@@ -43,6 +43,8 @@ menuconfig-prog	:= mconf
 nconfig-prog	:= nconf
 gconfig-prog	:= gconf
 xconfig-prog	:= qconf
+cftestgenconfig-prog	:= cftestgenconfig
+cftestconfig-prog	:= cftestconfig
 cfoutconfig-prog := cfoutconfig
 
 define config_rule
@@ -54,7 +56,7 @@ PHONY += build_$(1)
 build_$(1): $(obj)/$($(1)-prog)
 endef
 
-$(foreach c, config menuconfig nconfig gconfig xconfig cfoutconfig, $(eval $(call config_rule,$(c))))
+$(foreach c, config menuconfig nconfig gconfig xconfig cftestgenconfig cftestconfig cfoutconfig, $(eval $(call config_rule,$(c))))
 
 PHONY += localmodconfig localyesconfig
 localyesconfig localmodconfig: $(obj)/conf
@@ -156,6 +158,8 @@ help:
 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
 	@echo  '  cfoutconfig     - Print constraints and DIMACS-output into files (requires PicoSAT)'
+	@echo  '  cftestgenconfig - Tool for generating and solving conflicts'
+	@echo  '  cftestconfig    - Tool for testing random configurations and conflicts'
 	@echo  ''
 	@echo  'Configuration topic targets:'
 	@$(foreach f, $(all-config-fragments), \
@@ -204,6 +208,27 @@ $(addprefix $(obj)/, mconf.o $(lxdialog)): | $(obj)/mconf-cflags
 hostprogs        += cfoutconfig
 cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_fixgen.o cf_utils.o picosat_functions.o
 cfoutconfig-objs := cfoutconfig.o $(common-objs) $(cfconf-objs)
+
+HOSTCFLAGS_picosat.o = -DTRACE -Wno-missing-prototypes -Wno-pointer-compare
+
+# cftestgenconfig: Used for the cftestgenconfig target based on C++
+hostprogs	+= cftestgenconfig
+cftestgenconfig-cxxobjs	:= cftestgenconfig.o
+cftestgenconfig-objs	:= images.o $(common-objs) $(cfconf-objs)
+
+HOSTLDLIBS_cftestgenconfig	= $(shell . $(obj)/cftestgenconfig-cfg && echo $$libs)
+HOSTCXXFLAGS_cftestgenconfig.o	= $(shell . $(obj)/cftestgenconfig-cfg && echo $$cflags)
+
+$(obj)/cftestgenconfig.o: $(src)/cftestgenconfig.h $(obj)/cftestgenconfig-cfg
+
+# cftestconfig: Used for the cftestconfig target based on C++
+hostprogs	+= cftestconfig
+cftestconfig-cxxobjs	:= cftestconfig.o
+cftestconfig-objs	:= images.o $(common-objs) $(cfconf-objs)
+
+HOSTLDLIBS_cftestconfig	= $(shell . $(obj)/cftestconfig-cfg && echo $$libs)
+HOSTCXXFLAGS_cftestconfig.o	= $(shell . $(obj)/cftestconfig-cfg && echo $$cflags)
+
 
 # qconf: Used for the xconfig target based on Qt
 hostprogs	+= qconf
