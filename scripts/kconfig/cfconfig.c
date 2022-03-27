@@ -24,6 +24,9 @@ static void handle_fixes(struct sfl_list *diag);
 
 int main(int argc, char *argv[])
 {
+	struct sfl_list *diagnoses;
+	struct sdv_list *symbols;
+
 	CFDEBUG = true;
 
 	if (argc > 1 && !strcmp(argv[1], "-s")) {
@@ -37,25 +40,25 @@ int main(int argc, char *argv[])
 
 	init_config(argv[1]);
 
-	struct sfl_list *diagnoses;
-	struct sdv_list *symbols;
-
 	while(1) {
+		struct symbol *sym;
+		char input[100];
+		struct symbol_dvalue *sdv;
+
 		/* create the array */
 		symbols = sdv_list_init();
 
 		/* ask for user input */
-		struct symbol *sym = read_symbol_from_stdin();
+		sym = read_symbol_from_stdin();
 
 		printd("Found symbol %s, type %s\n\n", sym->name, sym_type_name(sym->type));
 		printd("Current value: %s\n", sym_get_string_value(sym));
 		printd("Desired value: ");
 
-		char input[100];
 		fgets(input, 100, stdin);
 		strtok(input, "\n");
 
-		struct symbol_dvalue *sdv = sym_create_sdv(sym, input);
+		sdv = sym_create_sdv(sym, input);
 		sdv_list_add(symbols, sdv);
 
 		diagnoses = run_satconf(symbols);
@@ -128,11 +131,13 @@ static void print_diagnoses_symbol(struct sfl_list *diag_sym)
 	}
 }
 
-static void apply_all_adiagnoses(struct sfl_list *diag) {
-	printd("Applying all diagnoses now...\n");
-
+static void apply_all_adiagnoses(struct sfl_list *diag)
+{
 	unsigned int counter = 1;
 	struct sfl_node *node;
+
+	printd("Applying all diagnoses now...\n");
+
 	sfl_list_for_each(node, diag) {
 		printd("\nDiagnosis %d:\n", counter++);
 		apply_fix(node->elem);
@@ -147,12 +152,15 @@ static void apply_all_adiagnoses(struct sfl_list *diag) {
  */
 static void handle_fixes(struct sfl_list *diag)
 {
+	int choice;
+	struct sfl_node *node;
+
 	printd("=== GENERATED DIAGNOSES ===\n");
 	printd("-1: No changes wanted\n");
 	printd(" 0: Apply all diagnoses\n");
 	print_diagnoses_symbol(diag);
 
-	int choice;
+
 	printd("\n> Choose option: ");
 	scanf("%d", &choice);
 
@@ -164,9 +172,8 @@ static void handle_fixes(struct sfl_list *diag)
 		return;
 	}
 
-	unsigned int counter;
-	struct sfl_node *node = diag->head;
-	for (counter = 1; counter < choice; counter++)
+	node = diag->head;
+	for (int counter = 1; counter < choice; counter++)
 		node = node->next;
 
 	apply_fix(node->elem);

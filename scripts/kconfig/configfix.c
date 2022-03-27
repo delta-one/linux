@@ -45,6 +45,9 @@ int run_satconf_cli(const char *Kconfig_file)
 {
 	clock_t start, end;
 	double time;
+	PicoSAT *pico;
+	unsigned int i;
+	struct symbol *sym;
 
 	if (!init_done) {
 		printd("Init...");
@@ -78,7 +81,7 @@ int run_satconf_cli(const char *Kconfig_file)
 	}
 
 	/* start PicoSAT */
-	PicoSAT *pico = initialize_picosat();
+	pico = initialize_picosat();
 	printd("Building CNF-clauses...");
 	start = clock();
 
@@ -94,8 +97,6 @@ int run_satconf_cli(const char *Kconfig_file)
 	printd("Adding assumptions...");
 	start = clock();
 
-	unsigned int i;
-	struct symbol *sym;
 	for_all_symbols(i, sym) {
 		if (sym->type == S_UNKNOWN)
 			continue;
@@ -131,6 +132,11 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 {
 	clock_t start, end;
 	double time;
+	struct symbol *sym;
+	unsigned int i;
+	struct sdv_node *node;
+	int res;
+	struct sfl_list *ret;
 
 	/* check whether all values can be applied -> no need to run */
 	if (sdv_within_range(symbols)) {
@@ -188,8 +194,6 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	sym_add_assumption_sdv(pico, sdv_symbols);
 
 	/* add assumptions for all other symbols */
-	struct symbol *sym;
-	unsigned int i;
 	for_all_symbols(i, sym) {
 		if (sym->type == S_UNKNOWN)
 			continue;
@@ -200,20 +204,18 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 
 	/* store the conflict symbols */
 	conflict_syms = sym_list_init();
-	struct sdv_node *node;
 	sdv_list_for_each(node, sdv_symbols)
 		sym_list_add(conflict_syms, node->elem->sym);
 
 	printd("Solving SAT-problem...");
 	start = clock();
 
-	int res = picosat_sat(pico, -1);
+	res = picosat_sat(pico, -1);
 
 	end = clock();
 	time = ((double)(end - start)) / CLOCKS_PER_SEC;
 	printd("done. (%.6f secs.)\n\n", time);
 
-	struct sfl_list *ret;
 	if (res == PICOSAT_SATISFIABLE) {
 		printd("===> PROBLEM IS SATISFIABLE <===\n");
 
