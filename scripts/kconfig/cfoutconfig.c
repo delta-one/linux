@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 {
 	clock_t start, end;
 	double time;
+	PicoSAT *pico;
 
 	printf("\nCreating constraints and CNF clauses...");
 	/* measure time for constructing constraints and clauses */
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
 	printd("done. (%.6f secs.)\n", time);
 
 	/* start PicoSAT */
-	PicoSAT *pico = picosat_init();
+	pico = picosat_init();
 	picosat_enable_trace_generation(pico);
 	printd("Building CNF-clauses...");
 	start = clock();
@@ -97,9 +98,10 @@ static void write_constraints_to_file(void)
 	struct symbol *sym;
 
 	for_all_symbols(i, sym) {
+		struct pexpr_node *node;
+
 		if (sym->type == S_UNKNOWN) continue;
 
-		struct pexpr_node *node;
 		pexpr_list_for_each(node, sym->constraints) {
 			struct gstr s = str_new();
 			pexpr_as_char(node->elem, &s, 0);
