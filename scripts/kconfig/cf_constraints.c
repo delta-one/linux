@@ -928,7 +928,7 @@ static void sym_nonbool_at_most_1(struct symbol *sym)
 
 	fexpr_list_for_each(node1, sym->nb_vals) {
 		struct pexpr *e1 = pexf(node1->elem);
-		for (struct fexpr_node * node2 = node1->next; node2 != NULL; node2 = node2->next) {
+		for (struct fexpr_node *node2 = node1->next; node2 != NULL; node2 = node2->next) {
 			struct pexpr *e2 = pexf(node2->elem);
 			struct pexpr *e = pexpr_or(pexpr_not(e1), pexpr_not(e2));
 			sym_add_constraint(sym, e);
