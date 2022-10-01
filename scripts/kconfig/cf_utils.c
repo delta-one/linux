@@ -56,7 +56,7 @@ void init_data(void)
 /*
  * create SAT-variables for all fexpr
  */
-void create_sat_variables(void)
+void create_sat_variables(struct cfdata *data)
 {
 	unsigned int i;
 	struct symbol *sym;
@@ -65,7 +65,7 @@ void create_sat_variables(void)
 
 	for_all_symbols(i, sym) {
 		sym->constraints = pexpr_list_init();
-		sym_create_fexpr(sym);
+		sym_create_fexpr(sym, data);
 	}
 
 	printd("done.\n");
@@ -74,26 +74,27 @@ void create_sat_variables(void)
 /*
  * create various constants
  */
-void create_constants(void)
+void create_constants(struct constants *constants)
 {
 	printd("Creating constants...");
 
 	/* create TRUE and FALSE constants */
-	const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
-	fexpr_add_to_satmap(const_false);
+	constants->const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
+	// const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
+	fexpr_add_to_satmap(constants->const_false);
 
 	const_true = fexpr_create(sat_variable_nr++, FE_TRUE, "True");
 	fexpr_add_to_satmap(const_true);
 
 	/* add fexpr of constants to tristate constants */
 	symbol_yes.fexpr_y = const_true;
-	symbol_yes.fexpr_m = const_false;
+	symbol_yes.fexpr_m = constants->const_false;
 
-	symbol_mod.fexpr_y = const_false;
+	symbol_mod.fexpr_y = constants->const_false;
 	symbol_mod.fexpr_m = const_true;
 
-	symbol_no.fexpr_y = const_false;
-	symbol_no.fexpr_m = const_false;
+	symbol_no.fexpr_y = constants->const_false;
+	symbol_no.fexpr_m = constants->const_false;
 
 	/* create symbols yes/mod/no as fexpr */
 	symbol_yes_fexpr = fexpr_create(0, FE_SYMBOL, "y");
@@ -343,7 +344,7 @@ struct property * sym_get_prompt(struct symbol *sym)
 /*
  * return the condition for the property, True if there is none
  */
-struct pexpr * prop_get_condition(struct property *prop)
+struct pexpr * prop_get_condition(struct property *prop, struct cfdata *data)
 {
 	if (prop == NULL)
 		return NULL;
@@ -352,7 +353,7 @@ struct pexpr * prop_get_condition(struct property *prop)
 	if (!prop->visible.expr)
 		return pexf(const_true);
 
-	return expr_calculate_pexpr_both(prop->visible.expr);
+	return expr_calculate_pexpr_both(prop->visible.expr, data);
 }
 
 /*
@@ -538,14 +539,14 @@ PicoSAT * initialize_picosat(void)
 /*
  * construct the CNF-clauses from the constraints
  */
-void construct_cnf_clauses(PicoSAT *p)
+void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 {
 	unsigned int i;
 	struct symbol *sym;
 	pico = p;
 
 	/* adding unit-clauses for constants */
-	sat_add_clause(2, pico, -(const_false->satval));
+	sat_add_clause(2, pico, -(data->constants->const_false->satval));
 	sat_add_clause(2, pico, const_true->satval);
 
 	for_all_symbols(i, sym) {

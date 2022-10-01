@@ -13,10 +13,10 @@ void init_config (const char *Kconfig_file);
 void init_data(void);
 
 /* assign SAT-variables to all fexpr and create the sat_map */
-void create_sat_variables(void);
+void create_sat_variables(struct cfdata *data);
 
 /* create True/False constants */
-void create_constants(void);
+void create_constants(struct constants *constants);
 
 /* create a temporary SAT-variable */
 struct fexpr * create_tmpsatvar(void);
@@ -58,7 +58,7 @@ bool sym_has_prompt(struct symbol *sym);
 struct property * sym_get_prompt(struct symbol *sym);
 
 /* return the condition for the property, True if there is none */
-struct pexpr * prop_get_condition(struct property *prop);
+struct pexpr * prop_get_condition(struct property *prop, struct cfdata *data);
 
 /* return the default property, NULL if none exists or can be satisfied */
 struct property *sym_get_default_prop(struct symbol *sym);
@@ -91,7 +91,7 @@ bool string_is_hex(char *s);
 PicoSAT * initialize_picosat(void);
 
 /* construct the CNF-clauses from the constraints */
-void construct_cnf_clauses(PicoSAT *pico);
+void construct_cnf_clauses(PicoSAT *pico, struct cfdata *data);
 
 /* add a clause to to PicoSAT */
 void sat_add_clause(int num, ...);

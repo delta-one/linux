@@ -37,93 +37,100 @@ static PicoSAT *pico;
 static bool init_done = false;
 static struct sym_list *conflict_syms;
 
+static void initialize_data(struct cfdata *data);
 static bool sdv_within_range(struct sdv_list *symbols);
 
 /* -------------------------------------- */
 
 int run_satconf_cli(const char *Kconfig_file)
 {
-	clock_t start, end;
-	double time;
-	PicoSAT *pico;
-	unsigned int i;
-	struct symbol *sym;
-
-	if (!init_done) {
-		printd("Init...");
-		/* measure time for constructing constraints and clauses */
-		start = clock();
-
-		/* parse Kconfig-file and read .config */
-		init_config(Kconfig_file);
-
-		/* initialize satmap and cnf_clauses */
-		init_data();
-
-		/* creating constants */
-		create_constants();
-
-		/* assign SAT variables & create sat_map */
-		create_sat_variables();
-
-		/* get the constraints */
-		get_constraints();
-
-		/* print all symbols and its constraints */
-		// 		print_all_symbols();
-
-		end = clock();
-		time = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-		printd("done. (%.6f secs.)\n", time);
-
-		init_done = true;
-	}
-
-	/* start PicoSAT */
-	pico = initialize_picosat();
-	printd("Building CNF-clauses...");
-	start = clock();
-
-	/* construct the CNF clauses */
-	construct_cnf_clauses(pico);
-
-	end = clock();
-	time = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-	printd("done. (%.6f secs.)\n", time);
-
-	/* add assumptions for all other symbols */
-	printd("Adding assumptions...");
-	start = clock();
-
-	for_all_symbols(i, sym) {
-		if (sym->type == S_UNKNOWN)
-			continue;
-
-		if (!sym->name || !sym_has_prompt(sym))
-			continue;
-
-		sym_add_assumption(pico, sym);
-
-	}
-
-	end = clock();
-	time = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-	printd("done. (%.6f secs.)\n", time);
-
-	picosat_solve(pico);
-
-	printd("\n===> STATISTICS <===\n");
-	printd("Constraints  : %d\n", count_counstraints());
-	printd("CNF-clauses  : %d\n", picosat_added_original_clauses(pico));
-	printd("SAT-variables: %d\n", picosat_variables(pico));
-	printd("Temp vars    : %d\n", tmp_variable_nr - 1);
-	printd("PicoSAT time : %.6f secs.\n", picosat_seconds(pico));
+	// clock_t start, end;
+	// double time;
+	// PicoSAT *pico;
+	// unsigned int i;
+	// struct symbol *sym;
+ //
+	// if (!init_done) {
+	// 	printd("Init...");
+	// 	/* measure time for constructing constraints and clauses */
+	// 	start = clock();
+ //
+	// 	/* parse Kconfig-file and read .config */
+	// 	init_config(Kconfig_file);
+ //
+	// 	/* initialize satmap and cnf_clauses */
+	// 	init_data();
+ //
+	// 	/* creating constants */
+	// 	create_constants();
+ //
+	// 	/* assign SAT variables & create sat_map */
+	// 	create_sat_variables();
+ //
+	// 	/* get the constraints */
+	// 	get_constraints();
+ //
+	// 	/* print all symbols and its constraints */
+	// 	// 		print_all_symbols();
+ //
+	// 	end = clock();
+	// 	time = ((double)(end - start)) / CLOCKS_PER_SEC;
+ //
+	// 	printd("done. (%.6f secs.)\n", time);
+ //
+	// 	init_done = true;
+	// }
+ //
+	// /* start PicoSAT */
+	// pico = initialize_picosat();
+	// printd("Building CNF-clauses...");
+	// start = clock();
+ //
+	// /* construct the CNF clauses */
+	// construct_cnf_clauses(pico);
+ //
+	// end = clock();
+	// time = ((double)(end - start)) / CLOCKS_PER_SEC;
+ //
+	// printd("done. (%.6f secs.)\n", time);
+ //
+	// /* add assumptions for all other symbols */
+	// printd("Adding assumptions...");
+	// start = clock();
+ //
+	// for_all_symbols(i, sym) {
+	// 	if (sym->type == S_UNKNOWN)
+	// 		continue;
+ //
+	// 	if (!sym->name || !sym_has_prompt(sym))
+	// 		continue;
+ //
+	// 	sym_add_assumption(pico, sym);
+ //
+	// }
+ //
+	// end = clock();
+	// time = ((double)(end - start)) / CLOCKS_PER_SEC;
+ //
+	// printd("done. (%.6f secs.)\n", time);
+ //
+	// picosat_solve(pico);
+ //
+	// printd("\n===> STATISTICS <===\n");
+	// printd("Constraints  : %d\n", count_counstraints());
+	// printd("CNF-clauses  : %d\n", picosat_added_original_clauses(pico));
+	// printd("SAT-variables: %d\n", picosat_variables(pico));
+	// printd("Temp vars    : %d\n", tmp_variable_nr - 1);
+	// printd("PicoSAT time : %.6f secs.\n", picosat_seconds(pico));
 
 	return EXIT_SUCCESS;
 }
+
+static void initialize_data(struct cfdata *data)
+{
+
+}
+
 
 /*
  * called from satdvconfig
@@ -137,6 +144,16 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	struct sdv_node *node;
 	int res;
 	struct sfl_list *ret;
+
+	static struct constants constants = {NULL, NULL, NULL, NULL, NULL};
+	static struct cfdata data = {
+		1,    // unsigned int sat_variable_nr
+		1,    // unsigned int tmp_variable_nr
+		NULL, // struct fexpr *satmap
+		0,    // size_t satmap_size
+		&constants // struct constants *constants
+	};
+
 
 	/* check whether all values can be applied -> no need to run */
 	if (sdv_within_range(symbols)) {
@@ -155,13 +172,13 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		init_data();
 
 		/* creating constants */
-		create_constants();
+		create_constants(data.constants);
 
 		/* assign SAT variables & create sat_map */
-		create_sat_variables();
+		create_sat_variables(&data);
 
 		/* get the constraints */
-		get_constraints();
+		get_constraints(&data);
 
 		end = clock();
 		time = ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -174,7 +191,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		start = clock();
 
 		/* construct the CNF clauses */
-		construct_cnf_clauses(pico);
+		construct_cnf_clauses(pico, &data);
 
 		end = clock();
 		time = ((double)(end - start)) / CLOCKS_PER_SEC;
