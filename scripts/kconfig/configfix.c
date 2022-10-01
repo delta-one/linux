@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
  */
 
 #define _GNU_SOURCE
@@ -16,118 +16,18 @@
 
 #include "configfix.h"
 
-unsigned int sat_variable_nr = 1;
-unsigned int tmp_variable_nr = 1;
-
-struct fexpr *satmap;
-size_t satmap_size;
-
-struct sdv_list *sdv_symbols; /* array with conflict-symbols */
-
-bool CFDEBUG = false;
-bool stop_rangefix = false;
-
-struct fexpr *const_false; /* constant False */
-struct fexpr *const_true; /* constant True */
-struct fexpr *symbol_yes_fexpr; /* symbol_yes as fexpr */
-struct fexpr *symbol_mod_fexpr; /* symbol_mod as fexpr */
-struct fexpr *symbol_no_fexpr; /* symbol_no_as fexpr */
+bool CFDEBUG;
+bool stop_rangefix;
 
 static PicoSAT *pico;
-static bool init_done = false;
+static bool init_done;
 static struct sym_list *conflict_syms;
 
 static bool sdv_within_range(struct sdv_list *symbols);
 
 /* -------------------------------------- */
 
-int run_satconf_cli(const char *Kconfig_file)
-{
-	clock_t start, end;
-	double time;
-	PicoSAT *pico;
-	unsigned int i;
-	struct symbol *sym;
 
-	if (!init_done) {
-		printd("Init...");
-		/* measure time for constructing constraints and clauses */
-		start = clock();
-
-		/* parse Kconfig-file and read .config */
-		init_config(Kconfig_file);
-
-		/* initialize satmap and cnf_clauses */
-		init_data();
-
-		/* creating constants */
-		create_constants();
-
-		/* assign SAT variables & create sat_map */
-		create_sat_variables();
-
-		/* get the constraints */
-		get_constraints();
-
-		/* print all symbols and its constraints */
-		// 		print_all_symbols();
-
-		end = clock();
-		time = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-		printd("done. (%.6f secs.)\n", time);
-
-		init_done = true;
-	}
-
-	/* start PicoSAT */
-	pico = initialize_picosat();
-	printd("Building CNF-clauses...");
-	start = clock();
-
-	/* construct the CNF clauses */
-	construct_cnf_clauses(pico);
-
-	end = clock();
-	time = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-	printd("done. (%.6f secs.)\n", time);
-
-	/* add assumptions for all other symbols */
-	printd("Adding assumptions...");
-	start = clock();
-
-	for_all_symbols(i, sym) {
-		if (sym->type == S_UNKNOWN)
-			continue;
-
-		if (!sym->name || !sym_has_prompt(sym))
-			continue;
-
-		sym_add_assumption(pico, sym);
-
-	}
-
-	end = clock();
-	time = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-	printd("done. (%.6f secs.)\n", time);
-
-	picosat_solve(pico);
-
-	printd("\n===> STATISTICS <===\n");
-	printd("Constraints  : %d\n", count_counstraints());
-	printd("CNF-clauses  : %d\n", picosat_added_original_clauses(pico));
-	printd("SAT-variables: %d\n", picosat_variables(pico));
-	printd("Temp vars    : %d\n", tmp_variable_nr - 1);
-	printd("PicoSAT time : %.6f secs.\n", picosat_seconds(pico));
-
-	return EXIT_SUCCESS;
-}
-
-/*
- * called from satdvconfig
- */
 struct sfl_list *run_satconf(struct sdv_list *symbols)
 {
 	clock_t start, end;
@@ -137,6 +37,17 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	struct sdv_node *node;
 	int res;
 	struct sfl_list *ret;
+
+	static struct constants constants = {NULL, NULL, NULL, NULL, NULL};
+	static struct cfdata data = {
+		1,    // unsigned int sat_variable_nr
+		1,    // unsigned int tmp_variable_nr
+		NULL, // struct fexpr *satmap
+		0,    // size_t satmap_size
+		&constants, // struct constants *constants
+		NULL // array with conflict-symbols
+	};
+
 
 	/* check whether all values can be applied -> no need to run */
 	if (sdv_within_range(symbols)) {
@@ -152,16 +63,16 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		start = clock();
 
 		/* initialize satmap and cnf_clauses */
-		init_data();
+		init_data(&data);
 
 		/* creating constants */
-		create_constants();
+		create_constants(&data);
 
 		/* assign SAT variables & create sat_map */
-		create_sat_variables();
+		create_sat_variables(&data);
 
 		/* get the constraints */
-		get_constraints();
+		get_constraints(&data);
 
 		end = clock();
 		time = ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -174,7 +85,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		start = clock();
 
 		/* construct the CNF clauses */
-		construct_cnf_clauses(pico);
+		construct_cnf_clauses(pico, &data);
 
 		end = clock();
 		time = ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -188,23 +99,23 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	}
 
 	/* copy array with symbols to change */
-	sdv_symbols = sdv_list_copy(symbols);
+	data.sdv_symbols = sdv_list_copy(symbols);
 
 	/* add assumptions for conflict-symbols */
-	sym_add_assumption_sdv(pico, sdv_symbols);
+	sym_add_assumption_sdv(pico, data.sdv_symbols);
 
 	/* add assumptions for all other symbols */
 	for_all_symbols(i, sym) {
 		if (sym->type == S_UNKNOWN)
 			continue;
 
-		if (!sym_is_sdv(sdv_symbols, sym))
+		if (!sym_is_sdv(data.sdv_symbols, sym))
 			sym_add_assumption(pico, sym);
 	}
 
 	/* store the conflict symbols */
 	conflict_syms = sym_list_init();
-	sdv_list_for_each(node, sdv_symbols)
+	sdv_list_for_each(node, data.sdv_symbols)
 		sym_list_add(conflict_syms, node->elem->sym);
 
 	printd("Solving SAT-problem...");
@@ -225,14 +136,14 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
 		printd("\n");
 
-		ret = rangefix_run(pico);
+		ret = rangefix_run(pico, &data);
 	} else {
 		printd("Unknown if satisfiable.\n");
 
 		ret = sfl_list_init();
 	}
 
-	sdv_list_free(sdv_symbols);
+	sdv_list_free(data.sdv_symbols);
 
 	return ret;
 }
@@ -243,8 +154,10 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 static bool sym_is_conflict_sym(struct symbol *sym)
 {
 	struct sym_node *node;
-	sym_list_for_each(node,
-			  conflict_syms) if (sym == node->elem) return true;
+
+	sym_list_for_each(node, conflict_syms)
+		if (sym == node->elem)
+			return true;
 
 	return false;
 }
@@ -405,6 +318,7 @@ struct sfix_list *select_solution(struct sfl_list *solutions, int index)
 {
 	struct sfl_node *node = solutions->head;
 	unsigned int counter;
+
 	for (counter = 0; counter < index; counter++)
 		node = node->next;
 
@@ -415,6 +329,7 @@ struct symbol_fix *select_symbol(struct sfix_list *solution, int index)
 {
 	struct sfix_node *node = solution->head;
 	unsigned int counter;
+
 	for (counter = 0; counter < index; counter++)
 		node = node->next;
 

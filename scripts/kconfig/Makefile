@@ -35,7 +35,6 @@ menuconfig-prog	:= mconf
 nconfig-prog	:= nconf
 gconfig-prog	:= gconf
 xconfig-prog	:= qconf
-cfconfig-prog    := cfconfig
 cfoutconfig-prog := cfoutconfig
 
 define config_rule
@@ -47,7 +46,7 @@ PHONY += build_$(1)
 build_$(1): $(obj)/$($(1)-prog)
 endef
 
-$(foreach c, config menuconfig nconfig gconfig xconfig cfconfig cfoutconfig, $(eval $(call config_rule,$(c))))
+$(foreach c, config menuconfig nconfig gconfig xconfig cfoutconfig, $(eval $(call config_rule,$(c))))
 
 PHONY += localmodconfig localyesconfig
 localyesconfig localmodconfig: $(obj)/conf
@@ -143,7 +142,6 @@ help:
 	@echo  '                    default value without prompting'
 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
-	@echo  '  cfconfig        - CLI tool for debugging ConfigFix'
 	@echo  '  cfoutconfig     - Print constraints and DIMACS-output into files'
 
 # ===========================================================================
@@ -184,9 +182,8 @@ $(obj)/mconf: | $(obj)/mconf-libs
 $(addprefix $(obj)/, mconf.o $(lxdialog)): | $(obj)/mconf-cflags
 
 # configfix: Used for the xconfig target as well as for its debugging tools
-hostprogs        += cfconfig cfoutconfig
+hostprogs        += cfoutconfig
 cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_rangefix.o cf_utils.o picosat.o
-cfconfig-objs    := cfconfig.o $(cfconf-objs) $(common-objs)
 cfoutconfig-objs := cfoutconfig.o $(cfconf-objs) $(common-objs)
 
 HOSTCFLAGS_picosat.o = -DTRACE -Wno-missing-prototypes -Wno-pointer-compare
