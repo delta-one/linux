@@ -51,9 +51,6 @@ struct etnaviv_chip_identity {
 	/* Number of shader cores. */
 	u32 shader_core_count;
 
-	/* Number of Neural Network cores. */
-	u32 nn_core_count;
-
 	/* Size of the vertex cache. */
 	u32 vertex_cache_size;
 
@@ -103,7 +100,6 @@ struct etnaviv_gpu {
 	struct etnaviv_chip_identity identity;
 	enum etnaviv_sec_mode sec_mode;
 	struct workqueue_struct *wq;
-	struct mutex sched_lock;
 	struct drm_gpu_scheduler sched;
 	bool initialized;
 	bool fe_running;
@@ -121,8 +117,8 @@ struct etnaviv_gpu {
 	u32 idle_mask;
 
 	/* Fencing support */
-	struct xarray user_fences;
-	u32 next_user_fence;
+	struct mutex fence_lock;
+	struct idr fence_idr;
 	u32 next_fence;
 	u32 completed_fence;
 	wait_queue_head_t fence_event;

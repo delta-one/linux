@@ -99,6 +99,7 @@ static int aspeed_hace_probe(struct platform_device *pdev)
 	const struct of_device_id *hace_dev_id;
 	struct aspeed_engine_hash *hash_engine;
 	struct aspeed_hace_dev *hace_dev;
+	struct resource *res;
 	int rc;
 
 	hace_dev = devm_kzalloc(&pdev->dev, sizeof(struct aspeed_hace_dev),
@@ -117,16 +118,22 @@ static int aspeed_hace_probe(struct platform_device *pdev)
 	hash_engine = &hace_dev->hash_engine;
 	crypto_engine = &hace_dev->crypto_engine;
 
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
 	platform_set_drvdata(pdev, hace_dev);
 
-	hace_dev->regs = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-	if (IS_ERR(hace_dev->regs))
+	hace_dev->regs = devm_ioremap_resource(&pdev->dev, res);
+	if (IS_ERR(hace_dev->regs)) {
+		dev_err(&pdev->dev, "Failed to map resources\n");
 		return PTR_ERR(hace_dev->regs);
+	}
 
 	/* Get irq number and register it */
 	hace_dev->irq = platform_get_irq(pdev, 0);
-	if (hace_dev->irq < 0)
+	if (!hace_dev->irq) {
+		dev_err(&pdev->dev, "Failed to get interrupt\n");
 		return -ENXIO;
+	}
 
 	rc = devm_request_irq(&pdev->dev, hace_dev->irq, aspeed_hace_irq, 0,
 			      dev_name(&pdev->dev), hace_dev);

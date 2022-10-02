@@ -4,7 +4,6 @@ TARGETS += amd-pstate
 TARGETS += arm64
 TARGETS += bpf
 TARGETS += breakpoints
-TARGETS += cachestat
 TARGETS += capabilities
 TARGETS += cgroup
 TARGETS += clone3
@@ -27,9 +26,7 @@ TARGETS += fpu
 TARGETS += ftrace
 TARGETS += futex
 TARGETS += gpio
-TARGETS += hid
 TARGETS += intel_pstate
-TARGETS += iommu
 TARGETS += ipc
 TARGETS += ir
 TARGETS += kcmp
@@ -51,21 +48,17 @@ TARGETS += nci
 TARGETS += net
 TARGETS += net/af_unix
 TARGETS += net/forwarding
-TARGETS += net/hsr
 TARGETS += net/mptcp
-TARGETS += net/openvswitch
 TARGETS += netfilter
 TARGETS += nsfs
 TARGETS += pidfd
 TARGETS += pid_namespace
 TARGETS += powerpc
-TARGETS += prctl
 TARGETS += proc
 TARGETS += pstore
 TARGETS += ptrace
 TARGETS += openat2
 TARGETS += resctrl
-TARGETS += riscv
 TARGETS += rlimits
 TARGETS += rseq
 TARGETS += rtc
@@ -80,7 +73,6 @@ TARGETS += sync
 TARGETS += syscall_user_dispatch
 TARGETS += sysctl
 TARGETS += tc-testing
-TARGETS += tdx
 TARGETS += timens
 ifneq (1, $(quicktest))
 TARGETS += timers
@@ -89,7 +81,7 @@ TARGETS += tmpfs
 TARGETS += tpm2
 TARGETS += user
 TARGETS += vDSO
-TARGETS += mm
+TARGETS += vm
 TARGETS += x86
 TARGETS += zram
 #Please keep the TARGETS list alphabetically sorted
@@ -240,8 +232,8 @@ ifdef INSTALL_PATH
 	@# included in the generated runlist.
 	for TARGET in $(TARGETS); do \
 		BUILD_TARGET=$$BUILD/$$TARGET;	\
-		[ ! -d $(INSTALL_PATH)/$$TARGET ] && printf "Skipping non-existent dir: $$TARGET\n" && continue; \
-		printf "Emit Tests for $$TARGET\n"; \
+		[ ! -d $(INSTALL_PATH)/$$TARGET ] && echo "Skipping non-existent dir: $$TARGET" && continue; \
+		echo -ne "Emit Tests for $$TARGET\n"; \
 		$(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET COLLECTION=$$TARGET \
 			-C $$TARGET emit_tests >> $(TEST_LIST); \
 	done;

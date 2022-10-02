@@ -16,7 +16,7 @@
 #include "pci.h"
 #include "pcic.h"
 
-#define MHI_TIMEOUT_DEFAULT_MS	20000
+#define MHI_TIMEOUT_DEFAULT_MS	90000
 #define RDDM_DUMP_SIZE	0x420000
 
 static struct mhi_channel_config ath11k_mhi_channels_qca6390[] = {
@@ -402,7 +402,8 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
 	ret = ath11k_mhi_get_msi(ab_pci);
 	if (ret) {
 		ath11k_err(ab, "failed to get msi for mhi\n");
-		goto free_controller;
+		mhi_free_controller(mhi_ctrl);
+		return ret;
 	}
 
 	if (!test_bit(ATH11K_FLAG_MULTI_MSI_VECTORS, &ab->dev_flags))
@@ -411,7 +412,7 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
 	if (test_bit(ATH11K_FLAG_FIXED_MEM_RGN, &ab->dev_flags)) {
 		ret = ath11k_mhi_read_addr_from_dt(mhi_ctrl);
 		if (ret < 0)
-			goto free_controller;
+			return ret;
 	} else {
 		mhi_ctrl->iova_start = 0;
 		mhi_ctrl->iova_stop = 0xFFFFFFFF;
@@ -439,22 +440,18 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
 	default:
 		ath11k_err(ab, "failed assign mhi_config for unknown hw rev %d\n",
 			   ab->hw_rev);
-		ret = -EINVAL;
-		goto free_controller;
+		mhi_free_controller(mhi_ctrl);
+		return -EINVAL;
 	}
 
 	ret = mhi_register_controller(mhi_ctrl, ath11k_mhi_config);
 	if (ret) {
 		ath11k_err(ab, "failed to register to mhi bus, err = %d\n", ret);
-		goto free_controller;
+		mhi_free_controller(mhi_ctrl);
+		return ret;
 	}
 
 	return 0;
-
-free_controller:
-	mhi_free_controller(mhi_ctrl);
-	ab_pci->mhi_ctrl = NULL;
-	return ret;
 }
 
 void ath11k_mhi_unregister(struct ath11k_pci *ab_pci)

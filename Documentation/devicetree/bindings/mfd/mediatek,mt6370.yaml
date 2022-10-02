@@ -35,7 +35,6 @@ properties:
 
   adc:
     type: object
-    additionalProperties: false
     description: |
       Provides 9 channels for system monitoring, including VBUSDIV5 (lower
       accuracy, higher measure range), VBUSDIV2 (higher accuracy, lower
@@ -74,7 +73,6 @@ properties:
 
   regulators:
     type: object
-    additionalProperties: false
     description: |
       List all supported regulators, which support the control for DisplayBias
       voltages and one general purpose LDO which commonly used to drive the
@@ -121,7 +119,7 @@ examples:
       #address-cells = <1>;
       #size-cells = <0>;
 
-      pmic@34 {
+        pmic@34 {
         compatible = "mediatek,mt6370";
         reg = <0x34>;
         wakeup-source;
@@ -141,8 +139,8 @@ examples:
 
         charger {
           compatible = "mediatek,mt6370-charger";
-          interrupts = <68>, <48>, <6>;
-          interrupt-names = "uvp_d_evt", "attach_i", "mivr";
+          interrupts = <48>, <68>, <6>;
+          interrupt-names = "attach_i", "uvp_d_evt", "mivr";
           io-channels = <&mt6370_adc MT6370_CHAN_IBUS>;
 
           mt6370_otg_vbus: usb-otg-vbus-regulator {

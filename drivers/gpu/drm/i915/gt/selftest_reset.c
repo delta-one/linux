@@ -20,7 +20,7 @@ __igt_reset_stolen(struct intel_gt *gt,
 		   const char *msg)
 {
 	struct i915_ggtt *ggtt = gt->ggtt;
-	const struct resource *dsm = &gt->i915->dsm.stolen;
+	const struct resource *dsm = &gt->i915->dsm;
 	resource_size_t num_pages, page;
 	struct intel_engine_cs *engine;
 	intel_wakeref_t wakeref;

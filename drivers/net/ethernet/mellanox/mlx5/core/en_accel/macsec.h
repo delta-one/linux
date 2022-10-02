@@ -10,11 +10,9 @@
 #include <net/macsec.h>
 #include <net/dst_metadata.h>
 
-/* Bit31 - 30: MACsec marker, Bit15-0: MACsec id */
-#define MLX5_MACEC_RX_FS_ID_MAX USHRT_MAX /* Must be power of two */
-#define MLX5_MACSEC_RX_FS_ID_MASK MLX5_MACEC_RX_FS_ID_MAX
+/* Bit31 - 30: MACsec marker, Bit3-0: MACsec id */
 #define MLX5_MACSEC_METADATA_MARKER(metadata)  ((((metadata) >> 30) & 0x3)  == 0x1)
-#define MLX5_MACSEC_RX_METADAT_HANDLE(metadata)  ((metadata) & MLX5_MACSEC_RX_FS_ID_MASK)
+#define MLX5_MACSEC_METADATA_HANDLE(metadata)  ((metadata) & GENMASK(3, 0))
 
 struct mlx5e_priv;
 struct mlx5e_macsec;
@@ -68,6 +66,7 @@ static inline void mlx5e_macsec_offload_handle_rx_skb(struct net_device *netdev,
 						      struct mlx5_cqe64 *cqe)
 {}
 static inline bool mlx5e_is_macsec_device(const struct mlx5_core_dev *mdev) { return false; }
+
 #endif  /* CONFIG_MLX5_EN_MACSEC */
 
 #endif	/* __MLX5_ACCEL_EN_MACSEC_H__ */

@@ -422,9 +422,10 @@ static unsigned int reserve_eilvt_offset(int offset, unsigned int new)
 		if (vector && !eilvt_entry_is_changeable(vector, new))
 			/* may not change if vectors are different */
 			return rsvd;
-	} while (!atomic_try_cmpxchg(&eilvt_offsets[offset], &rsvd, new));
+		rsvd = atomic_cmpxchg(&eilvt_offsets[offset], rsvd, new);
+	} while (rsvd != new);
 
-	rsvd = new & ~APIC_EILVT_MASKED;
+	rsvd &= ~APIC_EILVT_MASKED;
 	if (rsvd && rsvd != vector)
 		pr_info("LVT offset %d assigned for vector 0x%02x\n",
 			offset, rsvd);
@@ -1930,19 +1931,16 @@ void __init check_x2apic(void)
 	}
 }
 #else /* CONFIG_X86_X2APIC */
-void __init check_x2apic(void)
+static int __init validate_x2apic(void)
 {
 	if (!apic_is_x2apic_enabled())
-		return;
+		return 0;
 	/*
-	 * Checkme: Can we simply turn off x2APIC here instead of disabling the APIC?
+	 * Checkme: Can we simply turn off x2apic here instead of panic?
 	 */
-	pr_err("Kernel does not support x2APIC, please recompile with CONFIG_X86_X2APIC.\n");
-	pr_err("Disabling APIC, expect reduced performance and functionality.\n");
-
-	disable_apic = 1;
-	setup_clear_cpu_cap(X86_FEATURE_APIC);
+	panic("BIOS has enabled x2apic but kernel doesn't support x2apic, please disable x2apic in BIOS.\n");
 }
+early_initcall(validate_x2apic);
 
 static inline void try_to_enable_x2apic(int remap_mode) { }
 static inline void __x2apic_enable(void) { }

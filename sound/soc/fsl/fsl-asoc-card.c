@@ -28,8 +28,6 @@
 #include "../codecs/wm8994.h"
 #include "../codecs/tlv320aic31xx.h"
 
-#define DRIVER_NAME "fsl-asoc-card"
-
 #define CS427x_SYSCLK_MCLK 0
 
 #define RX 0
@@ -123,11 +121,11 @@ static const struct snd_soc_dapm_route audio_map[] = {
 
 static const struct snd_soc_dapm_route audio_map_ac97[] = {
 	/* 1st half -- Normal DAPM routes */
-	{"AC97 Playback",  NULL, "CPU AC97 Playback"},
-	{"CPU AC97 Capture",  NULL, "AC97 Capture"},
+	{"Playback",  NULL, "AC97 Playback"},
+	{"AC97 Capture",  NULL, "Capture"},
 	/* 2nd half -- ASRC DAPM routes */
-	{"CPU AC97 Playback",  NULL, "ASRC-Playback"},
-	{"ASRC-Capture",  NULL, "CPU AC97 Capture"},
+	{"AC97 Playback",  NULL, "ASRC-Playback"},
+	{"ASRC-Capture",  NULL, "AC97 Capture"},
 };
 
 static const struct snd_soc_dapm_route audio_map_tx[] = {
@@ -299,7 +297,7 @@ SND_SOC_DAILINK_DEFS(hifi_be,
 	DAILINK_COMP_ARRAY(COMP_EMPTY()),
 	DAILINK_COMP_ARRAY(COMP_DUMMY()));
 
-static const struct snd_soc_dai_link fsl_asoc_card_dai[] = {
+static struct snd_soc_dai_link fsl_asoc_card_dai[] = {
 	/* Default ASoC DAI Link*/
 	{
 		.name = "HiFi",
@@ -609,7 +607,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
 
 	priv->card.dapm_routes = audio_map;
 	priv->card.num_dapm_routes = ARRAY_SIZE(audio_map);
-	priv->card.driver_name = DRIVER_NAME;
 	/* Diversify the card configurations */
 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
 		codec_dai_name = "cs42888";
@@ -814,7 +811,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
 	priv->card.num_links = 1;
 
 	if (asrc_pdev) {
-		/* DPCM DAI Links only if ASRC exists */
+		/* DPCM DAI Links only if ASRC exsits */
 		priv->dai_link[1].cpus->of_node = asrc_np;
 		priv->dai_link[1].platforms->of_node = asrc_np;
 		priv->dai_link[2].codecs->dai_name = codec_dai_name;
@@ -918,7 +915,7 @@ MODULE_DEVICE_TABLE(of, fsl_asoc_card_dt_ids);
 static struct platform_driver fsl_asoc_card_driver = {
 	.probe = fsl_asoc_card_probe,
 	.driver = {
-		.name = DRIVER_NAME,
+		.name = "fsl-asoc-card",
 		.pm = &snd_soc_pm_ops,
 		.of_match_table = fsl_asoc_card_dt_ids,
 	},
@@ -927,5 +924,5 @@ module_platform_driver(fsl_asoc_card_driver);
 
 MODULE_DESCRIPTION("Freescale Generic ASoC Sound Card driver with ASRC");
 MODULE_AUTHOR("Nicolin Chen <nicoleotsuka@gmail.com>");
-MODULE_ALIAS("platform:" DRIVER_NAME);
+MODULE_ALIAS("platform:fsl-asoc-card");
 MODULE_LICENSE("GPL");

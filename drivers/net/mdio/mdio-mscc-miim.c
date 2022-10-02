@@ -52,7 +52,6 @@ struct mscc_miim_info {
 struct mscc_miim_dev {
 	struct regmap *regs;
 	int mii_status_offset;
-	bool ignore_read_errors;
 	struct regmap *phy_regs;
 	const struct mscc_miim_info *info;
 	struct clk *clk;
@@ -109,6 +108,9 @@ static int mscc_miim_read(struct mii_bus *bus, int mii_id, int regnum)
 	u32 val;
 	int ret;
 
+	if (regnum & MII_ADDR_C45)
+		return -EOPNOTSUPP;
+
 	ret = mscc_miim_wait_pending(bus);
 	if (ret)
 		goto out;
@@ -136,7 +138,7 @@ static int mscc_miim_read(struct mii_bus *bus, int mii_id, int regnum)
 		goto out;
 	}
 
-	if (!miim->ignore_read_errors && !!(val & MSCC_MIIM_DATA_ERROR)) {
+	if (val & MSCC_MIIM_DATA_ERROR) {
 		ret = -EIO;
 		goto out;
 	}
@@ -151,6 +153,9 @@ static int mscc_miim_write(struct mii_bus *bus, int mii_id,
 {
 	struct mscc_miim_dev *miim = bus->priv;
 	int ret;
+
+	if (regnum & MII_ADDR_C45)
+		return -EOPNOTSUPP;
 
 	ret = mscc_miim_wait_pending(bus);
 	if (ret < 0)
@@ -213,8 +218,7 @@ static const struct regmap_config mscc_miim_phy_regmap_config = {
 };
 
 int mscc_miim_setup(struct device *dev, struct mii_bus **pbus, const char *name,
-		    struct regmap *mii_regmap, int status_offset,
-		    bool ignore_read_errors)
+		    struct regmap *mii_regmap, int status_offset)
 {
 	struct mscc_miim_dev *miim;
 	struct mii_bus *bus;
@@ -236,7 +240,6 @@ int mscc_miim_setup(struct device *dev, struct mii_bus **pbus, const char *name,
 
 	miim->regs = mii_regmap;
 	miim->mii_status_offset = status_offset;
-	miim->ignore_read_errors = ignore_read_errors;
 
 	*pbus = bus;
 
@@ -288,7 +291,7 @@ static int mscc_miim_probe(struct platform_device *pdev)
 		return dev_err_probe(dev, PTR_ERR(phy_regmap),
 				     "Unable to create phy register regmap\n");
 
-	ret = mscc_miim_setup(dev, &bus, "mscc_miim", mii_regmap, 0, false);
+	ret = mscc_miim_setup(dev, &bus, "mscc_miim", mii_regmap, 0);
 	if (ret < 0) {
 		dev_err(dev, "Unable to setup the MDIO bus\n");
 		return ret;

@@ -175,7 +175,6 @@ struct cm_device {
 struct cm_av {
 	struct cm_port *port;
 	struct rdma_ah_attr ah_attr;
-	u16 dlid_datapath;
 	u16 pkey_index;
 	u8 timeout;
 };
@@ -1305,7 +1304,6 @@ static void cm_format_req(struct cm_req_msg *req_msg,
 	struct sa_path_rec *pri_path = param->primary_path;
 	struct sa_path_rec *alt_path = param->alternate_path;
 	bool pri_ext = false;
-	__be16 lid;
 
 	if (pri_path->rec_type == SA_PATH_REC_TYPE_OPA)
 		pri_ext = opa_is_extended_lid(pri_path->opa.dlid,
@@ -1365,16 +1363,9 @@ static void cm_format_req(struct cm_req_msg *req_msg,
 					      htons(ntohl(sa_path_get_dlid(
 						      pri_path)))));
 	} else {
-
-		if (param->primary_path_inbound) {
-			lid = param->primary_path_inbound->ib.dlid;
-			IBA_SET(CM_REQ_PRIMARY_LOCAL_PORT_LID, req_msg,
-				be16_to_cpu(lid));
-		} else
-			IBA_SET(CM_REQ_PRIMARY_LOCAL_PORT_LID, req_msg,
-				be16_to_cpu(IB_LID_PERMISSIVE));
-
 		/* Work-around until there's a way to obtain remote LID info */
+		IBA_SET(CM_REQ_PRIMARY_LOCAL_PORT_LID, req_msg,
+			be16_to_cpu(IB_LID_PERMISSIVE));
 		IBA_SET(CM_REQ_PRIMARY_REMOTE_PORT_LID, req_msg,
 			be16_to_cpu(IB_LID_PERMISSIVE));
 	}
@@ -1529,10 +1520,6 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
 	spin_lock_irqsave(&cm_id_priv->lock, flags);
 
 	cm_move_av_from_path(&cm_id_priv->av, &av);
-	if (param->primary_path_outbound)
-		cm_id_priv->av.dlid_datapath =
-			be16_to_cpu(param->primary_path_outbound->ib.dlid);
-
 	if (param->alternate_path)
 		cm_move_av_from_path(&cm_id_priv->alt_av, &alt_av);
 
@@ -1627,13 +1614,14 @@ static void cm_path_set_rec_type(struct ib_device *ib_device, u32 port_num,
 
 static void cm_format_path_lid_from_req(struct cm_req_msg *req_msg,
 					struct sa_path_rec *primary_path,
-					struct sa_path_rec *alt_path,
-					struct ib_wc *wc)
+					struct sa_path_rec *alt_path)
 {
 	u32 lid;
 
 	if (primary_path->rec_type != SA_PATH_REC_TYPE_OPA) {
-		sa_path_set_dlid(primary_path, wc->slid);
+		sa_path_set_dlid(primary_path,
+				 IBA_GET(CM_REQ_PRIMARY_LOCAL_PORT_LID,
+					 req_msg));
 		sa_path_set_slid(primary_path,
 				 IBA_GET(CM_REQ_PRIMARY_REMOTE_PORT_LID,
 					 req_msg));
@@ -1670,8 +1658,7 @@ static void cm_format_path_lid_from_req(struct cm_req_msg *req_msg,
 
 static void cm_format_paths_from_req(struct cm_req_msg *req_msg,
 				     struct sa_path_rec *primary_path,
-				     struct sa_path_rec *alt_path,
-				     struct ib_wc *wc)
+				     struct sa_path_rec *alt_path)
 {
 	primary_path->dgid =
 		*IBA_GET_MEM_PTR(CM_REQ_PRIMARY_LOCAL_PORT_GID, req_msg);
@@ -1729,7 +1716,7 @@ static void cm_format_paths_from_req(struct cm_req_msg *req_msg,
 		if (sa_path_is_roce(alt_path))
 			alt_path->roce.route_resolved = false;
 	}
-	cm_format_path_lid_from_req(req_msg, primary_path, alt_path, wc);
+	cm_format_path_lid_from_req(req_msg, primary_path, alt_path);
 }
 
 static u16 cm_get_bth_pkey(struct cm_work *work)
@@ -2142,7 +2129,7 @@ static int cm_req_handler(struct cm_work *work)
 	if (cm_req_has_alt_path(req_msg))
 		work->path[1].rec_type = work->path[0].rec_type;
 	cm_format_paths_from_req(req_msg, &work->path[0],
-				 &work->path[1], work->mad_recv_wc->wc);
+				 &work->path[1]);
 	if (cm_id_priv->av.ah_attr.type == RDMA_AH_ATTR_TYPE_ROCE)
 		sa_path_set_dmac(&work->path[0],
 				 cm_id_priv->av.ah_attr.roce.dmac);
@@ -2167,10 +2154,6 @@ static int cm_req_handler(struct cm_work *work)
 				       NULL, 0);
 		goto rejected;
 	}
-	if (cm_id_priv->av.ah_attr.type == RDMA_AH_ATTR_TYPE_IB)
-		cm_id_priv->av.dlid_datapath =
-			IBA_GET(CM_REQ_PRIMARY_LOCAL_PORT_LID, req_msg);
-
 	if (cm_req_has_alt_path(req_msg)) {
 		ret = cm_init_av_by_path(&work->path[1], NULL,
 					 &cm_id_priv->alt_av);
@@ -2912,8 +2895,6 @@ static int cm_send_rej_locked(struct cm_id_private *cm_id_priv,
 	    (ari && ari_length > IB_CM_REJ_ARI_LENGTH))
 		return -EINVAL;
 
-	trace_icm_send_rej(&cm_id_priv->id, reason);
-
 	switch (state) {
 	case IB_CM_REQ_SENT:
 	case IB_CM_MRA_REQ_RCVD:
@@ -2944,6 +2925,7 @@ static int cm_send_rej_locked(struct cm_id_private *cm_id_priv,
 		return -EINVAL;
 	}
 
+	trace_icm_send_rej(&cm_id_priv->id, reason);
 	ret = ib_post_send_mad(msg, NULL);
 	if (ret) {
 		cm_free_msg(msg);
@@ -4095,18 +4077,9 @@ static int cm_init_qp_init_attr(struct cm_id_private *cm_id_priv,
 		*qp_attr_mask = IB_QP_STATE | IB_QP_ACCESS_FLAGS |
 				IB_QP_PKEY_INDEX | IB_QP_PORT;
 		qp_attr->qp_access_flags = IB_ACCESS_REMOTE_WRITE;
-		if (cm_id_priv->responder_resources) {
-			struct ib_device *ib_dev = cm_id_priv->id.device;
-			u64 support_flush = ib_dev->attrs.device_cap_flags &
-			  (IB_DEVICE_FLUSH_GLOBAL | IB_DEVICE_FLUSH_PERSISTENT);
-			u32 flushable = support_flush ?
-					(IB_ACCESS_FLUSH_GLOBAL |
-					 IB_ACCESS_FLUSH_PERSISTENT) : 0;
-
+		if (cm_id_priv->responder_resources)
 			qp_attr->qp_access_flags |= IB_ACCESS_REMOTE_READ |
-						    IB_ACCESS_REMOTE_ATOMIC |
-						    flushable;
-		}
+						    IB_ACCESS_REMOTE_ATOMIC;
 		qp_attr->pkey_index = cm_id_priv->av.pkey_index;
 		if (cm_id_priv->av.port)
 			qp_attr->port_num = cm_id_priv->av.port->port_num;
@@ -4140,10 +4113,6 @@ static int cm_init_qp_rtr_attr(struct cm_id_private *cm_id_priv,
 		*qp_attr_mask = IB_QP_STATE | IB_QP_AV | IB_QP_PATH_MTU |
 				IB_QP_DEST_QPN | IB_QP_RQ_PSN;
 		qp_attr->ah_attr = cm_id_priv->av.ah_attr;
-		if ((qp_attr->ah_attr.type == RDMA_AH_ATTR_TYPE_IB) &&
-		    cm_id_priv->av.dlid_datapath &&
-		    (cm_id_priv->av.dlid_datapath != 0xffff))
-			qp_attr->ah_attr.ib.dlid = cm_id_priv->av.dlid_datapath;
 		qp_attr->path_mtu = cm_id_priv->path_mtu;
 		qp_attr->dest_qp_num = be32_to_cpu(cm_id_priv->remote_qpn);
 		qp_attr->rq_psn = be32_to_cpu(cm_id_priv->rq_psn);

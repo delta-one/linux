@@ -241,7 +241,7 @@
 	pinctrl-0 = <&pinctrl_uart2>;
 	status = "okay";
 
-	mcu {
+	rave-sp {
 		compatible = "zii,rave-sp-rdu2";
 		current-speed = <1000000>;
 		#address-cells = <1>;

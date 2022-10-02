@@ -75,7 +75,7 @@
 };
 
 &apps_rsc {
-	regulators-0 {
+	pmx55-rpmh-regulators {
 		compatible = "qcom,pmx55-rpmh-regulators";
 		qcom,pmic-id = "e";
 
@@ -227,10 +227,6 @@
 		nand-ecc-step-size = <512>;
 		nand-bus-width = <8>;
 	};
-};
-
-&remoteproc_mpss {
-	memory-region = <&mpss_adsp_mem>;
 };
 
 &usb {

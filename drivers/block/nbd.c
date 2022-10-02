@@ -157,6 +157,8 @@ static struct dentry *nbd_dbg_dir;
 
 #define nbd_name(nbd) ((nbd)->disk->disk_name)
 
+#define NBD_MAGIC 0x68797548
+
 #define NBD_DEF_BLKSIZE_BITS 10
 
 static unsigned int nbds_max = 16;
@@ -323,9 +325,6 @@ static int nbd_set_size(struct nbd_device *nbd, loff_t bytesize,
 		blksize = 1u << NBD_DEF_BLKSIZE_BITS;
 
 	if (blk_validate_block_size(blksize))
-		return -EINVAL;
-
-	if (bytesize < 0)
 		return -EINVAL;
 
 	nbd->config->bytesize = bytesize;
@@ -515,7 +514,6 @@ static int sock_xmit(struct nbd_device *nbd, int index, int send,
 	noreclaim_flag = memalloc_noreclaim_save();
 	do {
 		sock->sk->sk_allocation = GFP_NOIO | __GFP_MEMALLOC;
-		sock->sk->sk_use_task_frag = false;
 		msg.msg_name = NULL;
 		msg.msg_namelen = 0;
 		msg.msg_control = NULL;
@@ -567,7 +565,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
 	u32 nbd_cmd_flags = 0;
 	int sent = nsock->sent, skip = 0;
 
-	iov_iter_kvec(&from, ITER_SOURCE, &iov, 1, sizeof(request));
+	iov_iter_kvec(&from, WRITE, &iov, 1, sizeof(request));
 
 	type = req_to_nbd_cmd_type(req);
 	if (type == U32_MAX)
@@ -609,7 +607,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
 		request.len = htonl(size);
 	}
 	handle = nbd_cmd_handle(cmd);
-	request.cookie = cpu_to_be64(handle);
+	memcpy(request.handle, &handle, sizeof(handle));
 
 	trace_nbd_send_request(&request, nbd->index, blk_mq_rq_from_pdu(cmd));
 
@@ -621,7 +619,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
 	trace_nbd_header_sent(req, handle);
 	if (result < 0) {
 		if (was_interrupted(result)) {
-			/* If we haven't sent anything we can just return BUSY,
+			/* If we havne't sent anything we can just return BUSY,
 			 * however if we have sent something we need to make
 			 * sure we only allow this req to be sent until we are
 			 * completely done.
@@ -653,7 +651,7 @@ send_pages:
 
 			dev_dbg(nbd_to_dev(nbd), "request %p: sending %d bytes data\n",
 				req, bvec.bv_len);
-			iov_iter_bvec(&from, ITER_SOURCE, &bvec, 1, bvec.bv_len);
+			iov_iter_bvec(&from, WRITE, &bvec, 1, bvec.bv_len);
 			if (skip) {
 				if (skip >= iov_iter_count(&from)) {
 					skip -= iov_iter_count(&from);
@@ -705,7 +703,7 @@ static int nbd_read_reply(struct nbd_device *nbd, int index,
 	int result;
 
 	reply->magic = 0;
-	iov_iter_kvec(&to, ITER_DEST, &iov, 1, sizeof(*reply));
+	iov_iter_kvec(&to, READ, &iov, 1, sizeof(*reply));
 	result = sock_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
 	if (result < 0) {
 		if (!nbd_disconnected(nbd->config))
@@ -735,7 +733,7 @@ static struct nbd_cmd *nbd_handle_reply(struct nbd_device *nbd, int index,
 	u32 tag;
 	int ret = 0;
 
-	handle = be64_to_cpu(reply->cookie);
+	memcpy(&handle, reply->handle, sizeof(handle));
 	tag = nbd_handle_to_tag(handle);
 	hwq = blk_mq_unique_tag_to_hwq(tag);
 	if (hwq < nbd->tag_set.nr_hw_queues)
@@ -794,7 +792,7 @@ static struct nbd_cmd *nbd_handle_reply(struct nbd_device *nbd, int index,
 		struct iov_iter to;
 
 		rq_for_each_segment(bvec, req, iter) {
-			iov_iter_bvec(&to, ITER_DEST, &bvec, 1, bvec.bv_len);
+			iov_iter_bvec(&to, READ, &bvec, 1, bvec.bv_len);
 			result = sock_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
 			if (result < 0) {
 				dev_err(disk_to_dev(nbd->disk), "Receive data failed (result %d)\n",
@@ -1114,9 +1112,6 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
 	struct nbd_sock *nsock;
 	int err;
 
-	/* Arg will be cast to int, check it to avoid overflow */
-	if (arg > INT_MAX)
-		return -EINVAL;
 	sock = nbd_get_socket(nbd, arg, &err);
 	if (!sock)
 		return err;
@@ -1274,7 +1269,7 @@ static void send_disconnects(struct nbd_device *nbd)
 	for (i = 0; i < config->num_connections; i++) {
 		struct nbd_sock *nsock = config->socks[i];
 
-		iov_iter_kvec(&from, ITER_SOURCE, &iov, 1, sizeof(request));
+		iov_iter_kvec(&from, WRITE, &iov, 1, sizeof(request));
 		mutex_lock(&nsock->tx_lock);
 		ret = sock_xmit(nbd, i, 1, &from, 0, NULL);
 		if (ret < 0)
@@ -1805,6 +1800,7 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
 	 * Tell the block layer that we are not a rotational device
 	 */
 	blk_queue_flag_set(QUEUE_FLAG_NONROT, disk->queue);
+	blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, disk->queue);
 	disk->queue->limits.discard_granularity = 0;
 	blk_queue_max_discard_sectors(disk->queue, 0);
 	blk_queue_max_segment_size(disk->queue, UINT_MAX);
@@ -1939,11 +1935,11 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
 			return -EINVAL;
 		}
 	}
-	if (GENL_REQ_ATTR_CHECK(info, NBD_ATTR_SOCKETS)) {
+	if (!info->attrs[NBD_ATTR_SOCKETS]) {
 		pr_err("must specify at least one socket\n");
 		return -EINVAL;
 	}
-	if (GENL_REQ_ATTR_CHECK(info, NBD_ATTR_SIZE_BYTES)) {
+	if (!info->attrs[NBD_ATTR_SIZE_BYTES]) {
 		pr_err("must specify a size in bytes for the device\n");
 		return -EINVAL;
 	}
@@ -2128,7 +2124,7 @@ static int nbd_genl_disconnect(struct sk_buff *skb, struct genl_info *info)
 	if (!netlink_capable(skb, CAP_SYS_ADMIN))
 		return -EPERM;
 
-	if (GENL_REQ_ATTR_CHECK(info, NBD_ATTR_INDEX)) {
+	if (!info->attrs[NBD_ATTR_INDEX]) {
 		pr_err("must specify an index to disconnect\n");
 		return -EINVAL;
 	}
@@ -2166,7 +2162,7 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
 	if (!netlink_capable(skb, CAP_SYS_ADMIN))
 		return -EPERM;
 
-	if (GENL_REQ_ATTR_CHECK(info, NBD_ATTR_INDEX)) {
+	if (!info->attrs[NBD_ATTR_INDEX]) {
 		pr_err("must specify a device to reconfigure\n");
 		return -EINVAL;
 	}
@@ -2330,7 +2326,6 @@ static struct genl_family nbd_genl_family __ro_after_init = {
 	.n_small_ops	= ARRAY_SIZE(nbd_connect_genl_ops),
 	.resv_start_op	= NBD_CMD_STATUS + 1,
 	.maxattr	= NBD_ATTR_MAX,
-	.netnsok	= 1,
 	.policy = nbd_attr_policy,
 	.mcgrps		= nbd_mcast_grps,
 	.n_mcgrps	= ARRAY_SIZE(nbd_mcast_grps),

@@ -9,7 +9,7 @@
  * Copyright 2007, Michael Wu <flamingice@sourmilk.net>
  * Copyright 2013-2015  Intel Mobile Communications GmbH
  * Copyright 2016-2017  Intel Deutschland GmbH
- * Copyright (C) 2018-2022 Intel Corporation
+ * Copyright (C) 2018-2021 Intel Corporation
  */
 
 #include <linux/if_arp.h>
@@ -641,7 +641,7 @@ static void ieee80211_send_scan_probe_req(struct ieee80211_sub_if_data *sdata,
 		if (flags & IEEE80211_PROBE_FLAG_RANDOM_SN) {
 			struct ieee80211_hdr *hdr = (void *)skb->data;
 			struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-			u16 sn = get_random_u16();
+			u16 sn = get_random_u32();
 
 			info->control.flags |= IEEE80211_TX_CTRL_NO_SEQNO;
 			hdr->seq_ctrl =
@@ -1246,11 +1246,11 @@ int ieee80211_request_ibss_scan(struct ieee80211_sub_if_data *sdata,
 	return ret;
 }
 
+/*
+ * Only call this function when a scan can't be queued -- under RTNL.
+ */
 void ieee80211_scan_cancel(struct ieee80211_local *local)
 {
-	/* ensure a new scan cannot be queued */
-	lockdep_assert_wiphy(local->hw.wiphy);
-
 	/*
 	 * We are canceling software scan, or deferred scan that was not
 	 * yet really started (see __ieee80211_start_scan ).

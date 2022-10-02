@@ -36,8 +36,7 @@
 #include <linux/file.h>
 #include <linux/module.h>
 #include <drm/drm_cache.h>
-#include <drm/ttm/ttm_bo.h>
-#include <drm/ttm/ttm_tt.h>
+#include <drm/ttm/ttm_bo_driver.h>
 
 #include "ttm_module.h"
 
@@ -450,9 +449,3 @@ ttm_kmap_iter_tt_init(struct ttm_kmap_iter_tt *iter_tt,
 	return &iter_tt->base;
 }
 EXPORT_SYMBOL(ttm_kmap_iter_tt_init);
-
-unsigned long ttm_tt_pages_limit(void)
-{
-	return ttm_pages_limit;
-}
-EXPORT_SYMBOL(ttm_tt_pages_limit);

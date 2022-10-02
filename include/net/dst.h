@@ -16,7 +16,6 @@
 #include <linux/bug.h>
 #include <linux/jiffies.h>
 #include <linux/refcount.h>
-#include <linux/rcuref.h>
 #include <net/neighbour.h>
 #include <asm/processor.h>
 #include <linux/indirect_call_wrapper.h>
@@ -62,36 +61,23 @@ struct dst_entry {
 	unsigned short		trailer_len;	/* space to reserve at tail */
 
 	/*
-	 * __rcuref wants to be on a different cache line from
+	 * __refcnt wants to be on a different cache line from
 	 * input/output/ops or performance tanks badly
 	 */
 #ifdef CONFIG_64BIT
-	rcuref_t		__rcuref;	/* 64-bit offset 64 */
+	atomic_t		__refcnt;	/* 64-bit offset 64 */
 #endif
 	int			__use;
 	unsigned long		lastuse;
+	struct lwtunnel_state   *lwtstate;
 	struct rcu_head		rcu_head;
 	short			error;
 	short			__pad;
 	__u32			tclassid;
 #ifndef CONFIG_64BIT
-	struct lwtunnel_state   *lwtstate;
-	rcuref_t		__rcuref;	/* 32-bit offset 64 */
+	atomic_t		__refcnt;	/* 32-bit offset 64 */
 #endif
 	netdevice_tracker	dev_tracker;
-
-	/*
-	 * Used by rtable and rt6_info. Moves lwtstate into the next cache
-	 * line on 64bit so that lwtstate does not cause false sharing with
-	 * __rcuref under contention of __rcuref. This also puts the
-	 * frequently accessed members of rtable and rt6_info out of the
-	 * __rcuref cache line.
-	 */
-	struct list_head	rt_uncached;
-	struct uncached_list	*rt_uncached_list;
-#ifdef CONFIG_64BIT
-	struct lwtunnel_state   *lwtstate;
-#endif
 };
 
 struct dst_metrics {
@@ -239,10 +225,10 @@ static inline void dst_hold(struct dst_entry *dst)
 {
 	/*
 	 * If your kernel compilation stops here, please check
-	 * the placement of __rcuref in struct dst_entry
+	 * the placement of __refcnt in struct dst_entry
 	 */
-	BUILD_BUG_ON(offsetof(struct dst_entry, __rcuref) & 63);
-	WARN_ON(!rcuref_get(&dst->__rcuref));
+	BUILD_BUG_ON(offsetof(struct dst_entry, __refcnt) & 63);
+	WARN_ON(atomic_inc_not_zero(&dst->__refcnt) == 0);
 }
 
 static inline void dst_use_noref(struct dst_entry *dst, unsigned long time)
@@ -251,6 +237,12 @@ static inline void dst_use_noref(struct dst_entry *dst, unsigned long time)
 		dst->__use++;
 		dst->lastuse = time;
 	}
+}
+
+static inline void dst_hold_and_use(struct dst_entry *dst, unsigned long time)
+{
+	dst_hold(dst);
+	dst_use_noref(dst, time);
 }
 
 static inline struct dst_entry *dst_clone(struct dst_entry *dst)
@@ -306,7 +298,7 @@ static inline void skb_dst_copy(struct sk_buff *nskb, const struct sk_buff *oskb
  */
 static inline bool dst_hold_safe(struct dst_entry *dst)
 {
-	return rcuref_get(&dst->__rcuref);
+	return atomic_inc_not_zero(&dst->__refcnt);
 }
 
 /**
@@ -370,8 +362,9 @@ static inline void __skb_tunnel_rx(struct sk_buff *skb, struct net_device *dev,
 static inline void skb_tunnel_rx(struct sk_buff *skb, struct net_device *dev,
 				 struct net *net)
 {
-	DEV_STATS_INC(dev, rx_packets);
-	DEV_STATS_ADD(dev, rx_bytes, skb->len);
+	/* TODO : stats should be SMP safe */
+	dev->stats.rx_packets++;
+	dev->stats.rx_bytes += skb->len;
 	__skb_tunnel_rx(skb, dev, net);
 }
 

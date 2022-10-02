@@ -166,8 +166,6 @@ out_free_name:
 
 /* clang-format on */
 
-#define LANDLOCK_ABI_LAST 3
-
 int main(const int argc, char *const argv[], char *const *const envp)
 {
 	const char *cmd_path;
@@ -197,12 +195,8 @@ int main(const int argc, char *const argv[], char *const *const envp)
 			"\nexample:\n"
 			"%s=\"/bin:/lib:/usr:/proc:/etc:/dev/urandom\" "
 			"%s=\"/dev/null:/dev/full:/dev/zero:/dev/pts:/tmp\" "
-			"%s bash -i\n\n",
+			"%s bash -i\n",
 			ENV_FS_RO_NAME, ENV_FS_RW_NAME, argv[0]);
-		fprintf(stderr,
-			"This sandboxer can use Landlock features "
-			"up to ABI version %d.\n",
-			LANDLOCK_ABI_LAST);
 		return 1;
 	}
 
@@ -230,46 +224,15 @@ int main(const int argc, char *const argv[], char *const *const envp)
 		}
 		return 1;
 	}
-
 	/* Best-effort security. */
 	switch (abi) {
 	case 1:
-		/*
-		 * Removes LANDLOCK_ACCESS_FS_REFER for ABI < 2
-		 *
-		 * Note: The "refer" operations (file renaming and linking
-		 * across different directories) are always forbidden when using
-		 * Landlock with ABI 1.
-		 *
-		 * If only ABI 1 is available, this sandboxer knowingly forbids
-		 * refer operations.
-		 *
-		 * If a program *needs* to do refer operations after enabling
-		 * Landlock, it can not use Landlock at ABI level 1.  To be
-		 * compatible with different kernel versions, such programs
-		 * should then fall back to not restrict themselves at all if
-		 * the running kernel only supports ABI 1.
-		 */
+		/* Removes LANDLOCK_ACCESS_FS_REFER for ABI < 2 */
 		ruleset_attr.handled_access_fs &= ~LANDLOCK_ACCESS_FS_REFER;
 		__attribute__((fallthrough));
 	case 2:
 		/* Removes LANDLOCK_ACCESS_FS_TRUNCATE for ABI < 3 */
 		ruleset_attr.handled_access_fs &= ~LANDLOCK_ACCESS_FS_TRUNCATE;
-
-		fprintf(stderr,
-			"Hint: You should update the running kernel "
-			"to leverage Landlock features "
-			"provided by ABI version %d (instead of %d).\n",
-			LANDLOCK_ABI_LAST, abi);
-		__attribute__((fallthrough));
-	case LANDLOCK_ABI_LAST:
-		break;
-	default:
-		fprintf(stderr,
-			"Hint: You should update this sandboxer "
-			"to leverage Landlock features "
-			"provided by ABI version %d (instead of %d).\n",
-			abi, LANDLOCK_ABI_LAST);
 	}
 	access_fs_ro &= ruleset_attr.handled_access_fs;
 	access_fs_rw &= ruleset_attr.handled_access_fs;

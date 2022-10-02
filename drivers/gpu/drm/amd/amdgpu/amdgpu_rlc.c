@@ -34,9 +34,9 @@
  *
  * Set RLC enter into safe mode if RLC is enabled and haven't in safe mode.
  */
-void amdgpu_gfx_rlc_enter_safe_mode(struct amdgpu_device *adev, int xcc_id)
+void amdgpu_gfx_rlc_enter_safe_mode(struct amdgpu_device *adev)
 {
-	if (adev->gfx.rlc.in_safe_mode[xcc_id])
+	if (adev->gfx.rlc.in_safe_mode)
 		return;
 
 	/* if RLC is not enabled, do nothing */
@@ -46,8 +46,8 @@ void amdgpu_gfx_rlc_enter_safe_mode(struct amdgpu_device *adev, int xcc_id)
 	if (adev->cg_flags &
 	    (AMD_CG_SUPPORT_GFX_CGCG | AMD_CG_SUPPORT_GFX_MGCG |
 	     AMD_CG_SUPPORT_GFX_3D_CGCG)) {
-		adev->gfx.rlc.funcs->set_safe_mode(adev, xcc_id);
-		adev->gfx.rlc.in_safe_mode[xcc_id] = true;
+		adev->gfx.rlc.funcs->set_safe_mode(adev);
+		adev->gfx.rlc.in_safe_mode = true;
 	}
 }
 
@@ -58,9 +58,9 @@ void amdgpu_gfx_rlc_enter_safe_mode(struct amdgpu_device *adev, int xcc_id)
  *
  * Set RLC exit safe mode if RLC is enabled and have entered into safe mode.
  */
-void amdgpu_gfx_rlc_exit_safe_mode(struct amdgpu_device *adev, int xcc_id)
+void amdgpu_gfx_rlc_exit_safe_mode(struct amdgpu_device *adev)
 {
-	if (!(adev->gfx.rlc.in_safe_mode[xcc_id]))
+	if (!(adev->gfx.rlc.in_safe_mode))
 		return;
 
 	/* if RLC is not enabled, do nothing */
@@ -70,8 +70,8 @@ void amdgpu_gfx_rlc_exit_safe_mode(struct amdgpu_device *adev, int xcc_id)
 	if (adev->cg_flags &
 	    (AMD_CG_SUPPORT_GFX_CGCG | AMD_CG_SUPPORT_GFX_MGCG |
 	     AMD_CG_SUPPORT_GFX_3D_CGCG)) {
-		adev->gfx.rlc.funcs->unset_safe_mode(adev, xcc_id);
-		adev->gfx.rlc.in_safe_mode[xcc_id] = false;
+		adev->gfx.rlc.funcs->unset_safe_mode(adev);
+		adev->gfx.rlc.in_safe_mode = false;
 	}
 }
 
@@ -93,8 +93,7 @@ int amdgpu_gfx_rlc_init_sr(struct amdgpu_device *adev, u32 dws)
 
 	/* allocate save restore block */
 	r = amdgpu_bo_create_reserved(adev, dws * 4, PAGE_SIZE,
-				      AMDGPU_GEM_DOMAIN_VRAM |
-				      AMDGPU_GEM_DOMAIN_GTT,
+				      AMDGPU_GEM_DOMAIN_VRAM,
 				      &adev->gfx.rlc.save_restore_obj,
 				      &adev->gfx.rlc.save_restore_gpu_addr,
 				      (void **)&adev->gfx.rlc.sr_ptr);
@@ -131,8 +130,7 @@ int amdgpu_gfx_rlc_init_csb(struct amdgpu_device *adev)
 	/* allocate clear state block */
 	adev->gfx.rlc.clear_state_size = dws = adev->gfx.rlc.funcs->get_csb_size(adev);
 	r = amdgpu_bo_create_kernel(adev, dws * 4, PAGE_SIZE,
-				      AMDGPU_GEM_DOMAIN_VRAM |
-				      AMDGPU_GEM_DOMAIN_GTT,
+				      AMDGPU_GEM_DOMAIN_VRAM,
 				      &adev->gfx.rlc.clear_state_obj,
 				      &adev->gfx.rlc.clear_state_gpu_addr,
 				      (void **)&adev->gfx.rlc.cs_ptr);
@@ -158,8 +156,7 @@ int amdgpu_gfx_rlc_init_cpt(struct amdgpu_device *adev)
 	int r;
 
 	r = amdgpu_bo_create_reserved(adev, adev->gfx.rlc.cp_table_size,
-				      PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM |
-				      AMDGPU_GEM_DOMAIN_GTT,
+				      PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM,
 				      &adev->gfx.rlc.cp_table_obj,
 				      &adev->gfx.rlc.cp_table_gpu_addr,
 				      (void **)&adev->gfx.rlc.cp_table_ptr);
@@ -362,14 +359,6 @@ static void amdgpu_gfx_rlc_init_microcode_v2_1(struct amdgpu_device *adev)
 		le32_to_cpu(rlc_hdr->reg_list_format_direct_reg_list_length);
 
 	if (adev->firmware.load_type == AMDGPU_FW_LOAD_PSP) {
-		if (adev->gfx.rlc.save_restore_list_cntl_size_bytes) {
-			info = &adev->firmware.ucode[AMDGPU_UCODE_ID_RLC_RESTORE_LIST_CNTL];
-			info->ucode_id = AMDGPU_UCODE_ID_RLC_RESTORE_LIST_CNTL;
-			info->fw = adev->gfx.rlc_fw;
-			adev->firmware.fw_size +=
-				ALIGN(adev->gfx.rlc.save_restore_list_cntl_size_bytes, PAGE_SIZE);
-		}
-
 		if (adev->gfx.rlc.save_restore_list_gpm_size_bytes) {
 			info = &adev->firmware.ucode[AMDGPU_UCODE_ID_RLC_RESTORE_LIST_GPM_MEM];
 			info->ucode_id = AMDGPU_UCODE_ID_RLC_RESTORE_LIST_GPM_MEM;
@@ -540,9 +529,9 @@ int amdgpu_gfx_rlc_init_microcode(struct amdgpu_device *adev,
 		amdgpu_gfx_rlc_init_microcode_v2_1(adev);
 	if (version_minor >= 2)
 		amdgpu_gfx_rlc_init_microcode_v2_2(adev);
-	if (version_minor == 3)
+	if (version_minor >= 3)
 		amdgpu_gfx_rlc_init_microcode_v2_3(adev);
-	if (version_minor == 4)
+	if (version_minor >= 4)
 		amdgpu_gfx_rlc_init_microcode_v2_4(adev);
 
 	return 0;

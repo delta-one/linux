@@ -119,39 +119,10 @@ static int adls_pcode_read_psf_gv_point_info(struct drm_i915_private *dev_priv,
 	return 0;
 }
 
-static u16 icl_qgv_points_mask(struct drm_i915_private *i915)
-{
-	unsigned int num_psf_gv_points = i915->display.bw.max[0].num_psf_gv_points;
-	unsigned int num_qgv_points = i915->display.bw.max[0].num_qgv_points;
-	u16 qgv_points = 0, psf_points = 0;
-
-	/*
-	 * We can _not_ use the whole ADLS_QGV_PT_MASK here, as PCode rejects
-	 * it with failure if we try masking any unadvertised points.
-	 * So need to operate only with those returned from PCode.
-	 */
-	if (num_qgv_points > 0)
-		qgv_points = GENMASK(num_qgv_points - 1, 0);
-
-	if (num_psf_gv_points > 0)
-		psf_points = GENMASK(num_psf_gv_points - 1, 0);
-
-	return ICL_PCODE_REQ_QGV_PT(qgv_points) | ADLS_PCODE_REQ_PSF_PT(psf_points);
-}
-
-static bool is_sagv_enabled(struct drm_i915_private *i915, u16 points_mask)
-{
-	return !is_power_of_2(~points_mask & icl_qgv_points_mask(i915) &
-			      ICL_PCODE_REQ_QGV_PT_MASK);
-}
-
 int icl_pcode_restrict_qgv_points(struct drm_i915_private *dev_priv,
 				  u32 points_mask)
 {
 	int ret;
-
-	if (DISPLAY_VER(dev_priv) >= 14)
-		return 0;
 
 	/* bspec says to keep retrying for at least 1 ms */
 	ret = skl_pcode_request(&dev_priv->uncore, ICL_PCODE_SAGV_DE_MEM_SS_CONFIG,
@@ -164,9 +135,6 @@ int icl_pcode_restrict_qgv_points(struct drm_i915_private *dev_priv,
 		drm_err(&dev_priv->drm, "Failed to disable qgv points (%d) points: 0x%x\n", ret, points_mask);
 		return ret;
 	}
-
-	dev_priv->display.sagv.status = is_sagv_enabled(dev_priv, points_mask) ?
-		I915_SAGV_ENABLED : I915_SAGV_DISABLED;
 
 	return 0;
 }
@@ -471,8 +439,7 @@ static int tgl_get_bw_info(struct drm_i915_private *dev_priv, const struct intel
 		return ret;
 	}
 
-	if (DISPLAY_VER(dev_priv) < 14 &&
-	    (dram_info->type == INTEL_DRAM_LPDDR4 || dram_info->type == INTEL_DRAM_LPDDR5))
+	if (dram_info->type == INTEL_DRAM_LPDDR4 || dram_info->type == INTEL_DRAM_LPDDR5)
 		num_channels *= 2;
 
 	qi.deinterleave = qi.deinterleave ? : DIV_ROUND_UP(num_channels, is_y_tile ? 4 : 2);
@@ -995,6 +962,26 @@ int intel_bw_calc_min_cdclk(struct intel_atomic_state *state,
 	*need_cdclk_calc = true;
 
 	return 0;
+}
+
+static u16 icl_qgv_points_mask(struct drm_i915_private *i915)
+{
+	unsigned int num_psf_gv_points = i915->display.bw.max[0].num_psf_gv_points;
+	unsigned int num_qgv_points = i915->display.bw.max[0].num_qgv_points;
+	u16 qgv_points = 0, psf_points = 0;
+
+	/*
+	 * We can _not_ use the whole ADLS_QGV_PT_MASK here, as PCode rejects
+	 * it with failure if we try masking any unadvertised points.
+	 * So need to operate only with those returned from PCode.
+	 */
+	if (num_qgv_points > 0)
+		qgv_points = GENMASK(num_qgv_points - 1, 0);
+
+	if (num_psf_gv_points > 0)
+		psf_points = GENMASK(num_psf_gv_points - 1, 0);
+
+	return ICL_PCODE_REQ_QGV_PT(qgv_points) | ADLS_PCODE_REQ_PSF_PT(psf_points);
 }
 
 static int intel_bw_check_data_rate(struct intel_atomic_state *state, bool *changed)

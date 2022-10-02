@@ -910,12 +910,12 @@ exit:
 	return res;
 }
 
-static void acpi_power_meter_remove(struct acpi_device *device)
+static int acpi_power_meter_remove(struct acpi_device *device)
 {
 	struct acpi_power_meter_resource *resource;
 
 	if (!device || !acpi_driver_data(device))
-		return;
+		return -EINVAL;
 
 	resource = acpi_driver_data(device);
 	hwmon_device_unregister(resource->hwmon_dev);
@@ -924,7 +924,10 @@ static void acpi_power_meter_remove(struct acpi_device *device)
 	free_capabilities(resource);
 
 	kfree(resource);
+	return 0;
 }
+
+#ifdef CONFIG_PM_SLEEP
 
 static int acpi_power_meter_resume(struct device *dev)
 {
@@ -943,8 +946,9 @@ static int acpi_power_meter_resume(struct device *dev)
 	return 0;
 }
 
-static DEFINE_SIMPLE_DEV_PM_OPS(acpi_power_meter_pm, NULL,
-				acpi_power_meter_resume);
+#endif /* CONFIG_PM_SLEEP */
+
+static SIMPLE_DEV_PM_OPS(acpi_power_meter_pm, NULL, acpi_power_meter_resume);
 
 static struct acpi_driver acpi_power_meter_driver = {
 	.name = "power_meter",
@@ -955,7 +959,7 @@ static struct acpi_driver acpi_power_meter_driver = {
 		.remove = acpi_power_meter_remove,
 		.notify = acpi_power_meter_notify,
 		},
-	.drv.pm = pm_sleep_ptr(&acpi_power_meter_pm),
+	.drv.pm = &acpi_power_meter_pm,
 };
 
 /* Module init/exit routines */

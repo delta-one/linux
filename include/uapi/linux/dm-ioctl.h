@@ -136,7 +136,7 @@ struct dm_ioctl {
 	 * For output, the ioctls return the event number, not the cookie.
 	 */
 	__u32 event_nr;      	/* in/out */
-	__u32 padding;
+	__s32 error;		/* out */
 
 	__u64 dev;		/* in/out */
 
@@ -288,7 +288,7 @@ enum {
 #define DM_VERSION_MAJOR	4
 #define DM_VERSION_MINOR	48
 #define DM_VERSION_PATCHLEVEL	0
-#define DM_VERSION_EXTRA	"-ioctl (2023-03-01)"
+#define DM_VERSION_EXTRA	"-ioctl (2022-08-24)"
 
 /* Status bits */
 #define DM_READONLY_FLAG	(1 << 0) /* In/Out */
@@ -381,5 +381,13 @@ enum {
  * that would be measured by IMA subsystem on device state change.
  */
 #define DM_IMA_MEASUREMENT_FLAG	(1 << 19) /* In */
+
+/*
+ * If this flag is set, the caller wants to receive the error string.
+ * The error string is returned in the "name" field of the ioctl and
+ * the error number is returned in the "error" field. The ioctl returns
+ * zero.
+ */
+#define DM_RETURN_ERROR_FLAG	(1 << 20) /* In */
 
 #endif				/* _LINUX_DM_IOCTL_H */

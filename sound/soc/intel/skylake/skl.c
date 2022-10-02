@@ -387,6 +387,15 @@ static int skl_resume(struct device *dev)
 			snd_hdac_bus_init_cmd_io(bus);
 	} else {
 		ret = _skl_resume(bus);
+
+		/* turn off the links which are off before suspend */
+		list_for_each_entry(hlink, &bus->hlink_list, list) {
+			if (!hlink->ref_count)
+				snd_hdac_ext_bus_link_power_down(hlink);
+		}
+
+		if (!bus->cmd_dma_state)
+			snd_hdac_bus_stop_cmd_io(bus);
 	}
 
 	return ret;
@@ -436,7 +445,7 @@ static int skl_free(struct hdac_bus *bus)
 		free_irq(bus->irq, (void *)bus);
 	snd_hdac_bus_free_stream_pages(bus);
 	snd_hdac_ext_stream_free_all(bus);
-	snd_hdac_ext_link_free_all(bus);
+	snd_hdac_link_free_all(bus);
 
 	if (bus->remap_addr)
 		iounmap(bus->remap_addr);
@@ -680,6 +689,11 @@ static void load_codec_module(struct hda_codec *codec)
 
 #endif /* CONFIG_SND_SOC_INTEL_SKYLAKE_HDAUDIO_CODEC */
 
+static void skl_codec_device_exit(struct device *dev)
+{
+	snd_hdac_device_exit(dev_to_hdac_dev(dev));
+}
+
 static struct hda_codec *skl_codec_device_init(struct hdac_bus *bus, int addr)
 {
 	struct hda_codec *codec;
@@ -692,11 +706,12 @@ static struct hda_codec *skl_codec_device_init(struct hdac_bus *bus, int addr)
 	}
 
 	codec->core.type = HDA_DEV_ASOC;
+	codec->core.dev.release = skl_codec_device_exit;
 
 	ret = snd_hdac_device_register(&codec->core);
 	if (ret) {
 		dev_err(bus->dev, "failed to register hdac device\n");
-		put_device(&codec->core.dev);
+		snd_hdac_device_exit(&codec->core);
 		return ERR_PTR(ret);
 	}
 
@@ -1107,10 +1122,7 @@ static void skl_shutdown(struct pci_dev *pci)
 	if (!skl->init_done)
 		return;
 
-	snd_hdac_stop_streams(bus);
-	snd_hdac_ext_bus_link_power_down_all(bus);
-	skl_dsp_sleep(skl->dsp);
-
+	snd_hdac_stop_streams_and_chip(bus);
 	list_for_each_entry(s, &bus->stream_list, list) {
 		stream = stream_to_hdac_ext_stream(s);
 		snd_hdac_ext_stream_decouple(bus, stream, false);
@@ -1140,6 +1152,7 @@ static void skl_remove(struct pci_dev *pci)
 	if (skl->nhlt)
 		intel_nhlt_free(skl->nhlt);
 	skl_free(bus);
+	dev_set_drvdata(&pci->dev, NULL);
 }
 
 /* PCI IDs */

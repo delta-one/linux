@@ -731,19 +731,10 @@ nfsd4_commit(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 	     union nfsd4_op_u *u)
 {
 	struct nfsd4_commit *commit = &u->commit;
-	struct nfsd_file *nf;
-	__be32 status;
 
-	status = nfsd_file_acquire(rqstp, &cstate->current_fh, NFSD_MAY_WRITE |
-				   NFSD_MAY_NOT_BREAK_LEASE, &nf);
-	if (status != nfs_ok)
-		return status;
-
-	status = nfsd_commit(rqstp, &cstate->current_fh, nf, commit->co_offset,
+	return nfsd_commit(rqstp, &cstate->current_fh, commit->co_offset,
 			     commit->co_count,
 			     (__be32 *)commit->co_verf.data);
-	nfsd_file_put(nf);
-	return status;
 }
 
 static __be32
@@ -937,13 +928,18 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 	 * the client wants us to do more in this compound:
 	 */
 	if (!nfsd4_last_compound_op(rqstp))
-		clear_bit(RQ_SPLICE_OK, &rqstp->rq_flags);
+		__clear_bit(RQ_SPLICE_OK, &rqstp->rq_flags);
 
 	/* check stateid */
 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
 					&read->rd_stateid, RD_STATE,
 					&read->rd_nf, NULL);
-
+	if (status) {
+		dprintk("NFSD: nfsd4_read: couldn't process stateid!\n");
+		goto out;
+	}
+	status = nfs_ok;
+out:
 	read->rd_rqstp = rqstp;
 	read->rd_fhp = &cstate->current_fh;
 	return status;
@@ -1112,8 +1108,10 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 		status = nfs4_preprocess_stateid_op(rqstp, cstate,
 				&cstate->current_fh, &setattr->sa_stateid,
 				WR_STATE, NULL, NULL);
-		if (status)
+		if (status) {
+			dprintk("NFSD: nfsd4_setattr: couldn't process stateid!\n");
 			return status;
+		}
 	}
 	err = fh_want_write(&cstate->current_fh);
 	if (err)
@@ -1135,8 +1133,6 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 				0, (time64_t)0);
 	if (!status)
 		status = nfserrno(attrs.na_labelerr);
-	if (!status)
-		status = nfserrno(attrs.na_aclerr);
 out:
 	nfsd_attrs_free(&attrs);
 	fh_drop_write(&cstate->current_fh);
@@ -1163,8 +1159,10 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 			       write->wr_offset, cnt);
 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
 						stateid, WR_STATE, &nf, NULL);
-	if (status)
+	if (status) {
+		dprintk("NFSD: nfsd4_write: couldn't process stateid!\n");
 		return status;
+	}
 
 	write->wr_how_written = write->wr_stable_how;
 
@@ -1195,13 +1193,17 @@ nfsd4_verify_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 
 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->save_fh,
 					    src_stateid, RD_STATE, src, NULL);
-	if (status)
+	if (status) {
+		dprintk("NFSD: %s: couldn't process src stateid!\n", __func__);
 		goto out;
+	}
 
 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
 					    dst_stateid, WR_STATE, dst, NULL);
-	if (status)
+	if (status) {
+		dprintk("NFSD: %s: couldn't process dst stateid!\n", __func__);
 		goto out_put_src;
+	}
 
 	/* fix up for NFS-specific error code */
 	if (!S_ISREG(file_inode((*src)->nf_file)->i_mode) ||
@@ -1214,10 +1216,8 @@ out:
 	return status;
 out_put_dst:
 	nfsd_file_put(*dst);
-	*dst = NULL;
 out_put_src:
 	nfsd_file_put(*src);
-	*src = NULL;
 	goto out;
 }
 
@@ -1295,15 +1295,15 @@ extern void nfs_sb_deactive(struct super_block *sb);
  * setup a work entry in the ssc delayed unmount list.
  */
 static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
-				  struct nfsd4_ssc_umount_item **nsui)
+		struct nfsd4_ssc_umount_item **retwork, struct vfsmount **ss_mnt)
 {
 	struct nfsd4_ssc_umount_item *ni = NULL;
 	struct nfsd4_ssc_umount_item *work = NULL;
 	struct nfsd4_ssc_umount_item *tmp;
 	DEFINE_WAIT(wait);
-	__be32 status = 0;
 
-	*nsui = NULL;
+	*ss_mnt = NULL;
+	*retwork = NULL;
 	work = kzalloc(sizeof(*work), GFP_KERNEL);
 try_again:
 	spin_lock(&nn->nfsd_ssc_lock);
@@ -1320,19 +1320,18 @@ try_again:
 			/* allow 20secs for mount/unmount for now - revisit */
 			if (signal_pending(current) ||
 					(schedule_timeout(20*HZ) == 0)) {
-				finish_wait(&nn->nfsd_ssc_waitq, &wait);
 				kfree(work);
 				return nfserr_eagain;
 			}
 			finish_wait(&nn->nfsd_ssc_waitq, &wait);
 			goto try_again;
 		}
-		*nsui = ni;
+		*ss_mnt = ni->nsui_vfsmount;
 		refcount_inc(&ni->nsui_refcnt);
 		spin_unlock(&nn->nfsd_ssc_lock);
 		kfree(work);
 
-		/* return vfsmount in (*nsui)->nsui_vfsmount */
+		/* return vfsmount in ss_mnt */
 		return 0;
 	}
 	if (work) {
@@ -1340,32 +1339,31 @@ try_again:
 		refcount_set(&work->nsui_refcnt, 2);
 		work->nsui_busy = true;
 		list_add_tail(&work->nsui_list, &nn->nfsd_ssc_mount_list);
-		*nsui = work;
-	} else
-		status = nfserr_resource;
+		*retwork = work;
+	}
 	spin_unlock(&nn->nfsd_ssc_lock);
-	return status;
+	return 0;
 }
 
-static void nfsd4_ssc_update_dul(struct nfsd_net *nn,
-				 struct nfsd4_ssc_umount_item *nsui,
-				 struct vfsmount *ss_mnt)
+static void nfsd4_ssc_update_dul_work(struct nfsd_net *nn,
+		struct nfsd4_ssc_umount_item *work, struct vfsmount *ss_mnt)
 {
+	/* set nsui_vfsmount, clear busy flag and wakeup waiters */
 	spin_lock(&nn->nfsd_ssc_lock);
-	nsui->nsui_vfsmount = ss_mnt;
-	nsui->nsui_busy = false;
+	work->nsui_vfsmount = ss_mnt;
+	work->nsui_busy = false;
 	wake_up_all(&nn->nfsd_ssc_waitq);
 	spin_unlock(&nn->nfsd_ssc_lock);
 }
 
-static void nfsd4_ssc_cancel_dul(struct nfsd_net *nn,
-				 struct nfsd4_ssc_umount_item *nsui)
+static void nfsd4_ssc_cancel_dul_work(struct nfsd_net *nn,
+		struct nfsd4_ssc_umount_item *work)
 {
 	spin_lock(&nn->nfsd_ssc_lock);
-	list_del(&nsui->nsui_list);
+	list_del(&work->nsui_list);
 	wake_up_all(&nn->nfsd_ssc_waitq);
 	spin_unlock(&nn->nfsd_ssc_lock);
-	kfree(nsui);
+	kfree(work);
 }
 
 /*
@@ -1373,7 +1371,7 @@ static void nfsd4_ssc_cancel_dul(struct nfsd_net *nn,
  */
 static __be32
 nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
-		       struct nfsd4_ssc_umount_item **nsui)
+		       struct vfsmount **mount)
 {
 	struct file_system_type *type;
 	struct vfsmount *ss_mnt;
@@ -1384,6 +1382,7 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
 	char *ipaddr, *dev_name, *raw_data;
 	int len, raw_len;
 	__be32 status = nfserr_inval;
+	struct nfsd4_ssc_umount_item *work = NULL;
 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
 
 	naddr = &nss->u.nl4_addr;
@@ -1391,7 +1390,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
 					 naddr->addr_len,
 					 (struct sockaddr *)&tmp_addr,
 					 sizeof(tmp_addr));
-	*nsui = NULL;
 	if (tmp_addrlen == 0)
 		goto out_err;
 
@@ -1434,10 +1432,10 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
 		goto out_free_rawdata;
 	snprintf(dev_name, len + 5, "%s%s%s:/", startsep, ipaddr, endsep);
 
-	status = nfsd4_ssc_setup_dul(nn, ipaddr, nsui);
+	status = nfsd4_ssc_setup_dul(nn, ipaddr, &work, &ss_mnt);
 	if (status)
 		goto out_free_devname;
-	if ((*nsui)->nsui_vfsmount)
+	if (ss_mnt)
 		goto out_done;
 
 	/* Use an 'internal' mount: SB_KERNMOUNT -> MNT_INTERNAL */
@@ -1445,12 +1443,15 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
 	module_put(type->owner);
 	if (IS_ERR(ss_mnt)) {
 		status = nfserr_nodev;
-		nfsd4_ssc_cancel_dul(nn, *nsui);
+		if (work)
+			nfsd4_ssc_cancel_dul_work(nn, work);
 		goto out_free_devname;
 	}
-	nfsd4_ssc_update_dul(nn, *nsui, ss_mnt);
+	if (work)
+		nfsd4_ssc_update_dul_work(nn, work, ss_mnt);
 out_done:
 	status = 0;
+	*mount = ss_mnt;
 
 out_free_devname:
 	kfree(dev_name);
@@ -1460,6 +1461,13 @@ out_free_ipaddr:
 	kfree(ipaddr);
 out_err:
 	return status;
+}
+
+static void
+nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+{
+	nfs_do_sb_deactive(ss_mnt->mnt_sb);
+	mntput(ss_mnt);
 }
 
 /*
@@ -1474,7 +1482,7 @@ out_err:
 static __be32
 nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
 		      struct nfsd4_compound_state *cstate,
-		      struct nfsd4_copy *copy)
+		      struct nfsd4_copy *copy, struct vfsmount **mount)
 {
 	struct svc_fh *s_fh = NULL;
 	stateid_t *s_stid = &copy->cp_src_stateid;
@@ -1487,7 +1495,7 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
 	if (status)
 		goto out;
 
-	status = nfsd4_interssc_connect(copy->cp_src, rqstp, &copy->ss_nsui);
+	status = nfsd4_interssc_connect(copy->cp_src, rqstp, mount);
 	if (status)
 		goto out;
 
@@ -1505,26 +1513,45 @@ out:
 }
 
 static void
-nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *nsui, struct file *filp,
+nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
 			struct nfsd_file *dst)
 {
+	bool found = false;
+	long timeout;
+	struct nfsd4_ssc_umount_item *tmp;
+	struct nfsd4_ssc_umount_item *ni = NULL;
 	struct nfsd_net *nn = net_generic(dst->nf_net, nfsd_net_id);
-	long timeout = msecs_to_jiffies(nfsd4_ssc_umount_timeout);
 
 	nfs42_ssc_close(filp);
+	nfsd_file_put(dst);
 	fput(filp);
 
+	if (!nn) {
+		mntput(ss_mnt);
+		return;
+	}
 	spin_lock(&nn->nfsd_ssc_lock);
-	list_del(&nsui->nsui_list);
-	/*
-	 * vfsmount can be shared by multiple exports,
-	 * decrement refcnt. If the count drops to 1 it
-	 * will be unmounted when nsui_expire expires.
-	 */
-	refcount_dec(&nsui->nsui_refcnt);
-	nsui->nsui_expire = jiffies + timeout;
-	list_add_tail(&nsui->nsui_list, &nn->nfsd_ssc_mount_list);
+	timeout = msecs_to_jiffies(nfsd4_ssc_umount_timeout);
+	list_for_each_entry_safe(ni, tmp, &nn->nfsd_ssc_mount_list, nsui_list) {
+		if (ni->nsui_vfsmount->mnt_sb == ss_mnt->mnt_sb) {
+			list_del(&ni->nsui_list);
+			/*
+			 * vfsmount can be shared by multiple exports,
+			 * decrement refcnt. If the count drops to 1 it
+			 * will be unmounted when nsui_expire expires.
+			 */
+			refcount_dec(&ni->nsui_refcnt);
+			ni->nsui_expire = jiffies + timeout;
+			list_add_tail(&ni->nsui_list, &nn->nfsd_ssc_mount_list);
+			found = true;
+			break;
+		}
+	}
 	spin_unlock(&nn->nfsd_ssc_lock);
+	if (!found) {
+		mntput(ss_mnt);
+		return;
+	}
 }
 
 #else /* CONFIG_NFSD_V4_2_INTER_SSC */
@@ -1532,14 +1559,21 @@ nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *nsui, struct file *filp,
 static __be32
 nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
 		      struct nfsd4_compound_state *cstate,
-		      struct nfsd4_copy *copy)
+		      struct nfsd4_copy *copy,
+		      struct vfsmount **mount)
 {
+	*mount = NULL;
 	return nfserr_inval;
 }
 
 static void
-nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *nsui, struct file *filp,
+nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
 			struct nfsd_file *dst)
+{
+}
+
+static void
+nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
 {
 }
 
@@ -1559,6 +1593,13 @@ nfsd4_setup_intra_ssc(struct svc_rqst *rqstp,
 	return nfsd4_verify_copy(rqstp, cstate, &copy->cp_src_stateid,
 				 &copy->nf_src, &copy->cp_dst_stateid,
 				 &copy->nf_dst);
+}
+
+static void
+nfsd4_cleanup_intra_ssc(struct nfsd_file *src, struct nfsd_file *dst)
+{
+	nfsd_file_put(src);
+	nfsd_file_put(dst);
 }
 
 static void nfsd4_cb_offload_release(struct nfsd4_callback *cb)
@@ -1603,7 +1644,6 @@ static ssize_t _nfsd_copy_file_range(struct nfsd4_copy *copy,
 	u64 src_pos = copy->cp_src_pos;
 	u64 dst_pos = copy->cp_dst_pos;
 	int status;
-	loff_t end;
 
 	/* See RFC 7862 p.67: */
 	if (bytes_total == 0)
@@ -1623,8 +1663,8 @@ static ssize_t _nfsd_copy_file_range(struct nfsd4_copy *copy,
 	/* for a non-zero asynchronous copy do a commit of data */
 	if (nfsd4_copy_is_async(copy) && copy->cp_res.wr_bytes_written > 0) {
 		since = READ_ONCE(dst->f_wb_err);
-		end = copy->cp_dst_pos + copy->cp_res.wr_bytes_written - 1;
-		status = vfs_fsync_range(dst, copy->cp_dst_pos, end, 0);
+		status = vfs_fsync_range(dst, copy->cp_dst_pos,
+					 copy->cp_res.wr_bytes_written, 0);
 		if (!status)
 			status = filemap_check_wb_err(dst->f_mapping, since);
 		if (!status)
@@ -1672,27 +1712,18 @@ static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
 	memcpy(dst->cp_src, src->cp_src, sizeof(struct nl4_server));
 	memcpy(&dst->stateid, &src->stateid, sizeof(src->stateid));
 	memcpy(&dst->c_fh, &src->c_fh, sizeof(src->c_fh));
-	dst->ss_nsui = src->ss_nsui;
-}
-
-static void release_copy_files(struct nfsd4_copy *copy)
-{
-	if (copy->nf_src)
-		nfsd_file_put(copy->nf_src);
-	if (copy->nf_dst)
-		nfsd_file_put(copy->nf_dst);
+	dst->ss_mnt = src->ss_mnt;
 }
 
 static void cleanup_async_copy(struct nfsd4_copy *copy)
 {
 	nfs4_free_copy_state(copy);
-	release_copy_files(copy);
-	if (copy->cp_clp) {
-		spin_lock(&copy->cp_clp->async_lock);
-		if (!list_empty(&copy->copies))
-			list_del_init(&copy->copies);
-		spin_unlock(&copy->cp_clp->async_lock);
-	}
+	nfsd_file_put(copy->nf_dst);
+	if (!nfsd4_ssc_is_inter(copy))
+		nfsd_file_put(copy->nf_src);
+	spin_lock(&copy->cp_clp->async_lock);
+	list_del(&copy->copies);
+	spin_unlock(&copy->cp_clp->async_lock);
 	nfs4_put_copy(copy);
 }
 
@@ -1730,8 +1761,8 @@ static int nfsd4_do_async_copy(void *data)
 	if (nfsd4_ssc_is_inter(copy)) {
 		struct file *filp;
 
-		filp = nfs42_ssc_open(copy->ss_nsui->nsui_vfsmount,
-				      &copy->c_fh, &copy->stateid);
+		filp = nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
+				      &copy->stateid);
 		if (IS_ERR(filp)) {
 			switch (PTR_ERR(filp)) {
 			case -EBADF:
@@ -1740,15 +1771,16 @@ static int nfsd4_do_async_copy(void *data)
 			default:
 				nfserr = nfserr_offload_denied;
 			}
-			/* ss_mnt will be unmounted by the laundromat */
+			nfsd4_interssc_disconnect(copy->ss_mnt);
 			goto do_callback;
 		}
 		nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
 				       false);
-		nfsd4_cleanup_inter_ssc(copy->ss_nsui, filp, copy->nf_dst);
+		nfsd4_cleanup_inter_ssc(copy->ss_mnt, filp, copy->nf_dst);
 	} else {
 		nfserr = nfsd4_do_copy(copy, copy->nf_src->nf_file,
 				       copy->nf_dst->nf_file, false);
+		nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst);
 	}
 
 do_callback:
@@ -1770,7 +1802,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 			status = nfserr_notsupp;
 			goto out;
 		}
-		status = nfsd4_setup_inter_ssc(rqstp, cstate, copy);
+		status = nfsd4_setup_inter_ssc(rqstp, cstate, copy,
+				&copy->ss_mnt);
 		if (status)
 			return nfserr_offload_denied;
 	} else {
@@ -1789,13 +1822,12 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 		async_copy = kzalloc(sizeof(struct nfsd4_copy), GFP_KERNEL);
 		if (!async_copy)
 			goto out_err;
-		INIT_LIST_HEAD(&async_copy->copies);
-		refcount_set(&async_copy->refcount, 1);
 		async_copy->cp_src = kmalloc(sizeof(*async_copy->cp_src), GFP_KERNEL);
 		if (!async_copy->cp_src)
 			goto out_err;
 		if (!nfs4_init_copy_state(nn, copy))
 			goto out_err;
+		refcount_set(&async_copy->refcount, 1);
 		memcpy(&copy->cp_res.cb_stateid, &copy->cp_stateid.cs_stid,
 			sizeof(copy->cp_res.cb_stateid));
 		dup_copy_fields(copy, async_copy);
@@ -1812,51 +1844,34 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 	} else {
 		status = nfsd4_do_copy(copy, copy->nf_src->nf_file,
 				       copy->nf_dst->nf_file, true);
+		nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst);
 	}
 out:
-	release_copy_files(copy);
 	return status;
 out_err:
-	if (nfsd4_ssc_is_inter(copy)) {
-		/*
-		 * Source's vfsmount of inter-copy will be unmounted
-		 * by the laundromat. Use copy instead of async_copy
-		 * since async_copy->ss_nsui might not be set yet.
-		 */
-		refcount_dec(&copy->ss_nsui->nsui_refcnt);
-	}
 	if (async_copy)
 		cleanup_async_copy(async_copy);
 	status = nfserrno(-ENOMEM);
+	if (nfsd4_ssc_is_inter(copy))
+		nfsd4_interssc_disconnect(copy->ss_mnt);
 	goto out;
 }
 
-static struct nfsd4_copy *
-find_async_copy_locked(struct nfs4_client *clp, stateid_t *stateid)
-{
-	struct nfsd4_copy *copy;
-
-	lockdep_assert_held(&clp->async_lock);
-
-	list_for_each_entry(copy, &clp->async_copies, copies) {
-		if (memcmp(&copy->cp_stateid.cs_stid, stateid, NFS4_STATEID_SIZE))
-			continue;
-		return copy;
-	}
-	return NULL;
-}
-
-static struct nfsd4_copy *
+struct nfsd4_copy *
 find_async_copy(struct nfs4_client *clp, stateid_t *stateid)
 {
 	struct nfsd4_copy *copy;
 
 	spin_lock(&clp->async_lock);
-	copy = find_async_copy_locked(clp, stateid);
-	if (copy)
+	list_for_each_entry(copy, &clp->async_copies, copies) {
+		if (memcmp(&copy->cp_stateid.cs_stid, stateid, NFS4_STATEID_SIZE))
+			continue;
 		refcount_inc(&copy->refcount);
+		spin_unlock(&clp->async_lock);
+		return copy;
+	}
 	spin_unlock(&clp->async_lock);
-	return copy;
+	return NULL;
 }
 
 static __be32
@@ -1933,8 +1948,10 @@ nfsd4_fallocate(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
 					    &fallocate->falloc_stateid,
 					    WR_STATE, &nf, NULL);
-	if (status != nfs_ok)
+	if (status != nfs_ok) {
+		dprintk("NFSD: nfsd4_fallocate: couldn't process stateid!\n");
 		return status;
+	}
 
 	status = nfsd4_vfs_fallocate(rqstp, &cstate->current_fh, nf->nf_file,
 				     fallocate->falloc_offset,
@@ -1943,24 +1960,22 @@ nfsd4_fallocate(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 	nfsd_file_put(nf);
 	return status;
 }
-
 static __be32
 nfsd4_offload_status(struct svc_rqst *rqstp,
 		     struct nfsd4_compound_state *cstate,
 		     union nfsd4_op_u *u)
 {
 	struct nfsd4_offload_status *os = &u->offload_status;
-	__be32 status = nfs_ok;
+	__be32 status = 0;
 	struct nfsd4_copy *copy;
 	struct nfs4_client *clp = cstate->clp;
 
-	spin_lock(&clp->async_lock);
-	copy = find_async_copy_locked(clp, &os->stateid);
-	if (copy)
+	copy = find_async_copy(clp, &os->stateid);
+	if (copy) {
 		os->count = copy->cp_res.wr_bytes_written;
-	else
+		nfs4_put_copy(copy);
+	} else
 		status = nfserr_bad_stateid;
-	spin_unlock(&clp->async_lock);
 
 	return status;
 }
@@ -1992,8 +2007,10 @@ nfsd4_seek(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
 					    &seek->seek_stateid,
 					    RD_STATE, &nf, NULL);
-	if (status)
+	if (status) {
+		dprintk("NFSD: nfsd4_seek: couldn't process stateid!\n");
 		return status;
+	}
 
 	switch (seek->seek_whence) {
 	case NFS4_CONTENT_DATA:
@@ -2605,11 +2622,12 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
 	cstate->minorversion = args->minorversion;
 	fh_init(current_fh, NFS4_FHSIZE);
 	fh_init(save_fh, NFS4_FHSIZE);
+
 	/*
 	 * Don't use the deferral mechanism for NFSv4; compounds make it
 	 * too hard to avoid non-idempotency problems.
 	 */
-	clear_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
+	__clear_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
 
 	/*
 	 * According to RFC3010, this takes precedence over all other errors.
@@ -2731,7 +2749,7 @@ encode_op:
 out:
 	cstate->status = status;
 	/* Reset deferral mechanism for RPC deferrals */
-	set_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
+	__set_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
 	return rpc_success;
 }
 
@@ -2752,22 +2770,6 @@ out:
 					 op_encode_ace_maxsz)
 
 #define op_encode_channel_attrs_maxsz	(6 + 1 + 1)
-
-/*
- * The _rsize() helpers are invoked by the NFSv4 COMPOUND decoder, which
- * is called before sunrpc sets rq_res.buflen. Thus we have to compute
- * the maximum payload size here, based on transport limits and the size
- * of the remaining space in the rq_pages array.
- */
-static u32 nfsd4_max_payload(const struct svc_rqst *rqstp)
-{
-	u32 buflen;
-
-	buflen = (rqstp->rq_page_end - rqstp->rq_next_page) * PAGE_SIZE;
-	buflen -= rqstp->rq_auth_slack;
-	buflen -= rqstp->rq_res.head[0].iov_len;
-	return min_t(u32, buflen, svc_max_payload(rqstp));
-}
 
 static u32 nfsd4_only_status_rsize(const struct svc_rqst *rqstp,
 				   const struct nfsd4_op *op)
@@ -2814,9 +2816,9 @@ static u32 nfsd4_getattr_rsize(const struct svc_rqst *rqstp,
 	u32 ret = 0;
 
 	if (bmap0 & FATTR4_WORD0_ACL)
-		return nfsd4_max_payload(rqstp);
+		return svc_max_payload(rqstp);
 	if (bmap0 & FATTR4_WORD0_FS_LOCATIONS)
-		return nfsd4_max_payload(rqstp);
+		return svc_max_payload(rqstp);
 
 	if (bmap1 & FATTR4_WORD1_OWNER) {
 		ret += IDMAP_NAMESZ + 4;
@@ -2876,7 +2878,10 @@ static u32 nfsd4_open_rsize(const struct svc_rqst *rqstp,
 static u32 nfsd4_read_rsize(const struct svc_rqst *rqstp,
 			    const struct nfsd4_op *op)
 {
-	u32 rlen = min(op->u.read.rd_length, nfsd4_max_payload(rqstp));
+	u32 maxcount = 0, rlen = 0;
+
+	maxcount = svc_max_payload(rqstp);
+	rlen = min(op->u.read.rd_length, maxcount);
 
 	return (op_encode_hdr_size + 2 + XDR_QUADLEN(rlen)) * sizeof(__be32);
 }
@@ -2884,7 +2889,8 @@ static u32 nfsd4_read_rsize(const struct svc_rqst *rqstp,
 static u32 nfsd4_read_plus_rsize(const struct svc_rqst *rqstp,
 				 const struct nfsd4_op *op)
 {
-	u32 rlen = min(op->u.read.rd_length, nfsd4_max_payload(rqstp));
+	u32 maxcount = svc_max_payload(rqstp);
+	u32 rlen = min(op->u.read.rd_length, maxcount);
 	/*
 	 * If we detect that the file changed during hole encoding, then we
 	 * recover by encoding the remaining reply as data. This means we need
@@ -2898,7 +2904,10 @@ static u32 nfsd4_read_plus_rsize(const struct svc_rqst *rqstp,
 static u32 nfsd4_readdir_rsize(const struct svc_rqst *rqstp,
 			       const struct nfsd4_op *op)
 {
-	u32 rlen = min(op->u.readdir.rd_maxcount, nfsd4_max_payload(rqstp));
+	u32 maxcount = 0, rlen = 0;
+
+	maxcount = svc_max_payload(rqstp);
+	rlen = min(op->u.readdir.rd_maxcount, maxcount);
 
 	return (op_encode_hdr_size + op_encode_verifier_maxsz +
 		XDR_QUADLEN(rlen)) * sizeof(__be32);
@@ -3037,7 +3046,10 @@ static u32 nfsd4_copy_notify_rsize(const struct svc_rqst *rqstp,
 static u32 nfsd4_getdeviceinfo_rsize(const struct svc_rqst *rqstp,
 				     const struct nfsd4_op *op)
 {
-	u32 rlen = min(op->u.getdeviceinfo.gd_maxcount, nfsd4_max_payload(rqstp));
+	u32 maxcount = 0, rlen = 0;
+
+	maxcount = svc_max_payload(rqstp);
+	rlen = min(op->u.getdeviceinfo.gd_maxcount, maxcount);
 
 	return (op_encode_hdr_size +
 		1 /* gd_layout_type*/ +
@@ -3087,7 +3099,10 @@ static u32 nfsd4_seek_rsize(const struct svc_rqst *rqstp,
 static u32 nfsd4_getxattr_rsize(const struct svc_rqst *rqstp,
 				const struct nfsd4_op *op)
 {
-	u32 rlen = min_t(u32, XATTR_SIZE_MAX, nfsd4_max_payload(rqstp));
+	u32 maxcount, rlen;
+
+	maxcount = svc_max_payload(rqstp);
+	rlen = min_t(u32, XATTR_SIZE_MAX, maxcount);
 
 	return (op_encode_hdr_size + 1 + XDR_QUADLEN(rlen)) * sizeof(__be32);
 }
@@ -3101,7 +3116,10 @@ static u32 nfsd4_setxattr_rsize(const struct svc_rqst *rqstp,
 static u32 nfsd4_listxattrs_rsize(const struct svc_rqst *rqstp,
 				  const struct nfsd4_op *op)
 {
-	u32 rlen = min(op->u.listxattrs.lsxa_maxcount, nfsd4_max_payload(rqstp));
+	u32 maxcount, rlen;
+
+	maxcount = svc_max_payload(rqstp);
+	rlen = min(op->u.listxattrs.lsxa_maxcount, maxcount);
 
 	return (op_encode_hdr_size + 4 + XDR_QUADLEN(rlen)) * sizeof(__be32);
 }
@@ -3616,13 +3634,12 @@ static const struct svc_procedure nfsd_procedures4[2] = {
 	},
 };
 
-static DEFINE_PER_CPU_ALIGNED(unsigned long,
-			      nfsd_count4[ARRAY_SIZE(nfsd_procedures4)]);
+static unsigned int nfsd_count3[ARRAY_SIZE(nfsd_procedures4)];
 const struct svc_version nfsd_version4 = {
 	.vs_vers		= 4,
-	.vs_nproc		= ARRAY_SIZE(nfsd_procedures4),
+	.vs_nproc		= 2,
 	.vs_proc		= nfsd_procedures4,
-	.vs_count		= nfsd_count4,
+	.vs_count		= nfsd_count3,
 	.vs_dispatch		= nfsd_dispatch,
 	.vs_xdrsize		= NFS4_SVC_XDRSIZE,
 	.vs_rpcb_optnl		= true,

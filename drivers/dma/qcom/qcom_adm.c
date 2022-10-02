@@ -379,13 +379,13 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
 		if (blk_size < 0) {
 			dev_err(adev->dev, "invalid burst value: %d\n",
 				burst);
-			return NULL;
+			return ERR_PTR(-EINVAL);
 		}
 
 		crci = achan->crci & 0xf;
 		if (!crci || achan->crci > 0x1f) {
 			dev_err(adev->dev, "invalid crci value\n");
-			return NULL;
+			return ERR_PTR(-EINVAL);
 		}
 	}
 
@@ -403,10 +403,8 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
 	}
 
 	async_desc = kzalloc(sizeof(*async_desc), GFP_NOWAIT);
-	if (!async_desc) {
-		dev_err(adev->dev, "not enough memory for async_desc struct\n");
-		return NULL;
-	}
+	if (!async_desc)
+		return ERR_PTR(-ENOMEM);
 
 	async_desc->mux = achan->mux ? ADM_CRCI_CTL_MUX_SEL : 0;
 	async_desc->crci = crci;
@@ -416,10 +414,8 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
 				sizeof(*cple) + 2 * ADM_DESC_ALIGN;
 
 	async_desc->cpl = kzalloc(async_desc->dma_len, GFP_NOWAIT);
-	if (!async_desc->cpl) {
-		dev_err(adev->dev, "not enough memory for cpl struct\n");
+	if (!async_desc->cpl)
 		goto free;
-	}
 
 	async_desc->adev = adev;
 
@@ -441,10 +437,8 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
 	async_desc->dma_addr = dma_map_single(adev->dev, async_desc->cpl,
 					      async_desc->dma_len,
 					      DMA_TO_DEVICE);
-	if (dma_mapping_error(adev->dev, async_desc->dma_addr)) {
-		dev_err(adev->dev, "dma mapping error for cpl\n");
+	if (dma_mapping_error(adev->dev, async_desc->dma_addr))
 		goto free;
-	}
 
 	cple_addr = async_desc->dma_addr + ((void *)cple - async_desc->cpl);
 
@@ -460,7 +454,7 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
 
 free:
 	kfree(async_desc);
-	return NULL;
+	return ERR_PTR(-ENOMEM);
 }
 
 /**
@@ -500,7 +494,7 @@ static int adm_slave_config(struct dma_chan *chan, struct dma_slave_config *cfg)
 
 	spin_lock_irqsave(&achan->vc.lock, flag);
 	memcpy(&achan->slave, cfg, sizeof(struct dma_slave_config));
-	if (cfg->peripheral_size == sizeof(*config))
+	if (cfg->peripheral_size == sizeof(config))
 		achan->crci = config->crci;
 	spin_unlock_irqrestore(&achan->vc.lock, flag);
 

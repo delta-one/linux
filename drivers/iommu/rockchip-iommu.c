@@ -124,7 +124,6 @@ struct rk_iommudata {
 
 static struct device *dma_dev;
 static const struct rk_iommu_ops *rk_ops;
-static struct iommu_domain rk_identity_domain;
 
 static inline void rk_table_flush(struct rk_iommu_domain *dom, dma_addr_t dma,
 				  unsigned int count)
@@ -281,17 +280,19 @@ static u32 rk_mk_pte(phys_addr_t page, int prot)
  *  11:9 - Page address bit 34:32
  *   8:4 - Page address bit 39:35
  *     3 - Security
- *     2 - Writable
- *     1 - Readable
+ *     2 - Readable
+ *     1 - Writable
  *     0 - 1 if Page @ Page address is valid
  */
+#define RK_PTE_PAGE_READABLE_V2      BIT(2)
+#define RK_PTE_PAGE_WRITABLE_V2      BIT(1)
 
 static u32 rk_mk_pte_v2(phys_addr_t page, int prot)
 {
 	u32 flags = 0;
 
-	flags |= (prot & IOMMU_READ) ? RK_PTE_PAGE_READABLE : 0;
-	flags |= (prot & IOMMU_WRITE) ? RK_PTE_PAGE_WRITABLE : 0;
+	flags |= (prot & IOMMU_READ) ? RK_PTE_PAGE_READABLE_V2 : 0;
+	flags |= (prot & IOMMU_WRITE) ? RK_PTE_PAGE_WRITABLE_V2 : 0;
 
 	return rk_mk_dte_v2(page) | flags;
 }
@@ -647,7 +648,7 @@ static irqreturn_t rk_iommu_irq(int irq, void *dev_id)
 			 * Ignore the return code, though, since we always zap cache
 			 * and clear the page fault anyway.
 			 */
-			if (iommu->domain != &rk_identity_domain)
+			if (iommu->domain)
 				report_iommu_fault(iommu->domain, iommu->dev, iova,
 						   flags);
 			else
@@ -981,27 +982,26 @@ out_disable_clocks:
 	return ret;
 }
 
-static int rk_iommu_identity_attach(struct iommu_domain *identity_domain,
-				    struct device *dev)
+static void rk_iommu_detach_device(struct iommu_domain *domain,
+				   struct device *dev)
 {
 	struct rk_iommu *iommu;
-	struct rk_iommu_domain *rk_domain;
+	struct rk_iommu_domain *rk_domain = to_rk_domain(domain);
 	unsigned long flags;
 	int ret;
 
 	/* Allow 'virtual devices' (eg drm) to detach from domain */
 	iommu = rk_iommu_from_dev(dev);
 	if (!iommu)
-		return -ENODEV;
-
-	rk_domain = to_rk_domain(iommu->domain);
+		return;
 
 	dev_dbg(dev, "Detaching from iommu domain\n");
 
-	if (iommu->domain == identity_domain)
-		return 0;
+	/* iommu already detached */
+	if (iommu->domain != domain)
+		return;
 
-	iommu->domain = identity_domain;
+	iommu->domain = NULL;
 
 	spin_lock_irqsave(&rk_domain->iommus_lock, flags);
 	list_del_init(&iommu->node);
@@ -1013,30 +1013,7 @@ static int rk_iommu_identity_attach(struct iommu_domain *identity_domain,
 		rk_iommu_disable(iommu);
 		pm_runtime_put(iommu->dev);
 	}
-
-	return 0;
 }
-
-static void rk_iommu_identity_free(struct iommu_domain *domain)
-{
-}
-
-static struct iommu_domain_ops rk_identity_ops = {
-	.attach_dev = rk_iommu_identity_attach,
-	.free = rk_iommu_identity_free,
-};
-
-static struct iommu_domain rk_identity_domain = {
-	.type = IOMMU_DOMAIN_IDENTITY,
-	.ops = &rk_identity_ops,
-};
-
-#ifdef CONFIG_ARM
-static void rk_iommu_set_platform_dma(struct device *dev)
-{
-	WARN_ON(rk_iommu_identity_attach(&rk_identity_domain, dev));
-}
-#endif
 
 static int rk_iommu_attach_device(struct iommu_domain *domain,
 		struct device *dev)
@@ -1060,9 +1037,8 @@ static int rk_iommu_attach_device(struct iommu_domain *domain,
 	if (iommu->domain == domain)
 		return 0;
 
-	ret = rk_iommu_identity_attach(&rk_identity_domain, dev);
-	if (ret)
-		return ret;
+	if (iommu->domain)
+		rk_iommu_detach_device(iommu->domain, dev);
 
 	iommu->domain = domain;
 
@@ -1076,7 +1052,7 @@ static int rk_iommu_attach_device(struct iommu_domain *domain,
 
 	ret = rk_iommu_enable(iommu);
 	if (ret)
-		WARN_ON(rk_iommu_identity_attach(&rk_identity_domain, dev));
+		rk_iommu_detach_device(iommu->domain, dev);
 
 	pm_runtime_put(iommu->dev);
 
@@ -1086,9 +1062,6 @@ static int rk_iommu_attach_device(struct iommu_domain *domain,
 static struct iommu_domain *rk_iommu_domain_alloc(unsigned type)
 {
 	struct rk_iommu_domain *rk_domain;
-
-	if (type == IOMMU_DOMAIN_IDENTITY)
-		return &rk_identity_domain;
 
 	if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
 		return NULL;
@@ -1205,7 +1178,6 @@ static int rk_iommu_of_xlate(struct device *dev,
 	iommu_dev = of_find_device_by_node(args->np);
 
 	data->iommu = platform_get_drvdata(iommu_dev);
-	data->iommu->domain = &rk_identity_domain;
 	dev_iommu_priv_set(dev, data);
 
 	platform_device_put(iommu_dev);
@@ -1218,13 +1190,11 @@ static const struct iommu_ops rk_iommu_ops = {
 	.probe_device = rk_iommu_probe_device,
 	.release_device = rk_iommu_release_device,
 	.device_group = rk_iommu_device_group,
-#ifdef CONFIG_ARM
-	.set_platform_dma_ops = rk_iommu_set_platform_dma,
-#endif
 	.pgsize_bitmap = RK_IOMMU_PGSIZE_BITMAP,
 	.of_xlate = rk_iommu_of_xlate,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= rk_iommu_attach_device,
+		.detach_dev	= rk_iommu_detach_device,
 		.map		= rk_iommu_map,
 		.unmap		= rk_iommu_unmap,
 		.iova_to_phys	= rk_iommu_iova_to_phys,
@@ -1376,7 +1346,7 @@ static int __maybe_unused rk_iommu_suspend(struct device *dev)
 {
 	struct rk_iommu *iommu = dev_get_drvdata(dev);
 
-	if (iommu->domain == &rk_identity_domain)
+	if (!iommu->domain)
 		return 0;
 
 	rk_iommu_disable(iommu);
@@ -1387,7 +1357,7 @@ static int __maybe_unused rk_iommu_resume(struct device *dev)
 {
 	struct rk_iommu *iommu = dev_get_drvdata(dev);
 
-	if (iommu->domain == &rk_identity_domain)
+	if (!iommu->domain)
 		return 0;
 
 	return rk_iommu_enable(iommu);

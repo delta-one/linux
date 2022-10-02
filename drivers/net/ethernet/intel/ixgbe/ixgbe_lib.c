@@ -874,7 +874,8 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
 
 #endif
 	/* initialize NAPI */
-	netif_napi_add(adapter->netdev, &q_vector->napi, ixgbe_poll);
+	netif_napi_add(adapter->netdev, &q_vector->napi,
+		       ixgbe_poll, 64);
 
 	/* tie q_vector and adapter together */
 	adapter->q_vector[v_idx] = q_vector;
@@ -1034,6 +1035,9 @@ static void ixgbe_free_q_vector(struct ixgbe_adapter *adapter, int v_idx)
 
 	adapter->q_vector[v_idx] = NULL;
 	__netif_napi_del(&q_vector->napi);
+
+	if (static_key_enabled(&ixgbe_xdp_locking_key))
+		static_branch_dec(&ixgbe_xdp_locking_key);
 
 	/*
 	 * after a call to __netif_napi_del() napi may still be used and

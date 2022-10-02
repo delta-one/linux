@@ -26,7 +26,6 @@
 #include <linux/delay.h>
 #include <linux/slab.h>
 #include <linux/pm.h>
-#include <linux/pm_wakeirq.h>
 #include <linux/device.h>
 #include <linux/wait.h>
 #include <linux/err.h>
@@ -67,7 +66,16 @@
 #define I2C_HID_PWR_ON		0x00
 #define I2C_HID_PWR_SLEEP	0x01
 
-#define i2c_hid_dbg(ihid, ...) dev_dbg(&(ihid)->client->dev, __VA_ARGS__)
+/* debug option */
+static bool debug;
+module_param(debug, bool, 0444);
+MODULE_PARM_DESC(debug, "print a lot of debug information");
+
+#define i2c_hid_dbg(ihid, fmt, arg...)					  \
+do {									  \
+	if (debug)							  \
+		dev_printk(KERN_DEBUG, &(ihid)->client->dev, fmt, ##arg); \
+} while (0)
 
 struct i2c_hid_desc {
 	__le16 wHIDDescLength;
@@ -104,6 +112,7 @@ struct i2c_hid {
 
 	wait_queue_head_t	wait;		/* For waiting the interrupt */
 
+	bool			irq_wake_enabled;
 	struct mutex		reset_lock;
 
 	struct i2chid_ops	*ops;
@@ -545,8 +554,7 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
 	i2c_hid_dbg(ihid, "input: %*ph\n", ret_size, ihid->inbuf);
 
 	if (test_bit(I2C_HID_STARTED, &ihid->flags)) {
-		if (ihid->hid->group != HID_GROUP_RMI)
-			pm_wakeup_event(&ihid->client->dev, 0);
+		pm_wakeup_event(&ihid->client->dev, 0);
 
 		hid_input_report(ihid->hid, HID_INPUT_REPORT,
 				ihid->inbuf + sizeof(__le16),
@@ -833,7 +841,7 @@ static void i2c_hid_close(struct hid_device *hid)
 	clear_bit(I2C_HID_STARTED, &ihid->flags);
 }
 
-static const struct hid_ll_driver i2c_hid_ll_driver = {
+struct hid_ll_driver i2c_hid_ll_driver = {
 	.parse = i2c_hid_parse,
 	.start = i2c_hid_start,
 	.stop = i2c_hid_stop,
@@ -842,6 +850,7 @@ static const struct hid_ll_driver i2c_hid_ll_driver = {
 	.output_report = i2c_hid_output_report,
 	.raw_request = i2c_hid_raw_request,
 };
+EXPORT_SYMBOL_GPL(i2c_hid_ll_driver);
 
 static int i2c_hid_init_irq(struct i2c_client *client)
 {
@@ -849,7 +858,7 @@ static int i2c_hid_init_irq(struct i2c_client *client)
 	unsigned long irqflags = 0;
 	int ret;
 
-	i2c_hid_dbg(ihid, "Requesting IRQ: %d\n", client->irq);
+	dev_dbg(&client->dev, "Requesting IRQ: %d\n", client->irq);
 
 	if (!irq_get_trigger_type(client->irq))
 		irqflags = IRQF_TRIGGER_LOW;
@@ -993,7 +1002,7 @@ int i2c_hid_core_probe(struct i2c_client *client, struct i2chid_ops *ops,
 	/* Make sure there is something at this address */
 	ret = i2c_smbus_read_byte(client);
 	if (ret < 0) {
-		i2c_hid_dbg(ihid, "nothing at this address: %d\n", ret);
+		dev_dbg(&client->dev, "nothing at this address: %d\n", ret);
 		ret = -ENXIO;
 		goto err_powered;
 	}
@@ -1025,10 +1034,6 @@ int i2c_hid_core_probe(struct i2c_client *client, struct i2chid_ops *ops,
 	hid->vendor = le16_to_cpu(ihid->hdesc.wVendorID);
 	hid->product = le16_to_cpu(ihid->hdesc.wProductID);
 
-	hid->initial_quirks = quirks;
-	hid->initial_quirks |= i2c_hid_get_dmi_quirks(hid->vendor,
-						      hid->product);
-
 	snprintf(hid->name, sizeof(hid->name), "%s %04X:%04X",
 		 client->name, (u16)hid->vendor, (u16)hid->product);
 	strscpy(hid->phys, dev_name(&client->dev), sizeof(hid->phys));
@@ -1041,6 +1046,8 @@ int i2c_hid_core_probe(struct i2c_client *client, struct i2chid_ops *ops,
 			hid_err(client, "can't add hid device: %d\n", ret);
 		goto err_mem_free;
 	}
+
+	hid->quirks |= quirks;
 
 	return 0;
 
@@ -1092,6 +1099,7 @@ static int i2c_hid_core_suspend(struct device *dev)
 	struct i2c_hid *ihid = i2c_get_clientdata(client);
 	struct hid_device *hid = ihid->hid;
 	int ret;
+	int wake_status;
 
 	ret = hid_driver_suspend(hid, PMSG_SUSPEND);
 	if (ret < 0)
@@ -1102,8 +1110,16 @@ static int i2c_hid_core_suspend(struct device *dev)
 
 	disable_irq(client->irq);
 
-	if (!device_may_wakeup(&client->dev))
+	if (device_may_wakeup(&client->dev)) {
+		wake_status = enable_irq_wake(client->irq);
+		if (!wake_status)
+			ihid->irq_wake_enabled = true;
+		else
+			hid_warn(hid, "Failed to enable irq wake: %d\n",
+				wake_status);
+	} else {
 		i2c_hid_core_power_down(ihid);
+	}
 
 	return 0;
 }
@@ -1114,9 +1130,18 @@ static int i2c_hid_core_resume(struct device *dev)
 	struct i2c_client *client = to_i2c_client(dev);
 	struct i2c_hid *ihid = i2c_get_clientdata(client);
 	struct hid_device *hid = ihid->hid;
+	int wake_status;
 
-	if (!device_may_wakeup(&client->dev))
+	if (!device_may_wakeup(&client->dev)) {
 		i2c_hid_core_power_up(ihid);
+	} else if (ihid->irq_wake_enabled) {
+		wake_status = disable_irq_wake(client->irq);
+		if (!wake_status)
+			ihid->irq_wake_enabled = false;
+		else
+			hid_warn(hid, "Failed to disable irq wake: %d\n",
+				wake_status);
+	}
 
 	enable_irq(client->irq);
 

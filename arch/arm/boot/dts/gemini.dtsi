@@ -22,6 +22,8 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&pflash_default_pins>;
 			bank-width = <2>;
+			#address-cells = <1>;
+			#size-cells = <1>;
 			status = "disabled";
 		};
 
@@ -439,7 +441,7 @@
 		};
 
 		usb0: usb@68000000 {
-			compatible = "cortina,gemini-usb", "faraday,fotg200";
+			compatible = "cortina,gemini-usb", "faraday,fotg210";
 			reg = <0x68000000 0x1000>;
 			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
 			resets = <&syscon GEMINI_RESET_USB0>;
@@ -455,14 +457,12 @@
 			 */
 			pinctrl-names = "default";
 			pinctrl-0 = <&usb_default_pins>;
-			/* Default to host mode */
-			dr_mode = "host";
 			syscon = <&syscon>;
 			status = "disabled";
 		};
 
 		usb1: usb@69000000 {
-			compatible = "cortina,gemini-usb", "faraday,fotg200";
+			compatible = "cortina,gemini-usb", "faraday,fotg210";
 			reg = <0x69000000 0x1000>;
 			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
 			resets = <&syscon GEMINI_RESET_USB1>;

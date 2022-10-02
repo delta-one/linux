@@ -351,8 +351,7 @@ u32 i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
 		 *
 		 * If your hardware is free from tHD;STA issue, try this one.
 		 */
-		return DIV_ROUND_CLOSEST_ULL((u64)ic_clk * tSYMBOL, MICRO) -
-		       8 + offset;
+		return DIV_ROUND_CLOSEST(ic_clk * tSYMBOL, MICRO) - 8 + offset;
 	else
 		/*
 		 * Conditional expression:
@@ -368,8 +367,7 @@ u32 i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
 		 * The reason why we need to take into account "tf" here,
 		 * is the same as described in i2c_dw_scl_lcnt().
 		 */
-		return DIV_ROUND_CLOSEST_ULL((u64)ic_clk * (tSYMBOL + tf), MICRO) -
-		       3 + offset;
+		return DIV_ROUND_CLOSEST(ic_clk * (tSYMBOL + tf), MICRO) - 3 + offset;
 }
 
 u32 i2c_dw_scl_lcnt(u32 ic_clk, u32 tLOW, u32 tf, int offset)
@@ -385,13 +383,12 @@ u32 i2c_dw_scl_lcnt(u32 ic_clk, u32 tLOW, u32 tf, int offset)
 	 * account the fall time of SCL signal (tf).  Default tf value
 	 * should be 0.3 us, for safety.
 	 */
-	return DIV_ROUND_CLOSEST_ULL((u64)ic_clk * (tLOW + tf), MICRO) -
-	       1 + offset;
+	return DIV_ROUND_CLOSEST(ic_clk * (tLOW + tf), MICRO) - 1 + offset;
 }
 
 int i2c_dw_set_sda_hold(struct dw_i2c_dev *dev)
 {
-	unsigned int reg;
+	u32 reg;
 	int ret;
 
 	ret = i2c_dw_acquire_lock(dev);
@@ -442,7 +439,7 @@ err_release_lock:
 void __i2c_dw_disable(struct dw_i2c_dev *dev)
 {
 	int timeout = 100;
-	unsigned int status;
+	u32 status;
 
 	do {
 		__i2c_dw_disable_nowait(dev);
@@ -465,7 +462,7 @@ void __i2c_dw_disable(struct dw_i2c_dev *dev)
 	dev_warn(dev->dev, "timeout in disabling adapter\n");
 }
 
-u32 i2c_dw_clk_rate(struct dw_i2c_dev *dev)
+unsigned long i2c_dw_clk_rate(struct dw_i2c_dev *dev)
 {
 	/*
 	 * Clock is not necessary if we got LCNT/HCNT values directly from
@@ -527,7 +524,7 @@ void i2c_dw_release_lock(struct dw_i2c_dev *dev)
  */
 int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
 {
-	unsigned int status;
+	u32 status;
 	int ret;
 
 	ret = regmap_read_poll_timeout(dev->map, DW_IC_STATUS, status,
@@ -571,8 +568,7 @@ int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev)
 
 int i2c_dw_set_fifo_size(struct dw_i2c_dev *dev)
 {
-	u32 tx_fifo_depth, rx_fifo_depth;
-	unsigned int param;
+	u32 param, tx_fifo_depth, rx_fifo_depth;
 	int ret;
 
 	/*
@@ -612,7 +608,7 @@ u32 i2c_dw_func(struct i2c_adapter *adap)
 
 void i2c_dw_disable(struct dw_i2c_dev *dev)
 {
-	unsigned int dummy;
+	u32 dummy;
 	int ret;
 
 	ret = i2c_dw_acquire_lock(dev);
@@ -627,6 +623,11 @@ void i2c_dw_disable(struct dw_i2c_dev *dev)
 	regmap_read(dev->map, DW_IC_CLR_INTR, &dummy);
 
 	i2c_dw_release_lock(dev);
+}
+
+void i2c_dw_disable_int(struct dw_i2c_dev *dev)
+{
+	regmap_write(dev->map, DW_IC_INTR_MASK, 0);
 }
 
 MODULE_DESCRIPTION("Synopsys DesignWare I2C bus adapter core");

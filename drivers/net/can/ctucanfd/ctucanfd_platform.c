@@ -47,6 +47,7 @@ static void ctucan_platform_set_drvdata(struct device *dev,
  */
 static int ctucan_platform_probe(struct platform_device *pdev)
 {
+	struct resource *res; /* IO mem resources */
 	struct device	*dev = &pdev->dev;
 	void __iomem *addr;
 	int ret;
@@ -54,8 +55,10 @@ static int ctucan_platform_probe(struct platform_device *pdev)
 	int irq;
 
 	/* Get the virtual base address for the device */
-	addr = devm_platform_ioremap_resource(pdev, 0);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	addr = devm_ioremap_resource(dev, res);
 	if (IS_ERR(addr)) {
+		dev_err(dev, "Cannot remap address.\n");
 		ret = PTR_ERR(addr);
 		goto err;
 	}

@@ -386,6 +386,10 @@ vcs_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
 
 	uni_mode = use_unicode(inode);
 	attr = use_attributes(inode);
+	ret = -ENXIO;
+	vc = vcs_vc(inode, &viewed);
+	if (!vc)
+		goto unlock_out;
 
 	ret = -EINVAL;
 	if (pos < 0)
@@ -403,20 +407,16 @@ vcs_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
 		unsigned int this_round, skip = 0;
 		int size;
 
-		vc = vcs_vc(inode, &viewed);
-		if (!vc) {
-			ret = -ENXIO;
-			break;
-		}
-
 		/* Check whether we are above size each round,
 		 * as copy_to_user at the end of this loop
 		 * could sleep.
 		 */
 		size = vcs_size(vc, attr, uni_mode);
 		if (size < 0) {
+			if (read)
+				break;
 			ret = size;
-			break;
+			goto unlock_out;
 		}
 		if (pos >= size)
 			break;
@@ -804,7 +804,7 @@ int __init vcs_init(void)
 
 	if (register_chrdev(VCS_MAJOR, "vcs", &vcs_fops))
 		panic("unable to get major %d for vcs device", VCS_MAJOR);
-	vc_class = class_create("vc");
+	vc_class = class_create(THIS_MODULE, "vc");
 
 	device_create(vc_class, NULL, MKDEV(VCS_MAJOR, 0), NULL, "vcs");
 	device_create(vc_class, NULL, MKDEV(VCS_MAJOR, 64), NULL, "vcsu");

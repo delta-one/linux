@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (C) 2003 Jana Saout <jana@saout.de>
  * Copyright (C) 2004 Clemens Fruhwirth <clemens@endorphin.org>
@@ -72,9 +71,7 @@ struct dm_crypt_io {
 	struct crypt_config *cc;
 	struct bio *base_bio;
 	u8 *integrity_metadata;
-	bool integrity_metadata_from_pool:1;
-	bool in_tasklet:1;
-
+	bool integrity_metadata_from_pool;
 	struct work_struct work;
 	struct tasklet_struct tasklet;
 
@@ -174,14 +171,14 @@ struct crypt_config {
 	} iv_gen_private;
 	u64 iv_offset;
 	unsigned int iv_size;
-	unsigned short sector_size;
+	unsigned short int sector_size;
 	unsigned char sector_shift;
 
 	union {
 		struct crypto_skcipher **tfms;
 		struct crypto_aead **tfms_aead;
 	} cipher_tfm;
-	unsigned int tfms_count;
+	unsigned tfms_count;
 	unsigned long cipher_flags;
 
 	/*
@@ -215,7 +212,7 @@ struct crypt_config {
 	 * pool for per bio private data, crypto requests,
 	 * encryption requeusts/buffer pages and integrity tags
 	 */
-	unsigned int tag_pool_max_sectors;
+	unsigned tag_pool_max_sectors;
 	mempool_t tag_pool;
 	mempool_t req_pool;
 	mempool_t page_pool;
@@ -232,7 +229,7 @@ struct crypt_config {
 #define POOL_ENTRY_SIZE	512
 
 static DEFINE_SPINLOCK(dm_crypt_clients_lock);
-static unsigned int dm_crypt_clients_n;
+static unsigned dm_crypt_clients_n = 0;
 static volatile unsigned long dm_crypt_pages_per_client;
 #define DM_CRYPT_MEMORY_PERCENT			2
 #define DM_CRYPT_MIN_PAGES_PER_CLIENT		(BIO_MAX_VECS * 16)
@@ -357,7 +354,7 @@ static int crypt_iv_essiv_gen(struct crypt_config *cc, u8 *iv,
 static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
 			      const char *opts)
 {
-	unsigned int bs;
+	unsigned bs;
 	int log;
 
 	if (crypt_integrity_aead(cc))
@@ -366,10 +363,9 @@ static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
 		bs = crypto_skcipher_blocksize(any_tfm(cc));
 	log = ilog2(bs);
 
-	/*
-	 * We need to calculate how far we must shift the sector count
-	 * to get the cipher block count, we use this shift in _gen.
-	 */
+	/* we need to calculate how far we must shift the sector count
+	 * to get the cipher block count, we use this shift in _gen */
+
 	if (1 << log != bs) {
 		ti->error = "cypher blocksize is not a power of 2";
 		return -EINVAL;
@@ -535,9 +531,9 @@ static int crypt_iv_lmk_gen(struct crypt_config *cc, u8 *iv,
 
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE) {
 		sg = crypt_get_sg_data(cc, dmreq->sg_in);
-		src = kmap_local_page(sg_page(sg));
+		src = kmap_atomic(sg_page(sg));
 		r = crypt_iv_lmk_one(cc, iv, dmreq, src + sg->offset);
-		kunmap_local(src);
+		kunmap_atomic(src);
 	} else
 		memset(iv, 0, cc->iv_size);
 
@@ -555,14 +551,14 @@ static int crypt_iv_lmk_post(struct crypt_config *cc, u8 *iv,
 		return 0;
 
 	sg = crypt_get_sg_data(cc, dmreq->sg_out);
-	dst = kmap_local_page(sg_page(sg));
+	dst = kmap_atomic(sg_page(sg));
 	r = crypt_iv_lmk_one(cc, iv, dmreq, dst + sg->offset);
 
 	/* Tweak the first block of plaintext sector */
 	if (!r)
 		crypto_xor(dst + sg->offset, iv, cc->iv_size);
 
-	kunmap_local(dst);
+	kunmap_atomic(dst);
 	return r;
 }
 
@@ -685,9 +681,9 @@ static int crypt_iv_tcw_gen(struct crypt_config *cc, u8 *iv,
 	/* Remove whitening from ciphertext */
 	if (bio_data_dir(dmreq->ctx->bio_in) != WRITE) {
 		sg = crypt_get_sg_data(cc, dmreq->sg_in);
-		src = kmap_local_page(sg_page(sg));
+		src = kmap_atomic(sg_page(sg));
 		r = crypt_iv_tcw_whitening(cc, dmreq, src + sg->offset);
-		kunmap_local(src);
+		kunmap_atomic(src);
 	}
 
 	/* Calculate IV */
@@ -711,9 +707,9 @@ static int crypt_iv_tcw_post(struct crypt_config *cc, u8 *iv,
 
 	/* Apply whitening on ciphertext */
 	sg = crypt_get_sg_data(cc, dmreq->sg_out);
-	dst = kmap_local_page(sg_page(sg));
+	dst = kmap_atomic(sg_page(sg));
 	r = crypt_iv_tcw_whitening(cc, dmreq, dst + sg->offset);
-	kunmap_local(dst);
+	kunmap_atomic(dst);
 
 	return r;
 }
@@ -735,7 +731,8 @@ static int crypt_iv_eboiv_ctr(struct crypt_config *cc, struct dm_target *ti,
 	}
 
 	if (crypto_skcipher_blocksize(any_tfm(cc)) != cc->iv_size) {
-		ti->error = "Block size of EBOIV cipher does not match IV size of block cipher";
+		ti->error = "Block size of EBOIV cipher does "
+			    "not match IV size of block cipher";
 		return -EINVAL;
 	}
 
@@ -977,35 +974,35 @@ static int crypt_iv_elephant(struct crypt_config *cc, struct dm_crypt_request *d
 		goto out;
 
 	sg = crypt_get_sg_data(cc, dmreq->sg_out);
-	data = kmap_local_page(sg_page(sg));
+	data = kmap_atomic(sg_page(sg));
 	data_offset = data + sg->offset;
 
 	/* Cannot modify original bio, copy to sg_out and apply Elephant to it */
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE) {
 		sg2 = crypt_get_sg_data(cc, dmreq->sg_in);
-		data2 = kmap_local_page(sg_page(sg2));
+		data2 = kmap_atomic(sg_page(sg2));
 		memcpy(data_offset, data2 + sg2->offset, cc->sector_size);
-		kunmap_local(data2);
+		kunmap_atomic(data2);
 	}
 
 	if (bio_data_dir(dmreq->ctx->bio_in) != WRITE) {
-		diffuser_disk_to_cpu((u32 *)data_offset, cc->sector_size / sizeof(u32));
-		diffuser_b_decrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
-		diffuser_a_decrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
-		diffuser_cpu_to_disk((__le32 *)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_disk_to_cpu((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_b_decrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_a_decrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_cpu_to_disk((__le32*)data_offset, cc->sector_size / sizeof(u32));
 	}
 
 	for (i = 0; i < (cc->sector_size / 32); i++)
 		crypto_xor(data_offset + i * 32, ks, 32);
 
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE) {
-		diffuser_disk_to_cpu((u32 *)data_offset, cc->sector_size / sizeof(u32));
-		diffuser_a_encrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
-		diffuser_b_encrypt((u32 *)data_offset, cc->sector_size / sizeof(u32));
-		diffuser_cpu_to_disk((__le32 *)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_disk_to_cpu((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_a_encrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_b_encrypt((u32*)data_offset, cc->sector_size / sizeof(u32));
+		diffuser_cpu_to_disk((__le32*)data_offset, cc->sector_size / sizeof(u32));
 	}
 
-	kunmap_local(data);
+	kunmap_atomic(data);
 out:
 	kfree_sensitive(ks);
 	kfree_sensitive(es);
@@ -1258,7 +1255,6 @@ static __le64 *org_sector_of_dmreq(struct crypt_config *cc,
 		       struct dm_crypt_request *dmreq)
 {
 	u8 *ptr = iv_of_dmreq(cc, dmreq) + cc->iv_size + cc->iv_size;
-
 	return (__le64 *) ptr;
 }
 
@@ -1267,8 +1263,7 @@ static unsigned int *org_tag_of_dmreq(struct crypt_config *cc,
 {
 	u8 *ptr = iv_of_dmreq(cc, dmreq) + cc->iv_size +
 		  cc->iv_size + sizeof(uint64_t);
-
-	return (unsigned int *)ptr;
+	return (unsigned int*)ptr;
 }
 
 static void *tag_from_dmreq(struct crypt_config *cc,
@@ -1463,12 +1458,13 @@ static int crypt_convert_block_skcipher(struct crypt_config *cc,
 	return r;
 }
 
-static void kcryptd_async_done(void *async_req, int error);
+static void kcryptd_async_done(struct crypto_async_request *async_req,
+			       int error);
 
 static int crypt_alloc_req_skcipher(struct crypt_config *cc,
 				     struct convert_context *ctx)
 {
-	unsigned int key_index = ctx->cc_sector & (cc->tfms_count - 1);
+	unsigned key_index = ctx->cc_sector & (cc->tfms_count - 1);
 
 	if (!ctx->r.req) {
 		ctx->r.req = mempool_alloc(&cc->req_pool, in_interrupt() ? GFP_ATOMIC : GFP_NOIO);
@@ -1662,13 +1658,13 @@ static void crypt_free_buffer_pages(struct crypt_config *cc, struct bio *clone);
  * non-blocking allocations without a mutex first but on failure we fallback
  * to blocking allocations with a mutex.
  */
-static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned int size)
+static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned size)
 {
 	struct crypt_config *cc = io->cc;
 	struct bio *clone;
 	unsigned int nr_iovecs = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
 	gfp_t gfp_mask = GFP_NOWAIT | __GFP_HIGHMEM;
-	unsigned int i, len, remaining_size;
+	unsigned i, len, remaining_size;
 	struct page *page;
 
 retry:
@@ -1732,7 +1728,6 @@ static void crypt_io_init(struct dm_crypt_io *io, struct crypt_config *cc,
 	io->ctx.r.req = NULL;
 	io->integrity_metadata = NULL;
 	io->integrity_metadata_from_pool = false;
-	io->in_tasklet = false;
 	atomic_set(&io->io_pending, 0);
 }
 
@@ -1744,7 +1739,6 @@ static void crypt_inc_pending(struct dm_crypt_io *io)
 static void kcryptd_io_bio_endio(struct work_struct *work)
 {
 	struct dm_crypt_io *io = container_of(work, struct dm_crypt_io, work);
-
 	bio_endio(io->base_bio);
 }
 
@@ -1779,13 +1773,14 @@ static void crypt_dec_pending(struct dm_crypt_io *io)
 	 * our tasklet. In this case we need to delay bio_endio()
 	 * execution to after the tasklet is done and dequeued.
 	 */
-	if (io->in_tasklet) {
-		INIT_WORK(&io->work, kcryptd_io_bio_endio);
-		queue_work(cc->io_queue, &io->work);
+	if (tasklet_trylock(&io->tasklet)) {
+		tasklet_unlock(&io->tasklet);
+		bio_endio(base_bio);
 		return;
 	}
 
-	bio_endio(base_bio);
+	INIT_WORK(&io->work, kcryptd_io_bio_endio);
+	queue_work(cc->io_queue, &io->work);
 }
 
 /*
@@ -1809,7 +1804,7 @@ static void crypt_endio(struct bio *clone)
 {
 	struct dm_crypt_io *io = clone->bi_private;
 	struct crypt_config *cc = io->cc;
-	unsigned int rw = bio_data_dir(clone);
+	unsigned rw = bio_data_dir(clone);
 	blk_status_t error;
 
 	/*
@@ -1938,7 +1933,6 @@ pop_from_list:
 			io = crypt_io_from_node(rb_first(&write_tree));
 			rb_erase(&io->rb_node, &write_tree);
 			kcryptd_io_write(io);
-			cond_resched();
 		} while (!RB_EMPTY_ROOT(&write_tree));
 		blk_finish_plug(&plug);
 	}
@@ -2153,9 +2147,10 @@ static void kcryptd_crypt_read_convert(struct dm_crypt_io *io)
 	crypt_dec_pending(io);
 }
 
-static void kcryptd_async_done(void *data, int error)
+static void kcryptd_async_done(struct crypto_async_request *async_req,
+			       int error)
 {
-	struct dm_crypt_request *dmreq = data;
+	struct dm_crypt_request *dmreq = async_req->data;
 	struct convert_context *ctx = dmreq->ctx;
 	struct dm_crypt_io *io = container_of(ctx, struct dm_crypt_io, ctx);
 	struct crypt_config *cc = io->cc;
@@ -2233,7 +2228,6 @@ static void kcryptd_queue_crypt(struct dm_crypt_io *io)
 		 * it is being executed with irqs disabled.
 		 */
 		if (in_hardirq() || irqs_disabled()) {
-			io->in_tasklet = true;
 			tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
 			tasklet_schedule(&io->tasklet);
 			return;
@@ -2263,7 +2257,7 @@ static void crypt_free_tfms_aead(struct crypt_config *cc)
 
 static void crypt_free_tfms_skcipher(struct crypt_config *cc)
 {
-	unsigned int i;
+	unsigned i;
 
 	if (!cc->cipher_tfm.tfms)
 		return;
@@ -2288,7 +2282,7 @@ static void crypt_free_tfms(struct crypt_config *cc)
 
 static int crypt_alloc_tfms_skcipher(struct crypt_config *cc, char *ciphermode)
 {
-	unsigned int i;
+	unsigned i;
 	int err;
 
 	cc->cipher_tfm.tfms = kcalloc(cc->tfms_count,
@@ -2346,12 +2340,12 @@ static int crypt_alloc_tfms(struct crypt_config *cc, char *ciphermode)
 		return crypt_alloc_tfms_skcipher(cc, ciphermode);
 }
 
-static unsigned int crypt_subkey_size(struct crypt_config *cc)
+static unsigned crypt_subkey_size(struct crypt_config *cc)
 {
 	return (cc->key_size - cc->key_extra_size) >> ilog2(cc->tfms_count);
 }
 
-static unsigned int crypt_authenckey_size(struct crypt_config *cc)
+static unsigned crypt_authenckey_size(struct crypt_config *cc)
 {
 	return crypt_subkey_size(cc) + RTA_SPACE(sizeof(struct crypto_authenc_key_param));
 }
@@ -2362,7 +2356,7 @@ static unsigned int crypt_authenckey_size(struct crypt_config *cc)
  * This funcion converts cc->key to this special format.
  */
 static void crypt_copy_authenckey(char *p, const void *key,
-				  unsigned int enckeylen, unsigned int authkeylen)
+				  unsigned enckeylen, unsigned authkeylen)
 {
 	struct crypto_authenc_key_param *param;
 	struct rtattr *rta;
@@ -2380,7 +2374,7 @@ static void crypt_copy_authenckey(char *p, const void *key,
 
 static int crypt_setkey(struct crypt_config *cc)
 {
-	unsigned int subkey_size;
+	unsigned subkey_size;
 	int err = 0, i, r;
 
 	/* Ignore extra keys (which are used for IV etc) */
@@ -2493,7 +2487,7 @@ static int crypt_set_keyring_key(struct crypt_config *cc, const char *key_string
 	}
 
 	/* look for next ':' separating key_type from key_description */
-	key_desc = strchr(key_string, ':');
+	key_desc = strpbrk(key_string, ":");
 	if (!key_desc || key_desc == key_string || !strlen(key_desc + 1))
 		return -EINVAL;
 
@@ -2508,7 +2502,7 @@ static int crypt_set_keyring_key(struct crypt_config *cc, const char *key_string
 		type = &key_type_encrypted;
 		set_key = set_key_encrypted;
 	} else if (IS_ENABLED(CONFIG_TRUSTED_KEYS) &&
-		   !strncmp(key_string, "trusted:", key_desc - key_string + 1)) {
+	           !strncmp(key_string, "trusted:", key_desc - key_string + 1)) {
 		type = &key_type_trusted;
 		set_key = set_key_trusted;
 	} else {
@@ -3419,14 +3413,11 @@ static int crypt_map(struct dm_target *ti, struct bio *bio)
 	crypt_io_init(io, cc, bio, dm_target_offset(ti, bio->bi_iter.bi_sector));
 
 	if (cc->on_disk_tag_size) {
-		unsigned int tag_len = cc->on_disk_tag_size * (bio_sectors(bio) >> cc->sector_shift);
+		unsigned tag_len = cc->on_disk_tag_size * (bio_sectors(bio) >> cc->sector_shift);
 
-		if (unlikely(tag_len > KMALLOC_MAX_SIZE))
-			io->integrity_metadata = NULL;
-		else
-			io->integrity_metadata = kmalloc(tag_len, GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
-
-		if (unlikely(!io->integrity_metadata)) {
+		if (unlikely(tag_len > KMALLOC_MAX_SIZE) ||
+		    unlikely(!(io->integrity_metadata = kmalloc(tag_len,
+				GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN)))) {
 			if (bio_sectors(bio) > cc->tag_pool_max_sectors)
 				dm_accept_partial_bio(bio, cc->tag_pool_max_sectors);
 			io->integrity_metadata = mempool_alloc(&cc->tag_pool, GFP_NOIO);
@@ -3450,14 +3441,14 @@ static int crypt_map(struct dm_target *ti, struct bio *bio)
 
 static char hex2asc(unsigned char c)
 {
-	return c + '0' + ((unsigned int)(9 - c) >> 4 & 0x27);
+	return c + '0' + ((unsigned)(9 - c) >> 4 & 0x27);
 }
 
 static void crypt_status(struct dm_target *ti, status_type_t type,
-			 unsigned int status_flags, char *result, unsigned int maxlen)
+			 unsigned status_flags, char *result, unsigned maxlen)
 {
 	struct crypt_config *cc = ti->private;
-	unsigned int i, sz = 0;
+	unsigned i, sz = 0;
 	int num_feature_args = 0;
 
 	switch (type) {
@@ -3573,8 +3564,8 @@ static void crypt_resume(struct dm_target *ti)
  *	key set <key>
  *	key wipe
  */
-static int crypt_message(struct dm_target *ti, unsigned int argc, char **argv,
-			 char *result, unsigned int maxlen)
+static int crypt_message(struct dm_target *ti, unsigned argc, char **argv,
+			 char *result, unsigned maxlen)
 {
 	struct crypt_config *cc = ti->private;
 	int key_size, ret = -EINVAL;
@@ -3635,11 +3626,10 @@ static void crypt_io_hints(struct dm_target *ti, struct queue_limits *limits)
 	limits->max_segment_size = PAGE_SIZE;
 
 	limits->logical_block_size =
-		max_t(unsigned int, limits->logical_block_size, cc->sector_size);
+		max_t(unsigned, limits->logical_block_size, cc->sector_size);
 	limits->physical_block_size =
-		max_t(unsigned int, limits->physical_block_size, cc->sector_size);
-	limits->io_min = max_t(unsigned int, limits->io_min, cc->sector_size);
-	limits->dma_alignment = limits->logical_block_size - 1;
+		max_t(unsigned, limits->physical_block_size, cc->sector_size);
+	limits->io_min = max_t(unsigned, limits->io_min, cc->sector_size);
 }
 
 static struct target_type crypt_target = {
@@ -3659,7 +3649,25 @@ static struct target_type crypt_target = {
 	.iterate_devices = crypt_iterate_devices,
 	.io_hints = crypt_io_hints,
 };
-module_dm(crypt);
+
+static int __init dm_crypt_init(void)
+{
+	int r;
+
+	r = dm_register_target(&crypt_target);
+	if (r < 0)
+		DMERR("register failed %d", r);
+
+	return r;
+}
+
+static void __exit dm_crypt_exit(void)
+{
+	dm_unregister_target(&crypt_target);
+}
+
+module_init(dm_crypt_init);
+module_exit(dm_crypt_exit);
 
 MODULE_AUTHOR("Jana Saout <jana@saout.de>");
 MODULE_DESCRIPTION(DM_NAME " target for transparent encryption / decryption");

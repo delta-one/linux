@@ -117,10 +117,6 @@ static const struct attribute_group *nsim_bus_dev_attr_groups[] = {
 
 static void nsim_bus_dev_release(struct device *dev)
 {
-	struct nsim_bus_dev *nsim_bus_dev;
-
-	nsim_bus_dev = container_of(dev, struct nsim_bus_dev, dev);
-	kfree(nsim_bus_dev);
 }
 
 static struct device_type nsim_bus_dev_type = {
@@ -132,7 +128,7 @@ static struct nsim_bus_dev *
 nsim_bus_dev_new(unsigned int id, unsigned int port_count, unsigned int num_queues);
 
 static ssize_t
-new_device_store(const struct bus_type *bus, const char *buf, size_t count)
+new_device_store(struct bus_type *bus, const char *buf, size_t count)
 {
 	unsigned int id, port_count, num_queues;
 	struct nsim_bus_dev *nsim_bus_dev;
@@ -186,7 +182,7 @@ static BUS_ATTR_WO(new_device);
 static void nsim_bus_dev_del(struct nsim_bus_dev *nsim_bus_dev);
 
 static ssize_t
-del_device_store(const struct bus_type *bus, const char *buf, size_t count)
+del_device_store(struct bus_type *bus, const char *buf, size_t count)
 {
 	struct nsim_bus_dev *nsim_bus_dev, *tmp;
 	unsigned int id;
@@ -295,8 +291,6 @@ nsim_bus_dev_new(unsigned int id, unsigned int port_count, unsigned int num_queu
 
 err_nsim_bus_dev_id_free:
 	ida_free(&nsim_bus_dev_ids, nsim_bus_dev->dev.id);
-	put_device(&nsim_bus_dev->dev);
-	nsim_bus_dev = NULL;
 err_nsim_bus_dev_free:
 	kfree(nsim_bus_dev);
 	return ERR_PTR(err);
@@ -306,8 +300,9 @@ static void nsim_bus_dev_del(struct nsim_bus_dev *nsim_bus_dev)
 {
 	/* Disallow using nsim_bus_dev */
 	smp_store_release(&nsim_bus_dev->init, false);
-	ida_free(&nsim_bus_dev_ids, nsim_bus_dev->dev.id);
 	device_unregister(&nsim_bus_dev->dev);
+	ida_free(&nsim_bus_dev_ids, nsim_bus_dev->dev.id);
+	kfree(nsim_bus_dev);
 }
 
 static struct device_driver nsim_driver = {

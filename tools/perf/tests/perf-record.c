@@ -5,14 +5,12 @@
 
 #include <sched.h>
 #include <perf/mmap.h>
-#include "event.h"
 #include "evlist.h"
 #include "evsel.h"
 #include "debug.h"
 #include "record.h"
 #include "tests.h"
 #include "util/mmap.h"
-#include "util/sample.h"
 
 static int sched__get_first_possible_cpu(pid_t pid, cpu_set_t *maskp)
 {
@@ -332,7 +330,7 @@ out_delete_evlist:
 out:
 	if (err == -EACCES)
 		return TEST_SKIP;
-	if (err < 0 || errs != 0)
+	if (err < 0)
 		return TEST_FAIL;
 	return TEST_OK;
 }

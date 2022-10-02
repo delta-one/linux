@@ -608,12 +608,11 @@ static int ebu_nand_probe(struct platform_device *pdev)
 	ret = of_property_read_u32(chip_np, "reg", &cs);
 	if (ret) {
 		dev_err(dev, "failed to get chip select: %d\n", ret);
-		goto err_of_node_put;
+		return ret;
 	}
 	if (cs >= MAX_CS) {
 		dev_err(dev, "got invalid chip select: %d\n", cs);
-		ret = -EINVAL;
-		goto err_of_node_put;
+		return -EINVAL;
 	}
 
 	ebu_host->cs_num = cs;
@@ -621,22 +620,18 @@ static int ebu_nand_probe(struct platform_device *pdev)
 	resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", cs);
 	ebu_host->cs[cs].chipaddr = devm_platform_ioremap_resource_byname(pdev,
 									  resname);
-	if (IS_ERR(ebu_host->cs[cs].chipaddr)) {
-		ret = PTR_ERR(ebu_host->cs[cs].chipaddr);
-		goto err_of_node_put;
-	}
+	if (IS_ERR(ebu_host->cs[cs].chipaddr))
+		return PTR_ERR(ebu_host->cs[cs].chipaddr);
 
 	ebu_host->clk = devm_clk_get(dev, NULL);
-	if (IS_ERR(ebu_host->clk)) {
-		ret = dev_err_probe(dev, PTR_ERR(ebu_host->clk),
-				    "failed to get clock\n");
-		goto err_of_node_put;
-	}
+	if (IS_ERR(ebu_host->clk))
+		return dev_err_probe(dev, PTR_ERR(ebu_host->clk),
+				     "failed to get clock\n");
 
 	ret = clk_prepare_enable(ebu_host->clk);
 	if (ret) {
 		dev_err(dev, "failed to enable clock: %d\n", ret);
-		goto err_of_node_put;
+		return ret;
 	}
 
 	ebu_host->dma_tx = dma_request_chan(dev, "tx");
@@ -700,13 +695,11 @@ err_cleanup_dma:
 	ebu_dma_cleanup(ebu_host);
 err_disable_unprepare_clk:
 	clk_disable_unprepare(ebu_host->clk);
-err_of_node_put:
-	of_node_put(chip_np);
 
 	return ret;
 }
 
-static void ebu_nand_remove(struct platform_device *pdev)
+static int ebu_nand_remove(struct platform_device *pdev)
 {
 	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
 	int ret;
@@ -717,6 +710,8 @@ static void ebu_nand_remove(struct platform_device *pdev)
 	ebu_nand_disable(&ebu_host->chip);
 	ebu_dma_cleanup(ebu_host);
 	clk_disable_unprepare(ebu_host->clk);
+
+	return 0;
 }
 
 static const struct of_device_id ebu_nand_match[] = {
@@ -727,7 +722,7 @@ MODULE_DEVICE_TABLE(of, ebu_nand_match);
 
 static struct platform_driver ebu_nand_driver = {
 	.probe = ebu_nand_probe,
-	.remove_new = ebu_nand_remove,
+	.remove = ebu_nand_remove,
 	.driver = {
 		.name = "intel-nand-controller",
 		.of_match_table = ebu_nand_match,

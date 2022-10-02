@@ -665,17 +665,16 @@ static int stex_queuecommand_lck(struct scsi_cmnd *cmd)
 		return 0;
 	case PASSTHRU_CMD:
 		if (cmd->cmnd[1] == PASSTHRU_GET_DRVVER) {
-			const struct st_drvver ver = {
-				.major = ST_VER_MAJOR,
-				.minor = ST_VER_MINOR,
-				.oem = ST_OEM,
-				.build = ST_BUILD_VER,
-				.signature[0] = PASSTHRU_SIGNATURE,
-				.console_id = host->max_id - 1,
-				.host_no = hba->host->host_no,
-			};
+			struct st_drvver ver;
 			size_t cp_len = sizeof(ver);
 
+			ver.major = ST_VER_MAJOR;
+			ver.minor = ST_VER_MINOR;
+			ver.oem = ST_OEM;
+			ver.build = ST_BUILD_VER;
+			ver.signature[0] = PASSTHRU_SIGNATURE;
+			ver.console_id = host->max_id - 1;
+			ver.host_no = hba->host->host_no;
 			cp_len = scsi_sg_copy_from_buffer(cmd, &ver, cp_len);
 			if (sizeof(ver) == cp_len)
 				cmd->result = DID_OK << 16;
@@ -1472,7 +1471,7 @@ static int stex_biosparam(struct scsi_device *sdev,
 	return 0;
 }
 
-static const struct scsi_host_template driver_template = {
+static struct scsi_host_template driver_template = {
 	.module				= THIS_MODULE,
 	.name				= DRV_NAME,
 	.proc_name			= DRV_NAME,

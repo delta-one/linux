@@ -1631,7 +1631,7 @@ static void check_no_speaker_on_headset(struct snd_kcontrol *kctl,
 	if (!found)
 		return;
 
-	snd_ctl_rename(card, kctl, "Headphone");
+	strscpy(kctl->id.name, "Headphone", sizeof(kctl->id.name));
 }
 
 static const struct usb_feature_control_info *get_feature_control_info(int control)

@@ -136,16 +136,8 @@ static struct rcu_tasks rt_name =							\
 	.kname = #rt_name,								\
 }
 
-#ifdef CONFIG_TASKS_RCU
 /* Track exiting tasks in order to allow them to be waited for. */
 DEFINE_STATIC_SRCU(tasks_rcu_exit_srcu);
-#endif
-
-#ifdef CONFIG_TASKS_RCU
-/* Report delay in synchronize_srcu() completion in rcu_tasks_postscan(). */
-static void tasks_rcu_exit_srcu_stall(struct timer_list *unused);
-static DEFINE_TIMER(tasks_rcu_exit_srcu_stall_timer, tasks_rcu_exit_srcu_stall);
-#endif
 
 /* Avoid IPIing CPUs early in the grace period. */
 #define RCU_TASK_IPI_DELAY (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB) ? HZ / 2 : 0)
@@ -241,6 +233,7 @@ static void cblist_init_generic(struct rcu_tasks *rtp)
 	if (rcu_task_enqueue_lim < 0) {
 		rcu_task_enqueue_lim = 1;
 		rcu_task_cb_adjust = true;
+		pr_info("%s: Setting adjustable number of callback queues.\n", __func__);
 	} else if (rcu_task_enqueue_lim == 0) {
 		rcu_task_enqueue_lim = 1;
 	}
@@ -271,9 +264,7 @@ static void cblist_init_generic(struct rcu_tasks *rtp)
 		raw_spin_unlock_rcu_node(rtpcp); // irqs remain disabled.
 	}
 	raw_spin_unlock_irqrestore(&rtp->cbs_gbl_lock, flags);
-
-	pr_info("%s: Setting shift to %d and lim to %d rcu_task_cb_adjust=%d.\n", rtp->name,
-			data_race(rtp->percpu_enqueue_shift), data_race(rtp->percpu_enqueue_lim), rcu_task_cb_adjust);
+	pr_info("%s: Setting shift to %d and lim to %d.\n", __func__, data_race(rtp->percpu_enqueue_shift), data_race(rtp->percpu_enqueue_lim));
 }
 
 // IRQ-work handler that does deferred wakeup for call_rcu_tasks_generic().
@@ -393,7 +384,6 @@ static int rcu_tasks_need_gpcb(struct rcu_tasks *rtp)
 {
 	int cpu;
 	unsigned long flags;
-	bool gpdone = poll_state_synchronize_rcu(rtp->percpu_dequeue_gpseq);
 	long n;
 	long ncbs = 0;
 	long ncbsnz = 0;
@@ -435,23 +425,21 @@ static int rcu_tasks_need_gpcb(struct rcu_tasks *rtp)
 			WRITE_ONCE(rtp->percpu_enqueue_shift, order_base_2(nr_cpu_ids));
 			smp_store_release(&rtp->percpu_enqueue_lim, 1);
 			rtp->percpu_dequeue_gpseq = get_state_synchronize_rcu();
-			gpdone = false;
 			pr_info("Starting switch %s to CPU-0 callback queuing.\n", rtp->name);
 		}
 		raw_spin_unlock_irqrestore(&rtp->cbs_gbl_lock, flags);
 	}
-	if (rcu_task_cb_adjust && !ncbsnz && gpdone) {
+	if (rcu_task_cb_adjust && !ncbsnz &&
+	    poll_state_synchronize_rcu(rtp->percpu_dequeue_gpseq)) {
 		raw_spin_lock_irqsave(&rtp->cbs_gbl_lock, flags);
 		if (rtp->percpu_enqueue_lim < rtp->percpu_dequeue_lim) {
 			WRITE_ONCE(rtp->percpu_dequeue_lim, 1);
 			pr_info("Completing switch %s to CPU-0 callback queuing.\n", rtp->name);
 		}
-		if (rtp->percpu_dequeue_lim == 1) {
-			for (cpu = rtp->percpu_dequeue_lim; cpu < nr_cpu_ids; cpu++) {
-				struct rcu_tasks_percpu *rtpcp = per_cpu_ptr(rtp->rtpcpu, cpu);
+		for (cpu = rtp->percpu_dequeue_lim; cpu < nr_cpu_ids; cpu++) {
+			struct rcu_tasks_percpu *rtpcp = per_cpu_ptr(rtp->rtpcpu, cpu);
 
-				WARN_ON_ONCE(rcu_segcblist_n_cbs(&rtpcp->cblist));
-			}
+			WARN_ON_ONCE(rcu_segcblist_n_cbs(&rtpcp->cblist));
 		}
 		raw_spin_unlock_irqrestore(&rtp->cbs_gbl_lock, flags);
 	}
@@ -464,7 +452,6 @@ static void rcu_tasks_invoke_cbs(struct rcu_tasks *rtp, struct rcu_tasks_percpu 
 {
 	int cpu;
 	int cpunext;
-	int cpuwq;
 	unsigned long flags;
 	int len;
 	struct rcu_head *rhp;
@@ -475,13 +462,11 @@ static void rcu_tasks_invoke_cbs(struct rcu_tasks *rtp, struct rcu_tasks_percpu 
 	cpunext = cpu * 2 + 1;
 	if (cpunext < smp_load_acquire(&rtp->percpu_dequeue_lim)) {
 		rtpcp_next = per_cpu_ptr(rtp->rtpcpu, cpunext);
-		cpuwq = rcu_cpu_beenfullyonline(cpunext) ? cpunext : WORK_CPU_UNBOUND;
-		queue_work_on(cpuwq, system_wq, &rtpcp_next->rtp_work);
+		queue_work_on(cpunext, system_wq, &rtpcp_next->rtp_work);
 		cpunext++;
 		if (cpunext < smp_load_acquire(&rtp->percpu_dequeue_lim)) {
 			rtpcp_next = per_cpu_ptr(rtp->rtpcpu, cpunext);
-			cpuwq = rcu_cpu_beenfullyonline(cpunext) ? cpunext : WORK_CPU_UNBOUND;
-			queue_work_on(cpuwq, system_wq, &rtpcp_next->rtp_work);
+			queue_work_on(cpunext, system_wq, &rtpcp_next->rtp_work);
 		}
 	}
 
@@ -575,9 +560,8 @@ static int __noreturn rcu_tasks_kthread(void *arg)
 static void synchronize_rcu_tasks_generic(struct rcu_tasks *rtp)
 {
 	/* Complain if the scheduler has not started.  */
-	if (WARN_ONCE(rcu_scheduler_active == RCU_SCHEDULER_INACTIVE,
-			 "synchronize_%s() called too soon", rtp->name))
-		return;
+	WARN_ONCE(rcu_scheduler_active == RCU_SCHEDULER_INACTIVE,
+			 "synchronize_rcu_tasks called too soon");
 
 	// If the grace-period kthread is running, use it.
 	if (READ_ONCE(rtp->kthread_ptr)) {
@@ -744,7 +728,7 @@ static void rcu_tasks_wait_gp(struct rcu_tasks *rtp)
 		if (rtsi > 0 && !reported && time_after(j, lastinfo + rtsi)) {
 			lastinfo = j;
 			rtsi = rtsi * rcu_task_stall_info_mult;
-			pr_info("%s: %s grace period number %lu (since boot) is %lu jiffies old.\n",
+			pr_info("%s: %s grace period %lu is %lu jiffies old.\n",
 				__func__, rtp->kname, rtp->tasks_gp_seq, j - rtp->gp_start);
 		}
 	}
@@ -842,34 +826,14 @@ static void rcu_tasks_pertask(struct task_struct *t, struct list_head *hop)
 /* Processing between scanning taskslist and draining the holdout list. */
 static void rcu_tasks_postscan(struct list_head *hop)
 {
-	int rtsi = READ_ONCE(rcu_task_stall_info);
-
-	if (!IS_ENABLED(CONFIG_TINY_RCU)) {
-		tasks_rcu_exit_srcu_stall_timer.expires = jiffies + rtsi;
-		add_timer(&tasks_rcu_exit_srcu_stall_timer);
-	}
-
 	/*
-	 * Exiting tasks may escape the tasklist scan. Those are vulnerable
-	 * until their final schedule() with TASK_DEAD state. To cope with
-	 * this, divide the fragile exit path part in two intersecting
-	 * read side critical sections:
-	 *
-	 * 1) An _SRCU_ read side starting before calling exit_notify(),
-	 *    which may remove the task from the tasklist, and ending after
-	 *    the final preempt_disable() call in do_exit().
-	 *
-	 * 2) An _RCU_ read side starting with the final preempt_disable()
-	 *    call in do_exit() and ending with the final call to schedule()
-	 *    with TASK_DEAD state.
-	 *
-	 * This handles the part 1). And postgp will handle part 2) with a
-	 * call to synchronize_rcu().
+	 * Wait for tasks that are in the process of exiting.  This
+	 * does only part of the job, ensuring that all tasks that were
+	 * previously exiting reach the point where they have disabled
+	 * preemption, allowing the later synchronize_rcu() to finish
+	 * the job.
 	 */
 	synchronize_srcu(&tasks_rcu_exit_srcu);
-
-	if (!IS_ENABLED(CONFIG_TINY_RCU))
-		del_timer_sync(&tasks_rcu_exit_srcu_stall_timer);
 }
 
 /* See if tasks are still holding out, complain if so. */
@@ -934,31 +898,13 @@ static void rcu_tasks_postgp(struct rcu_tasks *rtp)
 	 *
 	 * In addition, this synchronize_rcu() waits for exiting tasks
 	 * to complete their final preempt_disable() region of execution,
-	 * cleaning up after synchronize_srcu(&tasks_rcu_exit_srcu),
-	 * enforcing the whole region before tasklist removal until
-	 * the final schedule() with TASK_DEAD state to be an RCU TASKS
-	 * read side critical section.
+	 * cleaning up after the synchronize_srcu() above.
 	 */
 	synchronize_rcu();
 }
 
 void call_rcu_tasks(struct rcu_head *rhp, rcu_callback_t func);
 DEFINE_RCU_TASKS(rcu_tasks, rcu_tasks_wait_gp, call_rcu_tasks, "RCU Tasks");
-
-static void tasks_rcu_exit_srcu_stall(struct timer_list *unused)
-{
-#ifndef CONFIG_TINY_RCU
-	int rtsi;
-
-	rtsi = READ_ONCE(rcu_task_stall_info);
-	pr_info("%s: %s grace period number %lu (since boot) gp_state: %s is %lu jiffies old.\n",
-		__func__, rcu_tasks.kname, rcu_tasks.tasks_gp_seq,
-		tasks_gp_state_getname(&rcu_tasks), jiffies - rcu_tasks.gp_jiffies);
-	pr_info("Please check any exiting tasks stuck between calls to exit_tasks_rcu_start() and exit_tasks_rcu_finish()\n");
-	tasks_rcu_exit_srcu_stall_timer.expires = jiffies + rtsi;
-	add_timer(&tasks_rcu_exit_srcu_stall_timer);
-#endif // #ifndef CONFIG_TINY_RCU
-}
 
 /**
  * call_rcu_tasks() - Queue an RCU for invocation task-based grace period
@@ -1042,42 +988,27 @@ void show_rcu_tasks_classic_gp_kthread(void)
 EXPORT_SYMBOL_GPL(show_rcu_tasks_classic_gp_kthread);
 #endif // !defined(CONFIG_TINY_RCU)
 
-/*
- * Contribute to protect against tasklist scan blind spot while the
- * task is exiting and may be removed from the tasklist. See
- * corresponding synchronize_srcu() for further details.
- */
+/* Do the srcu_read_lock() for the above synchronize_srcu().  */
 void exit_tasks_rcu_start(void) __acquires(&tasks_rcu_exit_srcu)
 {
+	preempt_disable();
 	current->rcu_tasks_idx = __srcu_read_lock(&tasks_rcu_exit_srcu);
+	preempt_enable();
 }
 
-/*
- * Contribute to protect against tasklist scan blind spot while the
- * task is exiting and may be removed from the tasklist. See
- * corresponding synchronize_srcu() for further details.
- */
-void exit_tasks_rcu_stop(void) __releases(&tasks_rcu_exit_srcu)
+/* Do the srcu_read_unlock() for the above synchronize_srcu().  */
+void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
 {
 	struct task_struct *t = current;
 
+	preempt_disable();
 	__srcu_read_unlock(&tasks_rcu_exit_srcu, t->rcu_tasks_idx);
-}
-
-/*
- * Contribute to protect against tasklist scan blind spot while the
- * task is exiting and may be removed from the tasklist. See
- * corresponding synchronize_srcu() for further details.
- */
-void exit_tasks_rcu_finish(void)
-{
-	exit_tasks_rcu_stop();
-	exit_tasks_rcu_finish_trace(current);
+	preempt_enable();
+	exit_tasks_rcu_finish_trace(t);
 }
 
 #else /* #ifdef CONFIG_TASKS_RCU */
 void exit_tasks_rcu_start(void) { }
-void exit_tasks_rcu_stop(void) { }
 void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
 #endif /* #else #ifdef CONFIG_TASKS_RCU */
 
@@ -1105,6 +1036,9 @@ static void rcu_tasks_be_rude(struct work_struct *work)
 // Wait for one rude RCU-tasks grace period.
 static void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
 {
+	if (num_online_cpus() <= 1)
+		return;	// Fastpath for only one CPU.
+
 	rtp->n_ipis += cpumask_weight(cpu_online_mask);
 	schedule_on_each_cpu(rcu_tasks_be_rude);
 }
@@ -1601,8 +1535,6 @@ static void rcu_tasks_trace_postscan(struct list_head *hop)
 {
 	// Wait for late-stage exiting tasks to finish exiting.
 	// These might have passed the call to exit_tasks_rcu_finish().
-
-	// If you remove the following line, update rcu_trace_implies_rcu_gp()!!!
 	synchronize_rcu();
 	// Any tasks that exit after this point will set
 	// TRC_NEED_QS_CHECKED in ->trc_reader_special.b.need_qs.
@@ -1881,21 +1813,23 @@ static void test_rcu_tasks_callback(struct rcu_head *rhp)
 
 static void rcu_tasks_initiate_self_tests(void)
 {
+	unsigned long j = jiffies;
+
 	pr_info("Running RCU-tasks wait API self tests\n");
 #ifdef CONFIG_TASKS_RCU
-	tests[0].runstart = jiffies;
+	tests[0].runstart = j;
 	synchronize_rcu_tasks();
 	call_rcu_tasks(&tests[0].rh, test_rcu_tasks_callback);
 #endif
 
 #ifdef CONFIG_TASKS_RUDE_RCU
-	tests[1].runstart = jiffies;
+	tests[1].runstart = j;
 	synchronize_rcu_tasks_rude();
 	call_rcu_tasks_rude(&tests[1].rh, test_rcu_tasks_callback);
 #endif
 
 #ifdef CONFIG_TASKS_TRACE_RCU
-	tests[2].runstart = jiffies;
+	tests[2].runstart = j;
 	synchronize_rcu_tasks_trace();
 	call_rcu_tasks_trace(&tests[2].rh, test_rcu_tasks_callback);
 #endif

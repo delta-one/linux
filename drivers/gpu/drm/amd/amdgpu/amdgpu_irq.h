@@ -53,7 +53,7 @@ struct amdgpu_iv_entry {
 	uint64_t timestamp;
 	unsigned timestamp_src;
 	unsigned pasid;
-	unsigned node_id;
+	unsigned pasid_src;
 	unsigned src_data[AMDGPU_IRQ_SRC_DATA_MAX_SIZE_DW];
 	const uint32_t *iv_entry;
 };
@@ -98,8 +98,6 @@ struct amdgpu_irq {
 	struct irq_domain		*domain; /* GPU irq controller domain */
 	unsigned			virq[AMDGPU_MAX_IRQ_SRC_ID];
 	uint32_t                        srbm_soft_reset;
-	u32                             retry_cam_doorbell_index;
-	bool                            retry_cam_enabled;
 };
 
 void amdgpu_irq_disable_all(struct amdgpu_device *adev);

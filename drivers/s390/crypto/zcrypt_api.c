@@ -53,6 +53,10 @@ MODULE_LICENSE("GPL");
 EXPORT_TRACEPOINT_SYMBOL(s390_zcrypt_req);
 EXPORT_TRACEPOINT_SYMBOL(s390_zcrypt_rep);
 
+static int zcrypt_hwrng_seed = 1;
+module_param_named(hwrng_seed, zcrypt_hwrng_seed, int, 0440);
+MODULE_PARM_DESC(hwrng_seed, "Turn on/off hwrng auto seed, default is 1 (on).");
+
 DEFINE_SPINLOCK(zcrypt_list_lock);
 LIST_HEAD(zcrypt_card_list);
 
@@ -159,20 +163,25 @@ static ssize_t ioctlmask_show(struct device *dev,
 			      struct device_attribute *attr,
 			      char *buf)
 {
+	int i, rc;
 	struct zcdn_device *zcdndev = to_zcdn_dev(dev);
-	int i, n;
 
 	if (mutex_lock_interruptible(&ap_perms_mutex))
 		return -ERESTARTSYS;
 
-	n = sysfs_emit(buf, "0x");
+	buf[0] = '0';
+	buf[1] = 'x';
 	for (i = 0; i < sizeof(zcdndev->perms.ioctlm) / sizeof(long); i++)
-		n += sysfs_emit_at(buf, n, "%016lx", zcdndev->perms.ioctlm[i]);
-	n += sysfs_emit_at(buf, n, "\n");
+		snprintf(buf + 2 + 2 * i * sizeof(long),
+			 PAGE_SIZE - 2 - 2 * i * sizeof(long),
+			 "%016lx", zcdndev->perms.ioctlm[i]);
+	buf[2 + 2 * i * sizeof(long)] = '\n';
+	buf[2 + 2 * i * sizeof(long) + 1] = '\0';
+	rc = 2 + 2 * i * sizeof(long) + 1;
 
 	mutex_unlock(&ap_perms_mutex);
 
-	return n;
+	return rc;
 }
 
 static ssize_t ioctlmask_store(struct device *dev,
@@ -196,20 +205,25 @@ static ssize_t apmask_show(struct device *dev,
 			   struct device_attribute *attr,
 			   char *buf)
 {
+	int i, rc;
 	struct zcdn_device *zcdndev = to_zcdn_dev(dev);
-	int i, n;
 
 	if (mutex_lock_interruptible(&ap_perms_mutex))
 		return -ERESTARTSYS;
 
-	n = sysfs_emit(buf, "0x");
+	buf[0] = '0';
+	buf[1] = 'x';
 	for (i = 0; i < sizeof(zcdndev->perms.apm) / sizeof(long); i++)
-		n += sysfs_emit_at(buf, n, "%016lx", zcdndev->perms.apm[i]);
-	n += sysfs_emit_at(buf, n, "\n");
+		snprintf(buf + 2 + 2 * i * sizeof(long),
+			 PAGE_SIZE - 2 - 2 * i * sizeof(long),
+			 "%016lx", zcdndev->perms.apm[i]);
+	buf[2 + 2 * i * sizeof(long)] = '\n';
+	buf[2 + 2 * i * sizeof(long) + 1] = '\0';
+	rc = 2 + 2 * i * sizeof(long) + 1;
 
 	mutex_unlock(&ap_perms_mutex);
 
-	return n;
+	return rc;
 }
 
 static ssize_t apmask_store(struct device *dev,
@@ -233,20 +247,25 @@ static ssize_t aqmask_show(struct device *dev,
 			   struct device_attribute *attr,
 			   char *buf)
 {
+	int i, rc;
 	struct zcdn_device *zcdndev = to_zcdn_dev(dev);
-	int i, n;
 
 	if (mutex_lock_interruptible(&ap_perms_mutex))
 		return -ERESTARTSYS;
 
-	n = sysfs_emit(buf, "0x");
+	buf[0] = '0';
+	buf[1] = 'x';
 	for (i = 0; i < sizeof(zcdndev->perms.aqm) / sizeof(long); i++)
-		n += sysfs_emit_at(buf, n, "%016lx", zcdndev->perms.aqm[i]);
-	n += sysfs_emit_at(buf, n, "\n");
+		snprintf(buf + 2 + 2 * i * sizeof(long),
+			 PAGE_SIZE - 2 - 2 * i * sizeof(long),
+			 "%016lx", zcdndev->perms.aqm[i]);
+	buf[2 + 2 * i * sizeof(long)] = '\n';
+	buf[2 + 2 * i * sizeof(long) + 1] = '\0';
+	rc = 2 + 2 * i * sizeof(long) + 1;
 
 	mutex_unlock(&ap_perms_mutex);
 
-	return n;
+	return rc;
 }
 
 static ssize_t aqmask_store(struct device *dev,
@@ -270,20 +289,25 @@ static ssize_t admask_show(struct device *dev,
 			   struct device_attribute *attr,
 			   char *buf)
 {
+	int i, rc;
 	struct zcdn_device *zcdndev = to_zcdn_dev(dev);
-	int i, n;
 
 	if (mutex_lock_interruptible(&ap_perms_mutex))
 		return -ERESTARTSYS;
 
-	n = sysfs_emit(buf, "0x");
+	buf[0] = '0';
+	buf[1] = 'x';
 	for (i = 0; i < sizeof(zcdndev->perms.adm) / sizeof(long); i++)
-		n += sysfs_emit_at(buf, n, "%016lx", zcdndev->perms.adm[i]);
-	n += sysfs_emit_at(buf, n, "\n");
+		snprintf(buf + 2 + 2 * i * sizeof(long),
+			 PAGE_SIZE - 2 - 2 * i * sizeof(long),
+			 "%016lx", zcdndev->perms.adm[i]);
+	buf[2 + 2 * i * sizeof(long)] = '\n';
+	buf[2 + 2 * i * sizeof(long) + 1] = '\0';
+	rc = 2 + 2 * i * sizeof(long) + 1;
 
 	mutex_unlock(&ap_perms_mutex);
 
-	return n;
+	return rc;
 }
 
 static ssize_t admask_store(struct device *dev,
@@ -320,14 +344,15 @@ static const struct attribute_group *zcdn_dev_attr_groups[] = {
 	NULL
 };
 
-static ssize_t zcdn_create_store(const struct class *class,
-				 const struct class_attribute *attr,
+static ssize_t zcdn_create_store(struct class *class,
+				 struct class_attribute *attr,
 				 const char *buf, size_t count)
 {
 	int rc;
 	char name[ZCDN_MAX_NAME];
 
-	strscpy(name, skip_spaces(buf), sizeof(name));
+	strncpy(name, skip_spaces(buf), sizeof(name));
+	name[sizeof(name) - 1] = '\0';
 
 	rc = zcdn_create(strim(name));
 
@@ -337,14 +362,15 @@ static ssize_t zcdn_create_store(const struct class *class,
 static const struct class_attribute class_attr_zcdn_create =
 	__ATTR(create, 0600, NULL, zcdn_create_store);
 
-static ssize_t zcdn_destroy_store(const struct class *class,
-				  const struct class_attribute *attr,
+static ssize_t zcdn_destroy_store(struct class *class,
+				  struct class_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int rc;
 	char name[ZCDN_MAX_NAME];
 
-	strscpy(name, skip_spaces(buf), sizeof(name));
+	strncpy(name, skip_spaces(buf), sizeof(name));
+	name[sizeof(name) - 1] = '\0';
 
 	rc = zcdn_destroy(strim(name));
 
@@ -2037,6 +2063,8 @@ int zcrypt_rng_device_add(void)
 			goto out;
 		}
 		zcrypt_rng_buffer_index = 0;
+		if (!zcrypt_hwrng_seed)
+			zcrypt_rng_dev.quality = 0;
 		rc = hwrng_register(&zcrypt_rng_dev);
 		if (rc)
 			goto out_free;
@@ -2151,7 +2179,7 @@ static int __init zcdn_init(void)
 	int rc;
 
 	/* create a new class 'zcrypt' */
-	zcrypt_class = class_create(ZCRYPT_NAME);
+	zcrypt_class = class_create(THIS_MODULE, ZCRYPT_NAME);
 	if (IS_ERR(zcrypt_class)) {
 		rc = PTR_ERR(zcrypt_class);
 		goto out_class_create_failed;

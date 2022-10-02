@@ -26,7 +26,7 @@ ksmbd_tree_conn_connect(struct ksmbd_conn *conn, struct ksmbd_session *sess,
 	struct sockaddr *peer_addr;
 	int ret;
 
-	sc = ksmbd_share_config_get(conn->um, share_name);
+	sc = ksmbd_share_config_get(share_name);
 	if (!sc)
 		return status;
 
@@ -61,7 +61,7 @@ ksmbd_tree_conn_connect(struct ksmbd_conn *conn, struct ksmbd_session *sess,
 		struct ksmbd_share_config *new_sc;
 
 		ksmbd_share_config_del(sc);
-		new_sc = ksmbd_share_config_get(conn->um, share_name);
+		new_sc = ksmbd_share_config_get(share_name);
 		if (!new_sc) {
 			pr_err("Failed to update stale share config\n");
 			status.ret = -ESTALE;
@@ -109,15 +109,18 @@ int ksmbd_tree_conn_disconnect(struct ksmbd_session *sess,
 struct ksmbd_tree_connect *ksmbd_tree_conn_lookup(struct ksmbd_session *sess,
 						  unsigned int id)
 {
-	struct ksmbd_tree_connect *tcon;
+	return xa_load(&sess->tree_conns, id);
+}
 
-	tcon = xa_load(&sess->tree_conns, id);
-	if (tcon) {
-		if (test_bit(TREE_CONN_EXPIRE, &tcon->status))
-			tcon = NULL;
-	}
+struct ksmbd_share_config *ksmbd_tree_conn_share(struct ksmbd_session *sess,
+						 unsigned int id)
+{
+	struct ksmbd_tree_connect *tc;
 
-	return tcon;
+	tc = ksmbd_tree_conn_lookup(sess, id);
+	if (tc)
+		return tc->share_conf;
+	return NULL;
 }
 
 int ksmbd_tree_conn_session_logoff(struct ksmbd_session *sess)
@@ -125,9 +128,6 @@ int ksmbd_tree_conn_session_logoff(struct ksmbd_session *sess)
 	int ret = 0;
 	struct ksmbd_tree_connect *tc;
 	unsigned long id;
-
-	if (!sess)
-		return -EINVAL;
 
 	xa_for_each(&sess->tree_conns, id, tc)
 		ret |= ksmbd_tree_conn_disconnect(sess, tc);

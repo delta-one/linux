@@ -18,7 +18,6 @@
 #include <linux/sched/debug.h>
 #include <linux/sched/task.h>
 #include <linux/sched/task_stack.h>
-#include <linux/hw_breakpoint.h>
 #include <linux/mm.h>
 #include <linux/stddef.h>
 #include <linux/unistd.h>
@@ -48,12 +47,6 @@
 #include <asm/unwind.h>
 #include <asm/vdso.h>
 
-#ifdef CONFIG_STACKPROTECTOR
-#include <linux/stackprotector.h>
-unsigned long __stack_chk_guard __read_mostly;
-EXPORT_SYMBOL(__stack_chk_guard);
-#endif
-
 /*
  * Idle related variables and functions
  */
@@ -62,7 +55,7 @@ unsigned long boot_option_idle_override = IDLE_NO_OVERRIDE;
 EXPORT_SYMBOL(boot_option_idle_override);
 
 #ifdef CONFIG_HOTPLUG_CPU
-void __noreturn arch_cpu_idle_dead(void)
+void arch_cpu_idle_dead(void)
 {
 	play_dead();
 }
@@ -95,11 +88,6 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
 	clear_used_math();
 	regs->csr_era = pc;
 	regs->regs[3] = sp;
-}
-
-void flush_thread(void)
-{
-	flush_ptrace_hw_breakpoint(current);
 }
 
 void exit_thread(struct task_struct *tsk)
@@ -141,7 +129,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	unsigned long clone_flags = args->flags;
 	struct pt_regs *childregs, *regs = current_pt_regs();
 
-	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
+	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
 
 	/* set up new TSS. */
 	childregs = (struct pt_regs *) childksp - 1;
@@ -164,7 +152,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 		childregs->csr_crmd = p->thread.csr_crmd;
 		childregs->csr_prmd = p->thread.csr_prmd;
 		childregs->csr_ecfg = p->thread.csr_ecfg;
-		goto out;
+		return 0;
 	}
 
 	/* user thread */
@@ -183,29 +171,33 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	 */
 	childregs->csr_euen = 0;
 
-	if (clone_flags & CLONE_SETTLS)
-		childregs->regs[2] = tls;
-
-out:
-	ptrace_hw_copy_thread(p);
 	clear_tsk_thread_flag(p, TIF_USEDFPU);
 	clear_tsk_thread_flag(p, TIF_USEDSIMD);
 	clear_tsk_thread_flag(p, TIF_LSX_CTX_LIVE);
 	clear_tsk_thread_flag(p, TIF_LASX_CTX_LIVE);
+
+	if (clone_flags & CLONE_SETTLS)
+		childregs->regs[2] = tls;
 
 	return 0;
 }
 
 unsigned long __get_wchan(struct task_struct *task)
 {
-	unsigned long pc = 0;
+	unsigned long pc;
 	struct unwind_state state;
 
 	if (!try_get_task_stack(task))
 		return 0;
 
-	for (unwind_start(&state, task, NULL);
-	     !unwind_done(&state); unwind_next_frame(&state)) {
+	unwind_start(&state, task, NULL);
+	state.sp = thread_saved_fp(task);
+	get_stack_info(state.sp, state.task, &state.stack_info);
+	state.pc = thread_saved_ra(task);
+#ifdef CONFIG_UNWINDER_PROLOGUE
+	state.type = UNWINDER_PROLOGUE;
+#endif
+	for (; !unwind_done(&state); unwind_next_frame(&state)) {
 		pc = unwind_get_return_address(&state);
 		if (!pc)
 			break;
@@ -244,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct task_struct *task,
 			struct stack_info *info)
 {
 	unsigned long begin = (unsigned long)task_stack_page(task);
-	unsigned long end = begin + THREAD_SIZE;
+	unsigned long end = begin + THREAD_SIZE - 32;
 
 	if (stack < begin || stack >= end)
 		return false;
@@ -301,7 +293,7 @@ unsigned long stack_top(void)
 unsigned long arch_align_stack(unsigned long sp)
 {
 	if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
-		sp -= get_random_u32_below(PAGE_SIZE);
+		sp -= get_random_int() & ~PAGE_MASK;
 
 	return sp & STACK_ALIGN;
 }

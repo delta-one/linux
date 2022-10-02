@@ -16,8 +16,6 @@
  *                    Fabio Checconi <fchecconi@gmail.com>
  */
 
-#include <linux/cpuset.h>
-
 /*
  * Default limits for DL period; on the top end we guard against small util
  * tasks still getting ridiculously long effective runtimes, on the bottom end we
@@ -646,8 +644,8 @@ static inline bool need_pull_dl_task(struct rq *rq, struct task_struct *prev)
 	return rq->online && dl_task(prev);
 }
 
-static DEFINE_PER_CPU(struct balance_callback, dl_push_head);
-static DEFINE_PER_CPU(struct balance_callback, dl_pull_head);
+static DEFINE_PER_CPU(struct callback_head, dl_push_head);
+static DEFINE_PER_CPU(struct callback_head, dl_pull_head);
 
 static void push_dl_tasks(struct rq *);
 static void pull_dl_task(struct rq *);
@@ -2248,7 +2246,6 @@ static struct rq *find_lock_later_rq(struct task_struct *task, struct rq *rq)
 				     !cpumask_test_cpu(later_rq->cpu, &task->cpus_mask) ||
 				     task_on_cpu(rq, task) ||
 				     !dl_task(task) ||
-				     is_migration_disabled(task) ||
 				     !task_on_rq_queued(task))) {
 				double_unlock_balance(rq, later_rq);
 				later_rq = NULL;
@@ -2488,7 +2485,8 @@ static void task_woken_dl(struct rq *rq, struct task_struct *p)
 }
 
 static void set_cpus_allowed_dl(struct task_struct *p,
-				struct affinity_context *ctx)
+				const struct cpumask *new_mask,
+				u32 flags)
 {
 	struct root_domain *src_rd;
 	struct rq *rq;
@@ -2503,7 +2501,7 @@ static void set_cpus_allowed_dl(struct task_struct *p,
 	 * update. We already made space for us in the destination
 	 * domain (see cpuset_can_attach()).
 	 */
-	if (!cpumask_intersects(src_rd->span, ctx->new_mask)) {
+	if (!cpumask_intersects(src_rd->span, new_mask)) {
 		struct dl_bw *src_dl_b;
 
 		src_dl_b = dl_bw_of(cpu_of(rq));
@@ -2517,7 +2515,7 @@ static void set_cpus_allowed_dl(struct task_struct *p,
 		raw_spin_unlock(&src_dl_b->lock);
 	}
 
-	set_cpus_allowed_common(p, ctx);
+	set_cpus_allowed_common(p, new_mask, flags);
 }
 
 /* Assumes rq->lock is held */
@@ -2598,12 +2596,6 @@ static void switched_from_dl(struct rq *rq, struct task_struct *p)
 	if (task_on_rq_queued(p) && p->dl.dl_runtime)
 		task_non_contending(p);
 
-	/*
-	 * In case a task is setscheduled out from SCHED_DEADLINE we need to
-	 * keep track of that on its cpuset (for correct bandwidth tracking).
-	 */
-	dec_dl_tasks_cs(p);
-
 	if (!task_on_rq_queued(p)) {
 		/*
 		 * Inactive timer is armed. However, p is leaving DEADLINE and
@@ -2644,12 +2636,6 @@ static void switched_to_dl(struct rq *rq, struct task_struct *p)
 	if (hrtimer_try_to_cancel(&p->dl.inactive_timer) == 1)
 		put_task_struct(p);
 
-	/*
-	 * In case a task is setscheduled to SCHED_DEADLINE we need to keep
-	 * track of that on its cpuset (for correct bandwidth tracking).
-	 */
-	inc_dl_tasks_cs(p);
-
 	/* If p is not queued we will update its parameters at next wakeup. */
 	if (!task_on_rq_queued(p)) {
 		add_rq_bw(&p->dl, &rq->dl);
@@ -2678,20 +2664,17 @@ static void switched_to_dl(struct rq *rq, struct task_struct *p)
 static void prio_changed_dl(struct rq *rq, struct task_struct *p,
 			    int oldprio)
 {
-	if (!task_on_rq_queued(p))
-		return;
-
+	if (task_on_rq_queued(p) || task_current(rq, p)) {
 #ifdef CONFIG_SMP
-	/*
-	 * This might be too much, but unfortunately
-	 * we don't have the old deadline value, and
-	 * we can't argue if the task is increasing
-	 * or lowering its prio, so...
-	 */
-	if (!rq->dl.overloaded)
-		deadline_queue_pull_task(rq);
+		/*
+		 * This might be too much, but unfortunately
+		 * we don't have the old deadline value, and
+		 * we can't argue if the task is increasing
+		 * or lowering its prio, so...
+		 */
+		if (!rq->dl.overloaded)
+			deadline_queue_pull_task(rq);
 
-	if (task_current(rq, p)) {
 		/*
 		 * If we now have a earlier deadline task than p,
 		 * then reschedule, provided p is still on this
@@ -2699,32 +2682,16 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
 		 */
 		if (dl_time_before(rq->dl.earliest_dl.curr, p->dl.deadline))
 			resched_curr(rq);
-	} else {
-		/*
-		 * Current may not be deadline in case p was throttled but we
-		 * have just replenished it (e.g. rt_mutex_setprio()).
-		 *
-		 * Otherwise, if p was given an earlier deadline, reschedule.
-		 */
-		if (!dl_task(rq->curr) ||
-		    dl_time_before(p->dl.deadline, rq->curr->dl.deadline))
-			resched_curr(rq);
-	}
 #else
-	/*
-	 * We don't know if p has a earlier or later deadline, so let's blindly
-	 * set a (maybe not needed) rescheduling point.
-	 */
-	resched_curr(rq);
-#endif
+		/*
+		 * Again, we don't know if p has a earlier
+		 * or later deadline, so let's blindly set a
+		 * (maybe not needed) rescheduling point.
+		 */
+		resched_curr(rq);
+#endif /* CONFIG_SMP */
+	}
 }
-
-#ifdef CONFIG_SCHED_CORE
-static int task_is_throttled_dl(struct task_struct *p, int cpu)
-{
-	return p->dl.dl_throttled;
-}
-#endif
 
 DEFINE_SCHED_CLASS(dl) = {
 
@@ -2758,9 +2725,6 @@ DEFINE_SCHED_CLASS(dl) = {
 	.switched_to		= switched_to_dl,
 
 	.update_curr		= update_curr_dl,
-#ifdef CONFIG_SCHED_CORE
-	.task_is_throttled	= task_is_throttled_dl,
-#endif
 };
 
 /* Used for dl_bw check and update, used under sched_rt_handler()::mutex */
@@ -3058,59 +3022,32 @@ int dl_cpuset_cpumask_can_shrink(const struct cpumask *cur,
 	return ret;
 }
 
-enum dl_bw_request {
-	dl_bw_req_check_overflow = 0,
-	dl_bw_req_alloc,
-	dl_bw_req_free
-};
-
-static int dl_bw_manage(enum dl_bw_request req, int cpu, u64 dl_bw)
+int dl_cpu_busy(int cpu, struct task_struct *p)
 {
-	unsigned long flags;
+	unsigned long flags, cap;
 	struct dl_bw *dl_b;
-	bool overflow = 0;
+	bool overflow;
 
 	rcu_read_lock_sched();
 	dl_b = dl_bw_of(cpu);
 	raw_spin_lock_irqsave(&dl_b->lock, flags);
+	cap = dl_bw_capacity(cpu);
+	overflow = __dl_overflow(dl_b, cap, 0, p ? p->dl.dl_bw : 0);
 
-	if (req == dl_bw_req_free) {
-		__dl_sub(dl_b, dl_bw, dl_bw_cpus(cpu));
-	} else {
-		unsigned long cap = dl_bw_capacity(cpu);
-
-		overflow = __dl_overflow(dl_b, cap, 0, dl_bw);
-
-		if (req == dl_bw_req_alloc && !overflow) {
-			/*
-			 * We reserve space in the destination
-			 * root_domain, as we can't fail after this point.
-			 * We will free resources in the source root_domain
-			 * later on (see set_cpus_allowed_dl()).
-			 */
-			__dl_add(dl_b, dl_bw, dl_bw_cpus(cpu));
-		}
+	if (!overflow && p) {
+		/*
+		 * We reserve space for this task in the destination
+		 * root_domain, as we can't fail after this point.
+		 * We will free resources in the source root_domain
+		 * later on (see set_cpus_allowed_dl()).
+		 */
+		__dl_add(dl_b, p->dl.dl_bw, dl_bw_cpus(cpu));
 	}
 
 	raw_spin_unlock_irqrestore(&dl_b->lock, flags);
 	rcu_read_unlock_sched();
 
 	return overflow ? -EBUSY : 0;
-}
-
-int dl_bw_check_overflow(int cpu)
-{
-	return dl_bw_manage(dl_bw_req_check_overflow, cpu, 0);
-}
-
-int dl_bw_alloc(int cpu, u64 dl_bw)
-{
-	return dl_bw_manage(dl_bw_req_alloc, cpu, dl_bw);
-}
-
-void dl_bw_free(int cpu, u64 dl_bw)
-{
-	dl_bw_manage(dl_bw_req_free, cpu, dl_bw);
 }
 #endif
 

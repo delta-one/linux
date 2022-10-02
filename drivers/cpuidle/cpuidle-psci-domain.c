@@ -64,11 +64,8 @@ static int psci_pd_init(struct device_node *np, bool use_osi)
 
 	pd->flags |= GENPD_FLAG_IRQ_SAFE | GENPD_FLAG_CPU_DOMAIN;
 
-	/*
-	 * Allow power off when OSI has been successfully enabled.
-	 * PREEMPT_RT is not yet ready to enter domain idle states.
-	 */
-	if (use_osi && !IS_ENABLED(CONFIG_PREEMPT_RT))
+	/* Allow power off when OSI has been successfully enabled. */
+	if (use_osi)
 		pd->power_off = psci_pd_power_off;
 	else
 		pd->flags |= GENPD_FLAG_ALWAYS_ON;
@@ -106,8 +103,7 @@ static void psci_pd_remove(void)
 	struct psci_pd_provider *pd_provider, *it;
 	struct generic_pm_domain *genpd;
 
-	list_for_each_entry_safe_reverse(pd_provider, it,
-					 &psci_pd_providers, link) {
+	list_for_each_entry_safe(pd_provider, it, &psci_pd_providers, link) {
 		of_genpd_del_provider(pd_provider->node);
 
 		genpd = of_genpd_remove_last(pd_provider->node);
@@ -128,8 +124,10 @@ static bool psci_pd_try_set_osi_mode(void)
 		return false;
 
 	ret = psci_set_osi_mode(true);
-	if (ret)
+	if (ret) {
+		pr_warn("failed to enable OSI mode: %d\n", ret);
 		return false;
+	}
 
 	return true;
 }
@@ -166,7 +164,7 @@ static int psci_cpuidle_domain_probe(struct platform_device *pdev)
 	 * initialize a genpd/genpd-of-provider pair when it's found.
 	 */
 	for_each_child_of_node(np, node) {
-		if (!of_property_present(node, "#power-domain-cells"))
+		if (!of_find_property(node, "#power-domain-cells", NULL))
 			continue;
 
 		ret = psci_pd_init(node, use_osi);
@@ -185,8 +183,7 @@ static int psci_cpuidle_domain_probe(struct platform_device *pdev)
 	if (ret)
 		goto remove_pd;
 
-	pr_info("Initialized CPU PM domain topology using %s mode\n",
-		use_osi ? "OSI" : "PC");
+	pr_info("Initialized CPU PM domain topology\n");
 	return 0;
 
 put_node:

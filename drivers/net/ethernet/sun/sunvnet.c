@@ -433,9 +433,6 @@ static int vnet_port_probe(struct vio_dev *vdev, const struct vio_device_id *id)
 
 	hp = mdesc_grab();
 
-	if (!hp)
-		return -ENODEV;
-
 	vp = vnet_find_parent(hp, vdev->mp, vdev);
 	if (IS_ERR(vp)) {
 		pr_err("Cannot find port parent vnet\n");
@@ -470,7 +467,8 @@ static int vnet_port_probe(struct vio_dev *vdev, const struct vio_device_id *id)
 	if (err)
 		goto err_out_free_port;
 
-	netif_napi_add(port->vp->dev, &port->napi, sunvnet_poll_common);
+	netif_napi_add(port->vp->dev, &port->napi, sunvnet_poll_common,
+		       NAPI_POLL_WEIGHT);
 
 	INIT_HLIST_NODE(&port->hash);
 	INIT_LIST_HEAD(&port->list);
@@ -527,7 +525,7 @@ static void vnet_port_remove(struct vio_dev *vdev)
 		hlist_del_rcu(&port->hash);
 
 		synchronize_rcu();
-		timer_shutdown_sync(&port->clean_timer);
+		del_timer_sync(&port->clean_timer);
 		sunvnet_port_rm_txq_common(port);
 		netif_napi_del(&port->napi);
 		sunvnet_port_free_tx_bufs_common(port);

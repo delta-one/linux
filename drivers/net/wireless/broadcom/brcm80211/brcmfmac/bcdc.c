@@ -87,8 +87,6 @@ struct brcmf_proto_bcdc_header {
 					 * plus any space that might be needed
 					 * for bus alignment padding.
 					 */
-#define ROUND_UP_MARGIN 2048
-
 struct brcmf_bcdc {
 	u16 reqid;
 	u8 bus_header[BUS_HEADER_LEN];
@@ -472,7 +470,7 @@ int brcmf_proto_bcdc_attach(struct brcmf_pub *drvr)
 
 	drvr->hdrlen += BCDC_HEADER_LEN + BRCMF_PROT_FW_SIGNAL_MAX_TXBYTES;
 	drvr->bus_if->maxctl = BRCMF_DCMD_MAXLEN +
-			sizeof(struct brcmf_proto_bcdc_dcmd) + ROUND_UP_MARGIN;
+			sizeof(struct brcmf_proto_bcdc_dcmd);
 	return 0;
 
 fail:

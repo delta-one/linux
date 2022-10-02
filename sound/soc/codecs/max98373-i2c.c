@@ -549,10 +549,6 @@ static int max98373_i2c_probe(struct i2c_client *i2c)
 	max98373->cache = devm_kcalloc(&i2c->dev, max98373->cache_num,
 				       sizeof(*max98373->cache),
 				       GFP_KERNEL);
-	if (!max98373->cache) {
-		ret = -ENOMEM;
-		return ret;
-	}
 
 	for (i = 0; i < max98373->cache_num; i++)
 		max98373->cache[i].reg = max98373_i2c_cache_reg[i];
@@ -624,7 +620,7 @@ static struct i2c_driver max98373_i2c_driver = {
 		.acpi_match_table = ACPI_PTR(max98373_acpi_match),
 		.pm = &max98373_pm,
 	},
-	.probe = max98373_i2c_probe,
+	.probe_new = max98373_i2c_probe,
 	.id_table = max98373_i2c_id,
 };
 

@@ -7,7 +7,6 @@
 
 #include <linux/io.h>
 #include <linux/clk.h>
-#include <linux/platform_device.h>
 #include <linux/timer.h>
 #include <linux/module.h>
 #include <linux/irqreturn.h>
@@ -24,7 +23,7 @@
 #include <linux/of.h>
 #include <linux/of_mdio.h>
 #include <linux/of_net.h>
-#include <linux/of_platform.h>
+#include <linux/of_device.h>
 #include <linux/if_vlan.h>
 #include <linux/kmemleak.h>
 #include <linux/sys_soc.h>
@@ -1406,10 +1405,6 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
 		ndev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
 				  NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_NETNS_LOCAL | NETIF_F_HW_TC;
 
-		ndev->xdp_features = NETDEV_XDP_ACT_BASIC |
-				     NETDEV_XDP_ACT_REDIRECT |
-				     NETDEV_XDP_ACT_NDO_XMIT;
-
 		ndev->netdev_ops = &cpsw_netdev_ops;
 		ndev->ethtool_ops = &cpsw_ethtool_ops;
 		SET_NETDEV_DEV(ndev, dev);
@@ -1421,7 +1416,9 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
 			 * accordingly.
 			 */
 			netif_napi_add(ndev, &cpsw->napi_rx,
-				       cpsw->quirk_irq ? cpsw_rx_poll : cpsw_rx_mq_poll);
+				       cpsw->quirk_irq ?
+				       cpsw_rx_poll : cpsw_rx_mq_poll,
+				       NAPI_POLL_WEIGHT);
 			netif_napi_add_tx(ndev, &cpsw->napi_tx,
 					  cpsw->quirk_irq ?
 					  cpsw_tx_poll : cpsw_tx_mq_poll);

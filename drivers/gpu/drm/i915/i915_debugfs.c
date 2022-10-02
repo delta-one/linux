@@ -50,9 +50,9 @@
 #include "i915_debugfs_params.h"
 #include "i915_driver.h"
 #include "i915_irq.h"
-#include "i915_reg.h"
 #include "i915_scheduler.h"
 #include "intel_mchbar_regs.h"
+#include "intel_pm.h"
 
 static inline struct drm_i915_private *node_to_i915(struct drm_info_node *node)
 {
@@ -183,7 +183,7 @@ i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj)
 
 		seq_printf(m, " (%s offset: %08llx, size: %08llx, pages: %s",
 			   stringify_vma_type(vma),
-			   i915_vma_offset(vma), i915_vma_size(vma),
+			   vma->node.start, vma->node.size,
 			   stringify_page_sizes(vma->resource->page_sizes_gtt,
 						NULL, 0));
 		if (i915_vma_is_ggtt(vma) || i915_vma_is_dpt(vma)) {
@@ -575,34 +575,14 @@ static int i915_wa_registers(struct seq_file *m, void *unused)
 static int i915_wedged_get(void *data, u64 *val)
 {
 	struct drm_i915_private *i915 = data;
-	struct intel_gt *gt;
-	unsigned int i;
 
-	*val = 0;
-
-	for_each_gt(gt, i915, i) {
-		int ret;
-
-		ret = intel_gt_debugfs_reset_show(gt, val);
-		if (ret)
-			return ret;
-
-		/* at least one tile should be wedged */
-		if (*val)
-			break;
-	}
-
-	return 0;
+	return intel_gt_debugfs_reset_show(to_gt(i915), val);
 }
 
 static int i915_wedged_set(void *data, u64 val)
 {
 	struct drm_i915_private *i915 = data;
-	struct intel_gt *gt;
-	unsigned int i;
-
-	for_each_gt(gt, i915, i)
-		intel_gt_debugfs_reset_store(gt, val);
+	intel_gt_debugfs_reset_store(to_gt(i915), val);
 
 	return 0;
 }
@@ -668,14 +648,13 @@ i915_drop_caches_get(void *data, u64 *val)
 
 	return 0;
 }
-
 static int
 gt_drop_caches(struct intel_gt *gt, u64 val)
 {
 	int ret;
 
 	if (val & DROP_RESET_ACTIVE &&
-	    wait_for(intel_engines_are_idle(gt), 200))
+	    wait_for(intel_engines_are_idle(gt), I915_IDLE_ENGINES_TIMEOUT))
 		intel_gt_set_wedged(gt);
 
 	if (val & DROP_RETIRE)
@@ -709,8 +688,8 @@ i915_drop_caches_set(void *data, u64 val)
 	unsigned int flags;
 	int ret;
 
-	drm_dbg(&i915->drm, "Dropping caches: 0x%08llx [0x%08llx]\n",
-		val, val & DROP_ALL);
+	DRM_DEBUG("Dropping caches: 0x%08llx [0x%08llx]\n",
+		  val, val & DROP_ALL);
 
 	ret = gt_drop_caches(to_gt(i915), val);
 	if (ret)
@@ -753,11 +732,7 @@ static int i915_sseu_status(struct seq_file *m, void *unused)
 static int i915_forcewake_open(struct inode *inode, struct file *file)
 {
 	struct drm_i915_private *i915 = inode->i_private;
-	struct intel_gt *gt;
-	unsigned int i;
-
-	for_each_gt(gt, i915, i)
-		intel_gt_pm_debugfs_forcewake_user_open(gt);
+	intel_gt_pm_debugfs_forcewake_user_open(to_gt(i915));
 
 	return 0;
 }
@@ -765,11 +740,7 @@ static int i915_forcewake_open(struct inode *inode, struct file *file)
 static int i915_forcewake_release(struct inode *inode, struct file *file)
 {
 	struct drm_i915_private *i915 = inode->i_private;
-	struct intel_gt *gt;
-	unsigned int i;
-
-	for_each_gt(gt, i915, i)
-		intel_gt_pm_debugfs_forcewake_user_release(gt);
+	intel_gt_pm_debugfs_forcewake_user_release(to_gt(i915));
 
 	return 0;
 }
@@ -791,6 +762,7 @@ static const struct drm_info_list i915_debugfs_list[] = {
 	{"i915_sseu_status", i915_sseu_status, 0},
 	{"i915_rps_boost_info", i915_rps_boost_info, 0},
 };
+#define I915_DEBUGFS_ENTRIES ARRAY_SIZE(i915_debugfs_list)
 
 static const struct i915_debugfs_files {
 	const char *name;
@@ -823,6 +795,6 @@ void i915_debugfs_register(struct drm_i915_private *dev_priv)
 	}
 
 	drm_debugfs_create_files(i915_debugfs_list,
-				 ARRAY_SIZE(i915_debugfs_list),
+				 I915_DEBUGFS_ENTRIES,
 				 minor->debugfs_root, minor);
 }

@@ -7,8 +7,6 @@
  * Copyright (C) 2020 Renesas Electronics Corp.
  */
 
-#include <dt-bindings/media/video-interfaces.h>
-
 #define CAM_ENABLED	1
 
 &CAM_PARENT_I2C {
@@ -23,7 +21,7 @@
 		port {
 			CAM_EP: endpoint {
 				bus-width = <8>;
-				bus-type = <MEDIA_BUS_TYPE_BT656>;
+				bus-type = <6>;
 				remote-endpoint = <&VIN_EP>;
 			};
 		};

@@ -10,6 +10,7 @@
 #include <linux/compiler.h>
 #include <linux/types.h>
 
+/* __used is needed to keep __crc_* for LTO */
 #define SYMBOL_CRC(sym, crc, sec)   \
 	asm(".section \"___kcrctab" sec "+" #sym "\",\"a\""	"\n" \
 	    "__crc_" #sym ":"					"\n" \

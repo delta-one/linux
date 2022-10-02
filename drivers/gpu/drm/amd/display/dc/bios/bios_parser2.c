@@ -24,7 +24,6 @@
  */
 
 #include "dm_services.h"
-#include "core_types.h"
 
 #include "ObjectID.h"
 #include "atomfirmware.h"
@@ -32,6 +31,7 @@
 #include "dc_bios_types.h"
 #include "include/grph_object_ctrl_defs.h"
 #include "include/bios_parser_interface.h"
+#include "include/i2caux_interface.h"
 #include "include/logger_interface.h"
 
 #include "command_table2.h"
@@ -49,6 +49,13 @@
 
 #define LAST_RECORD_TYPE 0xff
 #define SMU9_SYSPLL0_ID  0
+
+struct i2c_id_config_access {
+	uint8_t bfI2C_LineMux:4;
+	uint8_t bfHW_EngineID:3;
+	uint8_t bfHW_Capable:1;
+	uint8_t ucAccess;
+};
 
 static enum bp_result get_gpio_i2c_info(struct bios_parser *bp,
 	struct atom_i2c_record *record,
@@ -461,7 +468,6 @@ static enum bp_result get_gpio_i2c_info(
 	uint32_t count = 0;
 	unsigned int table_index = 0;
 	bool find_valid = false;
-	struct atom_gpio_pin_assignment *pin;
 
 	if (!info)
 		return BP_RESULT_BADINPUT;
@@ -489,17 +495,20 @@ static enum bp_result get_gpio_i2c_info(
 			- sizeof(struct atom_common_table_header))
 				/ sizeof(struct atom_gpio_pin_assignment);
 
-	pin = (struct atom_gpio_pin_assignment *) header->gpio_pin;
-
 	for (table_index = 0; table_index < count; table_index++) {
-		if (((record->i2c_id & I2C_HW_CAP) 				== (pin->gpio_id & I2C_HW_CAP)) &&
-		    ((record->i2c_id & I2C_HW_ENGINE_ID_MASK)	== (pin->gpio_id & I2C_HW_ENGINE_ID_MASK)) &&
-		    ((record->i2c_id & I2C_HW_LANE_MUX) 		== (pin->gpio_id & I2C_HW_LANE_MUX))) {
+		if (((record->i2c_id & I2C_HW_CAP) == (
+		header->gpio_pin[table_index].gpio_id &
+						I2C_HW_CAP)) &&
+		((record->i2c_id & I2C_HW_ENGINE_ID_MASK)  ==
+		(header->gpio_pin[table_index].gpio_id &
+					I2C_HW_ENGINE_ID_MASK)) &&
+		((record->i2c_id & I2C_HW_LANE_MUX) ==
+		(header->gpio_pin[table_index].gpio_id &
+						I2C_HW_LANE_MUX))) {
 			/* still valid */
 			find_valid = true;
 			break;
 		}
-		pin = (struct atom_gpio_pin_assignment *)((uint8_t *)pin + sizeof(struct atom_gpio_pin_assignment));
 	}
 
 	/* If we don't find the entry that we are looking for then
@@ -515,8 +524,11 @@ static enum bp_result get_gpio_i2c_info(
 	info->i2c_slave_address = record->i2c_slave_addr;
 
 	/* TODO: check how to get register offset for en, Y, etc. */
-	info->gpio_info.clk_a_register_index = le16_to_cpu(pin->data_a_reg_index);
-	info->gpio_info.clk_a_shift = pin->gpio_bitshift;
+	info->gpio_info.clk_a_register_index =
+			le16_to_cpu(
+			header->gpio_pin[table_index].data_a_reg_index);
+	info->gpio_info.clk_a_shift =
+			header->gpio_pin[table_index].gpio_bitshift;
 
 	return BP_RESULT_OK;
 }
@@ -1362,7 +1374,7 @@ static enum bp_result bios_parser_get_lttpr_interop(
 	default:
 		break;
 	}
-	DC_LOG_BIOS("DCE_INFO_CAPS_VBIOS_LTTPR_TRANSPARENT_ENABLE: %d tbl_revision.major = %d tbl_revision.minor = %d\n", *dce_caps, tbl_revision.major, tbl_revision.minor);
+
 	return result;
 }
 
@@ -1378,7 +1390,6 @@ static enum bp_result bios_parser_get_lttpr_caps(
 	if (!DATA_TABLES(dce_info))
 		return BP_RESULT_UNSUPPORTED;
 
-	*dce_caps  = 0;
 	header = GET_IMAGE(struct atom_common_table_header,
 						DATA_TABLES(dce_info));
 	get_atom_data_table_revision(header, &tbl_revision);
@@ -1412,11 +1423,7 @@ static enum bp_result bios_parser_get_lttpr_caps(
 	default:
 		break;
 	}
-	DC_LOG_BIOS("DCE_INFO_CAPS_LTTPR_SUPPORT_ENABLE: %d tbl_revision.major = %d tbl_revision.minor = %d\n", *dce_caps, tbl_revision.major, tbl_revision.minor);
-	if (dcb->ctx->dc->config.force_bios_enable_lttpr && *dce_caps == 0) {
-		*dce_caps = 1;
-		DC_LOG_BIOS("DCE_INFO_CAPS_VBIOS_LTTPR_TRANSPARENT_ENABLE: forced enabled");
-	}
+
 	return result;
 }
 
@@ -1694,15 +1701,14 @@ static enum bp_result bios_parser_enable_disp_power_gating(
 static enum bp_result bios_parser_enable_lvtma_control(
 	struct dc_bios *dcb,
 	uint8_t uc_pwr_on,
-	uint8_t panel_instance,
-	uint8_t bypass_panel_control_wait)
+	uint8_t panel_instance)
 {
 	struct bios_parser *bp = BP_FROM_DCB(dcb);
 
 	if (!bp->cmd_tbl.enable_lvtma_control)
 		return BP_RESULT_FAILURE;
 
-	return bp->cmd_tbl.enable_lvtma_control(bp, uc_pwr_on, panel_instance, bypass_panel_control_wait);
+	return bp->cmd_tbl.enable_lvtma_control(bp, uc_pwr_on, panel_instance);
 }
 
 static bool bios_parser_is_accelerated_mode(
@@ -2061,7 +2067,7 @@ static enum bp_result bios_parser_get_encoder_cap_info(
 	if (!info)
 		return BP_RESULT_BADINPUT;
 
-#if defined(CONFIG_DRM_AMD_DC_FP)
+#if defined(CONFIG_DRM_AMD_DC_DCN)
 	/* encoder cap record not available in v1_5 */
 	if (bp->object_info_tbl.revision.minor == 5)
 		return BP_RESULT_NORECORD;
@@ -2387,26 +2393,6 @@ static enum bp_result get_vram_info_v25(
 
 	return result;
 }
-
-static enum bp_result get_vram_info_v30(
-	struct bios_parser *bp,
-	struct dc_vram_info *info)
-{
-	struct atom_vram_info_header_v3_0 *info_v30;
-	enum bp_result result = BP_RESULT_OK;
-
-	info_v30 = GET_IMAGE(struct atom_vram_info_header_v3_0,
-						DATA_TABLES(vram_info));
-
-	if (info_v30 == NULL)
-		return BP_RESULT_BADBIOSTABLE;
-
-	info->num_chans = info_v30->channel_num;
-	info->dram_channel_width_bytes = (1 << info_v30->channel_width) / 8;
-
-	return result;
-}
-
 
 /*
  * get_integrated_info_v11
@@ -2926,6 +2912,7 @@ static enum bp_result construct_integrated_info(
 	struct atom_common_table_header *header;
 	struct atom_data_revision revision;
 
+	struct clock_voltage_caps temp = {0, 0};
 	uint32_t i;
 	uint32_t j;
 
@@ -3007,29 +2994,26 @@ static enum bp_result construct_integrated_info(
 						info->ext_disp_conn_info.path[i].ext_encoder_obj_id.id,
 						info->ext_disp_conn_info.path[i].caps
 						);
-			if (info->ext_disp_conn_info.path[i].caps & EXT_DISPLAY_PATH_CAPS__DP_FIXED_VS_EN)
-				DC_LOG_BIOS("BIOS EXT_DISPLAY_PATH_CAPS__DP_FIXED_VS_EN on path %d\n", i);
-			else if (bp->base.ctx->dc->config.force_bios_fixed_vs) {
-				info->ext_disp_conn_info.path[i].caps |= EXT_DISPLAY_PATH_CAPS__DP_FIXED_VS_EN;
-				DC_LOG_BIOS("driver forced EXT_DISPLAY_PATH_CAPS__DP_FIXED_VS_EN on path %d\n", i);
-			}
 		}
+
 		// Log the Checksum and Voltage Swing
 		DC_LOG_BIOS("Integrated info table CHECKSUM: %d\n"
 					"Integrated info table FIX_DP_VOLTAGE_SWING: %d\n",
 					info->ext_disp_conn_info.checksum,
 					info->ext_disp_conn_info.fixdpvoltageswing);
-		if (bp->base.ctx->dc->config.force_bios_fixed_vs && info->ext_disp_conn_info.fixdpvoltageswing == 0) {
-			info->ext_disp_conn_info.fixdpvoltageswing = bp->base.ctx->dc->config.force_bios_fixed_vs & 0xF;
-			DC_LOG_BIOS("driver forced fixdpvoltageswing = %d\n", info->ext_disp_conn_info.fixdpvoltageswing);
-		}
 	}
 	/* Sort voltage table from low to high*/
 	for (i = 1; i < NUMBER_OF_DISP_CLK_VOLTAGE; ++i) {
 		for (j = i; j > 0; --j) {
 			if (info->disp_clk_voltage[j].max_supported_clk <
-			    info->disp_clk_voltage[j-1].max_supported_clk)
-				swap(info->disp_clk_voltage[j-1], info->disp_clk_voltage[j]);
+				info->disp_clk_voltage[j-1].max_supported_clk
+				) {
+				/* swap j and j - 1*/
+				temp = info->disp_clk_voltage[j-1];
+				info->disp_clk_voltage[j-1] =
+					info->disp_clk_voltage[j];
+				info->disp_clk_voltage[j] = temp;
+			}
 		}
 	}
 
@@ -3062,16 +3046,6 @@ static enum bp_result bios_parser_get_vram_info(
 				break;
 			case 5:
 				result = get_vram_info_v25(bp, info);
-				break;
-			default:
-				break;
-			}
-			break;
-
-		case 3:
-			switch (revision.minor) {
-			case 0:
-				result = get_vram_info_v30(bp, info);
 				break;
 			default:
 				break;

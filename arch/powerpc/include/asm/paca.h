@@ -18,7 +18,7 @@
 #include <asm/lppaca.h>
 #include <asm/mmu.h>
 #include <asm/page.h>
-#ifdef CONFIG_PPC_BOOK3E_64
+#ifdef CONFIG_PPC_BOOK3E
 #include <asm/exception-64e.h>
 #else
 #include <asm/exception-64s.h>
@@ -88,9 +88,7 @@ struct paca_struct {
 	u16 lock_token;			/* Constant 0x8000, used in locks */
 #endif
 
-#ifndef CONFIG_PPC_KERNEL_PCREL
 	u64 kernel_toc;			/* Kernel TOC address */
-#endif
 	u64 kernelbase;			/* Base address of kernel */
 	u64 kernel_msr;			/* MSR while running in kernel */
 	void *emergency_sp;		/* pointer to emergency stack */
@@ -129,7 +127,7 @@ struct paca_struct {
 #endif
 #endif /* CONFIG_PPC_BOOK3S_64 */
 
-#ifdef CONFIG_PPC_BOOK3E_64
+#ifdef CONFIG_PPC_BOOK3E
 	u64 exgen[8] __aligned(0x40);
 	/* Keep pgd in the same cacheline as the start of extlb */
 	pgd_t *pgd __aligned(0x40); /* Current PGD */
@@ -153,7 +151,7 @@ struct paca_struct {
 	void *dbg_kstack;
 
 	struct tlb_core_data tcd;
-#endif /* CONFIG_PPC_BOOK3E_64 */
+#endif /* CONFIG_PPC_BOOK3E */
 
 #ifdef CONFIG_PPC_64S_HASH_MMU
 	unsigned char mm_ctx_low_slices_psize[BITS_PER_LONG / BITS_PER_BYTE];
@@ -170,7 +168,7 @@ struct paca_struct {
 #ifdef CONFIG_PPC64
 	u64 exit_save_r1;		/* Syscall/interrupt R1 save */
 #endif
-#ifdef CONFIG_PPC_BOOK3E_64
+#ifdef CONFIG_PPC_BOOK3E
 	u16 trap_save;			/* Used when bad stack is encountered */
 #endif
 #ifdef CONFIG_PPC_BOOK3S_64
@@ -297,6 +295,7 @@ extern void free_unused_pacas(void);
 
 #else /* CONFIG_PPC64 */
 
+static inline void allocate_paca_ptrs(void) { }
 static inline void allocate_paca(int cpu) { }
 static inline void free_unused_pacas(void) { }
 

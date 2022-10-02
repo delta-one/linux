@@ -596,7 +596,7 @@ static void online_pages_range(unsigned long start_pfn, unsigned long nr_pages)
 	unsigned long pfn;
 
 	/*
-	 * Online the pages in MAX_ORDER aligned chunks. The callback might
+	 * Online the pages in MAX_ORDER - 1 aligned chunks. The callback might
 	 * decide to not expose all pages to the buddy (e.g., expose them
 	 * later). We account all pages as being online and belonging to this
 	 * zone ("present").
@@ -605,18 +605,7 @@ static void online_pages_range(unsigned long start_pfn, unsigned long nr_pages)
 	 * this and the first chunk to online will be pageblock_nr_pages.
 	 */
 	for (pfn = start_pfn; pfn < end_pfn;) {
-		int order;
-
-		/*
-		 * Free to online pages in the largest chunks alignment allows.
-		 *
-		 * __ffs() behaviour is undefined for 0. start == 0 is
-		 * MAX_ORDER-aligned, Set order to MAX_ORDER for the case.
-		 */
-		if (pfn)
-			order = min_t(int, MAX_ORDER, __ffs(pfn));
-		else
-			order = MAX_ORDER;
+		int order = min(MAX_ORDER - 1UL, __ffs(pfn));
 
 		(*online_page_callback)(pfn_to_page(pfn), order);
 		pfn += (1UL << order);
@@ -1631,17 +1620,18 @@ found:
 	return 0;
 }
 
-static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+static int
+do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
 {
 	unsigned long pfn;
 	struct page *page, *head;
+	int ret = 0;
 	LIST_HEAD(source);
 	static DEFINE_RATELIMIT_STATE(migrate_rs, DEFAULT_RATELIMIT_INTERVAL,
 				      DEFAULT_RATELIMIT_BURST);
 
 	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
 		struct folio *folio;
-		bool isolated;
 
 		if (!pfn_valid(pfn))
 			continue;
@@ -1651,7 +1641,7 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
 
 		if (PageHuge(page)) {
 			pfn = page_to_pfn(head) + compound_nr(head) - 1;
-			isolate_hugetlb(folio, &source);
+			isolate_hugetlb(head, &source);
 			continue;
 		} else if (PageTransHuge(page))
 			pfn = page_to_pfn(head) + thp_nr_pages(page) - 1;
@@ -1678,10 +1668,10 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
 		 * LRU and non-lru movable pages.
 		 */
 		if (PageLRU(page))
-			isolated = isolate_lru_page(page);
+			ret = isolate_lru_page(page);
 		else
-			isolated = isolate_movable_page(page, ISOLATE_UNEVICTABLE);
-		if (isolated) {
+			ret = isolate_movable_page(page, ISOLATE_UNEVICTABLE);
+		if (!ret) { /* Success */
 			list_add_tail(&page->lru, &source);
 			if (!__PageMovable(page))
 				inc_node_page_state(page, NR_ISOLATED_ANON +
@@ -1701,7 +1691,6 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
 			.nmask = &nmask,
 			.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
 		};
-		int ret;
 
 		/*
 		 * We have checked that migration range is on a single zone so
@@ -1730,6 +1719,8 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
 			putback_movable_pages(&source);
 		}
 	}
+
+	return ret;
 }
 
 static int __init cmdline_parse_movable_node(char *p)

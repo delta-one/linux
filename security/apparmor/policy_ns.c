@@ -84,13 +84,15 @@ static struct aa_profile *alloc_unconfined(const char *name)
 {
 	struct aa_profile *profile;
 
-	profile = aa_alloc_null(NULL, name, GFP_KERNEL);
+	profile = aa_alloc_profile(name, NULL, GFP_KERNEL);
 	if (!profile)
 		return NULL;
 
 	profile->label.flags |= FLAG_IX_ON_NAME_ERROR |
 		FLAG_IMMUTIBLE | FLAG_NS_COUNT | FLAG_UNCONFINED;
 	profile->mode = APPARMOR_UNCONFINED;
+	profile->file.dfa = aa_get_dfa(nulldfa);
+	profile->policy.dfa = aa_get_dfa(nulldfa);
 
 	return profile;
 }
@@ -132,7 +134,7 @@ static struct aa_ns *alloc_ns(const char *prefix, const char *name)
 	return ns;
 
 fail_unconfined:
-	aa_policy_destroy(&ns->base);
+	kfree_sensitive(ns->base.hname);
 fail_ns:
 	kfree_sensitive(ns);
 	return NULL;

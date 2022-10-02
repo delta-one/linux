@@ -255,7 +255,7 @@ xfs_perag_set_inode_tag(
 		break;
 	}
 
-	trace_xfs_perag_set_inode_tag(pag, _RET_IP_);
+	trace_xfs_perag_set_inode_tag(mp, pag->pag_agno, tag, _RET_IP_);
 }
 
 /* Clear a tag on both the AG incore inode tree and the AG radix tree. */
@@ -289,7 +289,7 @@ xfs_perag_clear_inode_tag(
 	radix_tree_tag_clear(&mp->m_perag_tree, pag->pag_agno, tag);
 	spin_unlock(&mp->m_perag_lock);
 
-	trace_xfs_perag_clear_inode_tag(pag, _RET_IP_);
+	trace_xfs_perag_clear_inode_tag(mp, pag->pag_agno, tag, _RET_IP_);
 }
 
 /*
@@ -342,9 +342,6 @@ xfs_iget_recycle(
 
 	trace_xfs_iget_recycle(ip);
 
-	if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL))
-		return -EAGAIN;
-
 	/*
 	 * We need to make it look like the inode is being reclaimed to prevent
 	 * the actual reclaim workers from stomping over us while we recycle
@@ -358,7 +355,6 @@ xfs_iget_recycle(
 
 	ASSERT(!rwsem_is_locked(&inode->i_rwsem));
 	error = xfs_reinit_inode(mp, inode);
-	xfs_iunlock(ip, XFS_ILOCK_EXCL);
 	if (error) {
 		/*
 		 * Re-initializing the inode failed, and we are in deep
@@ -435,23 +431,18 @@ xfs_iget_check_free_state(
 }
 
 /* Make all pending inactivation work start immediately. */
-static bool
+static void
 xfs_inodegc_queue_all(
 	struct xfs_mount	*mp)
 {
 	struct xfs_inodegc	*gc;
 	int			cpu;
-	bool			ret = false;
 
 	for_each_online_cpu(cpu) {
 		gc = per_cpu_ptr(mp->m_inodegc, cpu);
-		if (!llist_empty(&gc->list)) {
+		if (!llist_empty(&gc->list))
 			mod_delayed_work_on(cpu, mp->m_inodegc_wq, &gc->work, 0);
-			ret = true;
-		}
 	}
-
-	return ret;
 }
 
 /*
@@ -527,8 +518,6 @@ xfs_iget_cache_hit(
 	if (ip->i_flags & XFS_IRECLAIMABLE) {
 		/* Drops i_flags_lock and RCU read lock. */
 		error = xfs_iget_recycle(pag, ip);
-		if (error == -EAGAIN)
-			goto out_skip;
 		if (error)
 			return error;
 	} else {
@@ -591,7 +580,7 @@ xfs_iget_cache_miss(
 	if (!ip)
 		return -ENOMEM;
 
-	error = xfs_imap(pag, tp, ip->i_ino, &ip->i_imap, flags);
+	error = xfs_imap(mp, tp, ip->i_ino, &ip->i_imap, flags);
 	if (error)
 		goto out_destroy;
 
@@ -607,7 +596,7 @@ xfs_iget_cache_miss(
 	 */
 	if (xfs_has_v3inodes(mp) &&
 	    (flags & XFS_IGET_CREATE) && !xfs_has_ikeep(mp)) {
-		VFS_I(ip)->i_generation = get_random_u32();
+		VFS_I(ip)->i_generation = prandom_u32();
 	} else {
 		struct xfs_buf		*bp;
 
@@ -772,8 +761,7 @@ again:
 	return 0;
 
 out_error_or_again:
-	if (!(flags & (XFS_IGET_INCORE | XFS_IGET_NORETRY)) &&
-	    error == -EAGAIN) {
+	if (!(flags & XFS_IGET_INCORE) && error == -EAGAIN) {
 		delay(1);
 		goto again;
 	}
@@ -1773,7 +1761,7 @@ xfs_icwalk(
 		if (error) {
 			last_error = error;
 			if (error == -EFSCORRUPTED) {
-				xfs_perag_rele(pag);
+				xfs_perag_put(pag);
 				break;
 			}
 		}
@@ -1859,21 +1847,11 @@ xfs_inodegc_worker(
 						struct xfs_inodegc, work);
 	struct llist_node	*node = llist_del_all(&gc->list);
 	struct xfs_inode	*ip, *n;
-	unsigned int		nofs_flag;
-
-	ASSERT(gc->cpu == smp_processor_id());
 
 	WRITE_ONCE(gc->items, 0);
 
 	if (!node)
 		return;
-
-	/*
-	 * We can allocate memory here while doing writeback on behalf of
-	 * memory reclaim.  To avoid memory allocation deadlocks set the
-	 * task-wide nofs context for the following operations.
-	 */
-	nofs_flag = memalloc_nofs_save();
 
 	ip = llist_entry(node, struct xfs_inode, i_gclist);
 	trace_xfs_inodegc_worker(ip->i_mount, READ_ONCE(gc->shrinker_hits));
@@ -1883,8 +1861,6 @@ xfs_inodegc_worker(
 		xfs_iflags_set(ip, XFS_INACTIVATING);
 		xfs_inodegc_inactivate(ip);
 	}
-
-	memalloc_nofs_restore(nofs_flag);
 }
 
 /*
@@ -1916,41 +1892,24 @@ xfs_inodegc_flush(
 
 /*
  * Flush all the pending work and then disable the inode inactivation background
- * workers and wait for them to stop.  Caller must hold sb->s_umount to
- * coordinate changes in the inodegc_enabled state.
+ * workers and wait for them to stop.
  */
 void
 xfs_inodegc_stop(
 	struct xfs_mount	*mp)
 {
-	bool			rerun;
-
 	if (!xfs_clear_inodegc_enabled(mp))
 		return;
 
-	/*
-	 * Drain all pending inodegc work, including inodes that could be
-	 * queued by racing xfs_inodegc_queue or xfs_inodegc_shrinker_scan
-	 * threads that sample the inodegc state just prior to us clearing it.
-	 * The inodegc flag state prevents new threads from queuing more
-	 * inodes, so we queue pending work items and flush the workqueue until
-	 * all inodegc lists are empty.  IOWs, we cannot use drain_workqueue
-	 * here because it does not allow other unserialized mechanisms to
-	 * reschedule inodegc work while this draining is in progress.
-	 */
 	xfs_inodegc_queue_all(mp);
-	do {
-		flush_workqueue(mp->m_inodegc_wq);
-		rerun = xfs_inodegc_queue_all(mp);
-	} while (rerun);
+	drain_workqueue(mp->m_inodegc_wq);
 
 	trace_xfs_inodegc_stop(mp, __return_address);
 }
 
 /*
  * Enable the inode inactivation background workers and schedule deferred inode
- * inactivation work if there is any.  Caller must hold sb->s_umount to
- * coordinate changes in the inodegc_enabled state.
+ * inactivation work if there is any.
  */
 void
 xfs_inodegc_start(
@@ -2093,8 +2052,7 @@ xfs_inodegc_queue(
 		queue_delay = 0;
 
 	trace_xfs_inodegc_queue(mp, __return_address);
-	mod_delayed_work_on(current_cpu(), mp->m_inodegc_wq, &gc->work,
-			queue_delay);
+	mod_delayed_work(mp->m_inodegc_wq, &gc->work, queue_delay);
 	put_cpu_ptr(gc);
 
 	if (xfs_inodegc_want_flush_work(ip, items, shrinker_hits)) {
@@ -2138,8 +2096,7 @@ xfs_inodegc_cpu_dead(
 
 	if (xfs_is_inodegc_enabled(mp)) {
 		trace_xfs_inodegc_queue(mp, __return_address);
-		mod_delayed_work_on(current_cpu(), mp->m_inodegc_wq, &gc->work,
-				0);
+		mod_delayed_work(mp->m_inodegc_wq, &gc->work, 0);
 	}
 	put_cpu_ptr(gc);
 }

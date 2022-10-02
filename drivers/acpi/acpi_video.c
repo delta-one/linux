@@ -70,14 +70,27 @@ module_param(device_id_scheme, bool, 0444);
 static int only_lcd = -1;
 module_param(only_lcd, int, 0444);
 
+/*
+ * Display probing is known to take up to 5 seconds, so delay the fallback
+ * backlight registration by 5 seconds + 3 seconds for some extra margin.
+ */
+static int register_backlight_delay = 8;
+module_param(register_backlight_delay, int, 0444);
+MODULE_PARM_DESC(register_backlight_delay,
+	"Delay in seconds before doing fallback (non GPU driver triggered) "
+	"backlight registration, set to 0 to disable.");
+
 static bool may_report_brightness_keys;
 static int register_count;
 static DEFINE_MUTEX(register_count_mutex);
 static DEFINE_MUTEX(video_list_lock);
 static LIST_HEAD(video_bus_head);
 static int acpi_video_bus_add(struct acpi_device *device);
-static void acpi_video_bus_remove(struct acpi_device *device);
+static int acpi_video_bus_remove(struct acpi_device *device);
 static void acpi_video_bus_notify(struct acpi_device *device, u32 event);
+static void acpi_video_bus_register_backlight_work(struct work_struct *ignored);
+static DECLARE_DELAYED_WORK(video_bus_register_backlight_work,
+			    acpi_video_bus_register_backlight_work);
 
 /*
  * Indices in the _BCL method response: the first two items are special,
@@ -1975,7 +1988,6 @@ static int instance;
 static int acpi_video_bus_add(struct acpi_device *device)
 {
 	struct acpi_video_bus *video;
-	bool auto_detect;
 	int error;
 	acpi_status status;
 
@@ -2037,20 +2049,10 @@ static int acpi_video_bus_add(struct acpi_device *device)
 	mutex_unlock(&video_list_lock);
 
 	/*
-	 * If backlight-type auto-detection is used then a native backlight may
-	 * show up later and this may change the result from video to native.
-	 * Therefor normally the userspace visible /sys/class/backlight device
-	 * gets registered separately by the GPU driver calling
-	 * acpi_video_register_backlight() when an internal panel is detected.
-	 * Register the backlight now when not using auto-detection, so that
-	 * when the kernel cmdline or DMI-quirks are used the backlight will
-	 * get registered even if acpi_video_register_backlight() is not called.
+	 * The userspace visible backlight_device gets registered separately
+	 * from acpi_video_register_backlight().
 	 */
 	acpi_video_run_bcl_for_osi(video);
-	if (__acpi_video_get_backlight_type(false, &auto_detect) == acpi_backlight_video &&
-	    !auto_detect)
-		acpi_video_bus_register_backlight(video);
-
 	acpi_video_bus_add_notify_handler(video);
 
 	return 0;
@@ -2065,13 +2067,13 @@ err_free_video:
 	return error;
 }
 
-static void acpi_video_bus_remove(struct acpi_device *device)
+static int acpi_video_bus_remove(struct acpi_device *device)
 {
 	struct acpi_video_bus *video = NULL;
 
 
 	if (!device || !acpi_driver_data(device))
-		return;
+		return -EINVAL;
 
 	video = acpi_driver_data(device);
 
@@ -2085,6 +2087,13 @@ static void acpi_video_bus_remove(struct acpi_device *device)
 
 	kfree(video->attached_array);
 	kfree(video);
+
+	return 0;
+}
+
+static void acpi_video_bus_register_backlight_work(struct work_struct *ignored)
+{
+	acpi_video_register_backlight();
 }
 
 static int __init is_i740(struct pci_dev *dev)
@@ -2197,6 +2206,18 @@ int acpi_video_register(void)
 	 */
 	register_count = 1;
 
+	/*
+	 * acpi_video_bus_add() skips registering the userspace visible
+	 * backlight_device. The intend is for this to be registered by the
+	 * drm/kms driver calling acpi_video_register_backlight() *after* it is
+	 * done setting up its own native backlight device. The delayed work
+	 * ensures that acpi_video_register_backlight() always gets called
+	 * eventually, in case there is no drm/kms driver or it is disabled.
+	 */
+	if (register_backlight_delay)
+		schedule_delayed_work(&video_bus_register_backlight_work,
+				      register_backlight_delay * HZ);
+
 leave:
 	mutex_unlock(&register_count_mutex);
 	return ret;
@@ -2207,6 +2228,7 @@ void acpi_video_unregister(void)
 {
 	mutex_lock(&register_count_mutex);
 	if (register_count) {
+		cancel_delayed_work_sync(&video_bus_register_backlight_work);
 		acpi_bus_unregister_driver(&acpi_video_bus);
 		register_count = 0;
 		may_report_brightness_keys = false;

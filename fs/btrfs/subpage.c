@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 
 #include <linux/slab.h>
-#include "messages.h"
 #include "ctree.h"
 #include "subpage.h"
 #include "btrfs_inode.h"
@@ -365,6 +364,28 @@ void btrfs_page_end_writer_lock(const struct btrfs_fs_info *fs_info,
 	btrfs_subpage_clamp_range(page, &start, &len);
 	if (btrfs_subpage_end_and_test_writer(fs_info, page, start, len))
 		unlock_page(page);
+}
+
+static bool bitmap_test_range_all_set(unsigned long *addr, unsigned int start,
+				      unsigned int nbits)
+{
+	unsigned int found_zero;
+
+	found_zero = find_next_zero_bit(addr, start + nbits, start);
+	if (found_zero == start + nbits)
+		return true;
+	return false;
+}
+
+static bool bitmap_test_range_all_zero(unsigned long *addr, unsigned int start,
+				       unsigned int nbits)
+{
+	unsigned int found_set;
+
+	found_set = find_next_bit(addr, start + nbits, start);
+	if (found_set == start + nbits)
+		return true;
+	return false;
 }
 
 #define subpage_calc_start_bit(fs_info, page, name, start, len)		\

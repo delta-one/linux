@@ -15,7 +15,6 @@
 #define DP_LABEL "MDSS DP DISPLAY"
 #define DP_MAX_PIXEL_CLK_KHZ	675000
 #define DP_MAX_NUM_DP_LANES	4
-#define DP_LINK_RATE_HBR2	540000 /* kbytes */
 
 enum dp_pm_type {
 	DP_CORE_PM,
@@ -120,7 +119,6 @@ struct dp_parser {
 	struct dp_io io;
 	struct dp_display_data disp_data;
 	u32 max_dp_lanes;
-	u32 max_dp_link_rate;
 	struct drm_bridge *next_bridge;
 
 	int (*parse)(struct dp_parser *parser);
@@ -140,9 +138,8 @@ struct dp_parser {
 struct dp_parser *dp_parser_get(struct platform_device *pdev);
 
 /**
- * devm_dp_parser_find_next_bridge() - find an additional bridge to DP
+ * dp_parser_find_next_bridge() - find an additional bridge to DP
  *
- * @dev: device to tie bridge lifetime to
  * @parser: dp_parser data from client
  *
  * This function is used to find any additional bridge attached to
@@ -150,6 +147,6 @@ struct dp_parser *dp_parser_get(struct platform_device *pdev);
  *
  * Return: 0 if able to get the bridge, otherwise negative errno for failure.
  */
-int devm_dp_parser_find_next_bridge(struct device *dev, struct dp_parser *parser);
+int dp_parser_find_next_bridge(struct dp_parser *parser);
 
 #endif

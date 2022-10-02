@@ -364,30 +364,15 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
 }
 
 static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
-					     struct machine *machine,
 					     bool is_kernel)
 {
 	struct build_id bid;
 	struct nsinfo *nsi;
 	struct nscookie nc;
-	struct dso *dso = NULL;
-	struct dso_id id;
 	int rc;
 
 	if (is_kernel) {
 		rc = sysfs__read_build_id("/sys/kernel/notes", &bid);
-		goto out;
-	}
-
-	id.maj = event->maj;
-	id.min = event->min;
-	id.ino = event->ino;
-	id.ino_generation = event->ino_generation;
-
-	dso = dsos__findnew_id(&machine->dsos, event->filename, &id);
-	if (dso && dso->has_build_id) {
-		bid = dso->bid;
-		rc = 0;
 		goto out;
 	}
 
@@ -406,16 +391,12 @@ out:
 		event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
 		event->__reserved_1 = 0;
 		event->__reserved_2 = 0;
-
-		if (dso && !dso->has_build_id)
-			dso__set_build_id(dso, &bid);
 	} else {
 		if (event->filename[0] == '/') {
 			pr_debug2("Failed to read build ID for %s\n",
 				  event->filename);
 		}
 	}
-	dso__put(dso);
 }
 
 int perf_event__synthesize_mmap_events(struct perf_tool *tool,
@@ -526,7 +507,7 @@ out:
 		event->mmap2.tid = pid;
 
 		if (symbol_conf.buildid_mmap2)
-			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
+			perf_record_mmap2__read_build_id(&event->mmap2, false);
 
 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
 			rc = -1;
@@ -669,7 +650,7 @@ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t
 				   struct machine *machine)
 {
 	int rc = 0;
-	struct map_rb_node *pos;
+	struct map *pos;
 	struct maps *maps = machine__kernel_maps(machine);
 	union perf_event *event;
 	size_t size = symbol_conf.buildid_mmap2 ?
@@ -692,39 +673,37 @@ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t
 		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
 
 	maps__for_each_entry(maps, pos) {
-		struct map *map = pos->map;
-		struct dso *dso;
-
-		if (!__map__is_kmodule(map))
+		if (!__map__is_kmodule(pos))
 			continue;
 
-		dso = map__dso(map);
 		if (symbol_conf.buildid_mmap2) {
-			size = PERF_ALIGN(dso->long_name_len + 1, sizeof(u64));
+			size = PERF_ALIGN(pos->dso->long_name_len + 1, sizeof(u64));
 			event->mmap2.header.type = PERF_RECORD_MMAP2;
 			event->mmap2.header.size = (sizeof(event->mmap2) -
 						(sizeof(event->mmap2.filename) - size));
 			memset(event->mmap2.filename + size, 0, machine->id_hdr_size);
 			event->mmap2.header.size += machine->id_hdr_size;
-			event->mmap2.start = map__start(map);
-			event->mmap2.len   = map__size(map);
+			event->mmap2.start = pos->start;
+			event->mmap2.len   = pos->end - pos->start;
 			event->mmap2.pid   = machine->pid;
 
-			memcpy(event->mmap2.filename, dso->long_name, dso->long_name_len + 1);
+			memcpy(event->mmap2.filename, pos->dso->long_name,
+			       pos->dso->long_name_len + 1);
 
-			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
+			perf_record_mmap2__read_build_id(&event->mmap2, false);
 		} else {
-			size = PERF_ALIGN(dso->long_name_len + 1, sizeof(u64));
+			size = PERF_ALIGN(pos->dso->long_name_len + 1, sizeof(u64));
 			event->mmap.header.type = PERF_RECORD_MMAP;
 			event->mmap.header.size = (sizeof(event->mmap) -
 						(sizeof(event->mmap.filename) - size));
 			memset(event->mmap.filename + size, 0, machine->id_hdr_size);
 			event->mmap.header.size += machine->id_hdr_size;
-			event->mmap.start = map__start(map);
-			event->mmap.len   = map__size(map);
+			event->mmap.start = pos->start;
+			event->mmap.len   = pos->end - pos->start;
 			event->mmap.pid   = machine->pid;
 
-			memcpy(event->mmap.filename, dso->long_name, dso->long_name_len + 1);
+			memcpy(event->mmap.filename, pos->dso->long_name,
+			       pos->dso->long_name_len + 1);
 		}
 
 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
@@ -1143,11 +1122,11 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
 		event->mmap2.header.size = (sizeof(event->mmap2) -
 				(sizeof(event->mmap2.filename) - size) + machine->id_hdr_size);
 		event->mmap2.pgoff = kmap->ref_reloc_sym->addr;
-		event->mmap2.start = map__start(map);
-		event->mmap2.len   = map__end(map) - event->mmap.start;
+		event->mmap2.start = map->start;
+		event->mmap2.len   = map->end - event->mmap.start;
 		event->mmap2.pid   = machine->pid;
 
-		perf_record_mmap2__read_build_id(&event->mmap2, machine, true);
+		perf_record_mmap2__read_build_id(&event->mmap2, true);
 	} else {
 		size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
 				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
@@ -1156,8 +1135,8 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
 		event->mmap.header.size = (sizeof(event->mmap) -
 				(sizeof(event->mmap.filename) - size) + machine->id_hdr_size);
 		event->mmap.pgoff = kmap->ref_reloc_sym->addr;
-		event->mmap.start = map__start(map);
-		event->mmap.len   = map__end(map) - event->mmap.start;
+		event->mmap.start = map->start;
+		event->mmap.len   = map->end - event->mmap.start;
 		event->mmap.pid   = machine->pid;
 	}
 
@@ -2006,7 +1985,7 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
 					     perf_event__handler_t process)
 {
 	struct perf_record_event_update *ev;
-	size_t len = strlen(evsel__name(evsel));
+	size_t len = strlen(evsel->name);
 	int err;
 
 	ev = event_update_event__new(len + 1, PERF_EVENT_UPDATE__NAME, evsel->core.id[0]);
@@ -2159,7 +2138,6 @@ int perf_event__synthesize_attr(struct perf_tool *tool, struct perf_event_attr *
 	return err;
 }
 
-#ifdef HAVE_LIBTRACEEVENT
 int perf_event__synthesize_tracing_data(struct perf_tool *tool, int fd, struct evlist *evlist,
 					perf_event__handler_t process)
 {
@@ -2206,7 +2184,6 @@ int perf_event__synthesize_tracing_data(struct perf_tool *tool, int fd, struct e
 
 	return aligned_size;
 }
-#endif
 
 int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16 misc,
 				    perf_event__handler_t process, struct machine *machine)
@@ -2221,10 +2198,9 @@ int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16
 
 	len = pos->long_name_len + 1;
 	len = PERF_ALIGN(len, NAME_ALIGN);
-	ev.build_id.size = min(pos->bid.size, sizeof(pos->bid.data));
-	memcpy(&ev.build_id.build_id, pos->bid.data, ev.build_id.size);
+	memcpy(&ev.build_id.build_id, pos->bid.data, sizeof(pos->bid.data));
 	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
-	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
+	ev.build_id.header.misc = misc;
 	ev.build_id.pid = machine->pid;
 	ev.build_id.header.size = sizeof(ev.build_id) + len;
 	memcpy(&ev.build_id.filename, pos->long_name, pos->long_name_len);
@@ -2359,7 +2335,6 @@ int perf_event__synthesize_for_pipe(struct perf_tool *tool,
 	}
 	ret += err;
 
-#ifdef HAVE_LIBTRACEEVENT
 	if (have_tracepoints(&evlist->core.entries)) {
 		int fd = perf_data__fd(data);
 
@@ -2379,9 +2354,6 @@ int perf_event__synthesize_for_pipe(struct perf_tool *tool,
 		}
 		ret += err;
 	}
-#else
-	(void)data;
-#endif
 
 	return ret;
 }

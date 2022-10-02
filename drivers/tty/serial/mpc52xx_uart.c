@@ -1364,7 +1364,7 @@ static const struct uart_ops mpc52xx_uart_ops = {
 /* Interrupt handling                                                       */
 /* ======================================================================== */
 
-static inline bool
+static inline unsigned int
 mpc52xx_uart_int_rx_chars(struct uart_port *port)
 {
 	struct tty_port *tport = &port->state->port;
@@ -1425,27 +1425,58 @@ mpc52xx_uart_int_rx_chars(struct uart_port *port)
 	return psc_ops->raw_rx_rdy(port);
 }
 
-static inline bool
+static inline int
 mpc52xx_uart_int_tx_chars(struct uart_port *port)
 {
-	u8 ch;
+	struct circ_buf *xmit = &port->state->xmit;
 
-	return uart_port_tx(port, ch,
-		psc_ops->raw_tx_rdy(port),
-		psc_ops->write_char(port, ch));
+	/* Process out of band chars */
+	if (port->x_char) {
+		psc_ops->write_char(port, port->x_char);
+		port->icount.tx++;
+		port->x_char = 0;
+		return 1;
+	}
+
+	/* Nothing to do ? */
+	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
+		mpc52xx_uart_stop_tx(port);
+		return 0;
+	}
+
+	/* Send chars */
+	while (psc_ops->raw_tx_rdy(port)) {
+		psc_ops->write_char(port, xmit->buf[xmit->tail]);
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+		if (uart_circ_empty(xmit))
+			break;
+	}
+
+	/* Wake up */
+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+		uart_write_wakeup(port);
+
+	/* Maybe we're done after all */
+	if (uart_circ_empty(xmit)) {
+		mpc52xx_uart_stop_tx(port);
+		return 0;
+	}
+
+	return 1;
 }
 
 static irqreturn_t
 mpc5xxx_uart_process_int(struct uart_port *port)
 {
 	unsigned long pass = ISR_PASS_LIMIT;
-	bool keepgoing;
+	unsigned int keepgoing;
 	u8 status;
 
 	/* While we have stuff to do, we continue */
 	do {
 		/* If we don't find anything to do, we stop */
-		keepgoing = false;
+		keepgoing = 0;
 
 		psc_ops->rx_clr_irq(port);
 		if (psc_ops->rx_rdy(port))
@@ -1464,7 +1495,7 @@ mpc5xxx_uart_process_int(struct uart_port *port)
 
 		/* Limit number of iteration */
 		if (!(--pass))
-			keepgoing = false;
+			keepgoing = 0;
 
 	} while (keepgoing);
 

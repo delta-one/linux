@@ -62,17 +62,17 @@
 		pinctrl-0 = <&pinctrl_led_gpio_default>;
 		status = "okay"; /* conflict with pwm0 */
 
-		led-red {
+		red {
 			label = "red";
 			gpios = <&pioA PIN_PB0 GPIO_ACTIVE_HIGH>;
 		};
 
-		led-green {
+		green {
 			label = "green";
 			gpios = <&pioA PIN_PB1 GPIO_ACTIVE_HIGH>;
 		};
 
-		led-blue {
+		blue {
 			label = "blue";
 			gpios = <&pioA PIN_PA31 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
@@ -669,8 +669,7 @@
 		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
 		reg = <0>;
-		spi-max-frequency = <104000000>;
-		spi-cs-setup-ns = <7>;
+		spi-max-frequency = <80000000>;
 		spi-tx-bus-width = <4>;
 		spi-rx-bus-width = <4>;
 		m25p,fast-read;

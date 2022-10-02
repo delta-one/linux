@@ -459,20 +459,26 @@ fail_dmx_conn:
 	for (j = j - 1; j >= 0; --j)
 		dvb->demux.dmx.remove_frontend(&dvb->demux.dmx,
 					       &dvb->dmx_fe[j]);
-	dvb_dmxdev_release(&dvb->dmx_dev);
 fail_dmx_dev:
-	dvb_dmx_release(&dvb->demux);
+	dvb_dmxdev_release(&dvb->dmx_dev);
 fail_dmx:
-fail_demod_probe:
-	for (i = i - 1; i >= 0; --i) {
-		dvb_unregister_frontend(dvb->fe[i]);
+	dvb_dmx_release(&dvb->demux);
 fail_fe:
-		dvb_module_release(dvb->i2c_client_tuner[i]);
+	for (j = i; j >= 0; --j)
+		dvb_unregister_frontend(dvb->fe[j]);
 fail_tuner_probe:
-		dvb_module_release(dvb->i2c_client_demod[i]);
-	}
+	for (j = i; j >= 0; --j)
+		if (dvb->i2c_client_tuner[j])
+			dvb_module_release(dvb->i2c_client_tuner[j]);
+
+fail_demod_probe:
+	for (j = i; j >= 0; --j)
+		if (dvb->i2c_client_demod[j])
+			dvb_module_release(dvb->i2c_client_demod[j]);
+
 fail_adapter:
 	dvb_unregister_adapter(&dvb->adapter);
+
 fail_i2c:
 	i2c_del_adapter(&dvb->i2c_adapter);
 
@@ -528,7 +534,7 @@ err_dvb:
 	return ret;
 }
 
-static void vidtv_bridge_remove(struct platform_device *pdev)
+static int vidtv_bridge_remove(struct platform_device *pdev)
 {
 	struct vidtv_dvb *dvb;
 	u32 i;
@@ -552,6 +558,8 @@ static void vidtv_bridge_remove(struct platform_device *pdev)
 	dvb_dmx_release(&dvb->demux);
 	dvb_unregister_adapter(&dvb->adapter);
 	dev_info(&pdev->dev, "Successfully removed vidtv\n");
+
+	return 0;
 }
 
 static void vidtv_bridge_dev_release(struct device *dev)
@@ -572,7 +580,7 @@ static struct platform_driver vidtv_bridge_driver = {
 		.name = VIDTV_PDEV_NAME,
 	},
 	.probe    = vidtv_bridge_probe,
-	.remove_new = vidtv_bridge_remove,
+	.remove   = vidtv_bridge_remove,
 };
 
 static void __exit vidtv_bridge_exit(void)

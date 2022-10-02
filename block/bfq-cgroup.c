@@ -224,7 +224,7 @@ void bfqg_stats_update_io_add(struct bfq_group *bfqg, struct bfq_queue *bfqq,
 {
 	blkg_rwstat_add(&bfqg->stats.queued, opf, 1);
 	bfqg_stats_end_empty_time(&bfqg->stats);
-	if (!(bfqq == bfqg->bfqd->in_service_queue))
+	if (!(bfqq == ((struct bfq_data *)bfqg->bfqd)->in_service_queue))
 		bfqg_stats_set_start_group_wait_time(bfqg, bfqq_group(bfqq));
 }
 
@@ -316,12 +316,14 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq)
 
 static void bfqg_get(struct bfq_group *bfqg)
 {
-	refcount_inc(&bfqg->ref);
+	bfqg->ref++;
 }
 
 static void bfqg_put(struct bfq_group *bfqg)
 {
-	if (refcount_dec_and_test(&bfqg->ref))
+	bfqg->ref--;
+
+	if (bfqg->ref == 0)
 		kfree(bfqg);
 }
 
@@ -497,9 +499,15 @@ static struct blkcg_policy_data *bfq_cpd_alloc(gfp_t gfp)
 	bgd = kzalloc(sizeof(*bgd), gfp);
 	if (!bgd)
 		return NULL;
-
-	bgd->weight = CGROUP_WEIGHT_DFL;
 	return &bgd->pd;
+}
+
+static void bfq_cpd_init(struct blkcg_policy_data *cpd)
+{
+	struct bfq_group_data *d = cpd_to_bfqgd(cpd);
+
+	d->weight = cgroup_subsys_on_dfl(io_cgrp_subsys) ?
+		CGROUP_WEIGHT_DFL : BFQ_WEIGHT_LEGACY_DFL;
 }
 
 static void bfq_cpd_free(struct blkcg_policy_data *cpd)
@@ -507,12 +515,12 @@ static void bfq_cpd_free(struct blkcg_policy_data *cpd)
 	kfree(cpd_to_bfqgd(cpd));
 }
 
-static struct blkg_policy_data *bfq_pd_alloc(struct gendisk *disk,
-		struct blkcg *blkcg, gfp_t gfp)
+static struct blkg_policy_data *bfq_pd_alloc(gfp_t gfp, struct request_queue *q,
+					     struct blkcg *blkcg)
 {
 	struct bfq_group *bfqg;
 
-	bfqg = kzalloc_node(sizeof(*bfqg), gfp, disk->node_id);
+	bfqg = kzalloc_node(sizeof(*bfqg), gfp, q->node);
 	if (!bfqg)
 		return NULL;
 
@@ -522,7 +530,7 @@ static struct blkg_policy_data *bfq_pd_alloc(struct gendisk *disk,
 	}
 
 	/* see comments in bfq_bic_update_cgroup for why refcounting */
-	refcount_set(&bfqg->ref, 1);
+	bfqg_get(bfqg);
 	return &bfqg->pd;
 }
 
@@ -544,7 +552,7 @@ static void bfq_pd_init(struct blkg_policy_data *pd)
 				   */
 	bfqg->bfqd = bfqd;
 	bfqg->active_entities = 0;
-	bfqg->num_queues_with_pending_reqs = 0;
+	bfqg->online = true;
 	bfqg->rq_pos_tree = RB_ROOT;
 }
 
@@ -602,12 +610,8 @@ struct bfq_group *bfq_bio_bfqg(struct bfq_data *bfqd, struct bio *bio)
 	struct bfq_group *bfqg;
 
 	while (blkg) {
-		if (!blkg->online) {
-			blkg = blkg->parent;
-			continue;
-		}
 		bfqg = blkg_to_bfqg(blkg);
-		if (bfqg->pd.online) {
+		if (bfqg->online) {
 			bio_associate_blkg_from_css(bio, &blkg->blkcg->css);
 			return bfqg;
 		}
@@ -637,7 +641,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
 {
 	struct bfq_entity *entity = &bfqq->entity;
 	struct bfq_group *old_parent = bfqq_group(bfqq);
-	bool has_pending_reqs = false;
 
 	/*
 	 * No point to move bfqq to the same group, which can happen when
@@ -657,11 +660,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
 	 * next possible expire or deactivate.
 	 */
 	bfqq->ref++;
-
-	if (entity->in_groups_with_pending_reqs) {
-		has_pending_reqs = true;
-		bfq_del_bfqq_in_groups_with_pending_reqs(bfqq);
-	}
 
 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
@@ -690,59 +688,16 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
 	/* pin down bfqg and its associated blkg  */
 	bfqg_and_blkg_get(bfqg);
 
-	if (has_pending_reqs)
-		bfq_add_bfqq_in_groups_with_pending_reqs(bfqq);
-
 	if (bfq_bfqq_busy(bfqq)) {
 		if (unlikely(!bfqd->nonrot_with_queueing))
 			bfq_pos_tree_add_move(bfqd, bfqq);
 		bfq_activate_bfqq(bfqd, bfqq);
 	}
 
-	if (!bfqd->in_service_queue && !bfqd->tot_rq_in_driver)
+	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
 		bfq_schedule_dispatch(bfqd);
 	/* release extra ref taken above, bfqq may happen to be freed now */
 	bfq_put_queue(bfqq);
-}
-
-static void bfq_sync_bfqq_move(struct bfq_data *bfqd,
-			       struct bfq_queue *sync_bfqq,
-			       struct bfq_io_cq *bic,
-			       struct bfq_group *bfqg,
-			       unsigned int act_idx)
-{
-	struct bfq_queue *bfqq;
-
-	if (!sync_bfqq->new_bfqq && !bfq_bfqq_coop(sync_bfqq)) {
-		/* We are the only user of this bfqq, just move it */
-		if (sync_bfqq->entity.sched_data != &bfqg->sched_data)
-			bfq_bfqq_move(bfqd, sync_bfqq, bfqg);
-		return;
-	}
-
-	/*
-	 * The queue was merged to a different queue. Check
-	 * that the merge chain still belongs to the same
-	 * cgroup.
-	 */
-	for (bfqq = sync_bfqq; bfqq; bfqq = bfqq->new_bfqq)
-		if (bfqq->entity.sched_data != &bfqg->sched_data)
-			break;
-	if (bfqq) {
-		/*
-		 * Some queue changed cgroup so the merge is not valid
-		 * anymore. We cannot easily just cancel the merge (by
-		 * clearing new_bfqq) as there may be other processes
-		 * using this queue and holding refs to all queues
-		 * below sync_bfqq->new_bfqq. Similarly if the merge
-		 * already happened, we need to detach from bfqq now
-		 * so that we cannot merge bio to a request from the
-		 * old cgroup.
-		 */
-		bfq_put_cooperator(sync_bfqq);
-		bic_set_bfqq(bic, NULL, true, act_idx);
-		bfq_release_process_ref(bfqd, sync_bfqq);
-	}
 }
 
 /**
@@ -755,25 +710,60 @@ static void bfq_sync_bfqq_move(struct bfq_data *bfqd,
  * sure that the reference to cgroup is valid across the call (see
  * comments in bfq_bic_update_cgroup on this issue)
  */
-static void __bfq_bic_change_cgroup(struct bfq_data *bfqd,
-				    struct bfq_io_cq *bic,
-				    struct bfq_group *bfqg)
+static void *__bfq_bic_change_cgroup(struct bfq_data *bfqd,
+				     struct bfq_io_cq *bic,
+				     struct bfq_group *bfqg)
 {
-	unsigned int act_idx;
+	struct bfq_queue *async_bfqq = bic_to_bfqq(bic, 0);
+	struct bfq_queue *sync_bfqq = bic_to_bfqq(bic, 1);
+	struct bfq_entity *entity;
 
-	for (act_idx = 0; act_idx < bfqd->num_actuators; act_idx++) {
-		struct bfq_queue *async_bfqq = bic_to_bfqq(bic, false, act_idx);
-		struct bfq_queue *sync_bfqq = bic_to_bfqq(bic, true, act_idx);
+	if (async_bfqq) {
+		entity = &async_bfqq->entity;
 
-		if (async_bfqq &&
-		    async_bfqq->entity.sched_data != &bfqg->sched_data) {
-			bic_set_bfqq(bic, NULL, false, act_idx);
+		if (entity->sched_data != &bfqg->sched_data) {
+			bic_set_bfqq(bic, NULL, 0);
 			bfq_release_process_ref(bfqd, async_bfqq);
 		}
-
-		if (sync_bfqq)
-			bfq_sync_bfqq_move(bfqd, sync_bfqq, bic, bfqg, act_idx);
 	}
+
+	if (sync_bfqq) {
+		if (!sync_bfqq->new_bfqq && !bfq_bfqq_coop(sync_bfqq)) {
+			/* We are the only user of this bfqq, just move it */
+			if (sync_bfqq->entity.sched_data != &bfqg->sched_data)
+				bfq_bfqq_move(bfqd, sync_bfqq, bfqg);
+		} else {
+			struct bfq_queue *bfqq;
+
+			/*
+			 * The queue was merged to a different queue. Check
+			 * that the merge chain still belongs to the same
+			 * cgroup.
+			 */
+			for (bfqq = sync_bfqq; bfqq; bfqq = bfqq->new_bfqq)
+				if (bfqq->entity.sched_data !=
+				    &bfqg->sched_data)
+					break;
+			if (bfqq) {
+				/*
+				 * Some queue changed cgroup so the merge is
+				 * not valid anymore. We cannot easily just
+				 * cancel the merge (by clearing new_bfqq) as
+				 * there may be other processes using this
+				 * queue and holding refs to all queues below
+				 * sync_bfqq->new_bfqq. Similarly if the merge
+				 * already happened, we need to detach from
+				 * bfqq now so that we cannot merge bio to a
+				 * request from the old cgroup.
+				 */
+				bfq_put_cooperator(sync_bfqq);
+				bfq_release_process_ref(bfqd, sync_bfqq);
+				bic_set_bfqq(bic, NULL, 1);
+			}
+		}
+	}
+
+	return bfqg;
 }
 
 void bfq_bic_update_cgroup(struct bfq_io_cq *bic, struct bio *bio)
@@ -978,6 +968,7 @@ static void bfq_pd_offline(struct blkg_policy_data *pd)
 
 put_async_queues:
 	bfq_put_async_queues(bfqd, bfqg);
+	bfqg->online = false;
 
 	spin_unlock_irqrestore(&bfqd->lock, flags);
 	/*
@@ -1105,11 +1096,9 @@ static ssize_t bfq_io_set_device_weight(struct kernfs_open_file *of,
 	struct bfq_group *bfqg;
 	u64 v;
 
-	blkg_conf_init(&ctx, buf);
-
-	ret = blkg_conf_prep(blkcg, &blkcg_policy_bfq, &ctx);
+	ret = blkg_conf_prep(blkcg, &blkcg_policy_bfq, buf, &ctx);
 	if (ret)
-		goto out;
+		return ret;
 
 	if (sscanf(ctx.body, "%llu", &v) == 1) {
 		/* require "default" on dfl */
@@ -1131,7 +1120,7 @@ static ssize_t bfq_io_set_device_weight(struct kernfs_open_file *of,
 		ret = 0;
 	}
 out:
-	blkg_conf_exit(&ctx);
+	blkg_conf_finish(&ctx);
 	return ret ?: nbytes;
 }
 
@@ -1285,7 +1274,7 @@ struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node)
 {
 	int ret;
 
-	ret = blkcg_activate_policy(bfqd->queue->disk, &blkcg_policy_bfq);
+	ret = blkcg_activate_policy(bfqd->queue, &blkcg_policy_bfq);
 	if (ret)
 		return NULL;
 
@@ -1297,6 +1286,8 @@ struct blkcg_policy blkcg_policy_bfq = {
 	.legacy_cftypes		= bfq_blkcg_legacy_files,
 
 	.cpd_alloc_fn		= bfq_cpd_alloc,
+	.cpd_init_fn		= bfq_cpd_init,
+	.cpd_bind_fn	        = bfq_cpd_init,
 	.cpd_free_fn		= bfq_cpd_free,
 
 	.pd_alloc_fn		= bfq_pd_alloc,

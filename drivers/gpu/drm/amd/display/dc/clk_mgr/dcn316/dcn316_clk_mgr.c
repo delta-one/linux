@@ -39,7 +39,7 @@
 #include "dcn316_smu.h"
 #include "dm_helpers.h"
 #include "dc_dmub_srv.h"
-#include "link.h"
+#include "dc_link_dp.h"
 
 // DCN316 this is CLK1 instance
 #define MAX_INSTANCE                                        7
@@ -254,7 +254,9 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
 	cmd.notify_clocks.clocks.dispclk_khz = clk_mgr_base->clks.dispclk_khz;
 	cmd.notify_clocks.clocks.dppclk_khz = clk_mgr_base->clks.dppclk_khz;
 
-	dm_execute_dmub_cmd(dc->ctx, &cmd, DM_DMUB_WAIT_TYPE_WAIT);
+	dc_dmub_srv_cmd_queue(dc->ctx->dmub_srv, &cmd);
+	dc_dmub_srv_cmd_execute(dc->ctx->dmub_srv);
+	dc_dmub_srv_wait_idle(dc->ctx->dmub_srv);
 }
 
 static void dcn316_dump_clk_registers(struct clk_state_registers_and_bypass *regs_and_bypass,
@@ -551,7 +553,6 @@ static void dcn316_clk_mgr_helper_populate_bw_params(
 
 	bw_params->vram_type = bios_info->memory_type;
 	bw_params->num_channels = bios_info->ma_channel_number;
-	bw_params->dram_channel_width_bytes = bios_info->memory_type == 0x22 ? 8 : 4;
 
 	for (i = 0; i < WM_SET_COUNT; i++) {
 		bw_params->wm_table.entries[i].wm_inst = i;

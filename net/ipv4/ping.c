@@ -49,11 +49,6 @@
 #include <net/transp_v6.h>
 #endif
 
-#define ping_portaddr_for_each_entry(__sk, node, list) \
-	hlist_nulls_for_each_entry(__sk, node, list, sk_nulls_node)
-#define ping_portaddr_for_each_entry_rcu(__sk, node, list) \
-	hlist_nulls_for_each_entry_rcu(__sk, node, list, sk_nulls_node)
-
 struct ping_table {
 	struct hlist_nulls_head	hash[PING_HTABLE_SIZE];
 	spinlock_t		lock;
@@ -143,7 +138,7 @@ next_port:
 
 fail:
 	spin_unlock(&ping_table.lock);
-	return -EADDRINUSE;
+	return 1;
 }
 EXPORT_SYMBOL_GPL(ping_get_port);
 
@@ -197,7 +192,7 @@ static struct sock *ping_lookup(struct net *net, struct sk_buff *skb, u16 ident)
 		return NULL;
 	}
 
-	ping_portaddr_for_each_entry_rcu(sk, hnode, hslot) {
+	ping_portaddr_for_each_entry(sk, hnode, hslot) {
 		isk = inet_sk(sk);
 
 		pr_debug("iterate\n");
@@ -622,9 +617,21 @@ int ping_getfrag(void *from, char *to,
 {
 	struct pingfakehdr *pfh = from;
 
-	if (!csum_and_copy_from_iter_full(to, fraglen, &pfh->wcheck,
-					  &pfh->msg->msg_iter))
-		return -EFAULT;
+	if (offset == 0) {
+		fraglen -= sizeof(struct icmphdr);
+		if (fraglen < 0)
+			BUG();
+		if (!csum_and_copy_from_iter_full(to + sizeof(struct icmphdr),
+			    fraglen, &pfh->wcheck,
+			    &pfh->msg->msg_iter))
+			return -EFAULT;
+	} else if (offset < sizeof(struct icmphdr)) {
+			BUG();
+	} else {
+		if (!csum_and_copy_from_iter_full(to, fraglen, &pfh->wcheck,
+					    &pfh->msg->msg_iter))
+			return -EFAULT;
+	}
 
 #if IS_ENABLED(CONFIG_IPV6)
 	/* For IPv6, checksum each skb as we go along, as expected by
@@ -632,7 +639,7 @@ int ping_getfrag(void *from, char *to,
 	 * wcheck, it will be finalized in ping_v4_push_pending_frames.
 	 */
 	if (pfh->family == AF_INET6) {
-		skb->csum = csum_block_add(skb->csum, pfh->wcheck, odd);
+		skb->csum = pfh->wcheck;
 		skb->ip_summed = CHECKSUM_NONE;
 		pfh->wcheck = 0;
 	}
@@ -835,8 +842,7 @@ back_from_confirm:
 	pfh.family = AF_INET;
 
 	err = ip_append_data(sk, &fl4, ping_getfrag, &pfh, len,
-			     sizeof(struct icmphdr), &ipc, &rt,
-			     msg->msg_flags);
+			0, &ipc, &rt, msg->msg_flags);
 	if (err)
 		ip_flush_pending_frames(sk);
 	else
@@ -1089,13 +1095,13 @@ static struct sock *ping_get_idx(struct seq_file *seq, loff_t pos)
 }
 
 void *ping_seq_start(struct seq_file *seq, loff_t *pos, sa_family_t family)
-	__acquires(ping_table.lock)
+	__acquires(RCU)
 {
 	struct ping_iter_state *state = seq->private;
 	state->bucket = 0;
 	state->family = family;
 
-	spin_lock(&ping_table.lock);
+	rcu_read_lock();
 
 	return *pos ? ping_get_idx(seq, *pos-1) : SEQ_START_TOKEN;
 }
@@ -1121,9 +1127,9 @@ void *ping_seq_next(struct seq_file *seq, void *v, loff_t *pos)
 EXPORT_SYMBOL_GPL(ping_seq_next);
 
 void ping_seq_stop(struct seq_file *seq, void *v)
-	__releases(ping_table.lock)
+	__releases(RCU)
 {
-	spin_unlock(&ping_table.lock);
+	rcu_read_unlock();
 }
 EXPORT_SYMBOL_GPL(ping_seq_stop);
 

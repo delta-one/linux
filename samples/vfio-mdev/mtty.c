@@ -12,6 +12,7 @@
 
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/device.h>
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/poll.h>
@@ -19,6 +20,7 @@
 #include <linux/cdev.h>
 #include <linux/sched.h>
 #include <linux/wait.h>
+#include <linux/uuid.h>
 #include <linux/vfio.h>
 #include <linux/iommu.h>
 #include <linux/sysfs.h>
@@ -72,7 +74,6 @@ static struct mtty_dev {
 	struct cdev	vd_cdev;
 	struct idr	vd_idr;
 	struct device	dev;
-	struct mdev_parent parent;
 } mtty_dev;
 
 struct mdev_region_info {
@@ -141,21 +142,6 @@ struct mdev_state {
 	struct mutex rxtx_lock;
 	struct vfio_device_info dev_info;
 	int nr_ports;
-};
-
-static struct mtty_type {
-	struct mdev_type type;
-	int nr_ports;
-} mtty_types[2] = {
-	{ .nr_ports = 1, .type.sysfs_name = "1",
-	  .type.pretty_name = "Single port serial" },
-	{ .nr_ports = 2, .type.sysfs_name = "2",
-	  .type.pretty_name = "Dual port serial" },
-};
-
-static struct mdev_type *mtty_mdev_types[] = {
-	&mtty_types[0].type,
-	&mtty_types[1].type,
 };
 
 static atomic_t mdev_avail_ports = ATOMIC_INIT(MAX_MTTYS);
@@ -722,19 +708,17 @@ static int mtty_init_dev(struct vfio_device *vdev)
 	struct mdev_state *mdev_state =
 		container_of(vdev, struct mdev_state, vdev);
 	struct mdev_device *mdev = to_mdev_device(vdev->dev);
-	struct mtty_type *type =
-		container_of(mdev->type, struct mtty_type, type);
+	int nr_ports = mdev_get_type_group_id(mdev) + 1;
 	int avail_ports = atomic_read(&mdev_avail_ports);
 	int ret;
 
 	do {
-		if (avail_ports < type->nr_ports)
+		if (avail_ports < nr_ports)
 			return -ENOSPC;
 	} while (!atomic_try_cmpxchg(&mdev_avail_ports,
-				     &avail_ports,
-				     avail_ports - type->nr_ports));
+				     &avail_ports, avail_ports - nr_ports));
 
-	mdev_state->nr_ports = type->nr_ports;
+	mdev_state->nr_ports = nr_ports;
 	mdev_state->irq_index = -1;
 	mdev_state->s[0].max_fifo_size = MAX_FIFO_SIZE;
 	mdev_state->s[1].max_fifo_size = MAX_FIFO_SIZE;
@@ -752,7 +736,7 @@ static int mtty_init_dev(struct vfio_device *vdev)
 	return 0;
 
 err_nr_ports:
-	atomic_add(type->nr_ports, &mdev_avail_ports);
+	atomic_add(nr_ports, &mdev_avail_ports);
 	return ret;
 }
 
@@ -784,6 +768,7 @@ static void mtty_release_dev(struct vfio_device *vdev)
 
 	atomic_add(mdev_state->nr_ports, &mdev_avail_ports);
 	kfree(mdev_state->vconfig);
+	vfio_free_device(vdev);
 }
 
 static void mtty_remove(struct mdev_device *mdev)
@@ -1255,12 +1240,59 @@ static const struct attribute_group *mdev_dev_groups[] = {
 	NULL,
 };
 
-static unsigned int mtty_get_available(struct mdev_type *mtype)
+static ssize_t name_show(struct mdev_type *mtype,
+			 struct mdev_type_attribute *attr, char *buf)
 {
-	struct mtty_type *type = container_of(mtype, struct mtty_type, type);
+	static const char *name_str[2] = { "Single port serial",
+					   "Dual port serial" };
 
-	return atomic_read(&mdev_avail_ports) / type->nr_ports;
+	return sysfs_emit(buf, "%s\n",
+			  name_str[mtype_get_type_group_id(mtype)]);
 }
+
+static MDEV_TYPE_ATTR_RO(name);
+
+static ssize_t available_instances_show(struct mdev_type *mtype,
+					struct mdev_type_attribute *attr,
+					char *buf)
+{
+	unsigned int ports = mtype_get_type_group_id(mtype) + 1;
+
+	return sprintf(buf, "%d\n", atomic_read(&mdev_avail_ports) / ports);
+}
+
+static MDEV_TYPE_ATTR_RO(available_instances);
+
+static ssize_t device_api_show(struct mdev_type *mtype,
+			       struct mdev_type_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%s\n", VFIO_DEVICE_API_PCI_STRING);
+}
+
+static MDEV_TYPE_ATTR_RO(device_api);
+
+static struct attribute *mdev_types_attrs[] = {
+	&mdev_type_attr_name.attr,
+	&mdev_type_attr_device_api.attr,
+	&mdev_type_attr_available_instances.attr,
+	NULL,
+};
+
+static struct attribute_group mdev_type_group1 = {
+	.name  = "1",
+	.attrs = mdev_types_attrs,
+};
+
+static struct attribute_group mdev_type_group2 = {
+	.name  = "2",
+	.attrs = mdev_types_attrs,
+};
+
+static struct attribute_group *mdev_type_groups[] = {
+	&mdev_type_group1,
+	&mdev_type_group2,
+	NULL,
+};
 
 static const struct vfio_device_ops mtty_dev_ops = {
 	.name = "vfio-mtty",
@@ -1269,13 +1301,9 @@ static const struct vfio_device_ops mtty_dev_ops = {
 	.read = mtty_read,
 	.write = mtty_write,
 	.ioctl = mtty_ioctl,
-	.bind_iommufd	= vfio_iommufd_emulated_bind,
-	.unbind_iommufd	= vfio_iommufd_emulated_unbind,
-	.attach_ioas	= vfio_iommufd_emulated_attach_ioas,
 };
 
 static struct mdev_driver mtty_driver = {
-	.device_api = VFIO_DEVICE_API_PCI_STRING,
 	.driver = {
 		.name = "mtty",
 		.owner = THIS_MODULE,
@@ -1284,7 +1312,7 @@ static struct mdev_driver mtty_driver = {
 	},
 	.probe = mtty_probe,
 	.remove	= mtty_remove,
-	.get_available = mtty_get_available,
+	.supported_type_groups = mdev_type_groups,
 };
 
 static void mtty_device_release(struct device *dev)
@@ -1319,7 +1347,7 @@ static int __init mtty_dev_init(void)
 	if (ret)
 		goto err_cdev;
 
-	mtty_dev.vd_class = class_create(MTTY_CLASS_NAME);
+	mtty_dev.vd_class = class_create(THIS_MODULE, MTTY_CLASS_NAME);
 
 	if (IS_ERR(mtty_dev.vd_class)) {
 		pr_err("Error: failed to register mtty_dev class\n");
@@ -1333,19 +1361,16 @@ static int __init mtty_dev_init(void)
 
 	ret = device_register(&mtty_dev.dev);
 	if (ret)
-		goto err_put;
+		goto err_class;
 
-	ret = mdev_register_parent(&mtty_dev.parent, &mtty_dev.dev,
-				   &mtty_driver, mtty_mdev_types,
-				   ARRAY_SIZE(mtty_mdev_types));
+	ret = mdev_register_device(&mtty_dev.dev, &mtty_driver);
 	if (ret)
 		goto err_device;
 	return 0;
 
 err_device:
-	device_del(&mtty_dev.dev);
-err_put:
-	put_device(&mtty_dev.dev);
+	device_unregister(&mtty_dev.dev);
+err_class:
 	class_destroy(mtty_dev.vd_class);
 err_driver:
 	mdev_unregister_driver(&mtty_driver);
@@ -1358,7 +1383,7 @@ err_cdev:
 static void __exit mtty_dev_exit(void)
 {
 	mtty_dev.dev.bus = NULL;
-	mdev_unregister_parent(&mtty_dev.parent);
+	mdev_unregister_device(&mtty_dev.dev);
 
 	device_unregister(&mtty_dev.dev);
 	idr_destroy(&mtty_dev.vd_idr);

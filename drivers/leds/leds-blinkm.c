@@ -139,11 +139,11 @@ static ssize_t show_color_common(struct device *dev, char *buf, int color)
 		return ret;
 	switch (color) {
 	case RED:
-		return sysfs_emit(buf, "%02X\n", data->red);
+		return scnprintf(buf, PAGE_SIZE, "%02X\n", data->red);
 	case GREEN:
-		return sysfs_emit(buf, "%02X\n", data->green);
+		return scnprintf(buf, PAGE_SIZE, "%02X\n", data->green);
 	case BLUE:
-		return sysfs_emit(buf, "%02X\n", data->blue);
+		return scnprintf(buf, PAGE_SIZE, "%02X\n", data->blue);
 	default:
 		return -EINVAL;
 	}
@@ -253,7 +253,7 @@ static DEVICE_ATTR_RW(blue);
 static ssize_t test_show(struct device *dev, struct device_attribute *attr,
 			 char *buf)
 {
-	return sysfs_emit(buf,
+	return scnprintf(buf, PAGE_SIZE,
 			 "#Write into test to start test sequence!#\n");
 }
 
@@ -565,7 +565,8 @@ static int blinkm_detect(struct i2c_client *client, struct i2c_board_info *info)
 	return 0;
 }
 
-static int blinkm_probe(struct i2c_client *client)
+static int blinkm_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
 {
 	struct blinkm_data *data;
 	struct blinkm_led *led[3];
@@ -730,7 +731,7 @@ static struct i2c_driver blinkm_driver = {
 	.driver = {
 		   .name = "blinkm",
 		   },
-	.probe_new = blinkm_probe,
+	.probe = blinkm_probe,
 	.remove = blinkm_remove,
 	.id_table = blinkm_id,
 	.detect = blinkm_detect,

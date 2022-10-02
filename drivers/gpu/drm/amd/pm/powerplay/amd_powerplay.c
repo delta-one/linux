@@ -111,7 +111,8 @@ static int pp_sw_fini(void *handle)
 
 	hwmgr_sw_fini(hwmgr);
 
-	amdgpu_ucode_release(&adev->pm.fw);
+	release_firmware(adev->pm.fw);
+	adev->pm.fw = NULL;
 
 	return 0;
 }
@@ -768,16 +769,10 @@ static int pp_dpm_read_sensor(void *handle, int idx,
 
 	switch (idx) {
 	case AMDGPU_PP_SENSOR_STABLE_PSTATE_SCLK:
-		*((uint32_t *)value) = hwmgr->pstate_sclk * 100;
+		*((uint32_t *)value) = hwmgr->pstate_sclk;
 		return 0;
 	case AMDGPU_PP_SENSOR_STABLE_PSTATE_MCLK:
-		*((uint32_t *)value) = hwmgr->pstate_mclk * 100;
-		return 0;
-	case AMDGPU_PP_SENSOR_PEAK_PSTATE_SCLK:
-		*((uint32_t *)value) = hwmgr->pstate_sclk_peak * 100;
-		return 0;
-	case AMDGPU_PP_SENSOR_PEAK_PSTATE_MCLK:
-		*((uint32_t *)value) = hwmgr->pstate_mclk_peak * 100;
+		*((uint32_t *)value) = hwmgr->pstate_mclk;
 		return 0;
 	case AMDGPU_PP_SENSOR_MIN_FAN_RPM:
 		*((uint32_t *)value) = hwmgr->thermal_controller.fanInfo.ulMinRPM;
@@ -843,8 +838,7 @@ static int pp_set_fine_grain_clk_vol(void *handle, uint32_t type, long *input, u
 	return hwmgr->hwmgr_func->set_fine_grain_clk_vol(hwmgr, type, input, size);
 }
 
-static int pp_odn_edit_dpm_table(void *handle, enum PP_OD_DPM_TABLE_COMMAND type,
-				 long *input, uint32_t size)
+static int pp_odn_edit_dpm_table(void *handle, uint32_t type, long *input, uint32_t size)
 {
 	struct pp_hwmgr *hwmgr = handle;
 
@@ -1513,7 +1507,7 @@ static void pp_pm_compute_clocks(void *handle)
 	struct pp_hwmgr *hwmgr = handle;
 	struct amdgpu_device *adev = hwmgr->adev;
 
-	if (!adev->dc_enabled) {
+	if (!amdgpu_device_has_dc_support(adev)) {
 		amdgpu_dpm_get_active_displays(adev);
 		adev->pm.pm_display_cfg.num_display = adev->pm.dpm.new_active_crtc_count;
 		adev->pm.pm_display_cfg.vrefresh = amdgpu_dpm_get_vrefresh(adev);

@@ -1215,7 +1215,6 @@ static int check_insn_config_length(struct comedi_insn *insn,
 	case INSN_CONFIG_GET_CLOCK_SRC:
 	case INSN_CONFIG_SET_OTHER_SRC:
 	case INSN_CONFIG_GET_COUNTER_STATUS:
-	case INSN_CONFIG_GET_PWM_OUTPUT:
 	case INSN_CONFIG_PWM_SET_H_BRIDGE:
 	case INSN_CONFIG_PWM_GET_H_BRIDGE:
 	case INSN_CONFIG_GET_HARDWARE_BUFFER_SIZE:
@@ -3383,7 +3382,7 @@ static int __init comedi_init(void)
 	if (retval)
 		goto out_unregister_chrdev_region;
 
-	comedi_class = class_create("comedi");
+	comedi_class = class_create(THIS_MODULE, "comedi");
 	if (IS_ERR(comedi_class)) {
 		retval = PTR_ERR(comedi_class);
 		pr_err("failed to create class\n");

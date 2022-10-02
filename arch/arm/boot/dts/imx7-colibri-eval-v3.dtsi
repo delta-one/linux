@@ -101,7 +101,6 @@
 
 /* Colibri USBC */
 &usbotg1 {
-	disable-over-current;
 	status = "okay";
 };
 

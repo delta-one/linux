@@ -111,7 +111,7 @@ static int init_interrupts_v11(struct amdgpu_device *adev, uint32_t pipe_id)
 
 	lock_srbm(adev, mec, pipe, 0, 0);
 
-	WREG32_SOC15(GC, 0, regCPC_INT_CNTL,
+	WREG32(SOC15_REG_OFFSET(GC, 0, regCPC_INT_CNTL),
 		CP_INT_CNTL_RING0__TIME_STAMP_INT_ENABLE_MASK |
 		CP_INT_CNTL_RING0__OPCODE_ERROR_INT_ENABLE_MASK);
 
@@ -260,7 +260,7 @@ static int hiq_mqd_load_v11(struct amdgpu_device *adev, void *mqd,
 			      uint32_t pipe_id, uint32_t queue_id,
 			      uint32_t doorbell_off)
 {
-	struct amdgpu_ring *kiq_ring = &adev->gfx.kiq[0].ring;
+	struct amdgpu_ring *kiq_ring = &adev->gfx.kiq.ring;
 	struct v11_compute_mqd *m;
 	uint32_t mec, pipe;
 	int r;
@@ -275,7 +275,7 @@ static int hiq_mqd_load_v11(struct amdgpu_device *adev, void *mqd,
 	pr_debug("kfd: set HIQ, mec:%d, pipe:%d, queue:%d.\n",
 		 mec, pipe, queue_id);
 
-	spin_lock(&adev->gfx.kiq[0].ring_lock);
+	spin_lock(&adev->gfx.kiq.ring_lock);
 	r = amdgpu_ring_alloc(kiq_ring, 7);
 	if (r) {
 		pr_err("Failed to alloc KIQ (%d).\n", r);
@@ -302,7 +302,7 @@ static int hiq_mqd_load_v11(struct amdgpu_device *adev, void *mqd,
 	amdgpu_ring_commit(kiq_ring);
 
 out_unlock:
-	spin_unlock(&adev->gfx.kiq[0].ring_lock);
+	spin_unlock(&adev->gfx.kiq.ring_lock);
 	release_queue(adev);
 
 	return r;

@@ -2406,10 +2406,6 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
 		container_of(nb, struct hci_dev, suspend_notifier);
 	int ret = 0;
 
-	/* Userspace has full control of this device. Do nothing. */
-	if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL))
-		return NOTIFY_DONE;
-
 	if (action == PM_SUSPEND_PREPARE)
 		ret = hci_suspend_dev(hdev);
 	else if (action == PM_POST_SUSPEND)
@@ -2544,7 +2540,6 @@ struct hci_dev *hci_alloc_dev_priv(int sizeof_priv)
 	INIT_DELAYED_WORK(&hdev->cmd_timer, hci_cmd_timeout);
 	INIT_DELAYED_WORK(&hdev->ncmd_timer, hci_ncmd_timeout);
 
-	hci_devcd_setup(hdev);
 	hci_request_setup(hdev);
 
 	hci_init_sysfs(hdev);
@@ -2661,7 +2656,7 @@ int hci_register_dev(struct hci_dev *hdev)
 
 	error = hci_register_suspend_notifier(hdev);
 	if (error)
-		BT_WARN("register suspend notifier failed error:%d\n", error);
+		goto err_wqueue;
 
 	queue_work(hdev->req_workqueue, &hdev->power_on);
 
@@ -2765,8 +2760,7 @@ int hci_register_suspend_notifier(struct hci_dev *hdev)
 {
 	int ret = 0;
 
-	if (!hdev->suspend_notifier.notifier_call &&
-	    !test_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks)) {
+	if (!test_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks)) {
 		hdev->suspend_notifier.notifier_call = hci_suspend_notifier;
 		ret = register_pm_notifier(&hdev->suspend_notifier);
 	}
@@ -2778,11 +2772,8 @@ int hci_unregister_suspend_notifier(struct hci_dev *hdev)
 {
 	int ret = 0;
 
-	if (hdev->suspend_notifier.notifier_call) {
+	if (!test_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks))
 		ret = unregister_pm_notifier(&hdev->suspend_notifier);
-		if (!ret)
-			hdev->suspend_notifier.notifier_call = NULL;
-	}
 
 	return ret;
 }
@@ -2802,9 +2793,6 @@ int hci_suspend_dev(struct hci_dev *hdev)
 	/* If powering down don't attempt to suspend */
 	if (mgmt_powering_down(hdev))
 		return 0;
-
-	/* Cancel potentially blocking sync operation before suspend */
-	__hci_cmd_sync_cancel(hdev, -EHOSTDOWN);
 
 	hci_req_sync_lock(hdev);
 	ret = hci_suspend_sync(hdev);
@@ -2875,25 +2863,10 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
 		return -ENXIO;
 	}
 
-	switch (hci_skb_pkt_type(skb)) {
-	case HCI_EVENT_PKT:
-		break;
-	case HCI_ACLDATA_PKT:
-		/* Detect if ISO packet has been sent as ACL */
-		if (hci_conn_num(hdev, ISO_LINK)) {
-			__u16 handle = __le16_to_cpu(hci_acl_hdr(skb)->handle);
-			__u8 type;
-
-			type = hci_conn_lookup_type(hdev, hci_handle(handle));
-			if (type == ISO_LINK)
-				hci_skb_pkt_type(skb) = HCI_ISODATA_PKT;
-		}
-		break;
-	case HCI_SCODATA_PKT:
-		break;
-	case HCI_ISODATA_PKT:
-		break;
-	default:
+	if (hci_skb_pkt_type(skb) != HCI_EVENT_PKT &&
+	    hci_skb_pkt_type(skb) != HCI_ACLDATA_PKT &&
+	    hci_skb_pkt_type(skb) != HCI_SCODATA_PKT &&
+	    hci_skb_pkt_type(skb) != HCI_ISODATA_PKT) {
 		kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -3512,27 +3485,15 @@ static inline int __get_blocks(struct hci_dev *hdev, struct sk_buff *skb)
 	return DIV_ROUND_UP(skb->len - HCI_ACL_HDR_SIZE, hdev->block_len);
 }
 
-static void __check_timeout(struct hci_dev *hdev, unsigned int cnt, u8 type)
+static void __check_timeout(struct hci_dev *hdev, unsigned int cnt)
 {
-	unsigned long last_tx;
-
-	if (hci_dev_test_flag(hdev, HCI_UNCONFIGURED))
-		return;
-
-	switch (type) {
-	case LE_LINK:
-		last_tx = hdev->le_last_tx;
-		break;
-	default:
-		last_tx = hdev->acl_last_tx;
-		break;
+	if (!hci_dev_test_flag(hdev, HCI_UNCONFIGURED)) {
+		/* ACL tx timeout must be longer than maximum
+		 * link supervision timeout (40.9 seconds) */
+		if (!cnt && time_after(jiffies, hdev->acl_last_tx +
+				       HCI_ACL_TX_TIMEOUT))
+			hci_link_tx_to(hdev, ACL_LINK);
 	}
-
-	/* tx timeout must be longer than maximum link supervision timeout
-	 * (40.9 seconds)
-	 */
-	if (!cnt && time_after(jiffies, last_tx + HCI_ACL_TX_TIMEOUT))
-		hci_link_tx_to(hdev, type);
 }
 
 /* Schedule SCO */
@@ -3590,7 +3551,7 @@ static void hci_sched_acl_pkt(struct hci_dev *hdev)
 	struct sk_buff *skb;
 	int quote;
 
-	__check_timeout(hdev, cnt, ACL_LINK);
+	__check_timeout(hdev, cnt);
 
 	while (hdev->acl_cnt &&
 	       (chan = hci_chan_sent(hdev, ACL_LINK, &quote))) {
@@ -3633,14 +3594,14 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
 	int quote;
 	u8 type;
 
+	__check_timeout(hdev, cnt);
+
 	BT_DBG("%s", hdev->name);
 
 	if (hdev->dev_type == HCI_AMP)
 		type = AMP_LINK;
 	else
 		type = ACL_LINK;
-
-	__check_timeout(hdev, cnt, type);
 
 	while (hdev->block_cnt > 0 &&
 	       (chan = hci_chan_sent(hdev, type, &quote))) {
@@ -3715,7 +3676,7 @@ static void hci_sched_le(struct hci_dev *hdev)
 
 	cnt = hdev->le_pkts ? hdev->le_cnt : hdev->acl_cnt;
 
-	__check_timeout(hdev, cnt, LE_LINK);
+	__check_timeout(hdev, cnt);
 
 	tmp = cnt;
 	while (cnt && (chan = hci_chan_sent(hdev, LE_LINK, &quote))) {
@@ -4004,7 +3965,7 @@ void hci_req_cmd_complete(struct hci_dev *hdev, u16 opcode, u8 status,
 			*req_complete_skb = bt_cb(skb)->hci.req_complete_skb;
 		else
 			*req_complete = bt_cb(skb)->hci.req_complete;
-		dev_kfree_skb_irq(skb);
+		kfree_skb(skb);
 	}
 	spin_unlock_irqrestore(&hdev->cmd_q.lock, flags);
 }

@@ -16,7 +16,6 @@
 #include <linux/irqbypass.h>
 
 struct vhost_work;
-struct vhost_task;
 typedef void (*vhost_work_fn_t)(struct vhost_work *work);
 
 #define VHOST_WORK_QUEUED 1
@@ -24,12 +23,6 @@ struct vhost_work {
 	struct llist_node	node;
 	vhost_work_fn_t		fn;
 	unsigned long		flags;
-};
-
-struct vhost_worker {
-	struct vhost_task	*vtsk;
-	struct llist_head	work_list;
-	u64			kcov_handle;
 };
 
 /* Poll a file (eventfd or socket) */
@@ -92,17 +85,13 @@ struct vhost_virtqueue {
 	/* The routine to call when the Guest pings us, or timeout. */
 	vhost_work_fn_t handle_kick;
 
-	/* Last available index we saw.
-	 * Values are limited to 0x7fff, and the high bit is used as
-	 * a wrap counter when using VIRTIO_F_RING_PACKED. */
+	/* Last available index we saw. */
 	u16 last_avail_idx;
 
 	/* Caches available index value from user. */
 	u16 avail_idx;
 
-	/* Last index we used.
-	 * Values are limited to 0x7fff, and the high bit is used as
-	 * a wrap counter when using VIRTIO_F_RING_PACKED. */
+	/* Last index we used. */
 	u16 last_used_idx;
 
 	/* Used flags */
@@ -158,7 +147,8 @@ struct vhost_dev {
 	struct vhost_virtqueue **vqs;
 	int nvqs;
 	struct eventfd_ctx *log_ctx;
-	struct vhost_worker *worker;
+	struct llist_head work_list;
+	struct task_struct *worker;
 	struct vhost_iotlb *umem;
 	struct vhost_iotlb *iotlb;
 	spinlock_t iotlb_lock;
@@ -168,6 +158,7 @@ struct vhost_dev {
 	int iov_limit;
 	int weight;
 	int byte_weight;
+	u64 kcov_handle;
 	bool use_worker;
 	int (*msg_handler)(struct vhost_dev *dev, u32 asid,
 			   struct vhost_iotlb_msg *msg);
@@ -190,7 +181,6 @@ long vhost_dev_ioctl(struct vhost_dev *, unsigned int ioctl, void __user *argp);
 long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp);
 bool vhost_vq_access_ok(struct vhost_virtqueue *vq);
 bool vhost_log_access_ok(struct vhost_dev *);
-void vhost_clear_msg(struct vhost_dev *dev);
 
 int vhost_get_vq_desc(struct vhost_virtqueue *,
 		      struct iovec iov[], unsigned int iov_count,
@@ -231,7 +221,7 @@ ssize_t vhost_chr_read_iter(struct vhost_dev *dev, struct iov_iter *to,
 			    int noblock);
 ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
 			     struct iov_iter *from);
-int vhost_init_device_iotlb(struct vhost_dev *d);
+int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
 
 void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
 			  struct vhost_iotlb_map *map);

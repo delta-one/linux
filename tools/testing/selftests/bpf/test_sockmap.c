@@ -138,7 +138,6 @@ struct sockmap_options {
 	bool data_test;
 	bool drop_expected;
 	bool check_recved_len;
-	bool tx_wait_mem;
 	int iov_count;
 	int iov_length;
 	int rate;
@@ -579,10 +578,6 @@ static int msg_loop(int fd, int iov_count, int iov_length, int cnt,
 			sent = sendmsg(fd, &msg, flags);
 
 			if (!drop && sent < 0) {
-				if (opt->tx_wait_mem && errno == EACCES) {
-					errno = 0;
-					goto out_errno;
-				}
 				perror("sendmsg loop error");
 				goto out_errno;
 			} else if (drop && sent >= 0) {
@@ -646,15 +641,6 @@ static int msg_loop(int fd, int iov_count, int iov_length, int cnt,
 					fprintf(stderr, "unexpected timeout: recved %zu/%f pop_total %f\n", s->bytes_recvd, total_bytes, txmsg_pop_total);
 				errno = -EIO;
 				clock_gettime(CLOCK_MONOTONIC, &s->end);
-				goto out_errno;
-			}
-
-			if (opt->tx_wait_mem) {
-				FD_ZERO(&w);
-				FD_SET(fd, &w);
-				slct = select(max_fd + 1, NULL, NULL, &w, &timeout);
-				errno = 0;
-				close(fd);
 				goto out_errno;
 			}
 
@@ -766,22 +752,6 @@ static int sendmsg_test(struct sockmap_options *opt)
 			return err;
 	}
 
-	if (opt->tx_wait_mem) {
-		struct timeval timeout;
-		int rxtx_buf_len = 1024;
-
-		timeout.tv_sec = 3;
-		timeout.tv_usec = 0;
-
-		err = setsockopt(c2, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(struct timeval));
-		err |= setsockopt(c2, SOL_SOCKET, SO_SNDBUFFORCE, &rxtx_buf_len, sizeof(int));
-		err |= setsockopt(p2, SOL_SOCKET, SO_RCVBUFFORCE, &rxtx_buf_len, sizeof(int));
-		if (err) {
-			perror("setsockopt failed()");
-			return errno;
-		}
-	}
-
 	rxpid = fork();
 	if (rxpid == 0) {
 		if (txmsg_pop || txmsg_start_pop)
@@ -817,9 +787,6 @@ static int sendmsg_test(struct sockmap_options *opt)
 		perror("msg_loop_rx");
 		return errno;
 	}
-
-	if (opt->tx_wait_mem)
-		close(c2);
 
 	txpid = fork();
 	if (txpid == 0) {
@@ -1485,14 +1452,6 @@ static void test_txmsg_redir(int cgrp, struct sockmap_options *opt)
 	test_send(opt, cgrp);
 }
 
-static void test_txmsg_redir_wait_sndmem(int cgrp, struct sockmap_options *opt)
-{
-	txmsg_redir = 1;
-	opt->tx_wait_mem = true;
-	test_send_large(opt, cgrp);
-	opt->tx_wait_mem = false;
-}
-
 static void test_txmsg_drop(int cgrp, struct sockmap_options *opt)
 {
 	txmsg_drop = 1;
@@ -1690,42 +1649,24 @@ static void test_txmsg_apply(int cgrp, struct sockmap_options *opt)
 {
 	txmsg_pass = 1;
 	txmsg_redir = 0;
-	txmsg_ingress = 0;
 	txmsg_apply = 1;
 	txmsg_cork = 0;
 	test_send_one(opt, cgrp);
 
 	txmsg_pass = 0;
 	txmsg_redir = 1;
-	txmsg_ingress = 0;
-	txmsg_apply = 1;
-	txmsg_cork = 0;
-	test_send_one(opt, cgrp);
-
-	txmsg_pass = 0;
-	txmsg_redir = 1;
-	txmsg_ingress = 1;
 	txmsg_apply = 1;
 	txmsg_cork = 0;
 	test_send_one(opt, cgrp);
 
 	txmsg_pass = 1;
 	txmsg_redir = 0;
-	txmsg_ingress = 0;
 	txmsg_apply = 1024;
 	txmsg_cork = 0;
 	test_send_large(opt, cgrp);
 
 	txmsg_pass = 0;
 	txmsg_redir = 1;
-	txmsg_ingress = 0;
-	txmsg_apply = 1024;
-	txmsg_cork = 0;
-	test_send_large(opt, cgrp);
-
-	txmsg_pass = 0;
-	txmsg_redir = 1;
-	txmsg_ingress = 1;
 	txmsg_apply = 1024;
 	txmsg_cork = 0;
 	test_send_large(opt, cgrp);
@@ -1859,7 +1800,6 @@ static int populate_progs(char *bpf_file)
 struct _test test[] = {
 	{"txmsg test passthrough", test_txmsg_pass},
 	{"txmsg test redirect", test_txmsg_redir},
-	{"txmsg test redirect wait send mem", test_txmsg_redir_wait_sndmem},
 	{"txmsg test drop", test_txmsg_drop},
 	{"txmsg test ingress redirect", test_txmsg_ingress_redir},
 	{"txmsg test skb", test_txmsg_skb},

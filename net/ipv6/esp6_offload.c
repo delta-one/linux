@@ -56,11 +56,12 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
 	__be32 seq;
 	__be32 spi;
 	int nhoff;
+	int err;
 
 	if (!pskb_pull(skb, offset))
 		return NULL;
 
-	if (xfrm_parse_spi(skb, IPPROTO_ESP, &spi, &seq) != 0)
+	if ((err = xfrm_parse_spi(skb, IPPROTO_ESP, &spi, &seq)) != 0)
 		goto out;
 
 	xo = xfrm_offload(skb);
@@ -344,9 +345,6 @@ static int esp6_xmit(struct xfrm_state *x, struct sk_buff *skb,  netdev_features
 		else
 			xo->seq.low += skb_shinfo(skb)->gso_segs;
 	}
-
-	if (xo->seq.low < seq)
-		xo->seq.hi++;
 
 	esp.seqno = cpu_to_be64(xo->seq.low + ((u64)xo->seq.hi << 32));
 

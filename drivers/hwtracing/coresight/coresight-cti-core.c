@@ -90,9 +90,11 @@ void cti_write_all_hw_regs(struct cti_drvdata *drvdata)
 static int cti_enable_hw(struct cti_drvdata *drvdata)
 {
 	struct cti_config *config = &drvdata->config;
+	struct device *dev = &drvdata->csdev->dev;
 	unsigned long flags;
 	int rc = 0;
 
+	pm_runtime_get_sync(dev->parent);
 	spin_lock_irqsave(&drvdata->spinlock, flags);
 
 	/* no need to do anything if enabled or unpowered*/
@@ -107,16 +109,17 @@ static int cti_enable_hw(struct cti_drvdata *drvdata)
 	cti_write_all_hw_regs(drvdata);
 
 	config->hw_enabled = true;
-	drvdata->config.enable_req_count++;
+	atomic_inc(&drvdata->config.enable_req_count);
 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
 	return rc;
 
 cti_state_unchanged:
-	drvdata->config.enable_req_count++;
+	atomic_inc(&drvdata->config.enable_req_count);
 
 	/* cannot enable due to error */
 cti_err_not_enabled:
 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+	pm_runtime_put(dev->parent);
 	return rc;
 }
 
@@ -129,7 +132,7 @@ static void cti_cpuhp_enable_hw(struct cti_drvdata *drvdata)
 	config->hw_powered = true;
 
 	/* no need to do anything if no enable request */
-	if (!drvdata->config.enable_req_count)
+	if (!atomic_read(&drvdata->config.enable_req_count))
 		goto cti_hp_not_enabled;
 
 	/* try to claim the device */
@@ -150,19 +153,13 @@ cti_hp_not_enabled:
 static int cti_disable_hw(struct cti_drvdata *drvdata)
 {
 	struct cti_config *config = &drvdata->config;
+	struct device *dev = &drvdata->csdev->dev;
 	struct coresight_device *csdev = drvdata->csdev;
-	int ret = 0;
 
 	spin_lock(&drvdata->spinlock);
 
-	/* don't allow negative refcounts, return an error */
-	if (!drvdata->config.enable_req_count) {
-		ret = -EINVAL;
-		goto cti_not_disabled;
-	}
-
 	/* check refcount - disable on 0 */
-	if (--drvdata->config.enable_req_count > 0)
+	if (atomic_dec_return(&drvdata->config.enable_req_count) > 0)
 		goto cti_not_disabled;
 
 	/* no need to do anything if disabled or cpu unpowered */
@@ -178,12 +175,13 @@ static int cti_disable_hw(struct cti_drvdata *drvdata)
 	coresight_disclaim_device_unlocked(csdev);
 	CS_LOCK(drvdata->base);
 	spin_unlock(&drvdata->spinlock);
-	return ret;
+	pm_runtime_put(dev->parent);
+	return 0;
 
 	/* not disabled this call */
 cti_not_disabled:
 	spin_unlock(&drvdata->spinlock);
-	return ret;
+	return 0;
 }
 
 void cti_write_single_reg(struct cti_drvdata *drvdata, int offset, u32 value)
@@ -239,7 +237,7 @@ static void cti_set_default_config(struct device *dev,
 	/* Most regs default to 0 as zalloc'ed except...*/
 	config->trig_filter_enable = true;
 	config->ctigate = GENMASK(config->nr_ctm_channels - 1, 0);
-	config->enable_req_count = 0;
+	atomic_set(&config->enable_req_count, 0);
 }
 
 /*
@@ -543,7 +541,7 @@ cti_match_fixup_csdev(struct cti_device *ctidev, const char *node_name,
 /*
  * Search the cti list to add an associated CTI into the supplied CS device
  * This will set the association if CTI declared before the CS device.
- * (called from coresight_register() without coresight_mutex locked).
+ * (called from coresight_register() with coresight_mutex locked).
  */
 static void cti_add_assoc_to_csdev(struct coresight_device *csdev)
 {
@@ -571,8 +569,7 @@ static void cti_add_assoc_to_csdev(struct coresight_device *csdev)
 			 * if we found a matching csdev then update the ECT
 			 * association pointer for the device with this CTI.
 			 */
-			coresight_set_assoc_ectdev_mutex(csdev,
-							 ect_item->csdev);
+			csdev->ect_dev = ect_item->csdev;
 			break;
 		}
 	}
@@ -696,7 +693,7 @@ static int cti_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
 		drvdata->config.hw_enabled = false;
 
 		/* check enable reference count to enable HW */
-		if (drvdata->config.enable_req_count) {
+		if (atomic_read(&drvdata->config.enable_req_count)) {
 			/* check we can claim the device as we re-power */
 			if (coresight_claim_device(csdev))
 				goto cti_notify_exit;

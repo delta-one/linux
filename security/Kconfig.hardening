@@ -22,17 +22,11 @@ menu "Memory initialization"
 config CC_HAS_AUTO_VAR_INIT_PATTERN
 	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
 
-config CC_HAS_AUTO_VAR_INIT_ZERO_BARE
-	def_bool $(cc-option,-ftrivial-auto-var-init=zero)
-
-config CC_HAS_AUTO_VAR_INIT_ZERO_ENABLER
-	# Clang 16 and later warn about using the -enable flag, but it
-	# is required before then.
-	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
-	depends on !CC_HAS_AUTO_VAR_INIT_ZERO_BARE
-
 config CC_HAS_AUTO_VAR_INIT_ZERO
-	def_bool CC_HAS_AUTO_VAR_INIT_ZERO_BARE || CC_HAS_AUTO_VAR_INIT_ZERO_ENABLER
+	# GCC ignores the -enable flag, so we can test for the feature with
+	# a single invocation using the flag, but drop it as appropriate in
+	# the Makefile, depending on the presence of Clang.
+	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
 
 choice
 	prompt "Initialize kernel stack variables at function entry"
@@ -257,9 +251,6 @@ config INIT_ON_FREE_DEFAULT_ON
 
 config CC_HAS_ZERO_CALL_USED_REGS
 	def_bool $(cc-option,-fzero-call-used-regs=used-gpr)
-	# https://github.com/ClangBuiltLinux/linux/issues/1766
-	# https://github.com/llvm/llvm-project/issues/59242
-	depends on !CC_IS_CLANG || CLANG_VERSION > 150006
 
 config ZERO_CALL_USED_REGS
 	bool "Enable register zeroing on function exit"
@@ -281,9 +272,6 @@ endmenu
 
 config CC_HAS_RANDSTRUCT
 	def_bool $(cc-option,-frandomize-layout-seed-file=/dev/null)
-	# Randstruct was first added in Clang 15, but it isn't safe to use until
-	# Clang 16 due to https://github.com/llvm/llvm-project/issues/60349
-	depends on !CC_IS_CLANG || CLANG_VERSION >= 160000
 
 choice
 	prompt "Randomize layout of sensitive kernel structures"

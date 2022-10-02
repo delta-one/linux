@@ -199,14 +199,8 @@ static unsigned long htb_search(struct Qdisc *sch, u32 handle)
 {
 	return (unsigned long)htb_find(handle, sch);
 }
-
-#define HTB_DIRECT ((struct htb_class *)-1L)
-
 /**
  * htb_classify - classify a packet into class
- * @skb: the socket buffer
- * @sch: the active queue discipline
- * @qerr: pointer for returned status code
  *
  * It returns NULL if the packet should be dropped or -1 if the packet
  * should be passed directly thru. In all other cases leaf class is returned.
@@ -217,6 +211,8 @@ static unsigned long htb_search(struct Qdisc *sch, u32 handle)
  * have no valid leaf we try to use MAJOR:default leaf. It still unsuccessful
  * then finish and return direct queue.
  */
+#define HTB_DIRECT ((struct htb_class *)-1L)
+
 static struct htb_class *htb_classify(struct sk_buff *skb, struct Qdisc *sch,
 				      int *qerr)
 {
@@ -431,10 +427,7 @@ static void htb_activate_prios(struct htb_sched *q, struct htb_class *cl)
 	while (cl->cmode == HTB_MAY_BORROW && p && mask) {
 		m = mask;
 		while (m) {
-			unsigned int prio = ffz(~m);
-
-			if (WARN_ON_ONCE(prio >= ARRAY_SIZE(p->inner.clprio)))
-				break;
+			int prio = ffz(~m);
 			m &= ~(1 << prio);
 
 			if (p->inner.clprio[prio].feed.rb_node)
@@ -1552,7 +1545,7 @@ static int htb_destroy_class_offload(struct Qdisc *sch, struct htb_class *cl,
 	struct tc_htb_qopt_offload offload_opt;
 	struct netdev_queue *dev_queue;
 	struct Qdisc *q = cl->leaf.q;
-	struct Qdisc *old;
+	struct Qdisc *old = NULL;
 	int err;
 
 	if (cl->level)
@@ -1560,17 +1553,14 @@ static int htb_destroy_class_offload(struct Qdisc *sch, struct htb_class *cl,
 
 	WARN_ON(!q);
 	dev_queue = htb_offload_get_queue(cl);
-	/* When destroying, caller qdisc_graft grafts the new qdisc and invokes
-	 * qdisc_put for the qdisc being destroyed. htb_destroy_class_offload
-	 * does not need to graft or qdisc_put the qdisc being destroyed.
-	 */
-	if (!destroying) {
-		old = htb_graft_helper(dev_queue, NULL);
-		/* Last qdisc grafted should be the same as cl->leaf.q when
-		 * calling htb_delete.
+	old = htb_graft_helper(dev_queue, NULL);
+	if (destroying)
+		/* Before HTB is destroyed, the kernel grafts noop_qdisc to
+		 * all queues.
 		 */
+		WARN_ON(!(old->flags & TCQ_F_BUILTIN));
+	else
 		WARN_ON(old != q);
-	}
 
 	if (cl->parent) {
 		_bstats_update(&cl->parent->bstats_bias,
@@ -1587,12 +1577,10 @@ static int htb_destroy_class_offload(struct Qdisc *sch, struct htb_class *cl,
 	};
 	err = htb_offload(qdisc_dev(sch), &offload_opt);
 
-	if (!destroying) {
-		if (!err)
-			qdisc_put(old);
-		else
-			htb_graft_helper(dev_queue, old);
-	}
+	if (!err || destroying)
+		qdisc_put(old);
+	else
+		htb_graft_helper(dev_queue, old);
 
 	if (last_child)
 		return err;
@@ -1786,7 +1774,7 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
 		goto failure;
 
 	err = nla_parse_nested_deprecated(tb, TCA_HTB_MAX, opt, htb_policy,
-					  extack);
+					  NULL);
 	if (err < 0)
 		goto failure;
 
@@ -1858,7 +1846,7 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
 
 		/* check maximal depth */
 		if (parent && parent->parent && parent->parent->level < 2) {
-			NL_SET_ERR_MSG_MOD(extack, "tree is too deep");
+			pr_err("htb: tree is too deep\n");
 			goto failure;
 		}
 		err = -ENOBUFS;
@@ -1917,8 +1905,8 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
 			};
 			err = htb_offload(dev, &offload_opt);
 			if (err) {
-				NL_SET_ERR_MSG_WEAK(extack,
-						    "Failed to offload TC_HTB_LEAF_ALLOC_QUEUE");
+				pr_err("htb: TC_HTB_LEAF_ALLOC_QUEUE failed with err = %d\n",
+				       err);
 				goto err_kill_estimator;
 			}
 			dev_queue = netdev_get_tx_queue(dev, offload_opt.qid);
@@ -1937,8 +1925,8 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
 			};
 			err = htb_offload(dev, &offload_opt);
 			if (err) {
-				NL_SET_ERR_MSG_WEAK(extack,
-						    "Failed to offload TC_HTB_LEAF_TO_INNER");
+				pr_err("htb: TC_HTB_LEAF_TO_INNER failed with err = %d\n",
+				       err);
 				htb_graft_helper(dev_queue, old_q);
 				goto err_kill_estimator;
 			}
@@ -2067,9 +2055,8 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
 	qdisc_put(parent_qdisc);
 
 	if (warn)
-		NL_SET_ERR_MSG_FMT_MOD(extack,
-				       "quantum of class %X is %s. Consider r2q change.",
-				       cl->common.classid, (warn == -1 ? "small" : "big"));
+		pr_warn("HTB: quantum of class %X is %s. Consider r2q change.\n",
+			    cl->common.classid, (warn == -1 ? "small" : "big"));
 
 	qdisc_class_hash_grow(sch, &q->clhash);
 
@@ -2132,8 +2119,15 @@ static void htb_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 
 	for (i = 0; i < q->clhash.hashsize; i++) {
 		hlist_for_each_entry(cl, &q->clhash.hash[i], common.hnode) {
-			if (!tc_qdisc_stats_dump(sch, (unsigned long)cl, arg))
+			if (arg->count < arg->skip) {
+				arg->count++;
+				continue;
+			}
+			if (arg->fn(sch, (unsigned long)cl, arg) < 0) {
+				arg->stop = 1;
 				return;
+			}
+			arg->count++;
 		}
 	}
 }

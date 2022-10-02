@@ -1194,6 +1194,7 @@ static int amd_ntb_init_pci(struct amd_ntb_dev *ndev,
 	return 0;
 
 err_dma_mask:
+	pci_clear_master(pdev);
 	pci_release_regions(pdev);
 err_pci_regions:
 	pci_disable_device(pdev);
@@ -1208,6 +1209,7 @@ static void amd_ntb_deinit_pci(struct amd_ntb_dev *ndev)
 
 	pci_iounmap(pdev, ndev->self_mmio);
 
+	pci_clear_master(pdev);
 	pci_release_regions(pdev);
 	pci_disable_device(pdev);
 	pci_set_drvdata(pdev, NULL);
@@ -1336,17 +1338,12 @@ static struct pci_driver amd_ntb_pci_driver = {
 
 static int __init amd_ntb_pci_driver_init(void)
 {
-	int ret;
 	pr_info("%s %s\n", NTB_DESC, NTB_VER);
 
 	if (debugfs_initialized())
 		debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
 
-	ret = pci_register_driver(&amd_ntb_pci_driver);
-	if (ret)
-		debugfs_remove_recursive(debugfs_dir);
-
-	return ret;
+	return pci_register_driver(&amd_ntb_pci_driver);
 }
 module_init(amd_ntb_pci_driver_init);
 

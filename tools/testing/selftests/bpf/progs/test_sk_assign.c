@@ -15,18 +15,7 @@
 #include <sys/socket.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
-#include "bpf_misc.h"
 
-#if defined(IPROUTE2_HAVE_LIBBPF)
-/* Use a new-style map definition. */
-struct {
-	__uint(type, BPF_MAP_TYPE_SOCKMAP);
-	__type(key, int);
-	__type(value, __u64);
-	__uint(pinning, LIBBPF_PIN_BY_NAME);
-	__uint(max_entries, 1);
-} server_map SEC(".maps");
-#else
 /* Pin map under /sys/fs/bpf/tc/globals/<map name> */
 #define PIN_GLOBAL_NS 2
 
@@ -46,7 +35,6 @@ struct {
 	.max_elem = 1,
 	.pinning = PIN_GLOBAL_NS,
 };
-#endif
 
 char _license[] SEC("license") = "GPL";
 
@@ -58,6 +46,7 @@ get_tuple(struct __sk_buff *skb, bool *ipv4, bool *tcp)
 	void *data = (void *)(long)skb->data;
 	struct bpf_sock_tuple *result;
 	struct ethhdr *eth;
+	__u64 tuple_len;
 	__u8 proto = 0;
 	__u64 ihl_len;
 
@@ -94,7 +83,6 @@ get_tuple(struct __sk_buff *skb, bool *ipv4, bool *tcp)
 		return NULL;
 
 	*tcp = (proto == IPPROTO_TCP);
-	__sink(ihl_len);
 	return result;
 }
 
@@ -174,6 +162,7 @@ int bpf_sk_assign_test(struct __sk_buff *skb)
 	struct bpf_sock_tuple *tuple;
 	bool ipv4 = false;
 	bool tcp = false;
+	int tuple_len;
 	int ret = 0;
 
 	tuple = get_tuple(skb, &ipv4, &tcp);

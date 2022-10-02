@@ -54,8 +54,7 @@ void __init kmsan_init_runtime(void);
  * Freed pages are either returned to buddy allocator or held back to be used
  * as metadata pages.
  */
-bool __init __must_check kmsan_memblock_free_pages(struct page *page,
-						   unsigned int order);
+bool __init kmsan_memblock_free_pages(struct page *page, unsigned int order);
 
 /**
  * kmsan_alloc_page() - Notify KMSAN about an alloc_pages() call.
@@ -135,14 +134,11 @@ void kmsan_kfree_large(const void *ptr);
  * @page_shift:	page_shift passed to vmap_range_noflush().
  *
  * KMSAN maps shadow and origin pages of @pages into contiguous ranges in
- * vmalloc metadata address range. Returns 0 on success, callers must check
- * for non-zero return value.
+ * vmalloc metadata address range.
  */
-int __must_check kmsan_vmap_pages_range_noflush(unsigned long start,
-						unsigned long end,
-						pgprot_t prot,
-						struct page **pages,
-						unsigned int page_shift);
+void kmsan_vmap_pages_range_noflush(unsigned long start, unsigned long end,
+				    pgprot_t prot, struct page **pages,
+				    unsigned int page_shift);
 
 /**
  * kmsan_vunmap_kernel_range_noflush() - Notify KMSAN about a vunmap.
@@ -163,12 +159,11 @@ void kmsan_vunmap_range_noflush(unsigned long start, unsigned long end);
  * @page_shift:	page_shift argument passed to vmap_range_noflush().
  *
  * KMSAN creates new metadata pages for the physical pages mapped into the
- * virtual memory. Returns 0 on success, callers must check for non-zero return
- * value.
+ * virtual memory.
  */
-int __must_check kmsan_ioremap_page_range(unsigned long addr, unsigned long end,
-					  phys_addr_t phys_addr, pgprot_t prot,
-					  unsigned int page_shift);
+void kmsan_ioremap_page_range(unsigned long addr, unsigned long end,
+			      phys_addr_t phys_addr, pgprot_t prot,
+			      unsigned int page_shift);
 
 /**
  * kmsan_iounmap_page_range() - Notify KMSAN about a iounmap_page_range() call.
@@ -240,8 +235,8 @@ static inline void kmsan_init_runtime(void)
 {
 }
 
-static inline bool __must_check kmsan_memblock_free_pages(struct page *page,
-							  unsigned int order)
+static inline bool kmsan_memblock_free_pages(struct page *page,
+					     unsigned int order)
 {
 	return true;
 }
@@ -254,9 +249,10 @@ static inline void kmsan_task_exit(struct task_struct *task)
 {
 }
 
-static inline void kmsan_alloc_page(struct page *page, unsigned int order,
-				    gfp_t flags)
+static inline int kmsan_alloc_page(struct page *page, unsigned int order,
+				   gfp_t flags)
 {
+	return 0;
 }
 
 static inline void kmsan_free_page(struct page *page, unsigned int order)
@@ -285,11 +281,12 @@ static inline void kmsan_kfree_large(const void *ptr)
 {
 }
 
-static inline int __must_check kmsan_vmap_pages_range_noflush(
-	unsigned long start, unsigned long end, pgprot_t prot,
-	struct page **pages, unsigned int page_shift)
+static inline void kmsan_vmap_pages_range_noflush(unsigned long start,
+						  unsigned long end,
+						  pgprot_t prot,
+						  struct page **pages,
+						  unsigned int page_shift)
 {
-	return 0;
 }
 
 static inline void kmsan_vunmap_range_noflush(unsigned long start,
@@ -297,13 +294,12 @@ static inline void kmsan_vunmap_range_noflush(unsigned long start,
 {
 }
 
-static inline int __must_check kmsan_ioremap_page_range(unsigned long start,
-							unsigned long end,
-							phys_addr_t phys_addr,
-							pgprot_t prot,
-							unsigned int page_shift)
+static inline void kmsan_ioremap_page_range(unsigned long start,
+					    unsigned long end,
+					    phys_addr_t phys_addr,
+					    pgprot_t prot,
+					    unsigned int page_shift)
 {
-	return 0;
 }
 
 static inline void kmsan_iounmap_page_range(unsigned long start,

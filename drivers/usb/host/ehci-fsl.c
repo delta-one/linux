@@ -29,7 +29,7 @@
 #include "ehci-fsl.h"
 
 #define DRIVER_DESC "Freescale EHCI Host controller driver"
-#define DRV_NAME "fsl-ehci"
+#define DRV_NAME "ehci-fsl"
 
 static struct hc_driver __read_mostly fsl_ehci_hc_driver;
 
@@ -712,7 +712,7 @@ static struct platform_driver ehci_fsl_driver = {
 	.remove = fsl_ehci_drv_remove,
 	.shutdown = usb_hcd_platform_shutdown,
 	.driver = {
-		.name = DRV_NAME,
+		.name = "fsl-ehci",
 		.pm = EHCI_FSL_PM_OPS,
 	},
 };

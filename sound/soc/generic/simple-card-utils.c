@@ -41,6 +41,27 @@ static void asoc_simple_fixup_sample_fmt(struct asoc_simple_data *data,
 	}
 }
 
+void asoc_simple_convert_fixup(struct asoc_simple_data *data,
+			       struct snd_pcm_hw_params *params)
+{
+	struct snd_interval *rate = hw_param_interval(params,
+						SNDRV_PCM_HW_PARAM_RATE);
+	struct snd_interval *channels = hw_param_interval(params,
+						SNDRV_PCM_HW_PARAM_CHANNELS);
+
+	if (data->convert_rate)
+		rate->min =
+		rate->max = data->convert_rate;
+
+	if (data->convert_channels)
+		channels->min =
+		channels->max = data->convert_channels;
+
+	if (data->convert_sample_format)
+		asoc_simple_fixup_sample_fmt(data, params);
+}
+EXPORT_SYMBOL_GPL(asoc_simple_convert_fixup);
+
 void asoc_simple_parse_convert(struct device_node *np,
 			       char *prefix,
 			       struct asoc_simple_data *data)
@@ -63,21 +84,6 @@ void asoc_simple_parse_convert(struct device_node *np,
 	of_property_read_string(np, prop, &data->convert_sample_format);
 }
 EXPORT_SYMBOL_GPL(asoc_simple_parse_convert);
-
-/**
- * asoc_simple_is_convert_required() - Query if HW param conversion was requested
- * @data: Link data.
- *
- * Returns true if any HW param conversion was requested for this DAI link with
- * any "convert-xxx" properties.
- */
-bool asoc_simple_is_convert_required(const struct asoc_simple_data *data)
-{
-	return data->convert_rate ||
-	       data->convert_channels ||
-	       data->convert_sample_format;
-}
-EXPORT_SYMBOL_GPL(asoc_simple_is_convert_required);
 
 int asoc_simple_parse_daifmt(struct device *dev,
 			     struct device_node *node,
@@ -501,20 +507,8 @@ int asoc_simple_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 {
 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
 	struct simple_dai_props *dai_props = simple_priv_to_props(priv, rtd->num);
-	struct asoc_simple_data *data = &dai_props->adata;
-	struct snd_interval *rate = hw_param_interval(params, SNDRV_PCM_HW_PARAM_RATE);
-	struct snd_interval *channels = hw_param_interval(params, SNDRV_PCM_HW_PARAM_CHANNELS);
 
-	if (data->convert_rate)
-		rate->min =
-		rate->max = data->convert_rate;
-
-	if (data->convert_channels)
-		channels->min =
-		channels->max = data->convert_channels;
-
-	if (data->convert_sample_format)
-		asoc_simple_fixup_sample_fmt(data, params);
+	asoc_simple_convert_fixup(&dai_props->adata, params);
 
 	return 0;
 }
@@ -562,12 +556,12 @@ static int asoc_simple_init_for_codec2codec(struct snd_soc_pcm_runtime *rtd,
 {
 	struct snd_soc_dai_link *dai_link = rtd->dai_link;
 	struct snd_soc_component *component;
-	struct snd_soc_pcm_stream *c2c_params;
+	struct snd_soc_pcm_stream *params;
 	struct snd_pcm_hardware hw;
 	int i, ret, stream;
 
 	/* Do nothing if it already has Codec2Codec settings */
-	if (dai_link->c2c_params)
+	if (dai_link->params)
 		return 0;
 
 	/* Do nothing if it was DPCM :: BE */
@@ -592,19 +586,19 @@ static int asoc_simple_init_for_codec2codec(struct snd_soc_pcm_runtime *rtd,
 		return ret;
 	}
 
-	c2c_params = devm_kzalloc(rtd->dev, sizeof(*c2c_params), GFP_KERNEL);
-	if (!c2c_params)
+	params = devm_kzalloc(rtd->dev, sizeof(*params), GFP_KERNEL);
+	if (!params)
 		return -ENOMEM;
 
-	c2c_params->formats		= hw.formats;
-	c2c_params->rates		= hw.rates;
-	c2c_params->rate_min		= hw.rate_min;
-	c2c_params->rate_max		= hw.rate_max;
-	c2c_params->channels_min	= hw.channels_min;
-	c2c_params->channels_max	= hw.channels_max;
+	params->formats = hw.formats;
+	params->rates = hw.rates;
+	params->rate_min = hw.rate_min;
+	params->rate_max = hw.rate_max;
+	params->channels_min = hw.channels_min;
+	params->channels_max = hw.channels_max;
 
-	dai_link->c2c_params		= c2c_params;
-	dai_link->num_c2c_params	= 1;
+	dai_link->params = params;
+	dai_link->num_params = 1;
 
 	return 0;
 }
@@ -638,16 +632,7 @@ EXPORT_SYMBOL_GPL(asoc_simple_dai_init);
 void asoc_simple_canonicalize_platform(struct snd_soc_dai_link_component *platforms,
 				       struct snd_soc_dai_link_component *cpus)
 {
-	/*
-	 * Assumes Platform == CPU
-	 *
-	 * Some CPU might be using soc-generic-dmaengine-pcm. This means CPU and Platform
-	 * are different Component, but are sharing same component->dev.
-	 *
-	 * Let's assume Platform is same as CPU if it doesn't identify Platform on DT.
-	 * see
-	 *	simple-card.c :: simple_count_noml()
-	 */
+	/* Assumes platform == cpu */
 	if (!platforms->of_node)
 		platforms->of_node = cpus->of_node;
 }
@@ -795,55 +780,6 @@ int asoc_simple_init_jack(struct snd_soc_card *card,
 }
 EXPORT_SYMBOL_GPL(asoc_simple_init_jack);
 
-int asoc_simple_init_aux_jacks(struct asoc_simple_priv *priv, char *prefix)
-{
-	struct snd_soc_card *card = simple_priv_to_card(priv);
-	struct snd_soc_component *component;
-	int found_jack_index = 0;
-	int type = 0;
-	int num = 0;
-	int ret;
-
-	if (priv->aux_jacks)
-		return 0;
-
-	for_each_card_auxs(card, component) {
-		type = snd_soc_component_get_jack_type(component);
-		if (type > 0)
-			num++;
-	}
-	if (num < 1)
-		return 0;
-
-	priv->aux_jacks = devm_kcalloc(card->dev, num,
-				       sizeof(struct snd_soc_jack), GFP_KERNEL);
-	if (!priv->aux_jacks)
-		return -ENOMEM;
-
-	for_each_card_auxs(card, component) {
-		char id[128];
-		struct snd_soc_jack *jack;
-
-		if (found_jack_index >= num)
-			break;
-
-		type = snd_soc_component_get_jack_type(component);
-		if (type <= 0)
-			continue;
-
-		/* create jack */
-		jack = &(priv->aux_jacks[found_jack_index++]);
-		snprintf(id, sizeof(id), "%s-jack", component->name);
-		ret = snd_soc_card_jack_new(card, id, type, jack);
-		if (ret)
-			continue;
-
-		(void)snd_soc_component_set_jack(component, jack, NULL);
-	}
-	return 0;
-}
-EXPORT_SYMBOL_GPL(asoc_simple_init_aux_jacks);
-
 int asoc_simple_init_priv(struct asoc_simple_priv *priv,
 			  struct link_info *li)
 {
@@ -889,6 +825,11 @@ int asoc_simple_init_priv(struct asoc_simple_priv *priv,
 	dev_dbg(dev, "link %d, dais %d, ccnf %d\n",
 		li->link, dai_num, cnf_num);
 
+	/* dummy CPU/Codec */
+	priv->dummy.of_node	= NULL;
+	priv->dummy.dai_name	= "snd-soc-dummy-dai";
+	priv->dummy.name	= "snd-soc-dummy";
+
 	priv->dai_props		= dai_props;
 	priv->dai_link		= dai_link;
 	priv->dais		= dais;
@@ -914,7 +855,7 @@ int asoc_simple_init_priv(struct asoc_simple_priv *priv,
 		} else {
 			/* DPCM Be's CPU = dummy */
 			dai_props[i].cpus	=
-			dai_link[i].cpus	= &asoc_dummy_dlc;
+			dai_link[i].cpus	= &priv->dummy;
 			dai_props[i].num.cpus	=
 			dai_link[i].num_cpus	= 1;
 		}
@@ -938,7 +879,7 @@ int asoc_simple_init_priv(struct asoc_simple_priv *priv,
 		} else {
 			/* DPCM Fe's Codec = dummy */
 			dai_props[i].codecs	=
-			dai_link[i].codecs	= &asoc_dummy_dlc;
+			dai_link[i].codecs	= &priv->dummy;
 			dai_props[i].num.codecs	=
 			dai_link[i].num_codecs	= 1;
 		}

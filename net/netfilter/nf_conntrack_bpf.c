@@ -14,8 +14,10 @@
 #include <linux/types.h>
 #include <linux/btf_ids.h>
 #include <linux/net_namespace.h>
+#include <net/netfilter/nf_conntrack.h>
 #include <net/netfilter/nf_conntrack_bpf.h>
 #include <net/netfilter/nf_conntrack_core.h>
+#include <net/netfilter/nf_nat.h>
 
 /* bpf_ct_opts - Options for CT lookup helpers
  *
@@ -191,15 +193,19 @@ BTF_ID(struct, nf_conn___init)
 
 /* Check writes into `struct nf_conn` */
 static int _nf_conntrack_btf_struct_access(struct bpf_verifier_log *log,
-					   const struct bpf_reg_state *reg,
-					   int off, int size)
+					   const struct btf *btf,
+					   const struct btf_type *t, int off,
+					   int size, enum bpf_access_type atype,
+					   u32 *next_btf_id,
+					   enum bpf_type_flag *flag)
 {
-	const struct btf_type *ncit, *nct, *t;
+	const struct btf_type *ncit;
+	const struct btf_type *nct;
 	size_t end;
 
-	ncit = btf_type_by_id(reg->btf, btf_nf_conn_ids[1]);
-	nct = btf_type_by_id(reg->btf, btf_nf_conn_ids[0]);
-	t = btf_type_by_id(reg->btf, reg->btf_id);
+	ncit = btf_type_by_id(btf, btf_nf_conn_ids[1]);
+	nct = btf_type_by_id(btf, btf_nf_conn_ids[0]);
+
 	if (t != nct && t != ncit) {
 		bpf_log(log, "only read is supported\n");
 		return -EACCES;
@@ -233,6 +239,10 @@ __diag_push();
 __diag_ignore_all("-Wmissing-prototypes",
 		  "Global functions as their definitions will be in nf_conntrack BTF");
 
+struct nf_conn___init {
+	struct nf_conn ct;
+};
+
 /* bpf_xdp_ct_alloc - Allocate a new CT entry
  *
  * Parameters:
@@ -248,7 +258,7 @@ __diag_ignore_all("-Wmissing-prototypes",
  * @opts__sz	- Length of the bpf_ct_opts structure
  *		    Must be NF_BPF_CT_OPTS_SZ (12)
  */
-__bpf_kfunc struct nf_conn___init *
+struct nf_conn___init *
 bpf_xdp_ct_alloc(struct xdp_md *xdp_ctx, struct bpf_sock_tuple *bpf_tuple,
 		 u32 tuple__sz, struct bpf_ct_opts *opts, u32 opts__sz)
 {
@@ -282,7 +292,7 @@ bpf_xdp_ct_alloc(struct xdp_md *xdp_ctx, struct bpf_sock_tuple *bpf_tuple,
  * @opts__sz	- Length of the bpf_ct_opts structure
  *		    Must be NF_BPF_CT_OPTS_SZ (12)
  */
-__bpf_kfunc struct nf_conn *
+struct nf_conn *
 bpf_xdp_ct_lookup(struct xdp_md *xdp_ctx, struct bpf_sock_tuple *bpf_tuple,
 		  u32 tuple__sz, struct bpf_ct_opts *opts, u32 opts__sz)
 {
@@ -315,7 +325,7 @@ bpf_xdp_ct_lookup(struct xdp_md *xdp_ctx, struct bpf_sock_tuple *bpf_tuple,
  * @opts__sz	- Length of the bpf_ct_opts structure
  *		    Must be NF_BPF_CT_OPTS_SZ (12)
  */
-__bpf_kfunc struct nf_conn___init *
+struct nf_conn___init *
 bpf_skb_ct_alloc(struct __sk_buff *skb_ctx, struct bpf_sock_tuple *bpf_tuple,
 		 u32 tuple__sz, struct bpf_ct_opts *opts, u32 opts__sz)
 {
@@ -350,7 +360,7 @@ bpf_skb_ct_alloc(struct __sk_buff *skb_ctx, struct bpf_sock_tuple *bpf_tuple,
  * @opts__sz	- Length of the bpf_ct_opts structure
  *		    Must be NF_BPF_CT_OPTS_SZ (12)
  */
-__bpf_kfunc struct nf_conn *
+struct nf_conn *
 bpf_skb_ct_lookup(struct __sk_buff *skb_ctx, struct bpf_sock_tuple *bpf_tuple,
 		  u32 tuple__sz, struct bpf_ct_opts *opts, u32 opts__sz)
 {
@@ -375,7 +385,7 @@ bpf_skb_ct_lookup(struct __sk_buff *skb_ctx, struct bpf_sock_tuple *bpf_tuple,
  * @nfct	 - Pointer to referenced nf_conn___init object, obtained
  *		   using bpf_xdp_ct_alloc or bpf_skb_ct_alloc.
  */
-__bpf_kfunc struct nf_conn *bpf_ct_insert_entry(struct nf_conn___init *nfct_i)
+struct nf_conn *bpf_ct_insert_entry(struct nf_conn___init *nfct_i)
 {
 	struct nf_conn *nfct = (struct nf_conn *)nfct_i;
 	int err;
@@ -399,8 +409,10 @@ __bpf_kfunc struct nf_conn *bpf_ct_insert_entry(struct nf_conn___init *nfct_i)
  * @nf_conn	 - Pointer to referenced nf_conn object, obtained using
  *		   bpf_xdp_ct_lookup or bpf_skb_ct_lookup.
  */
-__bpf_kfunc void bpf_ct_release(struct nf_conn *nfct)
+void bpf_ct_release(struct nf_conn *nfct)
 {
+	if (!nfct)
+		return;
 	nf_ct_put(nfct);
 }
 
@@ -414,7 +426,7 @@ __bpf_kfunc void bpf_ct_release(struct nf_conn *nfct)
  *                 bpf_xdp_ct_alloc or bpf_skb_ct_alloc.
  * @timeout      - Timeout in msecs.
  */
-__bpf_kfunc void bpf_ct_set_timeout(struct nf_conn___init *nfct, u32 timeout)
+void bpf_ct_set_timeout(struct nf_conn___init *nfct, u32 timeout)
 {
 	__nf_ct_set_timeout((struct nf_conn *)nfct, msecs_to_jiffies(timeout));
 }
@@ -429,7 +441,7 @@ __bpf_kfunc void bpf_ct_set_timeout(struct nf_conn___init *nfct, u32 timeout)
  *		   bpf_ct_insert_entry, bpf_xdp_ct_lookup, or bpf_skb_ct_lookup.
  * @timeout      - New timeout in msecs.
  */
-__bpf_kfunc int bpf_ct_change_timeout(struct nf_conn *nfct, u32 timeout)
+int bpf_ct_change_timeout(struct nf_conn *nfct, u32 timeout)
 {
 	return __nf_ct_change_timeout(nfct, msecs_to_jiffies(timeout));
 }
@@ -444,7 +456,7 @@ __bpf_kfunc int bpf_ct_change_timeout(struct nf_conn *nfct, u32 timeout)
  *		   bpf_xdp_ct_alloc or bpf_skb_ct_alloc.
  * @status       - New status value.
  */
-__bpf_kfunc int bpf_ct_set_status(const struct nf_conn___init *nfct, u32 status)
+int bpf_ct_set_status(const struct nf_conn___init *nfct, u32 status)
 {
 	return nf_ct_change_status_common((struct nf_conn *)nfct, status);
 }
@@ -459,9 +471,52 @@ __bpf_kfunc int bpf_ct_set_status(const struct nf_conn___init *nfct, u32 status)
  *		   bpf_ct_insert_entry, bpf_xdp_ct_lookup or bpf_skb_ct_lookup.
  * @status       - New status value.
  */
-__bpf_kfunc int bpf_ct_change_status(struct nf_conn *nfct, u32 status)
+int bpf_ct_change_status(struct nf_conn *nfct, u32 status)
 {
 	return nf_ct_change_status_common(nfct, status);
+}
+
+/* bpf_ct_set_nat_info - Set source or destination nat address
+ *
+ * Set source or destination nat address of the newly allocated
+ * nf_conn before insertion. This must be invoked for referenced
+ * PTR_TO_BTF_ID to nf_conn___init.
+ *
+ * Parameters:
+ * @nfct	- Pointer to referenced nf_conn object, obtained using
+ *		  bpf_xdp_ct_alloc or bpf_skb_ct_alloc.
+ * @addr	- Nat source/destination address
+ * @port	- Nat source/destination port. Non-positive values are
+ *		  interpreted as select a random port.
+ * @manip	- NF_NAT_MANIP_SRC or NF_NAT_MANIP_DST
+ */
+int bpf_ct_set_nat_info(struct nf_conn___init *nfct,
+			union nf_inet_addr *addr, int port,
+			enum nf_nat_manip_type manip)
+{
+#if ((IS_MODULE(CONFIG_NF_NAT) && IS_MODULE(CONFIG_NF_CONNTRACK)) || \
+     IS_BUILTIN(CONFIG_NF_NAT))
+	struct nf_conn *ct = (struct nf_conn *)nfct;
+	u16 proto = nf_ct_l3num(ct);
+	struct nf_nat_range2 range;
+
+	if (proto != NFPROTO_IPV4 && proto != NFPROTO_IPV6)
+		return -EINVAL;
+
+	memset(&range, 0, sizeof(struct nf_nat_range2));
+	range.flags = NF_NAT_RANGE_MAP_IPS;
+	range.min_addr = *addr;
+	range.max_addr = range.min_addr;
+	if (port > 0) {
+		range.flags |= NF_NAT_RANGE_PROTO_SPECIFIED;
+		range.min_proto.all = cpu_to_be16(port);
+		range.max_proto.all = range.min_proto.all;
+	}
+
+	return nf_nat_setup_info(ct, &range, manip) == NF_DROP ? -ENOMEM : 0;
+#else
+	return -EOPNOTSUPP;
+#endif
 }
 
 __diag_pop()
@@ -477,6 +532,7 @@ BTF_ID_FLAGS(func, bpf_ct_set_timeout, KF_TRUSTED_ARGS)
 BTF_ID_FLAGS(func, bpf_ct_change_timeout, KF_TRUSTED_ARGS)
 BTF_ID_FLAGS(func, bpf_ct_set_status, KF_TRUSTED_ARGS)
 BTF_ID_FLAGS(func, bpf_ct_change_status, KF_TRUSTED_ARGS)
+BTF_ID_FLAGS(func, bpf_ct_set_nat_info, KF_TRUSTED_ARGS)
 BTF_SET8_END(nf_ct_kfunc_set)
 
 static const struct btf_kfunc_id_set nf_conntrack_kfunc_set = {

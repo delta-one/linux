@@ -201,7 +201,8 @@ static struct attribute *omnia_led_controller_attrs[] = {
 };
 ATTRIBUTE_GROUPS(omnia_led_controller);
 
-static int omnia_leds_probe(struct i2c_client *client)
+static int omnia_leds_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
 {
 	struct device *dev = &client->dev;
 	struct device_node *np = dev_of_node(dev), *child;
@@ -271,7 +272,7 @@ static const struct i2c_device_id omnia_id[] = {
 MODULE_DEVICE_TABLE(i2c, omnia_id);
 
 static struct i2c_driver omnia_leds_driver = {
-	.probe_new	= omnia_leds_probe,
+	.probe		= omnia_leds_probe,
 	.remove		= omnia_leds_remove,
 	.id_table	= omnia_id,
 	.driver		= {

@@ -13,7 +13,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/of.h>
-#include <linux/gpio/consumer.h>
+#include <linux/of_gpio.h>
 #include <linux/phy/phy.h>
 #include <linux/platform_device.h>
 #include <linux/usb.h>
@@ -80,11 +80,19 @@ static int exynos_ehci_get_phy(struct device *dev,
 			return -EINVAL;
 		}
 
-		phy = devm_of_phy_optional_get(dev, child, NULL);
+		phy = devm_of_phy_get(dev, child, NULL);
 		exynos_ehci->phy[phy_number] = phy;
 		if (IS_ERR(phy)) {
-			of_node_put(child);
-			return PTR_ERR(phy);
+			ret = PTR_ERR(phy);
+			if (ret == -EPROBE_DEFER) {
+				of_node_put(child);
+				return ret;
+			} else if (ret != -ENOSYS && ret != -ENODEV) {
+				dev_err(dev,
+					"Error retrieving usb2 phy: %d\n", ret);
+				of_node_put(child);
+				return ret;
+			}
 		}
 	}
 
@@ -100,10 +108,12 @@ static int exynos_ehci_phy_enable(struct device *dev)
 	int ret = 0;
 
 	for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
-		ret = phy_power_on(exynos_ehci->phy[i]);
+		if (!IS_ERR(exynos_ehci->phy[i]))
+			ret = phy_power_on(exynos_ehci->phy[i]);
 	if (ret)
 		for (i--; i >= 0; i--)
-			phy_power_off(exynos_ehci->phy[i]);
+			if (!IS_ERR(exynos_ehci->phy[i]))
+				phy_power_off(exynos_ehci->phy[i]);
 
 	return ret;
 }
@@ -115,18 +125,26 @@ static void exynos_ehci_phy_disable(struct device *dev)
 	int i;
 
 	for (i = 0; i < PHY_NUMBER; i++)
-		phy_power_off(exynos_ehci->phy[i]);
+		if (!IS_ERR(exynos_ehci->phy[i]))
+			phy_power_off(exynos_ehci->phy[i]);
 }
 
 static void exynos_setup_vbus_gpio(struct device *dev)
 {
-	struct gpio_desc *gpio;
 	int err;
+	int gpio;
 
-	gpio = devm_gpiod_get_optional(dev, "samsung,vbus", GPIOD_OUT_HIGH);
-	err = PTR_ERR_OR_ZERO(gpio);
+	if (!dev->of_node)
+		return;
+
+	gpio = of_get_named_gpio(dev->of_node, "samsung,vbus-gpio", 0);
+	if (!gpio_is_valid(gpio))
+		return;
+
+	err = devm_gpio_request_one(dev, gpio, GPIOF_OUT_INIT_HIGH,
+				    "ehci_vbus_gpio");
 	if (err)
-		dev_err(dev, "can't request ehci vbus gpio: %d\n", err);
+		dev_err(dev, "can't request ehci vbus gpio %d", gpio);
 }
 
 static int exynos_ehci_probe(struct platform_device *pdev)

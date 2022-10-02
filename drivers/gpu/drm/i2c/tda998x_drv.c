@@ -1174,8 +1174,6 @@ static int tda998x_audio_codec_init(struct tda998x_priv *priv,
 	struct hdmi_codec_pdata codec_data = {
 		.ops = &audio_codec_ops,
 		.max_i2s_channels = 2,
-		.no_i2s_capture = 1,
-		.no_spdif_capture = 1,
 	};
 
 	if (priv->audio_port_enable[AUDIO_ROUTE_I2S])
@@ -2059,7 +2057,7 @@ static const struct component_ops tda998x_ops = {
 };
 
 static int
-tda998x_probe(struct i2c_client *client)
+tda998x_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
 	int ret;
 
@@ -2099,7 +2097,7 @@ static const struct i2c_device_id tda998x_ids[] = {
 MODULE_DEVICE_TABLE(i2c, tda998x_ids);
 
 static struct i2c_driver tda998x_driver = {
-	.probe_new = tda998x_probe,
+	.probe = tda998x_probe,
 	.remove = tda998x_remove,
 	.driver = {
 		.name = "tda998x",

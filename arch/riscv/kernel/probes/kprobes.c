@@ -23,14 +23,13 @@ post_kprobe_handler(struct kprobe *, struct kprobe_ctlblk *, struct pt_regs *);
 
 static void __kprobes arch_prepare_ss_slot(struct kprobe *p)
 {
-	u32 insn = __BUG_INSN_32;
 	unsigned long offset = GET_INSN_LENGTH(p->opcode);
 
 	p->ainsn.api.restore = (unsigned long)p->addr + offset;
 
-	patch_text(p->ainsn.api.insn, &p->opcode, 1);
+	patch_text(p->ainsn.api.insn, p->opcode);
 	patch_text((void *)((unsigned long)(p->ainsn.api.insn) + offset),
-		   &insn, 1);
+		   __BUG_INSN_32);
 }
 
 static void __kprobes arch_prepare_simulate(struct kprobe *p)
@@ -49,35 +48,15 @@ static void __kprobes arch_simulate_insn(struct kprobe *p, struct pt_regs *regs)
 	post_kprobe_handler(p, kcb, regs);
 }
 
-static bool __kprobes arch_check_kprobe(struct kprobe *p)
-{
-	unsigned long tmp  = (unsigned long)p->addr - p->offset;
-	unsigned long addr = (unsigned long)p->addr;
-
-	while (tmp <= addr) {
-		if (tmp == addr)
-			return true;
-
-		tmp += GET_INSN_LENGTH(*(u16 *)tmp);
-	}
-
-	return false;
-}
-
 int __kprobes arch_prepare_kprobe(struct kprobe *p)
 {
-	u16 *insn = (u16 *)p->addr;
+	unsigned long probe_addr = (unsigned long)p->addr;
 
-	if ((unsigned long)insn & 0x1)
-		return -EILSEQ;
-
-	if (!arch_check_kprobe(p))
+	if (probe_addr & 0x1)
 		return -EILSEQ;
 
 	/* copy instruction */
-	p->opcode = (kprobe_opcode_t)(*insn++);
-	if (GET_INSN_LENGTH(p->opcode) == 4)
-		p->opcode |= (kprobe_opcode_t)(*insn) << 16;
+	p->opcode = *p->addr;
 
 	/* decode instruction */
 	switch (riscv_probe_decode_insn(p->addr, &p->ainsn.api)) {
@@ -117,16 +96,16 @@ void *alloc_insn_page(void)
 /* install breakpoint in text */
 void __kprobes arch_arm_kprobe(struct kprobe *p)
 {
-	u32 insn = (p->opcode & __INSN_LENGTH_MASK) == __INSN_LENGTH_32 ?
-		   __BUG_INSN_32 : __BUG_INSN_16;
-
-	patch_text(p->addr, &insn, 1);
+	if ((p->opcode & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
+		patch_text(p->addr, __BUG_INSN_32);
+	else
+		patch_text(p->addr, __BUG_INSN_16);
 }
 
 /* remove breakpoint from text */
 void __kprobes arch_disarm_kprobe(struct kprobe *p)
 {
-	patch_text(p->addr, &p->opcode, 1);
+	patch_text(p->addr, p->opcode);
 }
 
 void __kprobes arch_remove_kprobe(struct kprobe *p)
@@ -364,6 +343,19 @@ int __init arch_populate_kprobe_blacklist(void)
 	ret = kprobe_add_area_blacklist((unsigned long)__irqentry_text_start,
 					(unsigned long)__irqentry_text_end);
 	return ret;
+}
+
+void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
+{
+	return (void *)kretprobe_trampoline_handler(regs, NULL);
+}
+
+void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+				      struct pt_regs *regs)
+{
+	ri->ret_addr = (kprobe_opcode_t *)regs->ra;
+	ri->fp = NULL;
+	regs->ra = (unsigned long) &__kretprobe_trampoline;
 }
 
 int __kprobes arch_trampoline_kprobe(struct kprobe *p)

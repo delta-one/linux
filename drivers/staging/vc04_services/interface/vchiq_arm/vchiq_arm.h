@@ -85,13 +85,13 @@ extern struct vchiq_state g_state;
 extern struct vchiq_state *
 vchiq_get_state(void);
 
-int
+enum vchiq_status
 vchiq_use_service(struct vchiq_instance *instance, unsigned int handle);
 
-extern int
+extern enum vchiq_status
 vchiq_release_service(struct vchiq_instance *instance, unsigned int handle);
 
-extern int
+extern enum vchiq_status
 vchiq_check_service(struct vchiq_service *service);
 
 extern void
@@ -100,10 +100,10 @@ vchiq_dump_platform_use_state(struct vchiq_state *state);
 extern void
 vchiq_dump_service_use_state(struct vchiq_state *state);
 
-extern int
+extern enum vchiq_status
 vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
 		   enum USE_TYPE_E use_type);
-extern int
+extern enum vchiq_status
 vchiq_release_internal(struct vchiq_state *state,
 		       struct vchiq_service *service);
 
@@ -137,7 +137,7 @@ static inline int vchiq_register_chrdev(struct device *parent) { return 0; }
 
 #endif /* IS_ENABLED(CONFIG_VCHIQ_CDEV) */
 
-extern int
+extern enum vchiq_status
 service_callback(struct vchiq_instance *vchiq_instance, enum vchiq_reason reason,
 		 struct vchiq_header *header, unsigned int handle, void *bulk_userdata);
 

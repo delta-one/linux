@@ -25,8 +25,8 @@ void mptcp_free_local_addr_list(struct mptcp_sock *msk)
 	}
 }
 
-static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
-						    struct mptcp_pm_addr_entry *entry)
+int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+					     struct mptcp_pm_addr_entry *entry)
 {
 	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
 	struct mptcp_pm_addr_entry *match = NULL;
@@ -59,8 +59,8 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
 		 */
 		e = sock_kmalloc(sk, sizeof(*e), GFP_ATOMIC);
 		if (!e) {
-			ret = -ENOMEM;
-			goto append_err;
+			spin_unlock_bh(&msk->pm.lock);
+			return -ENOMEM;
 		}
 
 		*e = *entry;
@@ -74,7 +74,6 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
 		ret = entry->addr.id;
 	}
 
-append_err:
 	spin_unlock_bh(&msk->pm.lock);
 	return ret;
 }
@@ -157,7 +156,6 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
 
 	if (addr_val.addr.id == 0 || !(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
 		GENL_SET_ERR_MSG(info, "invalid addr id or flags");
-		err = -EINVAL;
 		goto announce_err;
 	}
 
@@ -284,7 +282,6 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
 
 	if (addr_l.id == 0) {
 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "missing local addr id");
-		err = -EINVAL;
 		goto create_err;
 	}
 
@@ -294,14 +291,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
 		goto create_err;
 	}
 
-	sk = (struct sock *)msk;
-
-	if (!mptcp_pm_addr_families_match(sk, &addr_l, &addr_r)) {
-		GENL_SET_ERR_MSG(info, "families mismatch");
-		err = -EINVAL;
-		goto create_err;
-	}
-
+	sk = &msk->sk.icsk_inet.sk;
 	lock_sock(sk);
 
 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
@@ -405,17 +395,15 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
 
 	if (addr_l.family != addr_r.family) {
 		GENL_SET_ERR_MSG(info, "address families do not match");
-		err = -EINVAL;
 		goto destroy_err;
 	}
 
 	if (!addr_l.port || !addr_r.port) {
 		GENL_SET_ERR_MSG(info, "missing local or remote port");
-		err = -EINVAL;
 		goto destroy_err;
 	}
 
-	sk = (struct sock *)msk;
+	sk = &msk->sk.icsk_inet.sk;
 	lock_sock(sk);
 	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
 	if (ssk) {

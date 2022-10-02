@@ -121,19 +121,21 @@ struct v4l2_ctrl_ops {
  * struct v4l2_ctrl_type_ops - The control type operations that the driver
  *			       has to provide.
  *
- * @equal: return true if all ctrl->elems array elements are equal.
- * @init: initialize the value for array elements from from_idx to ctrl->elems.
+ * @equal: return true if both values are equal.
+ * @init: initialize the value.
  * @log: log the value.
- * @validate: validate the value for ctrl->new_elems array elements.
- *	Return 0 on success and a negative value otherwise.
+ * @validate: validate the value. Return 0 on success and a negative value
+ *	otherwise.
  */
 struct v4l2_ctrl_type_ops {
-	bool (*equal)(const struct v4l2_ctrl *ctrl,
-		      union v4l2_ctrl_ptr ptr1, union v4l2_ctrl_ptr ptr2);
-	void (*init)(const struct v4l2_ctrl *ctrl, u32 from_idx,
+	bool (*equal)(const struct v4l2_ctrl *ctrl, u32 elems,
+		      union v4l2_ctrl_ptr ptr1,
+		      union v4l2_ctrl_ptr ptr2);
+	void (*init)(const struct v4l2_ctrl *ctrl, u32 from_idx, u32 tot_elems,
 		     union v4l2_ctrl_ptr ptr);
 	void (*log)(const struct v4l2_ctrl *ctrl);
-	int (*validate)(const struct v4l2_ctrl *ctrl, union v4l2_ctrl_ptr ptr);
+	int (*validate)(const struct v4l2_ctrl *ctrl, u32 elems,
+			union v4l2_ctrl_ptr ptr);
 };
 
 /**
@@ -1343,7 +1345,7 @@ void v4l2_ctrl_request_complete(struct media_request *req,
  * @parent: The parent control handler ('priv' in media_request_object_find())
  *
  * This function finds the control handler in the request. It may return
- * NULL if not found. When done, you must call v4l2_ctrl_request_hdl_put()
+ * NULL if not found. When done, you must call v4l2_ctrl_request_put_hdl()
  * with the returned handler pointer.
  *
  * If the request is not in state VALIDATING or QUEUED, then this function
@@ -1541,12 +1543,13 @@ int v4l2_ctrl_new_fwnode_properties(struct v4l2_ctrl_handler *hdl,
  * v4l2_ctrl_type_op_equal - Default v4l2_ctrl_type_ops equal callback.
  *
  * @ctrl: The v4l2_ctrl pointer.
+ * @elems: The number of elements to compare.
  * @ptr1: A v4l2 control value.
  * @ptr2: A v4l2 control value.
  *
  * Return: true if values are equal, otherwise false.
  */
-bool v4l2_ctrl_type_op_equal(const struct v4l2_ctrl *ctrl,
+bool v4l2_ctrl_type_op_equal(const struct v4l2_ctrl *ctrl, u32 elems,
 			     union v4l2_ctrl_ptr ptr1, union v4l2_ctrl_ptr ptr2);
 
 /**
@@ -1554,12 +1557,13 @@ bool v4l2_ctrl_type_op_equal(const struct v4l2_ctrl *ctrl,
  *
  * @ctrl: The v4l2_ctrl pointer.
  * @from_idx: Starting element index.
+ * @elems: The number of elements to initialize.
  * @ptr: The v4l2 control value.
  *
  * Return: void
  */
 void v4l2_ctrl_type_op_init(const struct v4l2_ctrl *ctrl, u32 from_idx,
-			    union v4l2_ctrl_ptr ptr);
+			    u32 elems, union v4l2_ctrl_ptr ptr);
 
 /**
  * v4l2_ctrl_type_op_log - Default v4l2_ctrl_type_ops log callback.
@@ -1574,10 +1578,12 @@ void v4l2_ctrl_type_op_log(const struct v4l2_ctrl *ctrl);
  * v4l2_ctrl_type_op_validate - Default v4l2_ctrl_type_ops validate callback.
  *
  * @ctrl: The v4l2_ctrl pointer.
+ * @elems: The number of elements in the control.
  * @ptr: The v4l2 control value.
  *
  * Return: 0 on success, a negative error code on failure.
  */
-int v4l2_ctrl_type_op_validate(const struct v4l2_ctrl *ctrl, union v4l2_ctrl_ptr ptr);
+int v4l2_ctrl_type_op_validate(const struct v4l2_ctrl *ctrl, u32 elems,
+			       union v4l2_ctrl_ptr ptr);
 
 #endif

@@ -183,7 +183,7 @@ static void *cramfs_blkdev_read(struct super_block *sb, unsigned int offset,
 				unsigned int len)
 {
 	struct address_space *mapping = sb->s_bdev->bd_inode->i_mapping;
-	struct file_ra_state ra = {};
+	struct file_ra_state ra;
 	struct page *pages[BLKS_PER_BUF];
 	unsigned i, blocknr, buffer;
 	unsigned long devsize;
@@ -238,7 +238,8 @@ static void *cramfs_blkdev_read(struct super_block *sb, unsigned int offset,
 		struct page *page = pages[i];
 
 		if (page) {
-			memcpy_from_page(data, page, 0, PAGE_SIZE);
+			memcpy(data, kmap(page), PAGE_SIZE);
+			kunmap(page);
 			put_page(page);
 		} else
 			memset(data, 0, PAGE_SIZE);
@@ -407,7 +408,7 @@ static int cramfs_physmem_mmap(struct file *file, struct vm_area_struct *vma)
 		 * unpopulated ptes via cramfs_read_folio().
 		 */
 		int i;
-		vm_flags_set(vma, VM_MIXEDMAP);
+		vma->vm_flags |= VM_MIXEDMAP;
 		for (i = 0; i < pages && !ret; i++) {
 			vm_fault_t vmf;
 			unsigned long off = i * PAGE_SIZE;
@@ -436,7 +437,7 @@ bailout:
 
 static int cramfs_physmem_mmap(struct file *file, struct vm_area_struct *vma)
 {
-	return is_nommu_shared_mapping(vma->vm_flags) ? 0 : -ENOSYS;
+	return vma->vm_flags & (VM_SHARED | VM_MAYSHARE) ? 0 : -ENOSYS;
 }
 
 static unsigned long cramfs_physmem_get_unmapped_area(struct file *file,
@@ -814,7 +815,7 @@ static int cramfs_read_folio(struct file *file, struct folio *folio)
 
 	maxblock = (inode->i_size + PAGE_SIZE - 1) >> PAGE_SHIFT;
 	bytes_filled = 0;
-	pgdata = kmap_local_page(page);
+	pgdata = kmap(page);
 
 	if (page->index < maxblock) {
 		struct super_block *sb = inode->i_sb;
@@ -902,13 +903,13 @@ static int cramfs_read_folio(struct file *file, struct folio *folio)
 
 	memset(pgdata + bytes_filled, 0, PAGE_SIZE - bytes_filled);
 	flush_dcache_page(page);
-	kunmap_local(pgdata);
+	kunmap(page);
 	SetPageUptodate(page);
 	unlock_page(page);
 	return 0;
 
 err:
-	kunmap_local(pgdata);
+	kunmap(page);
 	ClearPageUptodate(page);
 	SetPageError(page);
 	unlock_page(page);

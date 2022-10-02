@@ -50,45 +50,6 @@ static inline struct tpm_tis_tcg_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *da
 	return container_of(data, struct tpm_tis_tcg_phy, priv);
 }
 
-#ifdef CONFIG_PREEMPT_RT
-/*
- * Flush previous write operations with a dummy read operation to the
- * TPM MMIO base address.
- */
-static inline void tpm_tis_flush(void __iomem *iobase)
-{
-	ioread8(iobase + TPM_ACCESS(0));
-}
-#else
-#define tpm_tis_flush(iobase) do { } while (0)
-#endif
-
-/*
- * Write a byte word to the TPM MMIO address, and flush the write queue.
- * The flush ensures that the data is sent immediately over the bus and not
- * aggregated with further requests and transferred later in a batch. The large
- * write requests can lead to unwanted latency spikes by blocking the CPU until
- * the complete batch has been transferred.
- */
-static inline void tpm_tis_iowrite8(u8 b, void __iomem *iobase, u32 addr)
-{
-	iowrite8(b, iobase + addr);
-	tpm_tis_flush(iobase);
-}
-
-/*
- * Write a 32-bit word to the TPM MMIO address, and flush the write queue.
- * The flush ensures that the data is sent immediately over the bus and not
- * aggregated with further requests and transferred later in a batch. The large
- * write requests can lead to unwanted latency spikes by blocking the CPU until
- * the complete batch has been transferred.
- */
-static inline void tpm_tis_iowrite32(u32 b, void __iomem *iobase, u32 addr)
-{
-	iowrite32(b, iobase + addr);
-	tpm_tis_flush(iobase);
-}
-
 static int interrupts = -1;
 module_param(interrupts, int, 0444);
 MODULE_PARM_DESC(interrupts, "Enable interrupts");
@@ -164,7 +125,6 @@ static int check_acpi_tpm2(struct device *dev)
 	const struct acpi_device_id *aid = acpi_match_device(tpm_acpi_tbl, dev);
 	struct acpi_table_tpm2 *tbl;
 	acpi_status st;
-	int ret = 0;
 
 	if (!aid || aid->driver_data != DEVICE_IS_TPM2)
 		return 0;
@@ -172,7 +132,8 @@ static int check_acpi_tpm2(struct device *dev)
 	/* If the ACPI TPM2 signature is matched then a global ACPI_SIG_TPM2
 	 * table is mandatory
 	 */
-	st = acpi_get_table(ACPI_SIG_TPM2, 1, (struct acpi_table_header **)&tbl);
+	st =
+	    acpi_get_table(ACPI_SIG_TPM2, 1, (struct acpi_table_header **)&tbl);
 	if (ACPI_FAILURE(st) || tbl->header.length < sizeof(*tbl)) {
 		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
 		return -EINVAL;
@@ -180,10 +141,9 @@ static int check_acpi_tpm2(struct device *dev)
 
 	/* The tpm2_crb driver handles this device */
 	if (tbl->start_method != ACPI_TPM2_MEMORY_MAPPED)
-		ret = -ENODEV;
+		return -ENODEV;
 
-	acpi_put_table((struct acpi_table_header *)tbl);
-	return ret;
+	return 0;
 }
 #else
 static int check_acpi_tpm2(struct device *dev)
@@ -225,12 +185,12 @@ static int tpm_tcg_write_bytes(struct tpm_tis_data *data, u32 addr, u16 len,
 	switch (io_mode) {
 	case TPM_TIS_PHYS_8:
 		while (len--)
-			tpm_tis_iowrite8(*value++, phy->iobase, addr);
+			iowrite8(*value++, phy->iobase + addr);
 		break;
 	case TPM_TIS_PHYS_16:
 		return -EINVAL;
 	case TPM_TIS_PHYS_32:
-		tpm_tis_iowrite32(le32_to_cpu(*((__le32 *)value)), phy->iobase, addr);
+		iowrite32(le32_to_cpu(*((__le32 *)value)), phy->iobase + addr);
 		break;
 	}
 
@@ -266,7 +226,7 @@ static int tpm_tis_init(struct device *dev, struct tpm_info *tpm_info)
 		irq = tpm_info->irq;
 
 	if (itpm || is_itpm(ACPI_COMPANION(dev)))
-		set_bit(TPM_TIS_ITPM_WORKAROUND, &phy->priv.flags);
+		phy->priv.flags |= TPM_TIS_ITPM_WORKAROUND;
 
 	return tpm_tis_core_init(dev, &phy->priv, irq, &tpm_tcg,
 				 ACPI_HANDLE(dev));
@@ -363,12 +323,14 @@ static int tpm_tis_plat_probe(struct platform_device *pdev)
 	return tpm_tis_init(&pdev->dev, &tpm_info);
 }
 
-static void tpm_tis_plat_remove(struct platform_device *pdev)
+static int tpm_tis_plat_remove(struct platform_device *pdev)
 {
 	struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
 
 	tpm_chip_unregister(chip);
 	tpm_tis_remove(chip);
+
+	return 0;
 }
 
 #ifdef CONFIG_OF
@@ -381,7 +343,7 @@ MODULE_DEVICE_TABLE(of, tis_of_platform_match);
 
 static struct platform_driver tis_drv = {
 	.probe = tpm_tis_plat_probe,
-	.remove_new = tpm_tis_plat_remove,
+	.remove = tpm_tis_plat_remove,
 	.driver = {
 		.name		= "tpm_tis",
 		.pm		= &tpm_tis_pm,

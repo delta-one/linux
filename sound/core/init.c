@@ -489,17 +489,17 @@ static const struct file_operations snd_shutdown_f_ops =
  *  Note: The current implementation replaces all active file->f_op with special
  *        dummy file operations (they do nothing except release).
  */
-void snd_card_disconnect(struct snd_card *card)
+int snd_card_disconnect(struct snd_card *card)
 {
 	struct snd_monitor_file *mfile;
 
 	if (!card)
-		return;
+		return -EINVAL;
 
 	spin_lock(&card->files_lock);
 	if (card->shutdown) {
 		spin_unlock(&card->files_lock);
-		return;
+		return 0;
 	}
 	card->shutdown = 1;
 
@@ -548,6 +548,7 @@ void snd_card_disconnect(struct snd_card *card)
 	wake_up(&card->power_sleep);
 	snd_power_sync_ref(card);
 #endif
+	return 0;	
 }
 EXPORT_SYMBOL(snd_card_disconnect);
 
@@ -562,7 +563,15 @@ EXPORT_SYMBOL(snd_card_disconnect);
  */
 void snd_card_disconnect_sync(struct snd_card *card)
 {
-	snd_card_disconnect(card);
+	int err;
+
+	err = snd_card_disconnect(card);
+	if (err < 0) {
+		dev_err(card->dev,
+			"snd_card_disconnect error (%d), skipping sync\n",
+			err);
+		return;
+	}
 
 	spin_lock_irq(&card->files_lock);
 	wait_event_lock_irq(card->remove_sleep,
@@ -608,14 +617,13 @@ static int snd_card_do_free(struct snd_card *card)
  *
  * Return: zero if successful, or a negative error code
  */
-void snd_card_free_when_closed(struct snd_card *card)
+int snd_card_free_when_closed(struct snd_card *card)
 {
-	if (!card)
-		return;
-
-	snd_card_disconnect(card);
+	int ret = snd_card_disconnect(card);
+	if (ret)
+		return ret;
 	put_device(&card->card_dev);
-	return;
+	return 0;
 }
 EXPORT_SYMBOL(snd_card_free_when_closed);
 
@@ -632,9 +640,10 @@ EXPORT_SYMBOL(snd_card_free_when_closed);
  * Return: Zero. Frees all associated devices and frees the control
  * interface associated to given soundcard.
  */
-void snd_card_free(struct snd_card *card)
+int snd_card_free(struct snd_card *card)
 {
 	DECLARE_COMPLETION_ONSTACK(released);
+	int ret;
 
 	/* The call of snd_card_free() is allowed from various code paths;
 	 * a manual call from the driver and the call via devres_free, and
@@ -643,13 +652,16 @@ void snd_card_free(struct snd_card *card)
 	 * the check here at the beginning.
 	 */
 	if (card->releasing)
-		return;
+		return 0;
 
 	card->release_completion = &released;
-	snd_card_free_when_closed(card);
-
+	ret = snd_card_free_when_closed(card);
+	if (ret)
+		return ret;
 	/* wait, until all devices are ready for the free operation */
 	wait_for_completion(&released);
+
+	return 0;
 }
 EXPORT_SYMBOL(snd_card_free);
 

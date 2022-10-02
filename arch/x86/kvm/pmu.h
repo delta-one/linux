@@ -18,6 +18,12 @@
 #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
 #define VMWARE_BACKDOOR_PMC_APPARENT_TIME	0x10002
 
+struct kvm_event_hw_type_mapping {
+	u8 eventsel;
+	u8 unit_mask;
+	unsigned event_type;
+};
+
 struct kvm_pmu_ops {
 	bool (*hw_event_available)(struct kvm_pmc *pmc);
 	bool (*pmc_is_enabled)(struct kvm_pmc *pmc);
@@ -34,9 +40,6 @@ struct kvm_pmu_ops {
 	void (*reset)(struct kvm_vcpu *vcpu);
 	void (*deliver_pmi)(struct kvm_vcpu *vcpu);
 	void (*cleanup)(struct kvm_vcpu *vcpu);
-
-	const u64 EVENTSEL_EVENT;
-	const int MAX_NR_GP_COUNTERS;
 };
 
 void kvm_pmu_ops_update(const struct kvm_pmu_ops *pmu_ops);
@@ -137,8 +140,7 @@ static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
 
 static inline void pmc_update_sample_period(struct kvm_pmc *pmc)
 {
-	if (!pmc->perf_event || pmc->is_paused ||
-	    !is_sampling_event(pmc->perf_event))
+	if (!pmc->perf_event || pmc->is_paused)
 		return;
 
 	perf_event_period(pmc->perf_event,
@@ -158,30 +160,18 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
 
 extern struct x86_pmu_capability kvm_pmu_cap;
 
-static inline void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
+static inline void kvm_init_pmu_capability(void)
 {
 	bool is_intel = boot_cpu_data.x86_vendor == X86_VENDOR_INTEL;
 
-	/*
-	 * Hybrid PMUs don't play nice with virtualization without careful
-	 * configuration by userspace, and KVM's APIs for reporting supported
-	 * vPMU features do not account for hybrid PMUs.  Disable vPMU support
-	 * for hybrid PMUs until KVM gains a way to let userspace opt-in.
-	 */
-	if (cpu_feature_enabled(X86_FEATURE_HYBRID_CPU))
+	perf_get_x86_pmu_capability(&kvm_pmu_cap);
+
+	 /*
+	  * For Intel, only support guest architectural pmu
+	  * on a host with architectural pmu.
+	  */
+	if ((is_intel && !kvm_pmu_cap.version) || !kvm_pmu_cap.num_counters_gp)
 		enable_pmu = false;
-
-	if (enable_pmu) {
-		perf_get_x86_pmu_capability(&kvm_pmu_cap);
-
-		/*
-		 * For Intel, only support guest architectural pmu
-		 * on a host with architectural pmu.
-		 */
-		if ((is_intel && !kvm_pmu_cap.version) ||
-		    !kvm_pmu_cap.num_counters_gp)
-			enable_pmu = false;
-	}
 
 	if (!enable_pmu) {
 		memset(&kvm_pmu_cap, 0, sizeof(kvm_pmu_cap));
@@ -189,17 +179,11 @@ static inline void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
 	}
 
 	kvm_pmu_cap.version = min(kvm_pmu_cap.version, 2);
-	kvm_pmu_cap.num_counters_gp = min(kvm_pmu_cap.num_counters_gp,
-					  pmu_ops->MAX_NR_GP_COUNTERS);
 	kvm_pmu_cap.num_counters_fixed = min(kvm_pmu_cap.num_counters_fixed,
 					     KVM_PMC_MAX_FIXED);
 }
 
-static inline void kvm_pmu_request_counter_reprogram(struct kvm_pmc *pmc)
-{
-	set_bit(pmc->idx, pmc_to_pmu(pmc)->reprogram_pmi);
-	kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
-}
+void reprogram_counter(struct kvm_pmc *pmc);
 
 void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu);
 void kvm_pmu_handle_event(struct kvm_vcpu *vcpu);

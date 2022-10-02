@@ -655,7 +655,8 @@ static int dmc620_pmu_device_probe(struct platform_device *pdev)
 		.attr_groups	= dmc620_pmu_attr_groups,
 	};
 
-	dmc620_pmu->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	dmc620_pmu->base = devm_ioremap_resource(&pdev->dev, res);
 	if (IS_ERR(dmc620_pmu->base))
 		return PTR_ERR(dmc620_pmu->base);
 
@@ -724,8 +725,6 @@ static struct platform_driver dmc620_pmu_driver = {
 
 static int __init dmc620_pmu_init(void)
 {
-	int ret;
-
 	cpuhp_state_num = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
 				      DMC620_DRVNAME,
 				      NULL,
@@ -733,11 +732,7 @@ static int __init dmc620_pmu_init(void)
 	if (cpuhp_state_num < 0)
 		return cpuhp_state_num;
 
-	ret = platform_driver_register(&dmc620_pmu_driver);
-	if (ret)
-		cpuhp_remove_multi_state(cpuhp_state_num);
-
-	return ret;
+	return platform_driver_register(&dmc620_pmu_driver);
 }
 
 static void __exit dmc620_pmu_exit(void)

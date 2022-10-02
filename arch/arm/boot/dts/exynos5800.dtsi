@@ -148,10 +148,6 @@
 	};
 };
 
-&dsi {
-	compatible = "samsung,exynos5422-mipi-dsi";
-};
-
 &mfc {
 	compatible = "samsung,mfc-v8";
 };

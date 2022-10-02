@@ -740,7 +740,8 @@ static int chipone_dsi_probe(struct mipi_dsi_device *dsi)
 	return ret;
 }
 
-static int chipone_i2c_probe(struct i2c_client *client)
+static int chipone_i2c_probe(struct i2c_client *client,
+			     const struct i2c_device_id *id)
 {
 	struct device *dev = &client->dev;
 	struct chipone *icn;
@@ -795,7 +796,7 @@ static struct i2c_device_id chipone_i2c_id[] = {
 MODULE_DEVICE_TABLE(i2c, chipone_i2c_id);
 
 static struct i2c_driver chipone_i2c_driver = {
-	.probe_new = chipone_i2c_probe,
+	.probe = chipone_i2c_probe,
 	.id_table = chipone_i2c_id,
 	.driver = {
 		.name = "chipone-icn6211-i2c",

@@ -378,9 +378,9 @@ static irqreturn_t ltc3589_isr(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-static int ltc3589_probe(struct i2c_client *client)
+static int ltc3589_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
 {
-	const struct i2c_device_id *id = i2c_client_get_device_id(client);
 	struct device *dev = &client->dev;
 	struct regulator_desc *descs;
 	struct ltc3589 *ltc3589;
@@ -474,7 +474,6 @@ MODULE_DEVICE_TABLE(of, ltc3589_of_match);
 static struct i2c_driver ltc3589_driver = {
 	.driver = {
 		.name = DRIVER_NAME,
-		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = of_match_ptr(ltc3589_of_match),
 	},
 	.probe = ltc3589_probe,

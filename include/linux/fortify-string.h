@@ -18,9 +18,9 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
 
 #define __compiletime_strlen(p)					\
 ({								\
-	char *__p = (char *)(p);				\
+	unsigned char *__p = (unsigned char *)(p);		\
 	size_t __ret = SIZE_MAX;				\
-	size_t __p_size = __member_size(p);			\
+	size_t __p_size = __builtin_object_size(p, 1);		\
 	if (__p_size != SIZE_MAX &&				\
 	    __builtin_constant_p(*__p)) {			\
 		size_t __p_len = __p_size - 1;			\
@@ -43,24 +43,11 @@ extern __kernel_size_t __underlying_strlen(const char *p) __RENAME(strlen);
 extern char *__underlying_strncat(char *p, const char *q, __kernel_size_t count) __RENAME(strncat);
 extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) __RENAME(strncpy);
 #else
-
-#if defined(__SANITIZE_MEMORY__)
-/*
- * For KMSAN builds all memcpy/memset/memmove calls should be replaced by the
- * corresponding __msan_XXX functions.
- */
-#include <linux/kmsan_string.h>
-#define __underlying_memcpy	__msan_memcpy
-#define __underlying_memmove	__msan_memmove
-#define __underlying_memset	__msan_memset
-#else
+#define __underlying_memchr	__builtin_memchr
+#define __underlying_memcmp	__builtin_memcmp
 #define __underlying_memcpy	__builtin_memcpy
 #define __underlying_memmove	__builtin_memmove
 #define __underlying_memset	__builtin_memset
-#endif
-
-#define __underlying_memchr	__builtin_memchr
-#define __underlying_memcmp	__builtin_memcmp
 #define __underlying_strcat	__builtin_strcat
 #define __underlying_strcpy	__builtin_strcpy
 #define __underlying_strlen	__builtin_strlen
@@ -85,27 +72,13 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) 
 	__underlying_memcpy(dst, src, bytes)
 
 /*
- * Clang's use of __builtin_*object_size() within inlines needs hinting via
- * __pass_*object_size(). The preference is to only ever use type 1 (member
+ * Clang's use of __builtin_object_size() within inlines needs hinting via
+ * __pass_object_size(). The preference is to only ever use type 1 (member
  * size, rather than struct size), but there remain some stragglers using
  * type 0 that will be converted in the future.
  */
-#if __has_builtin(__builtin_dynamic_object_size)
-#define POS			__pass_dynamic_object_size(1)
-#define POS0			__pass_dynamic_object_size(0)
-#define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
-#define __member_size(p)	__builtin_dynamic_object_size(p, 1)
-#else
-#define POS			__pass_object_size(1)
-#define POS0			__pass_object_size(0)
-#define __struct_size(p)	__builtin_object_size(p, 0)
-#define __member_size(p)	__builtin_object_size(p, 1)
-#endif
-
-#define __compiletime_lessthan(bounds, length)	(	\
-	__builtin_constant_p((bounds) < (length)) &&	\
-	(bounds) < (length)				\
-)
+#define POS	__pass_object_size(1)
+#define POS0	__pass_object_size(0)
 
 /**
  * strncpy - Copy a string to memory with non-guaranteed NUL padding
@@ -126,13 +99,13 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) 
  * Instead, please choose an alternative, so that the expectation
  * of @p's contents is unambiguous:
  *
- * +--------------------+--------------------+------------+
- * | **p** needs to be: | padded to **size** | not padded |
- * +====================+====================+============+
- * |     NUL-terminated | strscpy_pad()      | strscpy()  |
- * +--------------------+--------------------+------------+
- * | not NUL-terminated | strtomem_pad()     | strtomem() |
- * +--------------------+--------------------+------------+
+ * +--------------------+-----------------+------------+
+ * | @p needs to be:    | padded to @size | not padded |
+ * +====================+=================+============+
+ * |     NUL-terminated | strscpy_pad()   | strscpy()  |
+ * +--------------------+-----------------+------------+
+ * | not NUL-terminated | strtomem_pad()  | strtomem() |
+ * +--------------------+-----------------+------------+
  *
  * Note strscpy*()'s differing return values for detecting truncation,
  * and strtomem*()'s expectation that the destination is marked with
@@ -142,34 +115,19 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) 
 __FORTIFY_INLINE __diagnose_as(__builtin_strncpy, 1, 2, 3)
 char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
 {
-	size_t p_size = __member_size(p);
+	size_t p_size = __builtin_object_size(p, 1);
 
-	if (__compiletime_lessthan(p_size, size))
+	if (__builtin_constant_p(size) && p_size < size)
 		__write_overflow();
 	if (p_size < size)
 		fortify_panic(__func__);
 	return __underlying_strncpy(p, q, size);
 }
 
-/**
- * strcat - Append a string to an existing string
- *
- * @p: pointer to NUL-terminated string to append to
- * @q: pointer to NUL-terminated source string to append from
- *
- * Do not use this function. While FORTIFY_SOURCE tries to avoid
- * read and write overflows, this is only possible when the
- * destination buffer size is known to the compiler. Prefer
- * building the string with formatting, via scnprintf() or similar.
- * At the very least, use strncat().
- *
- * Returns @p.
- *
- */
 __FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
 char *strcat(char * const POS p, const char *q)
 {
-	size_t p_size = __member_size(p);
+	size_t p_size = __builtin_object_size(p, 1);
 
 	if (p_size == SIZE_MAX)
 		return __underlying_strcat(p, q);
@@ -179,19 +137,9 @@ char *strcat(char * const POS p, const char *q)
 }
 
 extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
-/**
- * strnlen - Return bounded count of characters in a NUL-terminated string
- *
- * @p: pointer to NUL-terminated string to count.
- * @maxlen: maximum number of characters to count.
- *
- * Returns number of characters in @p (NOT including the final NUL), or
- * @maxlen, if no NUL has been found up to there.
- *
- */
 __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size_t maxlen)
 {
-	size_t p_size = __member_size(p);
+	size_t p_size = __builtin_object_size(p, 1);
 	size_t p_len = __compiletime_strlen(p);
 	size_t ret;
 
@@ -214,19 +162,6 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
  * possible for strlen() to be used on compile-time strings for use in
  * static initializers (i.e. as a constant expression).
  */
-/**
- * strlen - Return count of characters in a NUL-terminated string
- *
- * @p: pointer to NUL-terminated string to count.
- *
- * Do not use this function unless the string length is known at
- * compile-time. When @p is unterminated, this function may crash
- * or return unexpected counts that could lead to memory content
- * exposures. Prefer strnlen().
- *
- * Returns number of characters in @p (NOT including the final NUL).
- *
- */
 #define strlen(p)							\
 	__builtin_choose_expr(__is_constexpr(__builtin_strlen(p)),	\
 		__builtin_strlen(p), __fortify_strlen(p))
@@ -234,7 +169,7 @@ __FORTIFY_INLINE __diagnose_as(__builtin_strlen, 1)
 __kernel_size_t __fortify_strlen(const char * const POS p)
 {
 	__kernel_size_t ret;
-	size_t p_size = __member_size(p);
+	size_t p_size = __builtin_object_size(p, 1);
 
 	/* Give up if we don't know how large p is. */
 	if (p_size == SIZE_MAX)
@@ -245,30 +180,12 @@ __kernel_size_t __fortify_strlen(const char * const POS p)
 	return ret;
 }
 
-/* Defined after fortified strlen() to reuse it. */
+/* defined after fortified strlen to reuse it */
 extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
-/**
- * strlcpy - Copy a string into another string buffer
- *
- * @p: pointer to destination of copy
- * @q: pointer to NUL-terminated source string to copy
- * @size: maximum number of bytes to write at @p
- *
- * If strlen(@q) >= @size, the copy of @q will be truncated at
- * @size - 1 bytes. @p will always be NUL-terminated.
- *
- * Do not use this function. While FORTIFY_SOURCE tries to avoid
- * over-reads when calculating strlen(@q), it is still possible.
- * Prefer strscpy(), though note its different return values for
- * detecting truncation.
- *
- * Returns total number of bytes written to @p, including terminating NUL.
- *
- */
 __FORTIFY_INLINE size_t strlcpy(char * const POS p, const char * const POS q, size_t size)
 {
-	size_t p_size = __member_size(p);
-	size_t q_size = __member_size(q);
+	size_t p_size = __builtin_object_size(p, 1);
+	size_t q_size = __builtin_object_size(q, 1);
 	size_t q_len;	/* Full count of source string length. */
 	size_t len;	/* Count of characters going into destination. */
 
@@ -290,38 +207,14 @@ __FORTIFY_INLINE size_t strlcpy(char * const POS p, const char * const POS q, si
 	return q_len;
 }
 
-/* Defined after fortified strnlen() to reuse it. */
+/* defined after fortified strnlen to reuse it */
 extern ssize_t __real_strscpy(char *, const char *, size_t) __RENAME(strscpy);
-/**
- * strscpy - Copy a C-string into a sized buffer
- *
- * @p: Where to copy the string to
- * @q: Where to copy the string from
- * @size: Size of destination buffer
- *
- * Copy the source string @p, or as much of it as fits, into the destination
- * @q buffer. The behavior is undefined if the string buffers overlap. The
- * destination @p buffer is always NUL terminated, unless it's zero-sized.
- *
- * Preferred to strlcpy() since the API doesn't require reading memory
- * from the source @q string beyond the specified @size bytes, and since
- * the return value is easier to error-check than strlcpy()'s.
- * In addition, the implementation is robust to the string changing out
- * from underneath it, unlike the current strlcpy() implementation.
- *
- * Preferred to strncpy() since it always returns a valid string, and
- * doesn't unnecessarily force the tail of the destination buffer to be
- * zero padded. If padding is desired please use strscpy_pad().
- *
- * Returns the number of characters copied in @p (not including the
- * trailing %NUL) or -E2BIG if @size is 0 or the copy of @q was truncated.
- */
 __FORTIFY_INLINE ssize_t strscpy(char * const POS p, const char * const POS q, size_t size)
 {
 	size_t len;
 	/* Use string size rather than possible enclosing struct size. */
-	size_t p_size = __member_size(p);
-	size_t q_size = __member_size(q);
+	size_t p_size = __builtin_object_size(p, 1);
+	size_t q_size = __builtin_object_size(q, 1);
 
 	/* If we cannot get size of p and q default to call strscpy. */
 	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
@@ -331,18 +224,8 @@ __FORTIFY_INLINE ssize_t strscpy(char * const POS p, const char * const POS q, s
 	 * If size can be known at compile time and is greater than
 	 * p_size, generate a compile time write overflow error.
 	 */
-	if (__compiletime_lessthan(p_size, size))
+	if (__builtin_constant_p(size) && size > p_size)
 		__write_overflow();
-
-	/* Short-circuit for compile-time known-safe lengths. */
-	if (__compiletime_lessthan(p_size, SIZE_MAX)) {
-		len = __compiletime_strlen(q);
-
-		if (len < SIZE_MAX && __compiletime_lessthan(len, size)) {
-			__underlying_memcpy(p, q, len + 1);
-			return len;
-		}
-	}
 
 	/*
 	 * This call protects from read overflow, because len will default to q
@@ -371,32 +254,13 @@ __FORTIFY_INLINE ssize_t strscpy(char * const POS p, const char * const POS q, s
 	return __real_strscpy(p, q, len);
 }
 
-/**
- * strncat - Append a string to an existing string
- *
- * @p: pointer to NUL-terminated string to append to
- * @q: pointer to source string to append from
- * @count: Maximum bytes to read from @q
- *
- * Appends at most @count bytes from @q (stopping at the first
- * NUL byte) after the NUL-terminated string at @p. @p will be
- * NUL-terminated.
- *
- * Do not use this function. While FORTIFY_SOURCE tries to avoid
- * read and write overflows, this is only possible when the sizes
- * of @p and @q are known to the compiler. Prefer building the
- * string with formatting, via scnprintf() or similar.
- *
- * Returns @p.
- *
- */
-/* Defined after fortified strlen() and strnlen() to reuse them. */
+/* defined after fortified strlen and strnlen to reuse them */
 __FORTIFY_INLINE __diagnose_as(__builtin_strncat, 1, 2, 3)
 char *strncat(char * const POS p, const char * const POS q, __kernel_size_t count)
 {
 	size_t p_len, copy_len;
-	size_t p_size = __member_size(p);
-	size_t q_size = __member_size(q);
+	size_t p_size = __builtin_object_size(p, 1);
+	size_t q_size = __builtin_object_size(q, 1);
 
 	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
 		return __underlying_strncat(p, q, count);
@@ -417,16 +281,15 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
 		/*
 		 * Length argument is a constant expression, so we
 		 * can perform compile-time bounds checking where
-		 * buffer sizes are also known at compile time.
+		 * buffer sizes are known.
 		 */
 
 		/* Error when size is larger than enclosing struct. */
-		if (__compiletime_lessthan(p_size_field, p_size) &&
-		    __compiletime_lessthan(p_size, size))
+		if (p_size > p_size_field && p_size < size)
 			__write_overflow();
 
 		/* Warn when write size is larger than dest field. */
-		if (__compiletime_lessthan(p_size_field, size))
+		if (p_size_field < size)
 			__write_overflow_field(p_size_field, size);
 	}
 	/*
@@ -454,12 +317,12 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
 })
 
 /*
- * __struct_size() vs __member_size() must be captured here to avoid
- * evaluating argument side-effects further into the macro layers.
+ * __builtin_object_size() must be captured here to avoid evaluating argument
+ * side-effects further into the macro layers.
  */
 #ifndef CONFIG_KMSAN
 #define memset(p, c, s) __fortify_memset_chk(p, c, s,			\
-		__struct_size(p), __member_size(p))
+		__builtin_object_size(p, 0), __builtin_object_size(p, 1))
 #endif
 
 /*
@@ -504,28 +367,25 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
 		/*
 		 * Length argument is a constant expression, so we
 		 * can perform compile-time bounds checking where
-		 * buffer sizes are also known at compile time.
+		 * buffer sizes are known.
 		 */
 
 		/* Error when size is larger than enclosing struct. */
-		if (__compiletime_lessthan(p_size_field, p_size) &&
-		    __compiletime_lessthan(p_size, size))
+		if (p_size > p_size_field && p_size < size)
 			__write_overflow();
-		if (__compiletime_lessthan(q_size_field, q_size) &&
-		    __compiletime_lessthan(q_size, size))
+		if (q_size > q_size_field && q_size < size)
 			__read_overflow2();
 
 		/* Warn when write size argument larger than dest field. */
-		if (__compiletime_lessthan(p_size_field, size))
+		if (p_size_field < size)
 			__write_overflow_field(p_size_field, size);
 		/*
 		 * Warn for source field over-read when building with W=1
 		 * or when an over-write happened, so both can be fixed at
 		 * the same time.
 		 */
-		if ((IS_ENABLED(KBUILD_EXTRA_WARN1) ||
-		     __compiletime_lessthan(p_size_field, size)) &&
-		    __compiletime_lessthan(q_size_field, size))
+		if ((IS_ENABLED(KBUILD_EXTRA_WARN1) || p_size_field < size) &&
+		    q_size_field < size)
 			__read_overflow2_field(q_size_field, size);
 	}
 	/*
@@ -553,7 +413,7 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
 	 * fake flexible arrays, until they are all converted to
 	 * proper flexible arrays.
 	 *
-	 * The implementation of __builtin_*object_size() behaves
+	 * The implementation of __builtin_object_size() behaves
 	 * like sizeof() when not directly referencing a flexible
 	 * array member, which means there will be many bounds checks
 	 * that will appear at run-time, without a way for them to be
@@ -570,18 +430,13 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
 
 #define __fortify_memcpy_chk(p, q, size, p_size, q_size,		\
 			     p_size_field, q_size_field, op) ({		\
-	const size_t __fortify_size = (size_t)(size);			\
-	const size_t __p_size = (p_size);				\
-	const size_t __q_size = (q_size);				\
-	const size_t __p_size_field = (p_size_field);			\
-	const size_t __q_size_field = (q_size_field);			\
-	WARN_ONCE(fortify_memcpy_chk(__fortify_size, __p_size,		\
-				     __q_size, __p_size_field,		\
-				     __q_size_field, #op),		\
+	size_t __fortify_size = (size_t)(size);				\
+	WARN_ONCE(fortify_memcpy_chk(__fortify_size, p_size, q_size,	\
+				     p_size_field, q_size_field, #op),	\
 		  #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
 		  __fortify_size,					\
 		  "field \"" #p "\" at " __FILE__ ":" __stringify(__LINE__), \
-		  __p_size_field);					\
+		  p_size_field);					\
 	__underlying_##op(p, q, __fortify_size);			\
 })
 
@@ -624,24 +479,24 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
  */
 
 /*
- * __struct_size() vs __member_size() must be captured here to avoid
- * evaluating argument side-effects further into the macro layers.
+ * __builtin_object_size() must be captured here to avoid evaluating argument
+ * side-effects further into the macro layers.
  */
 #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,			\
-		__struct_size(p), __struct_size(q),			\
-		__member_size(p), __member_size(q),			\
+		__builtin_object_size(p, 0), __builtin_object_size(q, 0), \
+		__builtin_object_size(p, 1), __builtin_object_size(q, 1), \
 		memcpy)
 #define memmove(p, q, s)  __fortify_memcpy_chk(p, q, s,			\
-		__struct_size(p), __struct_size(q),			\
-		__member_size(p), __member_size(q),			\
+		__builtin_object_size(p, 0), __builtin_object_size(q, 0), \
+		__builtin_object_size(p, 1), __builtin_object_size(q, 1), \
 		memmove)
 
 extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
 __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
 {
-	size_t p_size = __struct_size(p);
+	size_t p_size = __builtin_object_size(p, 0);
 
-	if (__compiletime_lessthan(p_size, size))
+	if (__builtin_constant_p(size) && p_size < size)
 		__read_overflow();
 	if (p_size < size)
 		fortify_panic(__func__);
@@ -651,13 +506,13 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
 __FORTIFY_INLINE __diagnose_as(__builtin_memcmp, 1, 2, 3)
 int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t size)
 {
-	size_t p_size = __struct_size(p);
-	size_t q_size = __struct_size(q);
+	size_t p_size = __builtin_object_size(p, 0);
+	size_t q_size = __builtin_object_size(q, 0);
 
 	if (__builtin_constant_p(size)) {
-		if (__compiletime_lessthan(p_size, size))
+		if (p_size < size)
 			__read_overflow();
-		if (__compiletime_lessthan(q_size, size))
+		if (q_size < size)
 			__read_overflow2();
 	}
 	if (p_size < size || q_size < size)
@@ -668,9 +523,9 @@ int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t
 __FORTIFY_INLINE __diagnose_as(__builtin_memchr, 1, 2, 3)
 void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
 {
-	size_t p_size = __struct_size(p);
+	size_t p_size = __builtin_object_size(p, 0);
 
-	if (__compiletime_lessthan(p_size, size))
+	if (__builtin_constant_p(size) && p_size < size)
 		__read_overflow();
 	if (p_size < size)
 		fortify_panic(__func__);
@@ -680,58 +535,41 @@ void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
 void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_inv);
 __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
 {
-	size_t p_size = __struct_size(p);
+	size_t p_size = __builtin_object_size(p, 0);
 
-	if (__compiletime_lessthan(p_size, size))
+	if (__builtin_constant_p(size) && p_size < size)
 		__read_overflow();
 	if (p_size < size)
 		fortify_panic(__func__);
 	return __real_memchr_inv(p, c, size);
 }
 
-extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup)
-								    __realloc_size(2);
+extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup);
 __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp)
 {
-	size_t p_size = __struct_size(p);
+	size_t p_size = __builtin_object_size(p, 0);
 
-	if (__compiletime_lessthan(p_size, size))
+	if (__builtin_constant_p(size) && p_size < size)
 		__read_overflow();
 	if (p_size < size)
 		fortify_panic(__func__);
 	return __real_kmemdup(p, size, gfp);
 }
 
-/**
- * strcpy - Copy a string into another string buffer
- *
- * @p: pointer to destination of copy
- * @q: pointer to NUL-terminated source string to copy
- *
- * Do not use this function. While FORTIFY_SOURCE tries to avoid
- * overflows, this is only possible when the sizes of @q and @p are
- * known to the compiler. Prefer strscpy(), though note its different
- * return values for detecting truncation.
- *
- * Returns @p.
- *
- */
 /* Defined after fortified strlen to reuse it. */
 __FORTIFY_INLINE __diagnose_as(__builtin_strcpy, 1, 2)
 char *strcpy(char * const POS p, const char * const POS q)
 {
-	size_t p_size = __member_size(p);
-	size_t q_size = __member_size(q);
+	size_t p_size = __builtin_object_size(p, 1);
+	size_t q_size = __builtin_object_size(q, 1);
 	size_t size;
 
 	/* If neither buffer size is known, immediately give up. */
-	if (__builtin_constant_p(p_size) &&
-	    __builtin_constant_p(q_size) &&
-	    p_size == SIZE_MAX && q_size == SIZE_MAX)
+	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
 		return __underlying_strcpy(p, q);
 	size = strlen(q) + 1;
 	/* Compile-time check for const size overflow. */
-	if (__compiletime_lessthan(p_size, size))
+	if (__builtin_constant_p(size) && p_size < size)
 		__write_overflow();
 	/* Run-time check for dynamic size overflow. */
 	if (p_size < size)

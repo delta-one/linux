@@ -600,7 +600,7 @@ static netdev_tx_t ctucan_start_xmit(struct sk_buff *skb, struct net_device *nde
 	bool ok;
 	unsigned long flags;
 
-	if (can_dev_dropped_skb(ndev, skb))
+	if (can_dropped_invalid_skb(ndev, skb))
 		return NETDEV_TX_OK;
 
 	if (unlikely(!CTU_CAN_FD_TXTNF(priv))) {
@@ -1424,7 +1424,7 @@ int ctucan_probe_common(struct device *dev, void __iomem *addr, int irq, unsigne
 
 	priv->can.clock.freq = can_clk_rate;
 
-	netif_napi_add(ndev, &priv->napi, ctucan_rx_poll);
+	netif_napi_add(ndev, &priv->napi, ctucan_rx_poll, NAPI_POLL_WEIGHT);
 
 	ret = register_candev(ndev);
 	if (ret) {

@@ -168,7 +168,7 @@ static void handle_rx(struct uart_port *port)
 
 		c = readw(port->membase + VT8500_RXFIFO) & 0x3ff;
 
-		/* Mask conditions we're ignoring. */
+		/* Mask conditions we're ignorning. */
 		c &= ~port->read_status_mask;
 
 		if (c & FER) {
@@ -187,20 +187,35 @@ static void handle_rx(struct uart_port *port)
 	tty_flip_buffer_push(tport);
 }
 
-static unsigned int vt8500_tx_empty(struct uart_port *port)
-{
-	unsigned int idx = vt8500_read(port, VT8500_URFIDX) & 0x1f;
-
-	return idx < 16 ? TIOCSER_TEMT : 0;
-}
-
 static void handle_tx(struct uart_port *port)
 {
-	u8 ch;
+	struct circ_buf *xmit = &port->state->xmit;
 
-	uart_port_tx(port, ch,
-		vt8500_tx_empty(port),
-		writeb(ch, port->membase + VT8500_TXFIFO));
+	if (port->x_char) {
+		writeb(port->x_char, port->membase + VT8500_TXFIFO);
+		port->icount.tx++;
+		port->x_char = 0;
+	}
+	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
+		vt8500_stop_tx(port);
+		return;
+	}
+
+	while ((vt8500_read(port, VT8500_URFIDX) & 0x1f) < 16) {
+		if (uart_circ_empty(xmit))
+			break;
+
+		writeb(xmit->buf[xmit->tail], port->membase + VT8500_TXFIFO);
+
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		port->icount.tx++;
+	}
+
+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+		uart_write_wakeup(port);
+
+	if (uart_circ_empty(xmit))
+		vt8500_stop_tx(port);
 }
 
 static void vt8500_start_tx(struct uart_port *port)
@@ -243,6 +258,12 @@ static irqreturn_t vt8500_irq(int irq, void *dev_id)
 	spin_unlock(&port->lock);
 
 	return IRQ_HANDLED;
+}
+
+static unsigned int vt8500_tx_empty(struct uart_port *port)
+{
+	return (vt8500_read(port, VT8500_URFIDX) & 0x1f) < 16 ?
+						TIOCSER_TEMT : 0;
 }
 
 static unsigned int vt8500_get_mctrl(struct uart_port *port)

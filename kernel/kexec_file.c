@@ -65,7 +65,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
 	return ret;
 }
 
-static void *kexec_image_load_default(struct kimage *image)
+void *kexec_image_load_default(struct kimage *image)
 {
 	if (!image->fops || !image->fops->load)
 		return ERR_PTR(-ENOEXEC);
@@ -249,8 +249,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
 	/* IMA needs to pass the measurement list to the next kernel. */
 	ima_add_kexec_buffer(image);
 
-	/* Call image load handler */
-	ldata = kexec_image_load_default(image);
+	/* Call arch image load handlers */
+	ldata = arch_kexec_kernel_image_load(image);
 
 	if (IS_ERR(ldata)) {
 		ret = PTR_ERR(ldata);
@@ -326,13 +326,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
 		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
 		unsigned long, flags)
 {
-	int image_type = (flags & KEXEC_FILE_ON_CRASH) ?
-			 KEXEC_TYPE_CRASH : KEXEC_TYPE_DEFAULT;
-	struct kimage **dest_image, *image;
 	int ret = 0, i;
+	struct kimage **dest_image, *image;
 
 	/* We only trust the superuser with rebooting the system. */
-	if (!kexec_load_permitted(image_type))
+	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
 		return -EPERM;
 
 	/* Make sure we have a legal set of flags */
@@ -344,12 +342,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
 	if (!kexec_trylock())
 		return -EBUSY;
 
-	if (image_type == KEXEC_TYPE_CRASH) {
+	dest_image = &kexec_image;
+	if (flags & KEXEC_FILE_ON_CRASH) {
 		dest_image = &kexec_crash_image;
 		if (kexec_crash_image)
 			arch_kexec_unprotect_crashkres();
-	} else {
-		dest_image = &kexec_image;
 	}
 
 	if (flags & KEXEC_FILE_UNLOAD)
@@ -1144,7 +1141,7 @@ int crash_exclude_mem_range(struct crash_mem *mem,
 {
 	int i, j;
 	unsigned long long start, end, p_start, p_end;
-	struct range temp_range = {0, 0};
+	struct crash_mem_range temp_range = {0, 0};
 
 	for (i = 0; i < mem->nr_ranges; i++) {
 		start = mem->ranges[i].start;

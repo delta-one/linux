@@ -128,16 +128,13 @@ static void i915_gem_object_userptr_drop_ref(struct drm_i915_gem_object *obj)
 
 static int i915_gem_userptr_get_pages(struct drm_i915_gem_object *obj)
 {
-	unsigned int max_segment = i915_sg_segment_size(obj->base.dev->dev);
+	const unsigned long num_pages = obj->base.size >> PAGE_SHIFT;
+	unsigned int max_segment = i915_sg_segment_size();
 	struct sg_table *st;
+	unsigned int sg_page_sizes;
 	struct page **pvec;
-	unsigned int num_pages; /* limited by sg_alloc_table_from_pages_segment */
 	int ret;
 
-	if (overflows_type(obj->base.size >> PAGE_SHIFT, num_pages))
-		return -E2BIG;
-
-	num_pages = obj->base.size >> PAGE_SHIFT;
 	st = kmalloc(sizeof(*st), GFP_KERNEL);
 	if (!st)
 		return -ENOMEM;
@@ -173,7 +170,8 @@ alloc_table:
 	if (i915_gem_object_can_bypass_llc(obj))
 		obj->cache_dirty = true;
 
-	__i915_gem_object_set_pages(obj, st);
+	sg_page_sizes = i915_sg_dma_sizes(st->sgl);
+	__i915_gem_object_set_pages(obj, st, sg_page_sizes);
 
 	return 0;
 
@@ -294,7 +292,7 @@ int i915_gem_object_userptr_submit_init(struct drm_i915_gem_object *obj)
 	if (!i915_gem_object_is_readonly(obj))
 		gup_flags |= FOLL_WRITE;
 
-	pinned = 0;
+	pinned = ret = 0;
 	while (pinned < num_pages) {
 		ret = pin_user_pages_fast(obj->userptr.ptr + pinned * PAGE_SIZE,
 					  num_pages - pinned, gup_flags,
@@ -304,6 +302,7 @@ int i915_gem_object_userptr_submit_init(struct drm_i915_gem_object *obj)
 
 		pinned += ret;
 	}
+	ret = 0;
 
 	ret = i915_gem_object_lock_interruptible(obj, NULL);
 	if (ret)
@@ -429,10 +428,9 @@ probe_range(struct mm_struct *mm, unsigned long addr, unsigned long len)
 {
 	VMA_ITERATOR(vmi, mm, addr);
 	struct vm_area_struct *vma;
-	unsigned long end = addr + len;
 
 	mmap_read_lock(mm);
-	for_each_vma_range(vmi, vma, end) {
+	for_each_vma_range(vmi, vma, addr + len) {
 		/* Check for holes, note that we also update the addr below */
 		if (vma->vm_start > addr)
 			break;
@@ -444,7 +442,7 @@ probe_range(struct mm_struct *mm, unsigned long addr, unsigned long len)
 	}
 	mmap_read_unlock(mm);
 
-	if (vma || addr < end)
+	if (vma)
 		return -EFAULT;
 	return 0;
 }

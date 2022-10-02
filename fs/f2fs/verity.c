@@ -81,7 +81,7 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
 		size_t n = min_t(size_t, count,
 				 PAGE_SIZE - offset_in_page(pos));
 		struct page *page;
-		void *fsdata = NULL;
+		void *fsdata;
 		int res;
 
 		res = aops->write_begin(NULL, mapping, pos, n, &page, &fsdata);
@@ -240,8 +240,6 @@ static int f2fs_get_verity_descriptor(struct inode *inode, void *buf,
 	if (pos + size < pos || pos + size > inode->i_sb->s_maxbytes ||
 	    pos < f2fs_verity_metadata_pos(inode) || size > INT_MAX) {
 		f2fs_warn(F2FS_I_SB(inode), "invalid verity xattr");
-		f2fs_handle_error(F2FS_I_SB(inode),
-				ERROR_CORRUPTED_VERITY_XATTR);
 		return -EFSCORRUPTED;
 	}
 	if (buf_size) {
@@ -258,14 +256,13 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
 					       pgoff_t index,
 					       unsigned long num_ra_pages)
 {
+	DEFINE_READAHEAD(ractl, NULL, NULL, inode->i_mapping, index);
 	struct page *page;
 
 	index += f2fs_verity_metadata_pos(inode) >> PAGE_SHIFT;
 
 	page = find_get_page_flags(inode->i_mapping, index, FGP_ACCESSED);
 	if (!page || !PageUptodate(page)) {
-		DEFINE_READAHEAD(ractl, NULL, NULL, inode->i_mapping, index);
-
 		if (page)
 			put_page(page);
 		else if (num_ra_pages > 1)
@@ -276,11 +273,11 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
 }
 
 static int f2fs_write_merkle_tree_block(struct inode *inode, const void *buf,
-					u64 pos, unsigned int size)
+					u64 index, int log_blocksize)
 {
-	pos += f2fs_verity_metadata_pos(inode);
+	loff_t pos = f2fs_verity_metadata_pos(inode) + (index << log_blocksize);
 
-	return pagecache_write(inode, buf, size, pos);
+	return pagecache_write(inode, buf, 1 << log_blocksize, pos);
 }
 
 const struct fsverity_operations f2fs_verityops = {

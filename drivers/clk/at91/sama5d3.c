@@ -40,14 +40,9 @@ static const struct clk_pcr_layout sama5d3_pcr_layout = {
 static const struct {
 	char *n;
 	char *p;
-	unsigned long flags;
 	u8 id;
 } sama5d3_systemck[] = {
-	/*
-	 * ddrck feeds DDR controller and is enabled by bootloader thus we need
-	 * to keep it enabled in case there is no Linux consumer for it.
-	 */
-	{ .n = "ddrck", .p = "masterck_div", .id = 2, .flags = CLK_IS_CRITICAL },
+	{ .n = "ddrck", .p = "masterck_div", .id = 2 },
 	{ .n = "lcdck", .p = "masterck_div", .id = 3 },
 	{ .n = "smdck", .p = "smdclk",       .id = 4 },
 	{ .n = "uhpck", .p = "usbck",        .id = 6 },
@@ -61,7 +56,6 @@ static const struct {
 	char *n;
 	u8 id;
 	struct clk_range r;
-	unsigned long flags;
 } sama5d3_periphck[] = {
 	{ .n = "dbgu_clk", .id = 2, },
 	{ .n = "hsmc_clk", .id = 5, },
@@ -105,11 +99,7 @@ static const struct {
 	{ .n = "tdes_clk", .id = 44, },
 	{ .n = "trng_clk", .id = 45, },
 	{ .n = "fuse_clk", .id = 48, },
-	/*
-	 * mpddr_clk feeds DDR controller and is enabled by bootloader thus we
-	 * need to keep it enabled in case there is no Linux consumer for it.
-	 */
-	{ .n = "mpddr_clk", .id = 49, .flags = CLK_IS_CRITICAL },
+	{ .n = "mpddr_clk", .id = 49, },
 };
 
 static void __init sama5d3_pmc_setup(struct device_node *np)
@@ -232,8 +222,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
 	for (i = 0; i < ARRAY_SIZE(sama5d3_systemck); i++) {
 		hw = at91_clk_register_system(regmap, sama5d3_systemck[i].n,
 					      sama5d3_systemck[i].p,
-					      sama5d3_systemck[i].id,
-					      sama5d3_systemck[i].flags);
+					      sama5d3_systemck[i].id);
 		if (IS_ERR(hw))
 			goto err_free;
 
@@ -247,8 +236,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
 							 "masterck_div",
 							 sama5d3_periphck[i].id,
 							 &sama5d3_periphck[i].r,
-							 INT_MIN,
-							 sama5d3_periphck[i].flags);
+							 INT_MIN);
 		if (IS_ERR(hw))
 			goto err_free;
 

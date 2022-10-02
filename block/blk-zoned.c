@@ -63,10 +63,13 @@ bool blk_req_needs_zone_write_lock(struct request *rq)
 	if (!rq->q->disk->seq_zones_wlock)
 		return false;
 
-	if (bdev_op_is_zoned_write(rq->q->disk->part0, req_op(rq)))
+	switch (req_op(rq)) {
+	case REQ_OP_WRITE_ZEROES:
+	case REQ_OP_WRITE:
 		return blk_rq_zone_is_seq(rq);
-
-	return false;
+	default:
+		return false;
+	}
 }
 EXPORT_SYMBOL_GPL(blk_req_needs_zone_write_lock);
 
@@ -277,10 +280,10 @@ int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
 		return -EINVAL;
 
 	/* Check alignment (handle eventual smaller last zone) */
-	if (!bdev_is_zone_start(bdev, sector))
+	if (sector & (zone_sectors - 1))
 		return -EINVAL;
 
-	if (!bdev_is_zone_start(bdev, nr_sectors) && end_sector != capacity)
+	if ((nr_sectors & (zone_sectors - 1)) && end_sector != capacity)
 		return -EINVAL;
 
 	/*
@@ -334,11 +337,16 @@ int blkdev_report_zones_ioctl(struct block_device *bdev, fmode_t mode,
 {
 	void __user *argp = (void __user *)arg;
 	struct zone_report_args args;
+	struct request_queue *q;
 	struct blk_zone_report rep;
 	int ret;
 
 	if (!argp)
 		return -EINVAL;
+
+	q = bdev_get_queue(bdev);
+	if (!q)
+		return -ENXIO;
 
 	if (!bdev_is_zoned(bdev))
 		return -ENOTTY;
@@ -386,12 +394,17 @@ int blkdev_zone_mgmt_ioctl(struct block_device *bdev, fmode_t mode,
 			   unsigned int cmd, unsigned long arg)
 {
 	void __user *argp = (void __user *)arg;
+	struct request_queue *q;
 	struct blk_zone_range zrange;
 	enum req_op op;
 	int ret;
 
 	if (!argp)
 		return -EINVAL;
+
+	q = bdev_get_queue(bdev);
+	if (!q)
+		return -ENXIO;
 
 	if (!bdev_is_zoned(bdev))
 		return -ENOTTY;

@@ -64,7 +64,7 @@ static struct platform_device *cpufreq_dt_pdev, *cpufreq_pdev;
 
 static void get_krait_bin_format_a(struct device *cpu_dev,
 					  int *speed, int *pvs, int *pvs_ver,
-					  u8 *buf)
+					  struct nvmem_cell *pvs_nvmem, u8 *buf)
 {
 	u32 pte_efuse;
 
@@ -95,7 +95,7 @@ static void get_krait_bin_format_a(struct device *cpu_dev,
 
 static void get_krait_bin_format_b(struct device *cpu_dev,
 					  int *speed, int *pvs, int *pvs_ver,
-					  u8 *buf)
+					  struct nvmem_cell *pvs_nvmem, u8 *buf)
 {
 	u32 pte_efuse, redundant_sel;
 
@@ -213,7 +213,6 @@ static int qcom_cpufreq_krait_name_version(struct device *cpu_dev,
 	int speed = 0, pvs = 0, pvs_ver = 0;
 	u8 *speedbin;
 	size_t len;
-	int ret = 0;
 
 	speedbin = nvmem_cell_read(speedbin_nvmem, &len);
 
@@ -223,16 +222,15 @@ static int qcom_cpufreq_krait_name_version(struct device *cpu_dev,
 	switch (len) {
 	case 4:
 		get_krait_bin_format_a(cpu_dev, &speed, &pvs, &pvs_ver,
-				       speedbin);
+				       speedbin_nvmem, speedbin);
 		break;
 	case 8:
 		get_krait_bin_format_b(cpu_dev, &speed, &pvs, &pvs_ver,
-				       speedbin);
+				       speedbin_nvmem, speedbin);
 		break;
 	default:
 		dev_err(cpu_dev, "Unable to read nvmem data. Defaulting to 0!\n");
-		ret = -ENODEV;
-		goto len_error;
+		return -ENODEV;
 	}
 
 	snprintf(*pvs_name, sizeof("speedXX-pvsXX-vXX"), "speed%d-pvs%d-v%d",
@@ -240,9 +238,8 @@ static int qcom_cpufreq_krait_name_version(struct device *cpu_dev,
 
 	drv->versions = (1 << speed);
 
-len_error:
 	kfree(speedbin);
-	return ret;
+	return 0;
 }
 
 static const struct qcom_cpufreq_match_data match_data_kryo = {
@@ -265,8 +262,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
 	struct nvmem_cell *speedbin_nvmem;
 	struct device_node *np;
 	struct device *cpu_dev;
-	char pvs_name_buffer[] = "speedXX-pvsXX-vXX";
-	char *pvs_name = pvs_name_buffer;
+	char *pvs_name = "speedXX-pvsXX-vXX";
 	unsigned cpu;
 	const struct of_device_id *match;
 	int ret;
@@ -299,8 +295,11 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
 	if (drv->data->get_version) {
 		speedbin_nvmem = of_nvmem_cell_get(np, NULL);
 		if (IS_ERR(speedbin_nvmem)) {
-			ret = dev_err_probe(cpu_dev, PTR_ERR(speedbin_nvmem),
-					    "Could not get nvmem cell\n");
+			if (PTR_ERR(speedbin_nvmem) != -EPROBE_DEFER)
+				dev_err(cpu_dev,
+					"Could not get nvmem cell: %ld\n",
+					PTR_ERR(speedbin_nvmem));
+			ret = PTR_ERR(speedbin_nvmem);
 			goto free_drv;
 		}
 

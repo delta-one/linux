@@ -274,7 +274,6 @@ static void show_vma_header_prefix(struct seq_file *m,
 static void
 show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 {
-	struct anon_vma_name *anon_name = NULL;
 	struct mm_struct *mm = vma->vm_mm;
 	struct file *file = vma->vm_file;
 	vm_flags_t flags = vma->vm_flags;
@@ -294,8 +293,6 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 	start = vma->vm_start;
 	end = vma->vm_end;
 	show_vma_header_prefix(m, start, end, flags, pgoff, dev, ino);
-	if (mm)
-		anon_name = anon_vma_name(vma);
 
 	/*
 	 * Print the dentry name for named mappings, and a
@@ -303,14 +300,7 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 	 */
 	if (file) {
 		seq_pad(m, ' ');
-		/*
-		 * If user named this anon shared memory via
-		 * prctl(PR_SET_VMA ..., use the provided name.
-		 */
-		if (anon_name)
-			seq_printf(m, "[anon_shmem:%s]", anon_name->name);
-		else
-			seq_file_path(m, file, "\n");
+		seq_file_path(m, file, "\n");
 		goto done;
 	}
 
@@ -322,6 +312,8 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 
 	name = arch_vma_name(vma);
 	if (!name) {
+		struct anon_vma_name *anon_name;
+
 		if (!mm) {
 			name = "[vdso]";
 			goto done;
@@ -338,6 +330,7 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 			goto done;
 		}
 
+		anon_name = anon_vma_name(vma);
 		if (anon_name) {
 			seq_pad(m, ' ');
 			seq_printf(m, "[anon:%s]", anon_name->name);
@@ -674,7 +667,6 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
 		[ilog2(VM_RAND_READ)]	= "rr",
 		[ilog2(VM_DONTCOPY)]	= "dc",
 		[ilog2(VM_DONTEXPAND)]	= "de",
-		[ilog2(VM_LOCKONFAULT)]	= "lf",
 		[ilog2(VM_ACCOUNT)]	= "ac",
 		[ilog2(VM_NORESERVE)]	= "nr",
 		[ilog2(VM_HUGETLB)]	= "ht",
@@ -745,7 +737,9 @@ static int smaps_hugetlb_range(pte_t *pte, unsigned long hmask,
 			page = pfn_swap_entry_to_page(swpent);
 	}
 	if (page) {
-		if (page_mapcount(page) >= 2 || hugetlb_pmd_shared(pte))
+		int mapcount = page_mapcount(page);
+
+		if (mapcount >= 2)
 			mss->shared_hugetlb += huge_page_size(hstate_vma(vma));
 		else
 			mss->private_hugetlb += huge_page_size(hstate_vma(vma));
@@ -782,6 +776,7 @@ static void smap_gather_stats(struct vm_area_struct *vma,
 	if (start >= vma->vm_end)
 		return;
 
+#ifdef CONFIG_SHMEM
 	if (vma->vm_file && shmem_mapping(vma->vm_file->f_mapping)) {
 		/*
 		 * For shared or readonly shmem mappings we know that all
@@ -802,7 +797,7 @@ static void smap_gather_stats(struct vm_area_struct *vma,
 			ops = &smaps_shmem_walk_ops;
 		}
 	}
-
+#endif
 	/* mmap_lock is held in m_start */
 	if (!start)
 		walk_page_vma(vma, ops, mss);
@@ -889,7 +884,7 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
 	struct vm_area_struct *vma;
 	unsigned long vma_start = 0, last_vma_end = 0;
 	int ret = 0;
-	VMA_ITERATOR(vmi, mm, 0);
+	MA_STATE(mas, &mm->mm_mt, 0, 0);
 
 	priv->task = get_proc_task(priv->inode);
 	if (!priv->task)
@@ -907,7 +902,7 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
 		goto out_put_mm;
 
 	hold_task_mempolicy(priv);
-	vma = vma_next(&vmi);
+	vma = mas_find(&mas, 0);
 
 	if (unlikely(!vma))
 		goto empty_set;
@@ -922,7 +917,7 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
 		 * access it for write request.
 		 */
 		if (mmap_lock_is_contended(mm)) {
-			vma_iter_invalidate(&vmi);
+			mas_pause(&mas);
 			mmap_read_unlock(mm);
 			ret = mmap_read_lock_killable(mm);
 			if (ret) {
@@ -947,31 +942,31 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
 			 *
 			 * 1) VMA2 is freed, but VMA3 exists:
 			 *
-			 *    vma_next(vmi) will return VMA3.
+			 *    find_vma(mm, 16k - 1) will return VMA3.
 			 *    In this case, just continue from VMA3.
 			 *
 			 * 2) VMA2 still exists:
 			 *
-			 *    vma_next(vmi) will return VMA3.
-			 *    In this case, just continue from VMA3.
+			 *    find_vma(mm, 16k - 1) will return VMA2.
+			 *    Iterate the loop like the original one.
 			 *
 			 * 3) No more VMAs can be found:
 			 *
-			 *    vma_next(vmi) will return NULL.
+			 *    find_vma(mm, 16k - 1) will return NULL.
 			 *    No more things to do, just break.
 			 *
 			 * 4) (last_vma_end - 1) is the middle of a vma (VMA'):
 			 *
-			 *    vma_next(vmi) will return VMA' whose range
+			 *    find_vma(mm, 16k - 1) will return VMA' whose range
 			 *    contains last_vma_end.
 			 *    Iterate VMA' from last_vma_end.
 			 */
-			vma = vma_next(&vmi);
+			vma = mas_find(&mas, ULONG_MAX);
 			/* Case 3 above */
 			if (!vma)
 				break;
 
-			/* Case 1 and 2 above */
+			/* Case 1 above */
 			if (vma->vm_start >= last_vma_end)
 				continue;
 
@@ -979,7 +974,8 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
 			if (vma->vm_end > last_vma_end)
 				smap_gather_stats(vma, &mss, last_vma_end);
 		}
-	} for_each_vma(vmi, vma);
+		/* Case 2 above */
+	} while ((vma = mas_find(&mas, ULONG_MAX)) != NULL);
 
 empty_set:
 	show_vma_header_prefix(m, vma_start, last_vma_end, 0, 0, 0, 0);
@@ -1275,7 +1271,7 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
 		return -ESRCH;
 	mm = get_task_mm(task);
 	if (mm) {
-		VMA_ITERATOR(vmi, mm, 0);
+		MA_STATE(mas, &mm->mm_mt, 0, 0);
 		struct mmu_notifier_range range;
 		struct clear_refs_private cp = {
 			.type = type,
@@ -1295,16 +1291,16 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
 		}
 
 		if (type == CLEAR_REFS_SOFT_DIRTY) {
-			for_each_vma(vmi, vma) {
+			mas_for_each(&mas, vma, ULONG_MAX) {
 				if (!(vma->vm_flags & VM_SOFTDIRTY))
 					continue;
-				vm_flags_clear(vma, VM_SOFTDIRTY);
+				vma->vm_flags &= ~VM_SOFTDIRTY;
 				vma_set_page_prot(vma);
 			}
 
 			inc_tlb_flush_pending(mm);
 			mmu_notifier_range_init(&range, MMU_NOTIFY_SOFT_DIRTY,
-						0, mm, 0, -1UL);
+						0, NULL, mm, 0, -1UL);
 			mmu_notifier_invalidate_range_start(&range);
 		}
 		walk_page_range(mm, 0, -1, &clear_refs_walk_ops, &cp);
@@ -1688,13 +1684,8 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
 
 	/* watch out for wraparound */
 	start_vaddr = end_vaddr;
-	if (svpfn <= (ULONG_MAX >> PAGE_SHIFT)) {
-		ret = mmap_read_lock_killable(mm);
-		if (ret)
-			goto out_free;
-		start_vaddr = untagged_addr_remote(mm, svpfn << PAGE_SHIFT);
-		mmap_read_unlock(mm);
-	}
+	if (svpfn <= (ULONG_MAX >> PAGE_SHIFT))
+		start_vaddr = untagged_addr(svpfn << PAGE_SHIFT);
 
 	/* Ensure the address is inside the task */
 	if (start_vaddr > mm->task_size)

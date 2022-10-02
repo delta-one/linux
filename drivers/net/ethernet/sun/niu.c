@@ -4522,7 +4522,7 @@ static int niu_alloc_channels(struct niu *np)
 
 		err = niu_rbr_fill(np, rp, GFP_KERNEL);
 		if (err)
-			goto out_err;
+			return err;
 	}
 
 	tx_rings = kcalloc(num_tx_rings, sizeof(struct tx_ring_info),
@@ -9115,7 +9115,7 @@ static int niu_ldg_init(struct niu *np)
 	for (i = 0; i < np->num_ldg; i++) {
 		struct niu_ldg *lp = &np->ldg[i];
 
-		netif_napi_add(np->dev, &lp->napi, niu_poll);
+		netif_napi_add(np->dev, &lp->napi, niu_poll, 64);
 
 		lp->np = np;
 		lp->ldg_num = ldg_num_map[i];
@@ -9271,7 +9271,7 @@ static int niu_get_of_props(struct niu *np)
 	if (model)
 		strcpy(np->vpd.model, model);
 
-	if (of_property_read_bool(dp, "hot-swappable-phy")) {
+	if (of_find_property(dp, "hot-swappable-phy", NULL)) {
 		np->flags |= (NIU_FLAGS_10G | NIU_FLAGS_FIBER |
 			NIU_FLAGS_HOTPLUG_PHY);
 	}

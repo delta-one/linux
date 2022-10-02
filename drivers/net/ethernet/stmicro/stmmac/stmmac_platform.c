@@ -108,10 +108,10 @@ static struct stmmac_axi *stmmac_axi_setup(struct platform_device *pdev)
 
 	axi->axi_lpi_en = of_property_read_bool(np, "snps,lpi_en");
 	axi->axi_xit_frm = of_property_read_bool(np, "snps,xit_frm");
-	axi->axi_kbbe = of_property_read_bool(np, "snps,kbbe");
-	axi->axi_fb = of_property_read_bool(np, "snps,fb");
-	axi->axi_mb = of_property_read_bool(np, "snps,mb");
-	axi->axi_rb =  of_property_read_bool(np, "snps,rb");
+	axi->axi_kbbe = of_property_read_bool(np, "snps,axi_kbbe");
+	axi->axi_fb = of_property_read_bool(np, "snps,axi_fb");
+	axi->axi_mb = of_property_read_bool(np, "snps,axi_mb");
+	axi->axi_rb =  of_property_read_bool(np, "snps,axi_rb");
 
 	if (of_property_read_u32(np, "snps,wr_osr_lmt", &axi->axi_wr_osr_lmt))
 		axi->axi_wr_osr_lmt = 1;
@@ -440,12 +440,11 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
 	/* Default to phy auto-detection */
 	plat->phy_addr = -1;
 
-	/* Default to get clk_csr from stmmac_clk_csr_set(),
+	/* Default to get clk_csr from stmmac_clk_crs_set(),
 	 * or get clk_csr from device tree.
 	 */
 	plat->clk_csr = -1;
-	if (of_property_read_u32(np, "snps,clk-csr", &plat->clk_csr))
-		of_property_read_u32(np, "clk_csr", &plat->clk_csr);
+	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
 
 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
 	 * and warn of its use. Remove this when phy node support is added.
@@ -519,8 +518,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
 	if (of_device_is_compatible(np, "snps,dwmac-4.00") ||
 	    of_device_is_compatible(np, "snps,dwmac-4.10a") ||
 	    of_device_is_compatible(np, "snps,dwmac-4.20a") ||
-	    of_device_is_compatible(np, "snps,dwmac-5.10a") ||
-	    of_device_is_compatible(np, "snps,dwmac-5.20")) {
+	    of_device_is_compatible(np, "snps,dwmac-5.10a")) {
 		plat->has_gmac4 = 1;
 		plat->has_gmac = 0;
 		plat->pmt = 1;
@@ -560,7 +558,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
 	dma_cfg->mixed_burst = of_property_read_bool(np, "snps,mixed-burst");
 
 	plat->force_thresh_dma_mode = of_property_read_bool(np, "snps,force_thresh_dma_mode");
-	if (plat->force_thresh_dma_mode && plat->force_sf_dma_mode) {
+	if (plat->force_thresh_dma_mode) {
 		plat->force_sf_dma_mode = 0;
 		dev_warn(&pdev->dev,
 			 "force_sf_dma_mode is ignored if force_thresh_dma_mode is set.\n");
@@ -712,15 +710,14 @@ int stmmac_pltfr_remove(struct platform_device *pdev)
 	struct net_device *ndev = platform_get_drvdata(pdev);
 	struct stmmac_priv *priv = netdev_priv(ndev);
 	struct plat_stmmacenet_data *plat = priv->plat;
-
-	stmmac_dvr_remove(&pdev->dev);
+	int ret = stmmac_dvr_remove(&pdev->dev);
 
 	if (plat->exit)
 		plat->exit(pdev, plat->bsp_priv);
 
 	stmmac_remove_config_dt(pdev, plat);
 
-	return 0;
+	return ret;
 }
 EXPORT_SYMBOL_GPL(stmmac_pltfr_remove);
 

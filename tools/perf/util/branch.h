@@ -7,10 +7,12 @@
  * detected in at least musl libc, used in Alpine Linux. -acme
  */
 #include <stdio.h>
+#include <stdint.h>
+#include <linux/compiler.h>
+#include <linux/stddef.h>
 #include <linux/perf_event.h>
 #include <linux/types.h>
-#include "util/map_symbol.h"
-#include "util/sample.h"
+#include "event.h"
 
 struct branch_flags {
 	union {
@@ -22,10 +24,9 @@ struct branch_flags {
 			u64 abort:1;
 			u64 cycles:16;
 			u64 type:4;
-			u64 spec:2;
 			u64 new_type:4;
 			u64 priv:3;
-			u64 reserved:31;
+			u64 reserved:33;
 		};
 	};
 };
@@ -88,7 +89,5 @@ const char *branch_new_type_name(int new_type);
 const char *get_branch_type(struct branch_entry *e);
 void branch_type_stat_display(FILE *fp, struct branch_type_stat *st);
 int branch_type_str(struct branch_type_stat *st, char *bf, int bfsize);
-
-const char *branch_spec_desc(int spec);
 
 #endif /* _PERF_BRANCH_H */

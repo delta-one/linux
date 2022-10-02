@@ -435,11 +435,11 @@ static int amdgpu_vram_mgr_new(struct ttm_resource_manager *man,
 	if (place->flags & TTM_PL_FLAG_TOPDOWN)
 		vres->flags |= DRM_BUDDY_TOPDOWN_ALLOCATION;
 
-	if (fpfn || lpfn != mgr->mm.size)
+	if (fpfn || lpfn != man->size)
 		/* Allocate blocks in desired range */
 		vres->flags |= DRM_BUDDY_RANGE_ALLOCATION;
 
-	remaining_size = (u64)vres->base.size;
+	remaining_size = (u64)vres->base.num_pages << PAGE_SHIFT;
 
 	mutex_lock(&mgr->lock);
 	while (remaining_size) {
@@ -453,8 +453,7 @@ static int amdgpu_vram_mgr_new(struct ttm_resource_manager *man,
 		/* Limit maximum size to 2GiB due to SG table limitations */
 		size = min(remaining_size, 2ULL << 30);
 
-		if ((size >= (u64)pages_per_block << PAGE_SHIFT) &&
-				!(size & (((u64)pages_per_block << PAGE_SHIFT) - 1)))
+		if (size >= (u64)pages_per_block << PAGE_SHIFT)
 			min_block_size = (u64)pages_per_block << PAGE_SHIFT;
 
 		cur_size = size;
@@ -499,7 +498,7 @@ static int amdgpu_vram_mgr_new(struct ttm_resource_manager *man,
 		LIST_HEAD(temp);
 
 		trim_list = &vres->blocks;
-		original_size = (u64)vres->base.size;
+		original_size = (u64)vres->base.num_pages << PAGE_SHIFT;
 
 		/*
 		 * If size value is rounded up to min_block_size, trim the last
@@ -534,8 +533,8 @@ static int amdgpu_vram_mgr_new(struct ttm_resource_manager *man,
 			amdgpu_vram_mgr_block_size(block);
 		start >>= PAGE_SHIFT;
 
-		if (start > PFN_UP(vres->base.size))
-			start -= PFN_UP(vres->base.size);
+		if (start > vres->base.num_pages)
+			start -= vres->base.num_pages;
 		else
 			start = 0;
 		vres->base.start = max(vres->base.start, start);
@@ -883,7 +882,7 @@ void amdgpu_vram_mgr_fini(struct amdgpu_device *adev)
 		kfree(rsv);
 
 	list_for_each_entry_safe(rsv, temp, &mgr->reserved_pages, blocks) {
-		drm_buddy_free_list(&mgr->mm, &rsv->allocated);
+		drm_buddy_free_list(&mgr->mm, &rsv->blocks);
 		kfree(rsv);
 	}
 	drm_buddy_fini(&mgr->mm);

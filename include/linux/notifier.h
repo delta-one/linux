@@ -73,9 +73,6 @@ struct raw_notifier_head {
 
 struct srcu_notifier_head {
 	struct mutex mutex;
-#ifdef CONFIG_TREE_SRCU
-	struct srcu_usage srcuu;
-#endif
 	struct srcu_struct srcu;
 	struct notifier_block __rcu *head;
 };
@@ -110,7 +107,7 @@ extern void srcu_init_notifier_head(struct srcu_notifier_head *nh);
 	{							\
 		.mutex = __MUTEX_INITIALIZER(name.mutex),	\
 		.head = NULL,					\
-		.srcu = __SRCU_STRUCT_INIT(name.srcu, name.srcuu, pcpu), \
+		.srcu = __SRCU_STRUCT_INIT(name.srcu, pcpu),	\
 	}
 
 #define ATOMIC_NOTIFIER_HEAD(name)				\

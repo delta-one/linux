@@ -14,7 +14,6 @@
  *  code, and exception/interrupt return code for PowerPC.
  */
 
-#include <linux/objtool.h>
 #include <linux/errno.h>
 #include <linux/err.h>
 #include <asm/cache.h>
@@ -74,7 +73,6 @@ flush_branch_caches:
 
 	// Flush the link stack
 	.rept 64
-	ANNOTATE_INTRA_FUNCTION_CALL
 	bl	.+4
 	.endr
 	b	1f
@@ -294,16 +292,16 @@ _GLOBAL(enter_prom)
 
 	/* Prepare a 32-bit mode big endian MSR
 	 */
-#ifdef CONFIG_PPC_BOOK3E_64
+#ifdef CONFIG_PPC_BOOK3E
 	rlwinm	r11,r11,0,1,31
 	mtsrr1	r11
 	rfi
-#else /* CONFIG_PPC_BOOK3E_64 */
+#else /* CONFIG_PPC_BOOK3E */
 	LOAD_REG_IMMEDIATE(r12, MSR_SF | MSR_LE)
 	andc	r11,r11,r12
 	mtsrr1	r11
 	RFI_TO_KERNEL
-#endif /* CONFIG_PPC_BOOK3E_64 */
+#endif /* CONFIG_PPC_BOOK3E */
 
 1:	/* Return from OF */
 	FIXUP_ENDIAN

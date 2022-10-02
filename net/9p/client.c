@@ -28,11 +28,7 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/9p.h>
 
-/* DEFAULT MSIZE = 32 pages worth of payload + P9_HDRSZ +
- * room for write (16 extra) or read (11 extra) operands.
- */
-
-#define DEFAULT_MSIZE ((128 * 1024) + P9_IOHDRSZ)
+#define DEFAULT_MSIZE (128 * 1024)
 
 /* Client Option Parsing (code inspired by NFS code)
  *  - a little lazy - parse all client options
@@ -301,11 +297,6 @@ p9_tag_alloc(struct p9_client *c, int8_t type, uint t_size, uint r_size,
 	p9pdu_reset(&req->rc);
 	req->t_err = 0;
 	req->status = REQ_STATUS_ALLOC;
-	/* refcount needs to be set to 0 before inserting into the idr
-	 * so p9_tag_lookup does not accept a request that is not fully
-	 * initialized. refcount_set to 2 below will mark request ready.
-	 */
-	refcount_set(&req->refcount, 0);
 	init_waitqueue_head(&req->wq);
 	INIT_LIST_HEAD(&req->req_list);
 
@@ -447,7 +438,7 @@ void p9_client_cb(struct p9_client *c, struct p9_req_t *req, int status)
 	 * the status change is visible to another thread
 	 */
 	smp_wmb();
-	WRITE_ONCE(req->status, status);
+	req->status = status;
 
 	wake_up(&req->wq);
 	p9_debug(P9_DEBUG_MUX, "wakeup: %d\n", req->tc.tag);
@@ -523,9 +514,10 @@ static int p9_check_errors(struct p9_client *c, struct p9_req_t *req)
 	int ecode;
 
 	err = p9_parse_header(&req->rc, NULL, &type, NULL, 0);
-	if (req->rc.size > req->rc.capacity && !req->rc.zc) {
-		pr_err("requested packet size too big: %d does not fit %zu (type=%d)\n",
-		       req->rc.size, req->rc.capacity, req->rc.id);
+	if (req->rc.size >= c->msize) {
+		p9_debug(P9_DEBUG_ERROR,
+			 "requested packet size too big: %d\n",
+			 req->rc.size);
 		return -EIO;
 	}
 	/* dump the response from server
@@ -608,7 +600,7 @@ static int p9_client_flush(struct p9_client *c, struct p9_req_t *oldreq)
 	/* if we haven't received a response for oldreq,
 	 * remove it from the list
 	 */
-	if (READ_ONCE(oldreq->status) == REQ_STATUS_SENT) {
+	if (oldreq->status == REQ_STATUS_SENT) {
 		if (c->trans_mod->cancelled)
 			c->trans_mod->cancelled(c, oldreq);
 	}
@@ -688,9 +680,6 @@ p9_client_rpc(struct p9_client *c, int8_t type, const char *fmt, ...)
 	if (IS_ERR(req))
 		return req;
 
-	req->tc.zc = false;
-	req->rc.zc = false;
-
 	if (signal_pending(current)) {
 		sigpending = 1;
 		clear_thread_flag(TIF_SIGPENDING);
@@ -708,8 +697,7 @@ p9_client_rpc(struct p9_client *c, int8_t type, const char *fmt, ...)
 	}
 again:
 	/* Wait for the response */
-	err = wait_event_killable(req->wq,
-				  READ_ONCE(req->status) >= REQ_STATUS_RCVD);
+	err = wait_event_killable(req->wq, req->status >= REQ_STATUS_RCVD);
 
 	/* Make sure our req is coherent with regard to updates in other
 	 * threads - echoes to wmb() in the callback
@@ -723,7 +711,7 @@ again:
 		goto again;
 	}
 
-	if (READ_ONCE(req->status) == REQ_STATUS_ERROR) {
+	if (req->status == REQ_STATUS_ERROR) {
 		p9_debug(P9_DEBUG_ERROR, "req_status error %d\n", req->t_err);
 		err = req->t_err;
 	}
@@ -736,7 +724,7 @@ again:
 			p9_client_flush(c, req);
 
 		/* if we received the response anyway, don't signal error */
-		if (READ_ONCE(req->status) == REQ_STATUS_RCVD)
+		if (req->status == REQ_STATUS_RCVD)
 			err = 0;
 	}
 recalc_sigpending:
@@ -790,9 +778,6 @@ static struct p9_req_t *p9_client_zc_rpc(struct p9_client *c, int8_t type,
 	if (IS_ERR(req))
 		return req;
 
-	req->tc.zc = true;
-	req->rc.zc = true;
-
 	if (signal_pending(current)) {
 		sigpending = 1;
 		clear_thread_flag(TIF_SIGPENDING);
@@ -808,7 +793,7 @@ static struct p9_req_t *p9_client_zc_rpc(struct p9_client *c, int8_t type,
 		if (err != -ERESTARTSYS)
 			goto recalc_sigpending;
 	}
-	if (READ_ONCE(req->status) == REQ_STATUS_ERROR) {
+	if (req->status == REQ_STATUS_ERROR) {
 		p9_debug(P9_DEBUG_ERROR, "req_status error %d\n", req->t_err);
 		err = req->t_err;
 	}
@@ -821,7 +806,7 @@ static struct p9_req_t *p9_client_zc_rpc(struct p9_client *c, int8_t type,
 			p9_client_flush(c, req);
 
 		/* if we received the response anyway, don't signal error */
-		if (READ_ONCE(req->status) == REQ_STATUS_RCVD)
+		if (req->status == REQ_STATUS_RCVD)
 			err = 0;
 	}
 recalc_sigpending:
@@ -976,13 +961,9 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
 	char *client_id;
 
 	err = 0;
-	clnt = kmalloc(sizeof(*clnt), GFP_KERNEL);
+	clnt = kzalloc(sizeof(*clnt), GFP_KERNEL);
 	if (!clnt)
 		return ERR_PTR(-ENOMEM);
-
-	clnt->trans_mod = NULL;
-	clnt->trans = NULL;
-	clnt->fcall_cache = NULL;
 
 	client_id = utsname()->nodename;
 	memcpy(clnt->name, client_id, strlen(client_id) + 1);
@@ -993,7 +974,7 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
 
 	err = parse_opts(options, clnt);
 	if (err < 0)
-		goto free_client;
+		goto out;
 
 	if (!clnt->trans_mod)
 		clnt->trans_mod = v9fs_get_default_trans();
@@ -1002,7 +983,7 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
 		err = -EPROTONOSUPPORT;
 		p9_debug(P9_DEBUG_ERROR,
 			 "No transport defined or default transport\n");
-		goto free_client;
+		goto out;
 	}
 
 	p9_debug(P9_DEBUG_MUX, "clnt %p trans %p msize %d protocol %d\n",
@@ -1010,7 +991,7 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
 
 	err = clnt->trans_mod->create(clnt, dev_name, options);
 	if (err)
-		goto put_trans;
+		goto out;
 
 	if (clnt->msize > clnt->trans_mod->maxsize) {
 		clnt->msize = clnt->trans_mod->maxsize;
@@ -1024,12 +1005,12 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
 		p9_debug(P9_DEBUG_ERROR,
 			 "Please specify a msize of at least 4k\n");
 		err = -EINVAL;
-		goto close_trans;
+		goto out;
 	}
 
 	err = p9_client_version(clnt);
 	if (err)
-		goto close_trans;
+		goto out;
 
 	/* P9_HDRSZ + 4 is the smallest packet header we can have that is
 	 * followed by data accessed from userspace by read
@@ -1042,12 +1023,8 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
 
 	return clnt;
 
-close_trans:
-	clnt->trans_mod->close(clnt);
-put_trans:
-	v9fs_put_trans(clnt->trans_mod);
-free_client:
-	kfree(clnt);
+out:
+	p9_client_destroy(clnt);
 	return ERR_PTR(err);
 }
 EXPORT_SYMBOL(p9_client_create);
@@ -1230,9 +1207,9 @@ int p9_client_open(struct p9_fid *fid, int mode)
 		return -EINVAL;
 
 	if (p9_is_proto_dotl(clnt))
-		req = p9_client_rpc(clnt, P9_TLOPEN, "dd", fid->fid, mode & P9L_MODE_MASK);
+		req = p9_client_rpc(clnt, P9_TLOPEN, "dd", fid->fid, mode);
 	else
-		req = p9_client_rpc(clnt, P9_TOPEN, "db", fid->fid, mode & P9L_MODE_MASK);
+		req = p9_client_rpc(clnt, P9_TOPEN, "db", fid->fid, mode);
 	if (IS_ERR(req)) {
 		err = PTR_ERR(req);
 		goto error;
@@ -1277,7 +1254,7 @@ int p9_client_create_dotl(struct p9_fid *ofid, const char *name, u32 flags,
 		return -EINVAL;
 
 	req = p9_client_rpc(clnt, P9_TLCREATE, "dsddg", ofid->fid, name, flags,
-			    mode & P9L_MODE_MASK, gid);
+			    mode, gid);
 	if (IS_ERR(req)) {
 		err = PTR_ERR(req);
 		goto error;
@@ -1293,7 +1270,7 @@ int p9_client_create_dotl(struct p9_fid *ofid, const char *name, u32 flags,
 		 qid->type, qid->path, qid->version, iounit);
 
 	memmove(&ofid->qid, qid, sizeof(struct p9_qid));
-	ofid->mode = flags;
+	ofid->mode = mode;
 	ofid->iounit = iounit;
 
 free_and_error:
@@ -1321,7 +1298,7 @@ int p9_client_fcreate(struct p9_fid *fid, const char *name, u32 perm, int mode,
 		return -EINVAL;
 
 	req = p9_client_rpc(clnt, P9_TCREATE, "dsdb?s", fid->fid, name, perm,
-			    mode & P9L_MODE_MASK, extension);
+			    mode, extension);
 	if (IS_ERR(req)) {
 		err = PTR_ERR(req);
 		goto error;
@@ -2058,7 +2035,7 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
 	struct kvec kv = {.iov_base = data, .iov_len = count};
 	struct iov_iter to;
 
-	iov_iter_kvec(&to, ITER_DEST, &kv, 1, count);
+	iov_iter_kvec(&to, READ, &kv, 1, count);
 
 	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %d\n",
 		 fid->fid, offset, count);

@@ -5,7 +5,6 @@
  */
 
 #include <inttypes.h>
-#include <linux/perf_event.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
@@ -98,10 +97,6 @@ struct intel_pt {
 	bool sample_instructions;
 	u64 instructions_sample_type;
 	u64 instructions_id;
-
-	bool sample_cycles;
-	u64 cycles_sample_type;
-	u64 cycles_id;
 
 	bool sample_branches;
 	u32 branches_filter;
@@ -219,8 +214,6 @@ struct intel_pt_queue {
 	u64 ipc_cyc_cnt;
 	u64 last_in_insn_cnt;
 	u64 last_in_cyc_cnt;
-	u64 last_cy_insn_cnt;
-	u64 last_cy_cyc_cnt;
 	u64 last_br_insn_cnt;
 	u64 last_br_cyc_cnt;
 	unsigned int cbr_seen;
@@ -801,27 +794,25 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
 	}
 
 	while (1) {
-		struct dso *dso;
-
-		if (!thread__find_map(thread, cpumode, *ip, &al) || !map__dso(al.map)) {
+		if (!thread__find_map(thread, cpumode, *ip, &al) || !al.map->dso) {
 			if (al.map)
 				intel_pt_log("ERROR: thread has no dso for %#" PRIx64 "\n", *ip);
 			else
 				intel_pt_log("ERROR: thread has no map for %#" PRIx64 "\n", *ip);
 			return -EINVAL;
 		}
-		dso = map__dso(al.map);
 
-		if (dso->data.status == DSO_DATA_STATUS_ERROR &&
-		    dso__data_status_seen(dso, DSO_DATA_STATUS_SEEN_ITRACE))
+		if (al.map->dso->data.status == DSO_DATA_STATUS_ERROR &&
+		    dso__data_status_seen(al.map->dso,
+					  DSO_DATA_STATUS_SEEN_ITRACE))
 			return -ENOENT;
 
-		offset = map__map_ip(al.map, *ip);
+		offset = al.map->map_ip(al.map, *ip);
 
 		if (!to_ip && one_map) {
 			struct intel_pt_cache_entry *e;
 
-			e = intel_pt_cache_lookup(dso, machine, offset);
+			e = intel_pt_cache_lookup(al.map->dso, machine, offset);
 			if (e &&
 			    (!max_insn_cnt || e->insn_cnt <= max_insn_cnt)) {
 				*insn_cnt_ptr = e->insn_cnt;
@@ -831,7 +822,8 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
 				intel_pt_insn->emulated_ptwrite = e->emulated_ptwrite;
 				intel_pt_insn->length = e->length;
 				intel_pt_insn->rel = e->rel;
-				memcpy(intel_pt_insn->buf, e->insn, INTEL_PT_INSN_BUF_SZ);
+				memcpy(intel_pt_insn->buf, e->insn,
+				       INTEL_PT_INSN_BUF_SZ);
 				intel_pt_log_insn_no_data(intel_pt_insn, *ip);
 				return 0;
 			}
@@ -843,17 +835,17 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
 		/* Load maps to ensure dso->is_64_bit has been updated */
 		map__load(al.map);
 
-		x86_64 = dso->is_64_bit;
+		x86_64 = al.map->dso->is_64_bit;
 
 		while (1) {
-			len = dso__data_read_offset(dso, machine,
+			len = dso__data_read_offset(al.map->dso, machine,
 						    offset, buf,
 						    INTEL_PT_INSN_BUF_SZ);
 			if (len <= 0) {
 				intel_pt_log("ERROR: failed to read at offset %#" PRIx64 " ",
 					     offset);
 				if (intel_pt_enable_logging)
-					dso__fprintf(dso, intel_pt_log_fp());
+					dso__fprintf(al.map->dso, intel_pt_log_fp());
 				return -EINVAL;
 			}
 
@@ -872,7 +864,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
 					goto out;
 				/* Check for emulated ptwrite */
 				offs = offset + intel_pt_insn->length;
-				eptw = intel_pt_emulated_ptwrite(dso, machine, offs);
+				eptw = intel_pt_emulated_ptwrite(al.map->dso, machine, offs);
 				intel_pt_insn->emulated_ptwrite = eptw;
 				goto out;
 			}
@@ -887,7 +879,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
 				goto out_no_cache;
 			}
 
-			if (*ip >= map__end(al.map))
+			if (*ip >= al.map->end)
 				break;
 
 			offset += intel_pt_insn->length;
@@ -907,13 +899,13 @@ out:
 	if (to_ip) {
 		struct intel_pt_cache_entry *e;
 
-		e = intel_pt_cache_lookup(map__dso(al.map), machine, start_offset);
+		e = intel_pt_cache_lookup(al.map->dso, machine, start_offset);
 		if (e)
 			return 0;
 	}
 
 	/* Ignore cache errors */
-	intel_pt_cache_add(map__dso(al.map), machine, start_offset, insn_cnt,
+	intel_pt_cache_add(al.map->dso, machine, start_offset, insn_cnt,
 			   *ip - start_ip, intel_pt_insn);
 
 	return 0;
@@ -984,12 +976,13 @@ static int __intel_pt_pgd_ip(uint64_t ip, void *data)
 	if (!thread)
 		return -EINVAL;
 
-	if (!thread__find_map(thread, cpumode, ip, &al) || !map__dso(al.map))
+	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
 		return -EINVAL;
 
-	offset = map__map_ip(al.map, ip);
+	offset = al.map->map_ip(al.map, ip);
 
-	return intel_pt_match_pgd_ip(ptq->pt, ip, offset, map__dso(al.map)->long_name);
+	return intel_pt_match_pgd_ip(ptq->pt, ip, offset,
+				     al.map->dso->long_name);
 }
 
 static bool intel_pt_pgd_ip(uint64_t ip, void *data)
@@ -1326,7 +1319,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
 	if (pt->filts.cnt > 0)
 		params.pgd_ip = intel_pt_pgd_ip;
 
-	if (pt->synth_opts.instructions || pt->synth_opts.cycles) {
+	if (pt->synth_opts.instructions) {
 		if (pt->synth_opts.period) {
 			switch (pt->synth_opts.period_type) {
 			case PERF_ITRACE_PERIOD_INSTRUCTIONS:
@@ -1835,33 +1828,6 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
 
 	return intel_pt_deliver_synth_event(pt, event, &sample,
 					    pt->instructions_sample_type);
-}
-
-static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
-{
-	struct intel_pt *pt = ptq->pt;
-	union perf_event *event = ptq->event_buf;
-	struct perf_sample sample = { .ip = 0, };
-	u64 period = 0;
-
-	if (ptq->sample_ipc)
-		period = ptq->ipc_cyc_cnt - ptq->last_cy_cyc_cnt;
-
-	if (!period || intel_pt_skip_event(pt))
-		return 0;
-
-	intel_pt_prep_sample(pt, ptq, event, &sample);
-
-	sample.id = ptq->pt->cycles_id;
-	sample.stream_id = ptq->pt->cycles_id;
-	sample.period = period;
-
-	sample.cyc_cnt = period;
-	sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_cy_insn_cnt;
-	ptq->last_cy_insn_cnt = ptq->ipc_insn_cnt;
-	ptq->last_cy_cyc_cnt = ptq->ipc_cyc_cnt;
-
-	return intel_pt_deliver_synth_event(pt, event, &sample, pt->cycles_sample_type);
 }
 
 static int intel_pt_synth_transaction_sample(struct intel_pt_queue *ptq)
@@ -2632,17 +2598,10 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
 		}
 	}
 
-	if (state->type & INTEL_PT_INSTRUCTION) {
-		if (pt->sample_instructions) {
-			err = intel_pt_synth_instruction_sample(ptq);
-			if (err)
-				return err;
-		}
-		if (pt->sample_cycles) {
-			err = intel_pt_synth_cycle_sample(ptq);
-			if (err)
-				return err;
-		}
+	if (pt->sample_instructions && (state->type & INTEL_PT_INSTRUCTION)) {
+		err = intel_pt_synth_instruction_sample(ptq);
+		if (err)
+			return err;
 	}
 
 	if (pt->sample_transactions && (state->type & INTEL_PT_TRANSACTION)) {
@@ -2744,13 +2703,13 @@ static u64 intel_pt_switch_ip(struct intel_pt *pt, u64 *ptss_ip)
 	if (map__load(map))
 		return 0;
 
-	start = dso__first_symbol(map__dso(map));
+	start = dso__first_symbol(map->dso);
 
 	for (sym = start; sym; sym = dso__next_symbol(sym)) {
 		if (sym->binding == STB_GLOBAL &&
 		    !strcmp(sym->name, "__switch_to")) {
-			ip = map__unmap_ip(map, sym->start);
-			if (ip >= map__start(map) && ip < map__end(map)) {
+			ip = map->unmap_ip(map, sym->start);
+			if (ip >= map->start && ip < map->end) {
 				switch_ip = ip;
 				break;
 			}
@@ -2767,8 +2726,8 @@ static u64 intel_pt_switch_ip(struct intel_pt *pt, u64 *ptss_ip)
 
 	for (sym = start; sym; sym = dso__next_symbol(sym)) {
 		if (!strcmp(sym->name, ptss)) {
-			ip = map__unmap_ip(map, sym->start);
-			if (ip >= map__start(map) && ip < map__end(map)) {
+			ip = map->unmap_ip(map, sym->start);
+			if (ip >= map->start && ip < map->end) {
 				*ptss_ip = ip;
 				break;
 			}
@@ -3183,7 +3142,6 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
 	return 1;
 }
 
-#ifdef HAVE_LIBTRACEEVENT
 static int intel_pt_process_switch(struct intel_pt *pt,
 				   struct perf_sample *sample)
 {
@@ -3207,7 +3165,6 @@ static int intel_pt_process_switch(struct intel_pt *pt,
 
 	return machine__set_current_tid(pt->machine, cpu, -1, tid);
 }
-#endif /* HAVE_LIBTRACEEVENT */
 
 static int intel_pt_context_switch_in(struct intel_pt *pt,
 				      struct perf_sample *sample)
@@ -3356,7 +3313,7 @@ static int intel_pt_process_aux_output_hw_id(struct intel_pt *pt,
 static int intel_pt_find_map(struct thread *thread, u8 cpumode, u64 addr,
 			     struct addr_location *al)
 {
-	if (!al->map || addr < map__start(al->map) || addr >= map__end(al->map)) {
+	if (!al->map || addr < al->map->start || addr >= al->map->end) {
 		if (!thread__find_map(thread, cpumode, addr, al))
 			return -1;
 	}
@@ -3381,21 +3338,18 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
 		return 0;
 
 	for (; cnt; cnt--, addr--) {
-		struct dso *dso;
-
 		if (intel_pt_find_map(thread, cpumode, addr, &al)) {
 			if (addr < event->text_poke.addr)
 				return 0;
 			continue;
 		}
 
-		dso = map__dso(al.map);
-		if (!dso || !dso->auxtrace_cache)
+		if (!al.map->dso || !al.map->dso->auxtrace_cache)
 			continue;
 
-		offset = map__map_ip(al.map, addr);
+		offset = al.map->map_ip(al.map, addr);
 
-		e = intel_pt_cache_lookup(dso, machine, offset);
+		e = intel_pt_cache_lookup(al.map->dso, machine, offset);
 		if (!e)
 			continue;
 
@@ -3408,9 +3362,9 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
 			if (e->branch != INTEL_PT_BR_NO_BRANCH)
 				return 0;
 		} else {
-			intel_pt_cache_invalidate(dso, machine, offset);
+			intel_pt_cache_invalidate(al.map->dso, machine, offset);
 			intel_pt_log("Invalidated instruction cache for %s at %#"PRIx64"\n",
-				     dso->long_name, addr);
+				     al.map->dso->long_name, addr);
 		}
 	}
 
@@ -3479,12 +3433,9 @@ static int intel_pt_process_event(struct perf_session *session,
 			return err;
 	}
 
-#ifdef HAVE_LIBTRACEEVENT
 	if (pt->switch_evsel && event->header.type == PERF_RECORD_SAMPLE)
 		err = intel_pt_process_switch(pt, sample);
-	else
-#endif
-	if (event->header.type == PERF_RECORD_ITRACE_START)
+	else if (event->header.type == PERF_RECORD_ITRACE_START)
 		err = intel_pt_process_itrace_start(pt, event, sample);
 	else if (event->header.type == PERF_RECORD_AUX_OUTPUT_HW_ID)
 		err = intel_pt_process_aux_output_hw_id(pt, event, sample);
@@ -3772,22 +3723,6 @@ static int intel_pt_synth_events(struct intel_pt *pt,
 		pt->sample_instructions = true;
 		pt->instructions_sample_type = attr.sample_type;
 		pt->instructions_id = id;
-		id += 1;
-	}
-
-	if (pt->synth_opts.cycles) {
-		attr.config = PERF_COUNT_HW_CPU_CYCLES;
-		if (pt->synth_opts.period_type == PERF_ITRACE_PERIOD_NANOSECS)
-			attr.sample_period =
-				intel_pt_ns_to_ticks(pt, pt->synth_opts.period);
-		else
-			attr.sample_period = pt->synth_opts.period;
-		err = intel_pt_synth_event(session, "cycles", &attr, id);
-		if (err)
-			return err;
-		pt->sample_cycles = true;
-		pt->cycles_sample_type = attr.sample_type;
-		pt->cycles_id = id;
 		id += 1;
 	}
 
@@ -4111,7 +4046,6 @@ static const char * const intel_pt_info_fmts[] = {
 	[INTEL_PT_SNAPSHOT_MODE]	= "  Snapshot mode       %"PRId64"\n",
 	[INTEL_PT_PER_CPU_MMAPS]	= "  Per-cpu maps        %"PRId64"\n",
 	[INTEL_PT_MTC_BIT]		= "  MTC bit             %#"PRIx64"\n",
-	[INTEL_PT_MTC_FREQ_BITS]	= "  MTC freq bits       %#"PRIx64"\n",
 	[INTEL_PT_TSC_CTC_N]		= "  TSC:CTC numerator   %"PRIu64"\n",
 	[INTEL_PT_TSC_CTC_D]		= "  TSC:CTC denominator %"PRIu64"\n",
 	[INTEL_PT_CYC_BIT]		= "  CYC bit             %#"PRIx64"\n",
@@ -4126,12 +4060,8 @@ static void intel_pt_print_info(__u64 *arr, int start, int finish)
 	if (!dump_trace)
 		return;
 
-	for (i = start; i <= finish; i++) {
-		const char *fmt = intel_pt_info_fmts[i];
-
-		if (fmt)
-			fprintf(stdout, fmt, arr[i]);
-	}
+	for (i = start; i <= finish; i++)
+		fprintf(stdout, intel_pt_info_fmts[i], arr[i]);
 }
 
 static void intel_pt_print_info_str(const char *name, const char *str)
@@ -4438,12 +4368,6 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
 		goto err_delete_thread;
 
 	intel_pt_setup_pebs_events(pt);
-
-	if (perf_data__is_pipe(session->data)) {
-		pr_warning("WARNING: Intel PT with pipe mode is not recommended.\n"
-			   "         The output cannot relied upon.  In particular,\n"
-			   "         timestamps and the order of events may be incorrect.\n");
-	}
 
 	if (pt->sampling_mode || list_empty(&session->auxtrace_index))
 		err = auxtrace_queue_data(session, true, true);

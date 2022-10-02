@@ -3054,7 +3054,7 @@ static int qcom_nand_host_parse_boot_partitions(struct qcom_nand_controller *nan
 	struct device *dev = nandc->dev;
 	int partitions_count, i, j, ret;
 
-	if (!of_property_present(dn, "qcom,boot-partitions"))
+	if (!of_find_property(dn, "qcom,boot-partitions", NULL))
 		return 0;
 
 	partitions_count = of_property_count_u32_elems(dn, "qcom,boot-partitions");
@@ -3167,18 +3167,16 @@ static int qcom_nand_host_init_and_register(struct qcom_nand_controller *nandc,
 
 	ret = mtd_device_parse_register(mtd, probes, NULL, NULL, 0);
 	if (ret)
-		goto err;
+		nand_cleanup(chip);
 
 	if (nandc->props->use_codeword_fixup) {
 		ret = qcom_nand_host_parse_boot_partitions(nandc, host, dn);
-		if (ret)
-			goto err;
+		if (ret) {
+			nand_cleanup(chip);
+			return ret;
+		}
 	}
 
-	return 0;
-
-err:
-	nand_cleanup(chip);
 	return ret;
 }
 
@@ -3269,7 +3267,8 @@ static int qcom_nandc_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
-	nandc->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	nandc->base = devm_ioremap_resource(dev, res);
 	if (IS_ERR(nandc->base))
 		return PTR_ERR(nandc->base);
 
@@ -3314,7 +3313,7 @@ err_core_clk:
 	return ret;
 }
 
-static void qcom_nandc_remove(struct platform_device *pdev)
+static int qcom_nandc_remove(struct platform_device *pdev)
 {
 	struct qcom_nand_controller *nandc = platform_get_drvdata(pdev);
 	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
@@ -3336,6 +3335,8 @@ static void qcom_nandc_remove(struct platform_device *pdev)
 
 	dma_unmap_resource(&pdev->dev, nandc->base_dma, resource_size(res),
 			   DMA_BIDIRECTIONAL, 0);
+
+	return 0;
 }
 
 static const struct qcom_nandc_props ipq806x_nandc_props = {
@@ -3402,7 +3403,7 @@ static struct platform_driver qcom_nandc_driver = {
 		.of_match_table = qcom_nandc_of_match,
 	},
 	.probe   = qcom_nandc_probe,
-	.remove_new = qcom_nandc_remove,
+	.remove  = qcom_nandc_remove,
 };
 module_platform_driver(qcom_nandc_driver);
 

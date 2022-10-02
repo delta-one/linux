@@ -44,8 +44,6 @@ static const struct rt5682s_platform_data i2s_default_platform_data = {
 static const char *rt5682s_supply_names[RT5682S_NUM_SUPPLIES] = {
 	[RT5682S_SUPPLY_AVDD] = "AVDD",
 	[RT5682S_SUPPLY_MICVDD] = "MICVDD",
-	[RT5682S_SUPPLY_DBVDD] = "DBVDD",
-	[RT5682S_SUPPLY_LDO1_IN] = "LDO1-IN",
 };
 
 static const struct reg_sequence patch_list[] = {
@@ -834,8 +832,8 @@ static void rt5682s_jack_detect_handler(struct work_struct *work)
 	struct snd_soc_dapm_context *dapm;
 	int val, btn_type;
 
-	if (!rt5682s->component ||
-	    !snd_soc_card_is_instantiated(rt5682s->component->card)) {
+	if (!rt5682s->component || !rt5682s->component->card ||
+	    !rt5682s->component->card->instantiated) {
 		/* card not yet ready, try later */
 		mod_delayed_work(system_power_efficient_wq,
 				 &rt5682s->jack_detect_work, msecs_to_jiffies(15));
@@ -1983,7 +1981,7 @@ static int rt5682s_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
 		unsigned int rx_mask, int slots, int slot_width)
 {
 	struct snd_soc_component *component = dai->component;
-	unsigned int cl, val = 0, tx_slotnum;
+	unsigned int cl, val = 0;
 
 	if (tx_mask || rx_mask)
 		snd_soc_component_update_bits(component,
@@ -1991,16 +1989,6 @@ static int rt5682s_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
 	else
 		snd_soc_component_update_bits(component,
 			RT5682S_TDM_ADDA_CTRL_2, RT5682S_TDM_EN, 0);
-
-	/* Tx slot configuration */
-	tx_slotnum = hweight_long(tx_mask);
-	if (tx_slotnum) {
-		if (tx_slotnum > slots) {
-			dev_err(component->dev, "Invalid or oversized Tx slots.\n");
-			return -EINVAL;
-		}
-		val |= (tx_slotnum - 1) << RT5682S_TDM_ADC_DL_SFT;
-	}
 
 	switch (slots) {
 	case 4:
@@ -2022,8 +2010,7 @@ static int rt5682s_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
 	}
 
 	snd_soc_component_update_bits(component, RT5682S_TDM_CTRL,
-		RT5682S_TDM_TX_CH_MASK | RT5682S_TDM_RX_CH_MASK |
-		RT5682S_TDM_ADC_DL_MASK, val);
+		RT5682S_TDM_TX_CH_MASK | RT5682S_TDM_RX_CH_MASK, val);
 
 	switch (slot_width) {
 	case 8:
@@ -2895,9 +2882,6 @@ static int rt5682s_suspend(struct snd_soc_component *component)
 {
 	struct rt5682s_priv *rt5682s = snd_soc_component_get_drvdata(component);
 
-	if (rt5682s->irq)
-		disable_irq(rt5682s->irq);
-
 	cancel_delayed_work_sync(&rt5682s->jack_detect_work);
 	cancel_delayed_work_sync(&rt5682s->jd_check_work);
 
@@ -2921,9 +2905,6 @@ static int rt5682s_resume(struct snd_soc_component *component)
 		mod_delayed_work(system_power_efficient_wq,
 			&rt5682s->jack_detect_work, msecs_to_jiffies(0));
 	}
-
-	if (rt5682s->irq)
-		enable_irq(rt5682s->irq);
 
 	return 0;
 }
@@ -3046,7 +3027,7 @@ static const struct regmap_config rt5682s_regmap = {
 	.max_register = RT5682S_MAX_REG,
 	.volatile_reg = rt5682s_volatile_register,
 	.readable_reg = rt5682s_readable_register,
-	.cache_type = REGCACHE_MAPLE,
+	.cache_type = REGCACHE_RBTREE,
 	.reg_defaults = rt5682s_reg,
 	.num_reg_defaults = ARRAY_SIZE(rt5682s_reg),
 	.use_single_read = true,
@@ -3096,14 +3077,6 @@ static void rt5682s_i2c_disable_regulators(void *data)
 	ret = regulator_disable(rt5682s->supplies[RT5682S_SUPPLY_AVDD].consumer);
 	if (ret)
 		dev_err(dev, "Failed to disable supply AVDD: %d\n", ret);
-
-	ret = regulator_disable(rt5682s->supplies[RT5682S_SUPPLY_DBVDD].consumer);
-	if (ret)
-		dev_err(dev, "Failed to disable supply DBVDD: %d\n", ret);
-
-	ret = regulator_disable(rt5682s->supplies[RT5682S_SUPPLY_LDO1_IN].consumer);
-	if (ret)
-		dev_err(dev, "Failed to disable supply LDO1-IN: %d\n", ret);
 
 	usleep_range(1000, 1500);
 
@@ -3163,18 +3136,6 @@ static int rt5682s_i2c_probe(struct i2c_client *i2c)
 	ret = regulator_enable(rt5682s->supplies[RT5682S_SUPPLY_AVDD].consumer);
 	if (ret) {
 		dev_err(&i2c->dev, "Failed to enable supply AVDD: %d\n", ret);
-		return ret;
-	}
-
-	ret = regulator_enable(rt5682s->supplies[RT5682S_SUPPLY_DBVDD].consumer);
-	if (ret) {
-		dev_err(&i2c->dev, "Failed to enable supply DBVDD: %d\n", ret);
-		return ret;
-	}
-
-	ret = regulator_enable(rt5682s->supplies[RT5682S_SUPPLY_LDO1_IN].consumer);
-	if (ret) {
-		dev_err(&i2c->dev, "Failed to enable supply LDO1-IN: %d\n", ret);
 		return ret;
 	}
 
@@ -3265,9 +3226,7 @@ static int rt5682s_i2c_probe(struct i2c_client *i2c)
 		ret = devm_request_threaded_irq(&i2c->dev, i2c->irq, NULL, rt5682s_irq,
 			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
 			"rt5682s", rt5682s);
-		if (!ret)
-			rt5682s->irq = i2c->irq;
-		else
+		if (ret)
 			dev_err(&i2c->dev, "Failed to reguest IRQ: %d\n", ret);
 	}
 
@@ -3316,7 +3275,7 @@ static struct i2c_driver rt5682s_i2c_driver = {
 		.acpi_match_table = rt5682s_acpi_match,
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 	},
-	.probe = rt5682s_i2c_probe,
+	.probe_new = rt5682s_i2c_probe,
 	.remove = rt5682s_i2c_remove,
 	.shutdown = rt5682s_i2c_shutdown,
 	.id_table = rt5682s_i2c_id,

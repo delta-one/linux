@@ -59,51 +59,9 @@ static int nvdimm_map_flush(struct device *dev, struct nvdimm *nvdimm, int dimm,
 	return 0;
 }
 
-static int nd_region_invalidate_memregion(struct nd_region *nd_region)
-{
-	int i, incoherent = 0;
-
-	for (i = 0; i < nd_region->ndr_mappings; i++) {
-		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
-		struct nvdimm *nvdimm = nd_mapping->nvdimm;
-
-		if (test_bit(NDD_INCOHERENT, &nvdimm->flags)) {
-			incoherent++;
-			break;
-		}
-	}
-
-	if (!incoherent)
-		return 0;
-
-	if (!cpu_cache_has_invalidate_memregion()) {
-		if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
-			dev_warn(
-				&nd_region->dev,
-				"Bypassing cpu_cache_invalidate_memergion() for testing!\n");
-			goto out;
-		} else {
-			dev_err(&nd_region->dev,
-				"Failed to synchronize CPU cache state\n");
-			return -ENXIO;
-		}
-	}
-
-	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-out:
-	for (i = 0; i < nd_region->ndr_mappings; i++) {
-		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
-		struct nvdimm *nvdimm = nd_mapping->nvdimm;
-
-		clear_bit(NDD_INCOHERENT, &nvdimm->flags);
-	}
-
-	return 0;
-}
-
 int nd_region_activate(struct nd_region *nd_region)
 {
-	int i, j, rc, num_flush = 0;
+	int i, j, num_flush = 0;
 	struct nd_region_data *ndrd;
 	struct device *dev = &nd_region->dev;
 	size_t flush_data_size = sizeof(void *);
@@ -126,10 +84,6 @@ int nd_region_activate(struct nd_region *nd_region)
 		flush_data_size += nvdimm->num_flush * sizeof(void *);
 	}
 	nvdimm_bus_unlock(&nd_region->dev);
-
-	rc = nd_region_invalidate_memregion(nd_region);
-	if (rc)
-		return rc;
 
 	ndrd = devm_kzalloc(dev, sizeof(*ndrd) + flush_data_size, GFP_KERNEL);
 	if (!ndrd)
@@ -555,12 +509,15 @@ static ssize_t align_store(struct device *dev,
 {
 	struct nd_region *nd_region = to_nd_region(dev);
 	unsigned long val, dpa;
-	u32 mappings, remainder;
+	u32 remainder;
 	int rc;
 
 	rc = kstrtoul(buf, 0, &val);
 	if (rc)
 		return rc;
+
+	if (!nd_region->ndr_mappings)
+		return -ENXIO;
 
 	/*
 	 * Ensure space-align is evenly divisible by the region
@@ -569,8 +526,7 @@ static ssize_t align_store(struct device *dev,
 	 * contribute to the tail capacity in system-physical-address
 	 * space for the namespace.
 	 */
-	mappings = max_t(u32, 1, nd_region->ndr_mappings);
-	dpa = div_u64_rem(val, mappings, &remainder);
+	dpa = div_u64_rem(val, nd_region->ndr_mappings, &remainder);
 	if (!is_power_of_2(dpa) || dpa < PAGE_SIZE
 			|| val > region_size(nd_region) || remainder)
 		return -EINVAL;
@@ -839,12 +795,12 @@ static const struct device_type nd_volatile_device_type = {
 	.groups = nd_region_attribute_groups,
 };
 
-bool is_nd_pmem(const struct device *dev)
+bool is_nd_pmem(struct device *dev)
 {
 	return dev ? dev->type == &nd_pmem_device_type : false;
 }
 
-bool is_nd_volatile(const struct device *dev)
+bool is_nd_volatile(struct device *dev)
 {
 	return dev ? dev->type == &nd_volatile_device_type : false;
 }
@@ -1140,7 +1096,7 @@ int nvdimm_flush(struct nd_region *nd_region, struct bio *bio)
 	return rc;
 }
 /**
- * generic_nvdimm_flush() - flush any posted write queues between the cpu and pmem media
+ * nvdimm_flush - flush any posted write queues between the cpu and pmem media
  * @nd_region: interleaved pmem region
  */
 int generic_nvdimm_flush(struct nd_region *nd_region)
@@ -1268,5 +1224,3 @@ int nd_region_conflict(struct nd_region *nd_region, resource_size_t start,
 
 	return device_for_each_child(&nvdimm_bus->dev, &ctx, region_conflict);
 }
-
-MODULE_IMPORT_NS(DEVMEM);

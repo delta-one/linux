@@ -31,11 +31,6 @@ MODULE_LICENSE("GPL");
 #define MEI_WLAN_UUID UUID_LE(0x13280904, 0x7792, 0x4fcb, \
 			      0xa1, 0xaa, 0x5e, 0x70, 0xcb, 0xb1, 0xe8, 0x65)
 
-/* After CSME takes ownership, it won't release it for 60 seconds to avoid
- * frequent ownership transitions.
- */
-#define MEI_OWNERSHIP_RETAKE_TIMEOUT_MS	msecs_to_jiffies(60000)
-
 /*
  * Since iwlwifi calls iwlmei without any context, hold a pointer to the
  * mei_cl_device structure here.
@@ -152,17 +147,9 @@ struct iwl_mei_filters {
  *	to send CSME_OWNERSHIP_CONFIRMED when the driver completes its down
  *	flow.
  * @link_prot_state: true when we are in link protection PASSIVE
- * @device_down: true if the device is down. Used to remember to send
- *	CSME_OWNERSHIP_CONFIRMED when the driver is already down.
  * @csa_throttle_end_wk: used when &csa_throttled is true
- * @pldr_wq: the wait queue for PLDR flow
- * @pldr_active: PLDR flow is in progress
  * @data_q_lock: protects the access to the data queues which are
  *	accessed without the mutex.
- * @netdev_work: used to defer registering and unregistering of the netdev to
- *	avoid taking the rtnl lock in the SAP messages handlers.
- * @ownership_dwork: used to re-ask for NIC ownership after ownership was taken
- *	by CSME or when a previous ownership request failed.
  * @sap_seq_no: the sequence number for the SAP messages
  * @seq_no: the sequence number for the SAP messages
  * @dbgfs_dir: the debugfs dir entry
@@ -180,13 +167,8 @@ struct iwl_mei {
 	bool csa_throttled;
 	bool csme_taking_ownership;
 	bool link_prot_state;
-	bool device_down;
 	struct delayed_work csa_throttle_end_wk;
-	wait_queue_head_t pldr_wq;
-	bool pldr_active;
 	spinlock_t data_q_lock;
-	struct work_struct netdev_work;
-	struct delayed_work ownership_dwork;
 
 	atomic_t sap_seq_no;
 	atomic_t seq_no;
@@ -606,38 +588,13 @@ static rx_handler_result_t iwl_mei_rx_handler(struct sk_buff **pskb)
 	return res;
 }
 
-static void iwl_mei_netdev_work(struct work_struct *wk)
-{
-	struct iwl_mei *mei =
-		container_of(wk, struct iwl_mei, netdev_work);
-	struct net_device *netdev;
-
-	/*
-	 * First take rtnl and only then the mutex to avoid an ABBA
-	 * with iwl_mei_set_netdev()
-	 */
-	rtnl_lock();
-	mutex_lock(&iwl_mei_mutex);
-
-	netdev = rcu_dereference_protected(iwl_mei_cache.netdev,
-					   lockdep_is_held(&iwl_mei_mutex));
-	if (netdev) {
-		if (mei->amt_enabled)
-			netdev_rx_handler_register(netdev, iwl_mei_rx_handler,
-						   mei);
-		else
-			netdev_rx_handler_unregister(netdev);
-	}
-
-	mutex_unlock(&iwl_mei_mutex);
-	rtnl_unlock();
-}
-
 static void
 iwl_mei_handle_rx_start_ok(struct mei_cl_device *cldev,
 			   const struct iwl_sap_me_msg_start_ok *rsp,
 			   ssize_t len)
 {
+	struct iwl_mei *mei = mei_cldev_get_drvdata(cldev);
+
 	if (len != sizeof(*rsp)) {
 		dev_err(&cldev->dev,
 			"got invalid SAP_ME_MSG_START_OK from CSME firmware\n");
@@ -656,10 +613,13 @@ iwl_mei_handle_rx_start_ok(struct mei_cl_device *cldev,
 
 	mutex_lock(&iwl_mei_mutex);
 	set_bit(IWL_MEI_STATUS_SAP_CONNECTED, &iwl_mei_status);
-	/*
-	 * We'll receive AMT_STATE SAP message in a bit and
-	 * that will continue the flow
-	 */
+	/* wifi driver has registered already */
+	if (iwl_mei_cache.ops) {
+		iwl_mei_send_sap_msg(mei->cldev,
+				     SAP_MSG_NOTIF_WIFIDR_UP);
+		iwl_mei_cache.ops->sap_connected(iwl_mei_cache.priv);
+	}
+
 	mutex_unlock(&iwl_mei_mutex);
 }
 
@@ -724,7 +684,7 @@ iwl_mei_handle_conn_status(struct mei_cl_device *cldev,
 						     status->link_prot_state);
 	else
 		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv,
-					  status->link_prot_state, false);
+					  status->link_prot_state);
 }
 
 static void iwl_mei_set_init_conf(struct iwl_mei *mei)
@@ -752,13 +712,6 @@ static void iwl_mei_set_init_conf(struct iwl_mei *mei)
 		.val = cpu_to_le32(iwl_mei_cache.rf_kill),
 	};
 
-	/* wifi driver has registered already */
-	if (iwl_mei_cache.ops) {
-		iwl_mei_send_sap_msg(mei->cldev,
-				     SAP_MSG_NOTIF_WIFIDR_UP);
-		iwl_mei_cache.ops->sap_connected(iwl_mei_cache.priv);
-	}
-
 	iwl_mei_send_sap_msg(mei->cldev, SAP_MSG_NOTIF_WHO_OWNS_NIC);
 
 	if (iwl_mei_cache.conn_info) {
@@ -785,23 +738,38 @@ static void iwl_mei_handle_amt_state(struct mei_cl_device *cldev,
 				     const struct iwl_sap_msg_dw *dw)
 {
 	struct iwl_mei *mei = mei_cldev_get_drvdata(cldev);
+	struct net_device *netdev;
 
+	/*
+	 * First take rtnl and only then the mutex to avoid an ABBA
+	 * with iwl_mei_set_netdev()
+	 */
+	rtnl_lock();
 	mutex_lock(&iwl_mei_mutex);
+
+	netdev = rcu_dereference_protected(iwl_mei_cache.netdev,
+					   lockdep_is_held(&iwl_mei_mutex));
 
 	if (mei->amt_enabled == !!le32_to_cpu(dw->val))
 		goto out;
 
 	mei->amt_enabled = dw->val;
 
-	if (mei->amt_enabled)
-		iwl_mei_set_init_conf(mei);
-	else if (iwl_mei_cache.ops)
-		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, false, false);
+	if (mei->amt_enabled) {
+		if (netdev)
+			netdev_rx_handler_register(netdev, iwl_mei_rx_handler, mei);
 
-	schedule_work(&mei->netdev_work);
+		iwl_mei_set_init_conf(mei);
+	} else {
+		if (iwl_mei_cache.ops)
+			iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, false);
+		if (netdev)
+			netdev_rx_handler_unregister(netdev);
+	}
 
 out:
 	mutex_unlock(&iwl_mei_mutex);
+	rtnl_unlock();
 }
 
 static void iwl_mei_handle_nic_owner(struct mei_cl_device *cldev,
@@ -830,20 +798,14 @@ static void iwl_mei_handle_csme_taking_ownership(struct mei_cl_device *cldev,
 
 	mei->got_ownership = false;
 
-	if (iwl_mei_cache.ops && !mei->device_down) {
-		/*
-		 * Remember to send CSME_OWNERSHIP_CONFIRMED when the wifi
-		 * driver is finished taking the device down.
-		 */
-		mei->csme_taking_ownership = true;
+	/*
+	 * Remember to send CSME_OWNERSHIP_CONFIRMED when the wifi driver
+	 * is finished taking the device down.
+	 */
+	mei->csme_taking_ownership = true;
 
-		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, true, true);
-	} else {
-		iwl_mei_send_sap_msg(cldev,
-				     SAP_MSG_NOTIF_CSME_OWNERSHIP_CONFIRMED);
-		schedule_delayed_work(&mei->ownership_dwork,
-				      MEI_OWNERSHIP_RETAKE_TIMEOUT_MS);
-	}
+	if (iwl_mei_cache.ops)
+		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, true);
 }
 
 static void iwl_mei_handle_nvm(struct mei_cl_device *cldev,
@@ -892,16 +854,7 @@ static void iwl_mei_handle_rx_host_own_req(struct mei_cl_device *cldev,
 
 	/* We can now start the connection, unblock rfkill */
 	if (iwl_mei_cache.ops)
-		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, false, false);
-}
-
-static void iwl_mei_handle_pldr_ack(struct mei_cl_device *cldev,
-				    const struct iwl_sap_pldr_ack_data *ack)
-{
-	struct iwl_mei *mei = mei_cldev_get_drvdata(cldev);
-
-	mei->pldr_active = le32_to_cpu(ack->status) == SAP_PLDR_STATUS_SUCCESS;
-	wake_up_all(&mei->pldr_wq);
+		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, false);
 }
 
 static void iwl_mei_handle_ping(struct mei_cl_device *cldev,
@@ -984,8 +937,6 @@ static void iwl_mei_handle_sap_msg(struct mei_cl_device *cldev,
 			iwl_mei_handle_can_release_ownership, 0);
 	SAP_MSG_HANDLER(CSME_TAKING_OWNERSHIP,
 			iwl_mei_handle_csme_taking_ownership, 0);
-	SAP_MSG_HANDLER(PLDR_ACK, iwl_mei_handle_pldr_ack,
-			sizeof(struct iwl_sap_pldr_ack_data));
 	default:
 	/*
 	 * This is not really an error, there are message that we decided
@@ -1362,62 +1313,6 @@ out:
 }
 EXPORT_SYMBOL_GPL(iwl_mei_get_nvm);
 
-#define IWL_MEI_PLDR_NUM_RETRIES	3
-
-int iwl_mei_pldr_req(void)
-{
-	struct iwl_mei *mei;
-	int ret;
-	struct iwl_sap_pldr_data msg = {
-		.hdr.type = cpu_to_le16(SAP_MSG_NOTIF_PLDR),
-		.hdr.len = cpu_to_le16(sizeof(msg) - sizeof(msg.hdr)),
-	};
-	int i;
-
-	mutex_lock(&iwl_mei_mutex);
-
-	/* In case we didn't have a bind */
-	if (!iwl_mei_is_connected()) {
-		ret = 0;
-		goto out;
-	}
-
-	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
-
-	if (!mei) {
-		ret = -ENODEV;
-		goto out;
-	}
-
-	if (!mei->amt_enabled) {
-		ret = 0;
-		goto out;
-	}
-
-	for (i = 0; i < IWL_MEI_PLDR_NUM_RETRIES; i++) {
-		ret = iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
-		mutex_unlock(&iwl_mei_mutex);
-		if (ret)
-			return ret;
-
-		ret = wait_event_timeout(mei->pldr_wq, mei->pldr_active, HZ / 2);
-		if (ret)
-			break;
-
-		/* Take the mutex for the next iteration */
-		mutex_lock(&iwl_mei_mutex);
-	}
-
-	if (ret)
-		return 0;
-
-	ret = -ETIMEDOUT;
-out:
-	mutex_unlock(&iwl_mei_mutex);
-	return ret;
-}
-EXPORT_SYMBOL_GPL(iwl_mei_pldr_req);
-
 int iwl_mei_get_ownership(void)
 {
 	struct iwl_mei *mei;
@@ -1457,45 +1352,31 @@ int iwl_mei_get_ownership(void)
 
 	ret = wait_event_timeout(mei->get_ownership_wq,
 				 mei->got_ownership, HZ / 2);
-	if (!ret) {
-		schedule_delayed_work(&mei->ownership_dwork,
-				      MEI_OWNERSHIP_RETAKE_TIMEOUT_MS);
+	if (!ret)
 		return -ETIMEDOUT;
+
+	mutex_lock(&iwl_mei_mutex);
+
+	/* In case we didn't have a bind */
+	if (!iwl_mei_is_connected()) {
+		ret = 0;
+		goto out;
 	}
 
-	return 0;
+	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
+
+	if (!mei) {
+		ret = -ENODEV;
+		goto out;
+	}
+
+	ret = !mei->got_ownership;
+
 out:
 	mutex_unlock(&iwl_mei_mutex);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(iwl_mei_get_ownership);
-
-void iwl_mei_alive_notif(bool success)
-{
-	struct iwl_mei *mei;
-	struct iwl_sap_pldr_end_data msg = {
-		.hdr.type = cpu_to_le16(SAP_MSG_NOTIF_PLDR_END),
-		.hdr.len = cpu_to_le16(sizeof(msg) - sizeof(msg.hdr)),
-		.status = success ? cpu_to_le32(SAP_PLDR_STATUS_SUCCESS) :
-			cpu_to_le32(SAP_PLDR_STATUS_FAILURE),
-	};
-
-	mutex_lock(&iwl_mei_mutex);
-
-	if (!iwl_mei_is_connected())
-		goto out;
-
-	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
-	if (!mei || !mei->pldr_active)
-		goto out;
-
-	mei->pldr_active = false;
-
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
-out:
-	mutex_unlock(&iwl_mei_mutex);
-}
-EXPORT_SYMBOL_GPL(iwl_mei_alive_notif);
 
 void iwl_mei_host_associated(const struct iwl_mei_conn_info *conn_info,
 			     const struct iwl_mei_colloc_info *colloc_info)
@@ -1532,7 +1413,10 @@ void iwl_mei_host_associated(const struct iwl_mei_conn_info *conn_info,
 
 	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
 
-	if (!mei && !mei->amt_enabled)
+	if (!mei)
+		goto out;
+
+	if (!mei->amt_enabled)
 		goto out;
 
 	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
@@ -1551,7 +1435,7 @@ void iwl_mei_host_disassociated(void)
 	struct iwl_sap_notif_host_link_down msg = {
 		.hdr.type = cpu_to_le16(SAP_MSG_NOTIF_HOST_LINK_DOWN),
 		.hdr.len = cpu_to_le16(sizeof(msg) - sizeof(msg.hdr)),
-		.type = HOST_LINK_DOWN_TYPE_TEMPORARY,
+		.type = HOST_LINK_DOWN_TYPE_LONG,
 	};
 
 	mutex_lock(&iwl_mei_mutex);
@@ -1561,7 +1445,7 @@ void iwl_mei_host_disassociated(void)
 
 	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
 
-	if (!mei && !mei->amt_enabled)
+	if (!mei)
 		goto out;
 
 	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
@@ -1597,7 +1481,7 @@ void iwl_mei_set_rfkill_state(bool hw_rfkill, bool sw_rfkill)
 
 	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
 
-	if (!mei && !mei->amt_enabled)
+	if (!mei)
 		goto out;
 
 	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
@@ -1626,7 +1510,7 @@ void iwl_mei_set_nic_info(const u8 *mac_address, const u8 *nvm_address)
 
 	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
 
-	if (!mei && !mei->amt_enabled)
+	if (!mei)
 		goto out;
 
 	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
@@ -1654,7 +1538,7 @@ void iwl_mei_set_country_code(u16 mcc)
 
 	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
 
-	if (!mei && !mei->amt_enabled)
+	if (!mei)
 		goto out;
 
 	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
@@ -1680,7 +1564,7 @@ void iwl_mei_set_power_limit(const __le16 *power_limit)
 
 	mei = mei_cldev_get_drvdata(iwl_mei_global_cldev);
 
-	if (!mei && !mei->amt_enabled)
+	if (!mei)
 		goto out;
 
 	memcpy(msg.sar_chain_info_table, power_limit, sizeof(msg.sar_chain_info_table));
@@ -1732,7 +1616,7 @@ out:
 }
 EXPORT_SYMBOL_GPL(iwl_mei_set_netdev);
 
-void iwl_mei_device_state(bool up)
+void iwl_mei_device_down(void)
 {
 	struct iwl_mei *mei;
 
@@ -1746,20 +1630,16 @@ void iwl_mei_device_state(bool up)
 	if (!mei)
 		goto out;
 
-	mei->device_down = !up;
-
-	if (up || !mei->csme_taking_ownership)
+	if (!mei->csme_taking_ownership)
 		goto out;
 
 	iwl_mei_send_sap_msg(mei->cldev,
 			     SAP_MSG_NOTIF_CSME_OWNERSHIP_CONFIRMED);
 	mei->csme_taking_ownership = false;
-	schedule_delayed_work(&mei->ownership_dwork,
-			      MEI_OWNERSHIP_RETAKE_TIMEOUT_MS);
 out:
 	mutex_unlock(&iwl_mei_mutex);
 }
-EXPORT_SYMBOL_GPL(iwl_mei_device_state);
+EXPORT_SYMBOL_GPL(iwl_mei_device_down);
 
 int iwl_mei_register(void *priv, const struct iwl_mei_ops *ops)
 {
@@ -1789,10 +1669,8 @@ int iwl_mei_register(void *priv, const struct iwl_mei_ops *ops)
 
 		/* we have already a SAP connection */
 		if (iwl_mei_is_connected()) {
-			if (mei->amt_enabled)
-				iwl_mei_send_sap_msg(mei->cldev,
-						     SAP_MSG_NOTIF_WIFIDR_UP,
-						     false);
+			iwl_mei_send_sap_msg(mei->cldev,
+					     SAP_MSG_NOTIF_WIFIDR_UP);
 			ops->rfkill(priv, mei->link_prot_state);
 		}
 	}
@@ -1913,11 +1791,6 @@ static void iwl_mei_dbgfs_unregister(struct iwl_mei *mei) {}
 
 #endif /* CONFIG_DEBUG_FS */
 
-static void iwl_mei_ownership_dwork(struct work_struct *wk)
-{
-	iwl_mei_get_ownership();
-}
-
 #define ALLOC_SHARED_MEM_RETRY_MAX_NUM	3
 
 /*
@@ -1944,14 +1817,10 @@ static int iwl_mei_probe(struct mei_cl_device *cldev,
 	INIT_DELAYED_WORK(&mei->csa_throttle_end_wk,
 			  iwl_mei_csa_throttle_end_wk);
 	init_waitqueue_head(&mei->get_ownership_wq);
-	init_waitqueue_head(&mei->pldr_wq);
 	spin_lock_init(&mei->data_q_lock);
-	INIT_WORK(&mei->netdev_work, iwl_mei_netdev_work);
-	INIT_DELAYED_WORK(&mei->ownership_dwork, iwl_mei_ownership_dwork);
 
 	mei_cldev_set_drvdata(cldev, mei);
 	mei->cldev = cldev;
-	mei->device_down = true;
 
 	do {
 		ret = iwl_mei_alloc_shared_mem(cldev);
@@ -1988,7 +1857,7 @@ static int iwl_mei_probe(struct mei_cl_device *cldev,
 	iwl_mei_dbgfs_register(mei);
 
 	/*
-	 * We now have a Rx function in place, start the SAP protocol
+	 * We now have a Rx function in place, start the SAP procotol
 	 * we expect to get the SAP_ME_MSG_START_OK response later on.
 	 */
 	mutex_lock(&iwl_mei_mutex);
@@ -2015,7 +1884,6 @@ free:
 }
 
 #define SEND_SAP_MAX_WAIT_ITERATION 10
-#define IWLMEI_DEVICE_DOWN_WAIT_ITERATION 50
 
 static void iwl_mei_remove(struct mei_cl_device *cldev)
 {
@@ -2026,26 +1894,8 @@ static void iwl_mei_remove(struct mei_cl_device *cldev)
 	 * We are being removed while the bus is active, it means we are
 	 * going to suspend/ shutdown, so the NIC will disappear.
 	 */
-	if (mei_cldev_enabled(cldev) && iwl_mei_cache.ops) {
-		unsigned int iter = IWLMEI_DEVICE_DOWN_WAIT_ITERATION;
-		bool down = false;
-
-		/*
-		 * In case of suspend, wait for the mac to stop and don't remove
-		 * the interface. This will allow the interface to come back
-		 * on resume.
-		 */
-		while (!down && iter--) {
-			mdelay(1);
-
-			mutex_lock(&iwl_mei_mutex);
-			down = mei->device_down;
-			mutex_unlock(&iwl_mei_mutex);
-		}
-
-		if (!down)
-			iwl_mei_cache.ops->nic_stolen(iwl_mei_cache.priv);
-	}
+	if (mei_cldev_enabled(cldev) && iwl_mei_cache.ops)
+		iwl_mei_cache.ops->nic_stolen(iwl_mei_cache.priv);
 
 	if (rcu_access_pointer(iwl_mei_cache.netdev)) {
 		struct net_device *dev;
@@ -2071,32 +1921,29 @@ static void iwl_mei_remove(struct mei_cl_device *cldev)
 
 	mutex_lock(&iwl_mei_mutex);
 
-	if (mei->amt_enabled) {
-		/*
-		 * Tell CSME that we are going down so that it won't access the
-		 * memory anymore, make sure this message goes through immediately.
-		 */
-		mei->csa_throttled = false;
-		iwl_mei_send_sap_msg(mei->cldev,
-				     SAP_MSG_NOTIF_HOST_GOES_DOWN);
+	/*
+	 * Tell CSME that we are going down so that it won't access the
+	 * memory anymore, make sure this message goes through immediately.
+	 */
+	mei->csa_throttled = false;
+	iwl_mei_send_sap_msg(mei->cldev,
+			     SAP_MSG_NOTIF_HOST_GOES_DOWN);
 
-		for (i = 0; i < SEND_SAP_MAX_WAIT_ITERATION; i++) {
-			if (!iwl_mei_host_to_me_data_pending(mei))
-				break;
+	for (i = 0; i < SEND_SAP_MAX_WAIT_ITERATION; i++) {
+		if (!iwl_mei_host_to_me_data_pending(mei))
+			break;
 
-			msleep(20);
-		}
-
-		/*
-		 * If we couldn't make sure that CSME saw the HOST_GOES_DOWN
-		 * message, it means that it will probably keep reading memory
-		 * that we are going to unmap and free, expect IOMMU error
-		 * messages.
-		 */
-		if (i == SEND_SAP_MAX_WAIT_ITERATION)
-			dev_err(&mei->cldev->dev,
-				"Couldn't get ACK from CSME on HOST_GOES_DOWN message\n");
+		msleep(5);
 	}
+
+	/*
+	 * If we couldn't make sure that CSME saw the HOST_GOES_DOWN message,
+	 * it means that it will probably keep reading memory that we are going
+	 * to unmap and free, expect IOMMU error messages.
+	 */
+	if (i == SEND_SAP_MAX_WAIT_ITERATION)
+		dev_err(&mei->cldev->dev,
+			"Couldn't get ACK from CSME on HOST_GOES_DOWN message\n");
 
 	mutex_unlock(&iwl_mei_mutex);
 
@@ -2112,7 +1959,7 @@ static void iwl_mei_remove(struct mei_cl_device *cldev)
 	spin_unlock_bh(&mei->data_q_lock);
 
 	if (iwl_mei_cache.ops)
-		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, false, false);
+		iwl_mei_cache.ops->rfkill(iwl_mei_cache.priv, false);
 
 	/*
 	 * mei_cldev_disable will return only after all the MEI Rx is done.
@@ -2129,8 +1976,6 @@ static void iwl_mei_remove(struct mei_cl_device *cldev)
 	 */
 	cancel_work_sync(&mei->send_csa_msg_wk);
 	cancel_delayed_work_sync(&mei->csa_throttle_end_wk);
-	cancel_work_sync(&mei->netdev_work);
-	cancel_delayed_work_sync(&mei->ownership_dwork);
 
 	/*
 	 * If someone waits for the ownership, let him know that we are going
@@ -2138,7 +1983,6 @@ static void iwl_mei_remove(struct mei_cl_device *cldev)
 	 * the device.
 	 */
 	wake_up_all(&mei->get_ownership_wq);
-	wake_up_all(&mei->pldr_wq);
 
 	mutex_lock(&iwl_mei_mutex);
 

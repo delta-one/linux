@@ -15,6 +15,8 @@
 #include "../../../util/pmu.h"
 #include "../../../util/fncache.h"
 
+#define TEMPLATE_ALIAS	"%s/bus/event_source/devices/%s/alias"
+
 struct pmu_alias {
 	char *name;
 	char *alias;
@@ -27,14 +29,10 @@ static bool cached_list;
 struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
 {
 #ifdef HAVE_AUXTRACE_SUPPORT
-	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME)) {
-		pmu->auxtrace = true;
+	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME))
 		return intel_pt_pmu_default_config(pmu);
-	}
-	if (!strcmp(pmu->name, INTEL_BTS_PMU_NAME)) {
-		pmu->auxtrace = true;
+	if (!strcmp(pmu->name, INTEL_BTS_PMU_NAME))
 		pmu->selectable = true;
-	}
 #endif
 	return NULL;
 }
@@ -71,19 +69,22 @@ out_delete:
 
 static int setup_pmu_alias_list(void)
 {
-	int fd, dirfd;
+	char path[PATH_MAX];
 	DIR *dir;
 	struct dirent *dent;
+	const char *sysfs = sysfs__mountpoint();
 	struct pmu_alias *pmu_alias;
 	char buf[MAX_PMU_NAME_LEN];
 	FILE *file;
 	int ret = -ENOMEM;
 
-	dirfd = perf_pmu__event_source_devices_fd();
-	if (dirfd < 0)
+	if (!sysfs)
 		return -1;
 
-	dir = fdopendir(dirfd);
+	snprintf(path, PATH_MAX,
+		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
+
+	dir = opendir(path);
 	if (!dir)
 		return -errno;
 
@@ -92,11 +93,13 @@ static int setup_pmu_alias_list(void)
 		    !strcmp(dent->d_name, ".."))
 			continue;
 
-		fd = perf_pmu__pathname_fd(dirfd, dent->d_name, "alias", O_RDONLY);
-		if (fd < 0)
+		snprintf(path, PATH_MAX,
+			 TEMPLATE_ALIAS, sysfs, dent->d_name);
+
+		if (!file_available(path))
 			continue;
 
-		file = fdopen(fd, "r");
+		file = fopen(path, "r");
 		if (!file)
 			continue;
 

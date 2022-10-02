@@ -5,7 +5,6 @@
 
 #include <drm/drm_fourcc.h>
 
-#include "display/intel_display.h"
 #include "gem/i915_gem_ioctls.h"
 #include "gem/i915_gem_lmem.h"
 #include "gem/i915_gem_region.h"
@@ -144,8 +143,7 @@ object_free:
 }
 
 /**
- * __i915_gem_object_create_user - Creates a new object using the same path as
- *                                 DRM_I915_GEM_CREATE_EXT
+ * Creates a new object using the same path as DRM_I915_GEM_CREATE_EXT
  * @i915: i915 private
  * @size: size of the buffer, in bytes
  * @placements: possible placement regions, in priority order
@@ -216,7 +214,7 @@ i915_gem_dumb_create(struct drm_file *file,
 }
 
 /**
- * i915_gem_create_ioctl - Creates a new mm object and returns a handle to it.
+ * Creates a new mm object and returns a handle to it.
  * @dev: drm device pointer
  * @data: ioctl data blob
  * @file: drm file pointer
@@ -386,7 +384,7 @@ static int ext_set_protected(struct i915_user_extension __user *base, void *data
 	if (ext.flags)
 		return -EINVAL;
 
-	if (!intel_pxp_is_enabled(ext_data->i915->pxp))
+	if (!intel_pxp_is_enabled(&to_gt(ext_data->i915)->pxp))
 		return -ENODEV;
 
 	ext_data->flags |= I915_BO_PROTECTED;
@@ -400,7 +398,7 @@ static const i915_user_extension_fn create_extensions[] = {
 };
 
 /**
- * i915_gem_create_ext_ioctl - Creates a new mm object and returns a handle to it.
+ * Creates a new mm object and returns a handle to it.
  * @dev: drm device pointer
  * @data: ioctl data blob
  * @file: drm file pointer

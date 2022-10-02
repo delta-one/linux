@@ -17,7 +17,6 @@
 #include <linux/io.h>
 #include <linux/interrupt.h>
 #include <linux/module.h>
-#include <linux/reset.h>
 #include <linux/slab.h>
 #include <linux/pm_runtime.h>
 #include <sound/designware_i2s.h>
@@ -133,13 +132,13 @@ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
 
 		/* Error Handling: TX */
 		if (isr[i] & ISR_TXFO) {
-			dev_err_ratelimited(dev->dev, "TX overrun (ch_id=%d)\n", i);
+			dev_err(dev->dev, "TX overrun (ch_id=%d)\n", i);
 			irq_valid = true;
 		}
 
 		/* Error Handling: TX */
 		if (isr[i] & ISR_RXFO) {
-			dev_err_ratelimited(dev->dev, "RX overrun (ch_id=%d)\n", i);
+			dev_err(dev->dev, "RX overrun (ch_id=%d)\n", i);
 			irq_valid = true;
 		}
 	}
@@ -481,9 +480,9 @@ static const u32 bus_widths[COMP_MAX_DATA_WIDTH] = {
 static const u32 formats[COMP_MAX_WORDSIZE] = {
 	SNDRV_PCM_FMTBIT_S16_LE,
 	SNDRV_PCM_FMTBIT_S16_LE,
-	SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE,
-	SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE,
-	SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE,
+	SNDRV_PCM_FMTBIT_S24_LE,
+	SNDRV_PCM_FMTBIT_S24_LE,
+	SNDRV_PCM_FMTBIT_S32_LE,
 	0,
 	0,
 	0
@@ -649,14 +648,6 @@ static int dw_i2s_probe(struct platform_device *pdev)
 	if (IS_ERR(dev->i2s_base))
 		return PTR_ERR(dev->i2s_base);
 
-	dev->reset = devm_reset_control_array_get_optional_shared(&pdev->dev);
-	if (IS_ERR(dev->reset))
-		return PTR_ERR(dev->reset);
-
-	ret = reset_control_deassert(dev->reset);
-	if (ret)
-		return ret;
-
 	dev->dev = &pdev->dev;
 
 	irq = platform_get_irq_optional(pdev, 0);
@@ -665,7 +656,7 @@ static int dw_i2s_probe(struct platform_device *pdev)
 				pdev->name, dev);
 		if (ret < 0) {
 			dev_err(&pdev->dev, "failed to request irq\n");
-			goto err_assert_reset;
+			return ret;
 		}
 	}
 
@@ -685,27 +676,24 @@ static int dw_i2s_probe(struct platform_device *pdev)
 		ret = dw_configure_dai_by_dt(dev, dw_i2s_dai, res);
 	}
 	if (ret < 0)
-		goto err_assert_reset;
+		return ret;
 
 	if (dev->capability & DW_I2S_MASTER) {
 		if (pdata) {
 			dev->i2s_clk_cfg = pdata->i2s_clk_cfg;
 			if (!dev->i2s_clk_cfg) {
 				dev_err(&pdev->dev, "no clock configure method\n");
-				ret = -ENODEV;
-				goto err_assert_reset;
+				return -ENODEV;
 			}
 		}
 		dev->clk = devm_clk_get(&pdev->dev, clk_id);
 
-		if (IS_ERR(dev->clk)) {
-			ret = PTR_ERR(dev->clk);
-			goto err_assert_reset;
-		}
+		if (IS_ERR(dev->clk))
+			return PTR_ERR(dev->clk);
 
 		ret = clk_prepare_enable(dev->clk);
 		if (ret < 0)
-			goto err_assert_reset;
+			return ret;
 	}
 
 	dev_set_drvdata(&pdev->dev, dev);
@@ -739,20 +727,18 @@ static int dw_i2s_probe(struct platform_device *pdev)
 err_clk_disable:
 	if (dev->capability & DW_I2S_MASTER)
 		clk_disable_unprepare(dev->clk);
-err_assert_reset:
-	reset_control_assert(dev->reset);
 	return ret;
 }
 
-static void dw_i2s_remove(struct platform_device *pdev)
+static int dw_i2s_remove(struct platform_device *pdev)
 {
 	struct dw_i2s_dev *dev = dev_get_drvdata(&pdev->dev);
 
 	if (dev->capability & DW_I2S_MASTER)
 		clk_disable_unprepare(dev->clk);
 
-	reset_control_assert(dev->reset);
 	pm_runtime_disable(&pdev->dev);
+	return 0;
 }
 
 #ifdef CONFIG_OF
@@ -770,7 +756,7 @@ static const struct dev_pm_ops dwc_pm_ops = {
 
 static struct platform_driver dw_i2s_driver = {
 	.probe		= dw_i2s_probe,
-	.remove_new	= dw_i2s_remove,
+	.remove		= dw_i2s_remove,
 	.driver		= {
 		.name	= "designware-i2s",
 		.of_match_table = of_match_ptr(dw_i2s_of_match),

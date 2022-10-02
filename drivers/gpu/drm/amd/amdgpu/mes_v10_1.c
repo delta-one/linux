@@ -121,10 +121,6 @@ static int mes_v10_1_submit_pkt_and_poll_completion(struct amdgpu_mes *mes,
 	if (r < 1) {
 		DRM_ERROR("MES failed to response msg=%d\n",
 			  x_pkt->header.opcode);
-
-		while (halt_if_hws_hang)
-			schedule();
-
 		return -ETIMEDOUT;
 	}
 
@@ -378,6 +374,93 @@ static const struct amdgpu_mes_funcs mes_v10_1_funcs = {
 	.suspend_gang = mes_v10_1_suspend_gang,
 	.resume_gang = mes_v10_1_resume_gang,
 };
+
+static int mes_v10_1_init_microcode(struct amdgpu_device *adev,
+				    enum admgpu_mes_pipe pipe)
+{
+	const char *chip_name;
+	char fw_name[30];
+	int err;
+	const struct mes_firmware_header_v1_0 *mes_hdr;
+	struct amdgpu_firmware_info *info;
+
+	switch (adev->ip_versions[GC_HWIP][0]) {
+	case IP_VERSION(10, 1, 10):
+		chip_name = "navi10";
+		break;
+	case IP_VERSION(10, 3, 0):
+		chip_name = "sienna_cichlid";
+		break;
+	default:
+		BUG();
+	}
+
+	if (pipe == AMDGPU_MES_SCHED_PIPE)
+		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mes.bin",
+			 chip_name);
+	else
+		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mes1.bin",
+			 chip_name);
+
+	err = request_firmware(&adev->mes.fw[pipe], fw_name, adev->dev);
+	if (err)
+		return err;
+
+	err = amdgpu_ucode_validate(adev->mes.fw[pipe]);
+	if (err) {
+		release_firmware(adev->mes.fw[pipe]);
+		adev->mes.fw[pipe] = NULL;
+		return err;
+	}
+
+	mes_hdr = (const struct mes_firmware_header_v1_0 *)
+		adev->mes.fw[pipe]->data;
+	adev->mes.ucode_fw_version[pipe] =
+		le32_to_cpu(mes_hdr->mes_ucode_version);
+	adev->mes.ucode_fw_version[pipe] =
+		le32_to_cpu(mes_hdr->mes_ucode_data_version);
+	adev->mes.uc_start_addr[pipe] =
+		le32_to_cpu(mes_hdr->mes_uc_start_addr_lo) |
+		((uint64_t)(le32_to_cpu(mes_hdr->mes_uc_start_addr_hi)) << 32);
+	adev->mes.data_start_addr[pipe] =
+		le32_to_cpu(mes_hdr->mes_data_start_addr_lo) |
+		((uint64_t)(le32_to_cpu(mes_hdr->mes_data_start_addr_hi)) << 32);
+
+	if (adev->firmware.load_type == AMDGPU_FW_LOAD_PSP) {
+		int ucode, ucode_data;
+
+		if (pipe == AMDGPU_MES_SCHED_PIPE) {
+			ucode = AMDGPU_UCODE_ID_CP_MES;
+			ucode_data = AMDGPU_UCODE_ID_CP_MES_DATA;
+		} else {
+			ucode = AMDGPU_UCODE_ID_CP_MES1;
+			ucode_data = AMDGPU_UCODE_ID_CP_MES1_DATA;
+		}
+
+		info = &adev->firmware.ucode[ucode];
+		info->ucode_id = ucode;
+		info->fw = adev->mes.fw[pipe];
+		adev->firmware.fw_size +=
+			ALIGN(le32_to_cpu(mes_hdr->mes_ucode_size_bytes),
+			      PAGE_SIZE);
+
+		info = &adev->firmware.ucode[ucode_data];
+		info->ucode_id = ucode_data;
+		info->fw = adev->mes.fw[pipe];
+		adev->firmware.fw_size +=
+			ALIGN(le32_to_cpu(mes_hdr->mes_ucode_data_size_bytes),
+			      PAGE_SIZE);
+	}
+
+	return 0;
+}
+
+static void mes_v10_1_free_microcode(struct amdgpu_device *adev,
+				     enum admgpu_mes_pipe pipe)
+{
+	release_firmware(adev->mes.fw[pipe]);
+	adev->mes.fw[pipe] = NULL;
+}
 
 static int mes_v10_1_allocate_ucode_buffer(struct amdgpu_device *adev,
 					   enum admgpu_mes_pipe pipe)
@@ -797,8 +880,8 @@ static void mes_v10_1_queue_init_register(struct amdgpu_ring *ring)
 
 static int mes_v10_1_kiq_enable_queue(struct amdgpu_device *adev)
 {
-	struct amdgpu_kiq *kiq = &adev->gfx.kiq[0];
-	struct amdgpu_ring *kiq_ring = &adev->gfx.kiq[0].ring;
+	struct amdgpu_kiq *kiq = &adev->gfx.kiq;
+	struct amdgpu_ring *kiq_ring = &adev->gfx.kiq.ring;
 	int r;
 
 	if (!kiq->pmf || !kiq->pmf->kiq_map_queues)
@@ -863,9 +946,9 @@ static int mes_v10_1_kiq_ring_init(struct amdgpu_device *adev)
 {
 	struct amdgpu_ring *ring;
 
-	spin_lock_init(&adev->gfx.kiq[0].ring_lock);
+	spin_lock_init(&adev->gfx.kiq.ring_lock);
 
-	ring = &adev->gfx.kiq[0].ring;
+	ring = &adev->gfx.kiq.ring;
 
 	ring->me = 3;
 	ring->pipe = 1;
@@ -891,7 +974,7 @@ static int mes_v10_1_mqd_sw_init(struct amdgpu_device *adev,
 	struct amdgpu_ring *ring;
 
 	if (pipe == AMDGPU_MES_KIQ_PIPE)
-		ring = &adev->gfx.kiq[0].ring;
+		ring = &adev->gfx.kiq.ring;
 	else if (pipe == AMDGPU_MES_SCHED_PIPE)
 		ring = &adev->mes.ring;
 	else
@@ -901,7 +984,6 @@ static int mes_v10_1_mqd_sw_init(struct amdgpu_device *adev,
 		return 0;
 
 	r = amdgpu_bo_create_kernel(adev, mqd_size, PAGE_SIZE,
-				    AMDGPU_GEM_DOMAIN_VRAM |
 				    AMDGPU_GEM_DOMAIN_GTT, &ring->mqd_obj,
 				    &ring->mqd_gpu_addr, &ring->mqd_ptr);
 	if (r) {
@@ -925,6 +1007,7 @@ static int mes_v10_1_sw_init(void *handle)
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 	int pipe, r;
 
+	adev->mes.adev = adev;
 	adev->mes.funcs = &mes_v10_1_funcs;
 	adev->mes.kiq_hw_init = &mes_v10_1_kiq_hw_init;
 
@@ -935,6 +1018,10 @@ static int mes_v10_1_sw_init(void *handle)
 	for (pipe = 0; pipe < AMDGPU_MAX_MES_PIPES; pipe++) {
 		if (!adev->enable_mes_kiq && pipe == AMDGPU_MES_KIQ_PIPE)
 			continue;
+
+		r = mes_v10_1_init_microcode(adev, pipe);
+		if (r)
+			return r;
 
 		r = mes_v10_1_allocate_eop_buf(adev, pipe);
 		if (r)
@@ -972,18 +1059,19 @@ static int mes_v10_1_sw_fini(void *handle)
 		amdgpu_bo_free_kernel(&adev->mes.eop_gpu_obj[pipe],
 				      &adev->mes.eop_gpu_addr[pipe],
 				      NULL);
-		amdgpu_ucode_release(&adev->mes.fw[pipe]);
+
+		mes_v10_1_free_microcode(adev, pipe);
 	}
 
-	amdgpu_bo_free_kernel(&adev->gfx.kiq[0].ring.mqd_obj,
-			      &adev->gfx.kiq[0].ring.mqd_gpu_addr,
-			      &adev->gfx.kiq[0].ring.mqd_ptr);
+	amdgpu_bo_free_kernel(&adev->gfx.kiq.ring.mqd_obj,
+			      &adev->gfx.kiq.ring.mqd_gpu_addr,
+			      &adev->gfx.kiq.ring.mqd_ptr);
 
 	amdgpu_bo_free_kernel(&adev->mes.ring.mqd_obj,
 			      &adev->mes.ring.mqd_gpu_addr,
 			      &adev->mes.ring.mqd_ptr);
 
-	amdgpu_ring_fini(&adev->gfx.kiq[0].ring);
+	amdgpu_ring_fini(&adev->gfx.kiq.ring);
 	amdgpu_ring_fini(&adev->mes.ring);
 
 	amdgpu_mes_fini(adev);
@@ -1039,7 +1127,7 @@ static int mes_v10_1_kiq_hw_init(struct amdgpu_device *adev)
 
 	mes_v10_1_enable(adev, true);
 
-	mes_v10_1_kiq_setting(&adev->gfx.kiq[0].ring);
+	mes_v10_1_kiq_setting(&adev->gfx.kiq.ring);
 
 	r = mes_v10_1_queue_init(adev);
 	if (r)
@@ -1091,7 +1179,7 @@ static int mes_v10_1_hw_init(void *handle)
 	 * MES uses KIQ ring exclusively so driver cannot access KIQ ring
 	 * with MES enabled.
 	 */
-	adev->gfx.kiq[0].ring.sched.ready = false;
+	adev->gfx.kiq.ring.sched.ready = false;
 	adev->mes.ring.sched.ready = true;
 
 	return 0;
@@ -1141,22 +1229,6 @@ static int mes_v10_1_resume(void *handle)
 	return amdgpu_mes_resume(adev);
 }
 
-static int mes_v10_0_early_init(void *handle)
-{
-	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
-	int pipe, r;
-
-	for (pipe = 0; pipe < AMDGPU_MAX_MES_PIPES; pipe++) {
-		if (!adev->enable_mes_kiq && pipe == AMDGPU_MES_KIQ_PIPE)
-			continue;
-		r = amdgpu_mes_init_microcode(adev, pipe);
-		if (r)
-			return r;
-	}
-
-	return 0;
-}
-
 static int mes_v10_0_late_init(void *handle)
 {
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
@@ -1169,7 +1241,6 @@ static int mes_v10_0_late_init(void *handle)
 
 static const struct amd_ip_funcs mes_v10_1_ip_funcs = {
 	.name = "mes_v10_1",
-	.early_init = mes_v10_0_early_init,
 	.late_init = mes_v10_0_late_init,
 	.sw_init = mes_v10_1_sw_init,
 	.sw_fini = mes_v10_1_sw_fini,

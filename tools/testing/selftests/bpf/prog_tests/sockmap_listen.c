@@ -18,12 +18,6 @@
 #include <string.h>
 #include <sys/select.h>
 #include <unistd.h>
-#include <linux/vm_sockets.h>
-
-/* workaround for older vm_sockets.h */
-#ifndef VMADDR_CID_LOCAL
-#define VMADDR_CID_LOCAL 1
-#endif
 
 #include <bpf/bpf.h>
 #include <bpf/libbpf.h>
@@ -35,8 +29,6 @@
 #define IO_TIMEOUT_SEC 30
 #define MAX_STRERR_LEN 256
 #define MAX_TEST_NAME 80
-
-#define __always_unused	__attribute__((__unused__))
 
 #define _FAIL(errnum, fmt...)                                                  \
 	({                                                                     \
@@ -257,16 +249,6 @@ static void init_addr_loopback6(struct sockaddr_storage *ss, socklen_t *len)
 	*len = sizeof(*addr6);
 }
 
-static void init_addr_loopback_vsock(struct sockaddr_storage *ss, socklen_t *len)
-{
-	struct sockaddr_vm *addr = memset(ss, 0, sizeof(*ss));
-
-	addr->svm_family = AF_VSOCK;
-	addr->svm_port = VMADDR_PORT_ANY;
-	addr->svm_cid = VMADDR_CID_LOCAL;
-	*len = sizeof(*addr);
-}
-
 static void init_addr_loopback(int family, struct sockaddr_storage *ss,
 			       socklen_t *len)
 {
@@ -276,9 +258,6 @@ static void init_addr_loopback(int family, struct sockaddr_storage *ss,
 		return;
 	case AF_INET6:
 		init_addr_loopback6(ss, len);
-		return;
-	case AF_VSOCK:
-		init_addr_loopback_vsock(ss, len);
 		return;
 	default:
 		FAIL("unsupported address family %d", family);
@@ -342,8 +321,7 @@ static int socket_loopback(int family, int sotype)
 	return socket_loopback_reuseport(family, sotype, -1);
 }
 
-static void test_insert_invalid(struct test_sockmap_listen *skel __always_unused,
-				int family, int sotype, int mapfd)
+static void test_insert_invalid(int family, int sotype, int mapfd)
 {
 	u32 key = 0;
 	u64 value;
@@ -360,8 +338,7 @@ static void test_insert_invalid(struct test_sockmap_listen *skel __always_unused
 		FAIL_ERRNO("map_update: expected EBADF");
 }
 
-static void test_insert_opened(struct test_sockmap_listen *skel __always_unused,
-			       int family, int sotype, int mapfd)
+static void test_insert_opened(int family, int sotype, int mapfd)
 {
 	u32 key = 0;
 	u64 value;
@@ -382,8 +359,7 @@ static void test_insert_opened(struct test_sockmap_listen *skel __always_unused,
 	xclose(s);
 }
 
-static void test_insert_bound(struct test_sockmap_listen *skel __always_unused,
-			      int family, int sotype, int mapfd)
+static void test_insert_bound(int family, int sotype, int mapfd)
 {
 	struct sockaddr_storage addr;
 	socklen_t len;
@@ -410,8 +386,7 @@ close:
 	xclose(s);
 }
 
-static void test_insert(struct test_sockmap_listen *skel __always_unused,
-			int family, int sotype, int mapfd)
+static void test_insert(int family, int sotype, int mapfd)
 {
 	u64 value;
 	u32 key;
@@ -427,8 +402,7 @@ static void test_insert(struct test_sockmap_listen *skel __always_unused,
 	xclose(s);
 }
 
-static void test_delete_after_insert(struct test_sockmap_listen *skel __always_unused,
-				     int family, int sotype, int mapfd)
+static void test_delete_after_insert(int family, int sotype, int mapfd)
 {
 	u64 value;
 	u32 key;
@@ -445,8 +419,7 @@ static void test_delete_after_insert(struct test_sockmap_listen *skel __always_u
 	xclose(s);
 }
 
-static void test_delete_after_close(struct test_sockmap_listen *skel __always_unused,
-				    int family, int sotype, int mapfd)
+static void test_delete_after_close(int family, int sotype, int mapfd)
 {
 	int err, s;
 	u64 value;
@@ -469,8 +442,7 @@ static void test_delete_after_close(struct test_sockmap_listen *skel __always_un
 		FAIL_ERRNO("map_delete: expected EINVAL/EINVAL");
 }
 
-static void test_lookup_after_insert(struct test_sockmap_listen *skel __always_unused,
-				     int family, int sotype, int mapfd)
+static void test_lookup_after_insert(int family, int sotype, int mapfd)
 {
 	u64 cookie, value;
 	socklen_t len;
@@ -498,8 +470,7 @@ static void test_lookup_after_insert(struct test_sockmap_listen *skel __always_u
 	xclose(s);
 }
 
-static void test_lookup_after_delete(struct test_sockmap_listen *skel __always_unused,
-				     int family, int sotype, int mapfd)
+static void test_lookup_after_delete(int family, int sotype, int mapfd)
 {
 	int err, s;
 	u64 value;
@@ -522,8 +493,7 @@ static void test_lookup_after_delete(struct test_sockmap_listen *skel __always_u
 	xclose(s);
 }
 
-static void test_lookup_32_bit_value(struct test_sockmap_listen *skel __always_unused,
-				     int family, int sotype, int mapfd)
+static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
 {
 	u32 key, value32;
 	int err, s;
@@ -553,8 +523,7 @@ close:
 	xclose(s);
 }
 
-static void test_update_existing(struct test_sockmap_listen *skel __always_unused,
-				 int family, int sotype, int mapfd)
+static void test_update_existing(int family, int sotype, int mapfd)
 {
 	int s1, s2;
 	u64 value;
@@ -582,7 +551,7 @@ close_s1:
 /* Exercise the code path where we destroy child sockets that never
  * got accept()'ed, aka orphans, when parent socket gets closed.
  */
-static void do_destroy_orphan_child(int family, int sotype, int mapfd)
+static void test_destroy_orphan_child(int family, int sotype, int mapfd)
 {
 	struct sockaddr_storage addr;
 	socklen_t len;
@@ -613,38 +582,10 @@ close_srv:
 	xclose(s);
 }
 
-static void test_destroy_orphan_child(struct test_sockmap_listen *skel,
-				      int family, int sotype, int mapfd)
-{
-	int msg_verdict = bpf_program__fd(skel->progs.prog_msg_verdict);
-	int skb_verdict = bpf_program__fd(skel->progs.prog_skb_verdict);
-	const struct test {
-		int progfd;
-		enum bpf_attach_type atype;
-	} tests[] = {
-		{ -1, -1 },
-		{ msg_verdict, BPF_SK_MSG_VERDICT },
-		{ skb_verdict, BPF_SK_SKB_VERDICT },
-	};
-	const struct test *t;
-
-	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
-		if (t->progfd != -1 &&
-		    xbpf_prog_attach(t->progfd, mapfd, t->atype, 0) != 0)
-			return;
-
-		do_destroy_orphan_child(family, sotype, mapfd);
-
-		if (t->progfd != -1)
-			xbpf_prog_detach2(t->progfd, mapfd, t->atype);
-	}
-}
-
 /* Perform a passive open after removing listening socket from SOCKMAP
  * to ensure that callbacks get restored properly.
  */
-static void test_clone_after_delete(struct test_sockmap_listen *skel __always_unused,
-				    int family, int sotype, int mapfd)
+static void test_clone_after_delete(int family, int sotype, int mapfd)
 {
 	struct sockaddr_storage addr;
 	socklen_t len;
@@ -680,8 +621,7 @@ close_srv:
  * SOCKMAP, but got accept()'ed only after the parent has been removed
  * from SOCKMAP, gets cloned without parent psock state or callbacks.
  */
-static void test_accept_after_delete(struct test_sockmap_listen *skel __always_unused,
-				     int family, int sotype, int mapfd)
+static void test_accept_after_delete(int family, int sotype, int mapfd)
 {
 	struct sockaddr_storage addr;
 	const u32 zero = 0;
@@ -735,8 +675,7 @@ close_srv:
 /* Check that child socket that got created and accepted while parent
  * was in a SOCKMAP is cloned without parent psock state or callbacks.
  */
-static void test_accept_before_delete(struct test_sockmap_listen *skel __always_unused,
-				      int family, int sotype, int mapfd)
+static void test_accept_before_delete(int family, int sotype, int mapfd)
 {
 	struct sockaddr_storage addr;
 	const u32 zero = 0, one = 1;
@@ -845,8 +784,7 @@ done:
 	return NULL;
 }
 
-static void test_syn_recv_insert_delete(struct test_sockmap_listen *skel __always_unused,
-					int family, int sotype, int mapfd)
+static void test_syn_recv_insert_delete(int family, int sotype, int mapfd)
 {
 	struct connect_accept_ctx ctx = { 0 };
 	struct sockaddr_storage addr;
@@ -909,8 +847,7 @@ static void *listen_thread(void *arg)
 	return NULL;
 }
 
-static void test_race_insert_listen(struct test_sockmap_listen *skel __always_unused,
-				    int family, int socktype, int mapfd)
+static void test_race_insert_listen(int family, int socktype, int mapfd)
 {
 	struct connect_accept_ctx ctx = { 0 };
 	const u32 zero = 0;
@@ -1497,8 +1434,6 @@ static const char *family_str(sa_family_t family)
 		return "IPv6";
 	case AF_UNIX:
 		return "Unix";
-	case AF_VSOCK:
-		return "VSOCK";
 	default:
 		return "unknown";
 	}
@@ -1538,8 +1473,7 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
 		     int family, int sotype)
 {
 	const struct op_test {
-		void (*fn)(struct test_sockmap_listen *skel,
-			   int family, int sotype, int mapfd);
+		void (*fn)(int family, int sotype, int mapfd);
 		const char *name;
 		int sotype;
 	} tests[] = {
@@ -1586,7 +1520,7 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
 		if (!test__start_subtest(s))
 			continue;
 
-		t->fn(skel, family, sotype, map_fd);
+		t->fn(family, sotype, map_fd);
 		test_ops_cleanup(map);
 	}
 }
@@ -1708,151 +1642,6 @@ static void test_unix_redir(struct test_sockmap_listen *skel, struct bpf_map *ma
 	if (!test__start_subtest(s))
 		return;
 	unix_skb_redir_to_connected(skel, map, sotype);
-}
-
-/* Returns two connected loopback vsock sockets */
-static int vsock_socketpair_connectible(int sotype, int *v0, int *v1)
-{
-	struct sockaddr_storage addr;
-	socklen_t len = sizeof(addr);
-	int s, p, c;
-
-	s = socket_loopback(AF_VSOCK, sotype);
-	if (s < 0)
-		return -1;
-
-	c = xsocket(AF_VSOCK, sotype | SOCK_NONBLOCK, 0);
-	if (c == -1)
-		goto close_srv;
-
-	if (getsockname(s, sockaddr(&addr), &len) < 0)
-		goto close_cli;
-
-	if (connect(c, sockaddr(&addr), len) < 0 && errno != EINPROGRESS) {
-		FAIL_ERRNO("connect");
-		goto close_cli;
-	}
-
-	len = sizeof(addr);
-	p = accept_timeout(s, sockaddr(&addr), &len, IO_TIMEOUT_SEC);
-	if (p < 0)
-		goto close_cli;
-
-	*v0 = p;
-	*v1 = c;
-
-	return 0;
-
-close_cli:
-	close(c);
-close_srv:
-	close(s);
-
-	return -1;
-}
-
-static void vsock_unix_redir_connectible(int sock_mapfd, int verd_mapfd,
-					 enum redir_mode mode, int sotype)
-{
-	const char *log_prefix = redir_mode_str(mode);
-	char a = 'a', b = 'b';
-	int u0, u1, v0, v1;
-	int sfd[2];
-	unsigned int pass;
-	int err, n;
-	u32 key;
-
-	zero_verdict_count(verd_mapfd);
-
-	if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK, 0, sfd))
-		return;
-
-	u0 = sfd[0];
-	u1 = sfd[1];
-
-	err = vsock_socketpair_connectible(sotype, &v0, &v1);
-	if (err) {
-		FAIL("vsock_socketpair_connectible() failed");
-		goto close_uds;
-	}
-
-	err = add_to_sockmap(sock_mapfd, u0, v0);
-	if (err) {
-		FAIL("add_to_sockmap failed");
-		goto close_vsock;
-	}
-
-	n = write(v1, &a, sizeof(a));
-	if (n < 0)
-		FAIL_ERRNO("%s: write", log_prefix);
-	if (n == 0)
-		FAIL("%s: incomplete write", log_prefix);
-	if (n < 1)
-		goto out;
-
-	n = recv(mode == REDIR_INGRESS ? u0 : u1, &b, sizeof(b), MSG_DONTWAIT);
-	if (n < 0)
-		FAIL("%s: recv() err, errno=%d", log_prefix, errno);
-	if (n == 0)
-		FAIL("%s: incomplete recv", log_prefix);
-	if (b != a)
-		FAIL("%s: vsock socket map failed, %c != %c", log_prefix, a, b);
-
-	key = SK_PASS;
-	err = xbpf_map_lookup_elem(verd_mapfd, &key, &pass);
-	if (err)
-		goto out;
-	if (pass != 1)
-		FAIL("%s: want pass count 1, have %d", log_prefix, pass);
-out:
-	key = 0;
-	bpf_map_delete_elem(sock_mapfd, &key);
-	key = 1;
-	bpf_map_delete_elem(sock_mapfd, &key);
-
-close_vsock:
-	close(v0);
-	close(v1);
-
-close_uds:
-	close(u0);
-	close(u1);
-}
-
-static void vsock_unix_skb_redir_connectible(struct test_sockmap_listen *skel,
-					     struct bpf_map *inner_map,
-					     int sotype)
-{
-	int verdict = bpf_program__fd(skel->progs.prog_skb_verdict);
-	int verdict_map = bpf_map__fd(skel->maps.verdict_map);
-	int sock_map = bpf_map__fd(inner_map);
-	int err;
-
-	err = xbpf_prog_attach(verdict, sock_map, BPF_SK_SKB_VERDICT, 0);
-	if (err)
-		return;
-
-	skel->bss->test_ingress = false;
-	vsock_unix_redir_connectible(sock_map, verdict_map, REDIR_EGRESS, sotype);
-	skel->bss->test_ingress = true;
-	vsock_unix_redir_connectible(sock_map, verdict_map, REDIR_INGRESS, sotype);
-
-	xbpf_prog_detach2(verdict, sock_map, BPF_SK_SKB_VERDICT);
-}
-
-static void test_vsock_redir(struct test_sockmap_listen *skel, struct bpf_map *map)
-{
-	const char *family_name, *map_name;
-	char s[MAX_TEST_NAME];
-
-	family_name = family_str(AF_VSOCK);
-	map_name = map_type_str(map);
-	snprintf(s, sizeof(s), "%s %s %s", map_name, family_name, __func__);
-	if (!test__start_subtest(s))
-		return;
-
-	vsock_unix_skb_redir_connectible(skel, map, SOCK_STREAM);
-	vsock_unix_skb_redir_connectible(skel, map, SOCK_SEQPACKET);
 }
 
 static void test_reuseport(struct test_sockmap_listen *skel,
@@ -2226,14 +2015,12 @@ void serial_test_sockmap_listen(void)
 	run_tests(skel, skel->maps.sock_map, AF_INET6);
 	test_unix_redir(skel, skel->maps.sock_map, SOCK_DGRAM);
 	test_unix_redir(skel, skel->maps.sock_map, SOCK_STREAM);
-	test_vsock_redir(skel, skel->maps.sock_map);
 
 	skel->bss->test_sockmap = false;
 	run_tests(skel, skel->maps.sock_hash, AF_INET);
 	run_tests(skel, skel->maps.sock_hash, AF_INET6);
 	test_unix_redir(skel, skel->maps.sock_hash, SOCK_DGRAM);
 	test_unix_redir(skel, skel->maps.sock_hash, SOCK_STREAM);
-	test_vsock_redir(skel, skel->maps.sock_hash);
 
 	test_sockmap_listen__destroy(skel);
 }

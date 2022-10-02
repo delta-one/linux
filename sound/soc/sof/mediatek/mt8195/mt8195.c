@@ -49,13 +49,47 @@ static int mt8195_send_msg(struct snd_sof_dev *sdev,
 	return mtk_adsp_ipc_send(priv->dsp_ipc, MTK_ADSP_IPC_REQ, MTK_ADSP_IPC_OP_REQ);
 }
 
+static void mt8195_get_reply(struct snd_sof_dev *sdev)
+{
+	struct snd_sof_ipc_msg *msg = sdev->msg;
+	struct sof_ipc_reply reply;
+	int ret = 0;
+
+	if (!msg) {
+		dev_warn(sdev->dev, "unexpected ipc interrupt\n");
+		return;
+	}
+
+	/* get reply */
+	sof_mailbox_read(sdev, sdev->host_box.offset, &reply, sizeof(reply));
+	if (reply.error < 0) {
+		memcpy(msg->reply_data, &reply, sizeof(reply));
+		ret = reply.error;
+	} else {
+		/* reply has correct size? */
+		if (reply.hdr.size != msg->reply_size) {
+			dev_err(sdev->dev, "error: reply expected %zu got %u bytes\n",
+				msg->reply_size, reply.hdr.size);
+			ret = -EINVAL;
+		}
+
+		/* read the message */
+		if (msg->reply_size > 0)
+			sof_mailbox_read(sdev, sdev->host_box.offset,
+					 msg->reply_data, msg->reply_size);
+	}
+
+	msg->reply_error = ret;
+}
+
 static void mt8195_dsp_handle_reply(struct mtk_adsp_ipc *ipc)
 {
 	struct adsp_priv *priv = mtk_adsp_ipc_get_data(ipc);
 	unsigned long flags;
 
 	spin_lock_irqsave(&priv->sdev->ipc_lock, flags);
-	snd_sof_ipc_process_reply(priv->sdev, 0);
+	mt8195_get_reply(priv->sdev);
+	snd_sof_ipc_reply(priv->sdev, 0);
 	spin_unlock_irqrestore(&priv->sdev->ipc_lock, flags);
 }
 
@@ -181,6 +215,11 @@ static int platform_parse_resource(struct platform_device *pdev, void *data)
 
 	adsp->pa_sram = (phys_addr_t)mmio->start;
 	adsp->sramsize = resource_size(mmio);
+	if (adsp->sramsize < TOTAL_SIZE_SHARED_SRAM_FROM_TAIL) {
+		dev_err(dev, "adsp SRAM(%#x) is not enough for share\n",
+			adsp->sramsize);
+		return -EINVAL;
+	}
 
 	dev_dbg(dev, "sram pbase=%pa,%#x\n", &adsp->pa_sram, adsp->sramsize);
 
@@ -457,48 +496,6 @@ static int mt8195_get_bar_index(struct snd_sof_dev *sdev, u32 type)
 	return type;
 }
 
-static int mt8195_pcm_hw_params(struct snd_sof_dev *sdev,
-				struct snd_pcm_substream *substream,
-				struct snd_pcm_hw_params *params,
-				struct snd_sof_platform_stream_params *platform_params)
-{
-	platform_params->cont_update_posn = 1;
-
-	return 0;
-}
-
-static snd_pcm_uframes_t mt8195_pcm_pointer(struct snd_sof_dev *sdev,
-					    struct snd_pcm_substream *substream)
-{
-	int ret;
-	snd_pcm_uframes_t pos;
-	struct snd_sof_pcm *spcm;
-	struct sof_ipc_stream_posn posn;
-	struct snd_sof_pcm_stream *stream;
-	struct snd_soc_component *scomp = sdev->component;
-	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
-
-	spcm = snd_sof_find_spcm_dai(scomp, rtd);
-	if (!spcm) {
-		dev_warn_ratelimited(sdev->dev, "warn: can't find PCM with DAI ID %d\n",
-				     rtd->dai_link->id);
-		return 0;
-	}
-
-	stream = &spcm->stream[substream->stream];
-	ret = snd_sof_ipc_msg_data(sdev, stream, &posn, sizeof(posn));
-	if (ret < 0) {
-		dev_warn(sdev->dev, "failed to read stream position: %d\n", ret);
-		return 0;
-	}
-
-	memcpy(&stream->posn, &posn, sizeof(posn));
-	pos = spcm->stream[substream->stream].posn.host_posn;
-	pos = bytes_to_frames(substream->runtime, pos);
-
-	return pos;
-}
-
 static void mt8195_adsp_dump(struct snd_sof_dev *sdev, u32 flags)
 {
 	u32 dbg_pc, dbg_data, dbg_bus0, dbg_bus1, dbg_inst;
@@ -591,8 +588,6 @@ static struct snd_sof_dsp_ops sof_mt8195_ops = {
 
 	/* stream callbacks */
 	.pcm_open	= sof_stream_pcm_open,
-	.pcm_hw_params	= mt8195_pcm_hw_params,
-	.pcm_pointer	= mt8195_pcm_pointer,
 	.pcm_close	= sof_stream_pcm_close,
 
 	/* firmware loading */
@@ -603,7 +598,6 @@ static struct snd_sof_dsp_ops sof_mt8195_ops = {
 
 	/* Debug information */
 	.dbg_dump = mt8195_adsp_dump,
-	.debugfs_add_region_item = snd_sof_debugfs_add_region_item_iomem,
 
 	/* DAI drivers */
 	.drv = mt8195_dai,

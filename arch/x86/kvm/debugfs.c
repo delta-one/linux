@@ -4,8 +4,6 @@
  *
  * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  */
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
 #include <linux/kvm_host.h>
 #include <linux/debugfs.h>
 #include "lapic.h"
@@ -160,16 +158,11 @@ out:
 static int kvm_mmu_rmaps_stat_open(struct inode *inode, struct file *file)
 {
 	struct kvm *kvm = inode->i_private;
-	int r;
 
 	if (!kvm_get_kvm_safe(kvm))
 		return -ENOENT;
 
-	r = single_open(file, kvm_mmu_rmaps_stat_show, kvm);
-	if (r < 0)
-		kvm_put_kvm(kvm);
-
-	return r;
+	return single_open(file, kvm_mmu_rmaps_stat_show, kvm);
 }
 
 static int kvm_mmu_rmaps_stat_release(struct inode *inode, struct file *file)

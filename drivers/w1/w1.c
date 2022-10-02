@@ -32,7 +32,7 @@ static int w1_timeout = 10;
 module_param_named(timeout, w1_timeout, int, 0);
 MODULE_PARM_DESC(timeout, "time in seconds between automatic slave searches");
 
-static int w1_timeout_us;
+static int w1_timeout_us = 0;
 module_param_named(timeout_us, w1_timeout_us, int, 0);
 MODULE_PARM_DESC(timeout_us,
 		 "time in microseconds between automatic slave searches");
@@ -57,6 +57,11 @@ MODULE_PARM_DESC(slave_ttl,
 
 DEFINE_MUTEX(w1_mlock);
 LIST_HEAD(w1_masters);
+
+static int w1_master_match(struct device *dev, struct device_driver *drv)
+{
+	return 1;
+}
 
 static int w1_master_probe(struct device *dev)
 {
@@ -165,10 +170,11 @@ static struct w1_family w1_default_family = {
 	.fops = &w1_default_fops,
 };
 
-static int w1_uevent(const struct device *dev, struct kobj_uevent_env *env);
+static int w1_uevent(struct device *dev, struct kobj_uevent_env *env);
 
 static struct bus_type w1_bus_type = {
 	.name = "w1",
+	.match = w1_master_match,
 	.uevent = w1_uevent,
 };
 
@@ -295,13 +301,17 @@ static ssize_t w1_master_attribute_show_pointer(struct device *dev, struct devic
 
 static ssize_t w1_master_attribute_show_timeout(struct device *dev, struct device_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%d\n", w1_timeout);
+	ssize_t count;
+	count = sprintf(buf, "%d\n", w1_timeout);
+	return count;
 }
 
 static ssize_t w1_master_attribute_show_timeout_us(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%d\n", w1_timeout_us);
+	ssize_t count;
+	count = sprintf(buf, "%d\n", w1_timeout_us);
+	return count;
 }
 
 static ssize_t w1_master_attribute_store_max_slave_count(struct device *dev,
@@ -491,7 +501,7 @@ static ssize_t w1_master_attribute_store_remove(struct device *dev,
 	struct w1_master *md = dev_to_w1_master(dev);
 	struct w1_reg_num rn;
 	struct w1_slave *sl;
-	ssize_t result;
+	ssize_t result = count;
 
 	if (w1_atoreg_num(dev, buf, count, &rn))
 		return -EINVAL;
@@ -567,11 +577,11 @@ void w1_destroy_master_attributes(struct w1_master *master)
 	sysfs_remove_group(&master->dev.kobj, &w1_master_defattr_group);
 }
 
-static int w1_uevent(const struct device *dev, struct kobj_uevent_env *env)
+static int w1_uevent(struct device *dev, struct kobj_uevent_env *env)
 {
-	const struct w1_master *md = NULL;
-	const struct w1_slave *sl = NULL;
-	const char *event_owner, *name;
+	struct w1_master *md = NULL;
+	struct w1_slave *sl = NULL;
+	char *event_owner, *name;
 	int err = 0;
 
 	if (dev->driver == &w1_master_driver) {
@@ -692,7 +702,6 @@ static int __w1_attach_slave_device(struct w1_slave *sl)
 		dev_err(&sl->dev,
 			"Device registration [%s] failed. err=%d\n",
 			dev_name(&sl->dev), err);
-		of_node_put(sl->dev.of_node);
 		put_device(&sl->dev);
 		return err;
 	}
@@ -1157,8 +1166,6 @@ int w1_process(void *data)
 	/* remainder if it woke up early */
 	unsigned long jremain = 0;
 
-	atomic_inc(&dev->refcnt);
-
 	for (;;) {
 
 		if (!jremain && dev->search_count) {
@@ -1186,10 +1193,8 @@ int w1_process(void *data)
 		 */
 		mutex_unlock(&dev->list_mutex);
 
-		if (kthread_should_stop()) {
-			__set_current_state(TASK_RUNNING);
+		if (kthread_should_stop())
 			break;
-		}
 
 		/* Only sleep when the search is active. */
 		if (dev->search_count) {
@@ -1254,10 +1259,10 @@ err_out_exit_init:
 
 static void __exit w1_fini(void)
 {
-	struct w1_master *dev, *n;
+	struct w1_master *dev;
 
 	/* Set netlink removal messages and some cleanup */
-	list_for_each_entry_safe(dev, n, &w1_masters, w1_master_entry)
+	list_for_each_entry(dev, &w1_masters, w1_master_entry)
 		__w1_remove_master_device(dev);
 
 	w1_fini_netlink();

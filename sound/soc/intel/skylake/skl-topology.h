@@ -115,10 +115,7 @@ struct skl_cpr_gtw_cfg {
 	u32 dma_buffer_size;
 	u32 config_length;
 	/* not mandatory; required only for DMIC/I2S */
-	struct {
-		u32 gtw_attrs;
-		u32 data[];
-	} config_data;
+	u32 config_data[1];
 } __packed;
 
 struct skl_dma_control {
@@ -236,8 +233,8 @@ struct skl_uuid_inst_map {
 struct skl_kpb_params {
 	u32 num_modules;
 	union {
-		DECLARE_FLEX_ARRAY(struct skl_mod_inst_map, map);
-		DECLARE_FLEX_ARRAY(struct skl_uuid_inst_map, map_uuid);
+		struct skl_mod_inst_map map[0];
+		struct skl_uuid_inst_map map_uuid[0];
 	} u;
 };
 
@@ -327,6 +324,7 @@ struct skl_pipe {
 	struct skl_path_config configs[SKL_MAX_PATH_CONFIGS];
 	struct list_head w_list;
 	bool passthru;
+	u32 pipe_config_idx;
 };
 
 enum skl_module_state {

@@ -451,7 +451,15 @@ static int flow_get_tirn(struct mlx5e_priv *priv,
 		eth_rule->rss = rss;
 		mlx5e_rss_refcnt_inc(eth_rule->rss);
 	} else {
-		*tirn = mlx5e_rx_res_get_tirn_direct(priv->rx_res, fs->ring_cookie);
+		struct mlx5e_params *params = &priv->channels.params;
+		enum mlx5e_rq_group group;
+		u16 ix;
+
+		mlx5e_qid_get_ch_and_group(params, fs->ring_cookie, &ix, &group);
+
+		*tirn = group == MLX5E_RQ_GROUP_XSK ?
+			mlx5e_rx_res_get_tirn_xsk(priv->rx_res, ix) :
+			mlx5e_rx_res_get_tirn_direct(priv->rx_res, ix);
 	}
 
 	return 0;
@@ -674,7 +682,8 @@ static int validate_flow(struct mlx5e_priv *priv,
 		return -ENOSPC;
 
 	if (fs->ring_cookie != RX_CLS_FLOW_DISC)
-		if (fs->ring_cookie >= priv->channels.params.num_channels)
+		if (!mlx5e_qid_validate(priv->profile, &priv->channels.params,
+					fs->ring_cookie))
 			return -EINVAL;
 
 	switch (flow_type_mask(fs->flow_type)) {

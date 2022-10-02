@@ -1,8 +1,8 @@
 .. SPDX-License-Identifier: GPL-2.0
 
-==============
-SCSI Subsystem
-==============
+====================
+Linux SCSI Subsystem
+====================
 
 .. toctree::
    :maxdepth: 1

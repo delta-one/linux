@@ -342,9 +342,7 @@ static struct v4l2_subdev *video_remote_subdev(struct camss_video *video,
 static int video_get_subdev_format(struct camss_video *video,
 				   struct v4l2_format *format)
 {
-	struct v4l2_subdev_format fmt = {
-		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-	};
+	struct v4l2_subdev_format fmt;
 	struct v4l2_subdev *subdev;
 	u32 pad;
 	int ret;
@@ -353,8 +351,8 @@ static int video_get_subdev_format(struct camss_video *video,
 	if (subdev == NULL)
 		return -EPIPE;
 
-	memset(&fmt, 0, sizeof(fmt));
 	fmt.pad = pad;
+	fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
 
 	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
 	if (ret)
@@ -495,11 +493,9 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
 	struct v4l2_subdev *subdev;
 	int ret;
 
-	ret = video_device_pipeline_alloc_start(vdev);
-	if (ret < 0) {
-		dev_err(video->camss->dev, "Failed to start media pipeline: %d\n", ret);
-		goto flush_buffers;
-	}
+	ret = media_pipeline_start(&vdev->entity, &video->pipe);
+	if (ret < 0)
+		return ret;
 
 	ret = video_check_format(video);
 	if (ret < 0)
@@ -526,9 +522,8 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
 	return 0;
 
 error:
-	video_device_pipeline_stop(vdev);
+	media_pipeline_stop(&vdev->entity);
 
-flush_buffers:
 	video->ops->flush_buffers(video, VB2_BUF_STATE_QUEUED);
 
 	return ret;
@@ -541,7 +536,6 @@ static void video_stop_streaming(struct vb2_queue *q)
 	struct media_entity *entity;
 	struct media_pad *pad;
 	struct v4l2_subdev *subdev;
-	int ret;
 
 	entity = &vdev->entity;
 	while (1) {
@@ -556,21 +550,10 @@ static void video_stop_streaming(struct vb2_queue *q)
 		entity = pad->entity;
 		subdev = media_entity_to_v4l2_subdev(entity);
 
-		ret = v4l2_subdev_call(subdev, video, s_stream, 0);
-
-		if (entity->use_count > 1) {
-			/* Don't stop if other instances of the pipeline are still running */
-			dev_dbg(video->camss->dev, "Video pipeline still used, don't stop streaming.\n");
-			return;
-		}
-
-		if (ret) {
-			dev_err(video->camss->dev, "Video pipeline stop failed: %d\n", ret);
-			return;
-		}
+		v4l2_subdev_call(subdev, video, s_stream, 0);
 	}
 
-	video_device_pipeline_stop(vdev);
+	media_pipeline_stop(&vdev->entity);
 
 	video->ops->flush_buffers(video, VB2_BUF_STATE_ERROR);
 }

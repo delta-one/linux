@@ -636,7 +636,7 @@ static int platinumfb_probe(struct platform_device* odev)
 	return rc;
 }
 
-static void platinumfb_remove(struct platform_device* odev)
+static int platinumfb_remove(struct platform_device* odev)
 {
 	struct fb_info		*info = dev_get_drvdata(&odev->dev);
 	struct fb_info_platinum	*pinfo = info->par;
@@ -654,6 +654,8 @@ static void platinumfb_remove(struct platform_device* odev)
 	release_mem_region(pinfo->cmap_regs_phys, 0x1000);
 
 	framebuffer_release(info);
+
+	return 0;
 }
 
 static struct of_device_id platinumfb_match[] = 
@@ -671,7 +673,7 @@ static struct platform_driver platinum_driver =
 		.of_match_table = platinumfb_match,
 	},
 	.probe		= platinumfb_probe,
-	.remove_new	= platinumfb_remove,
+	.remove		= platinumfb_remove,
 };
 
 static int __init platinumfb_init(void)

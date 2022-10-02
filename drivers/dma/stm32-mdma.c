@@ -1539,7 +1539,6 @@ static struct dma_chan *stm32_mdma_of_xlate(struct of_phandle_args *dma_spec,
 		return NULL;
 	}
 
-	memset(&config, 0, sizeof(config));
 	config.request = dma_spec->args[0];
 	config.priority_level = dma_spec->args[1];
 	config.transfer_config = dma_spec->args[2];
@@ -1580,6 +1579,7 @@ static int stm32_mdma_probe(struct platform_device *pdev)
 	struct stm32_mdma_device *dmadev;
 	struct dma_device *dd;
 	struct device_node *of_node;
+	struct resource *res;
 	struct reset_control *rst;
 	u32 nr_channels, nr_requests;
 	int i, count, ret;
@@ -1621,7 +1621,8 @@ static int stm32_mdma_probe(struct platform_device *pdev)
 				       count);
 	dmadev->nr_ahb_addr_masks = count;
 
-	dmadev->base = devm_platform_ioremap_resource(pdev, 0);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
 	if (IS_ERR(dmadev->base))
 		return PTR_ERR(dmadev->base);
 
@@ -1814,3 +1815,4 @@ subsys_initcall(stm32_mdma_init);
 MODULE_DESCRIPTION("Driver for STM32 MDMA controller");
 MODULE_AUTHOR("M'boumba Cedric Madianga <cedric.madianga@gmail.com>");
 MODULE_AUTHOR("Pierre-Yves Mordret <pierre-yves.mordret@st.com>");
+MODULE_LICENSE("GPL v2");

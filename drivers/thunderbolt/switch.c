@@ -8,13 +8,12 @@
 
 #include <linux/delay.h>
 #include <linux/idr.h>
-#include <linux/module.h>
 #include <linux/nvmem-provider.h>
 #include <linux/pm_runtime.h>
 #include <linux/sched/signal.h>
 #include <linux/sizes.h>
 #include <linux/slab.h>
-#include <linux/string_helpers.h>
+#include <linux/module.h>
 
 #include "tb.h"
 
@@ -271,9 +270,9 @@ static int nvm_authenticate(struct tb_switch *sw, bool auth_only)
 		}
 		sw->nvm->authenticating = true;
 		return usb4_switch_nvm_authenticate(sw);
-	}
-	if (auth_only)
+	} else if (auth_only) {
 		return -EOPNOTSUPP;
+	}
 
 	sw->nvm->authenticating = true;
 	if (!tb_route(sw)) {
@@ -513,44 +512,36 @@ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged)
 
 	while (retries--) {
 		state = tb_port_state(port);
-		switch (state) {
-		case TB_PORT_DISABLED:
+		if (state < 0)
+			return state;
+		if (state == TB_PORT_DISABLED) {
 			tb_port_dbg(port, "is disabled (state: 0)\n");
 			return 0;
-
-		case TB_PORT_UNPLUGGED:
+		}
+		if (state == TB_PORT_UNPLUGGED) {
 			if (wait_if_unplugged) {
 				/* used during resume */
 				tb_port_dbg(port,
 					    "is unplugged (state: 7), retrying...\n");
 				msleep(100);
-				break;
+				continue;
 			}
 			tb_port_dbg(port, "is unplugged (state: 7)\n");
 			return 0;
-
-		case TB_PORT_UP:
-		case TB_PORT_TX_CL0S:
-		case TB_PORT_RX_CL0S:
-		case TB_PORT_CL1:
-		case TB_PORT_CL2:
-			tb_port_dbg(port, "is connected, link is up (state: %d)\n", state);
+		}
+		if (state == TB_PORT_UP) {
+			tb_port_dbg(port, "is connected, link is up (state: 2)\n");
 			return 1;
-
-		default:
-			if (state < 0)
-				return state;
-
-			/*
-			 * After plug-in the state is TB_PORT_CONNECTING. Give it some
-			 * time.
-			 */
-			tb_port_dbg(port,
-				    "is connected, link is not up (state: %d), retrying...\n",
-				    state);
-			msleep(100);
 		}
 
+		/*
+		 * After plug-in the state is TB_PORT_CONNECTING. Give it some
+		 * time.
+		 */
+		tb_port_dbg(port,
+			    "is connected, link is not up (state: %d), retrying...\n",
+			    state);
+		msleep(100);
 	}
 	tb_port_warn(port,
 		     "failed to reach state TB_PORT_UP. Ignoring port...\n");
@@ -653,7 +644,7 @@ static int __tb_port_enable(struct tb_port *port, bool enable)
 	if (ret)
 		return ret;
 
-	tb_port_dbg(port, "lane %s\n", str_enabled_disabled(enable));
+	tb_port_dbg(port, "lane %sabled\n", enable ? "en" : "dis");
 	return 0;
 }
 
@@ -1703,7 +1694,7 @@ static ssize_t authorized_show(struct device *dev,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%u\n", sw->authorized);
+	return sprintf(buf, "%u\n", sw->authorized);
 }
 
 static int disapprove_switch(struct device *dev, void *not_used)
@@ -1813,7 +1804,7 @@ static ssize_t boot_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%u\n", sw->boot);
+	return sprintf(buf, "%u\n", sw->boot);
 }
 static DEVICE_ATTR_RO(boot);
 
@@ -1822,7 +1813,7 @@ static ssize_t device_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%#x\n", sw->device);
+	return sprintf(buf, "%#x\n", sw->device);
 }
 static DEVICE_ATTR_RO(device);
 
@@ -1831,7 +1822,7 @@ device_name_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%s\n", sw->device_name ?: "");
+	return sprintf(buf, "%s\n", sw->device_name ? sw->device_name : "");
 }
 static DEVICE_ATTR_RO(device_name);
 
@@ -1840,7 +1831,7 @@ generation_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%u\n", sw->generation);
+	return sprintf(buf, "%u\n", sw->generation);
 }
 static DEVICE_ATTR_RO(generation);
 
@@ -1854,9 +1845,9 @@ static ssize_t key_show(struct device *dev, struct device_attribute *attr,
 		return restart_syscall();
 
 	if (sw->key)
-		ret = sysfs_emit(buf, "%*phN\n", TB_SWITCH_KEY_SIZE, sw->key);
+		ret = sprintf(buf, "%*phN\n", TB_SWITCH_KEY_SIZE, sw->key);
 	else
-		ret = sysfs_emit(buf, "\n");
+		ret = sprintf(buf, "\n");
 
 	mutex_unlock(&sw->tb->lock);
 	return ret;
@@ -1901,7 +1892,7 @@ static ssize_t speed_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%u.0 Gb/s\n", sw->link_speed);
+	return sprintf(buf, "%u.0 Gb/s\n", sw->link_speed);
 }
 
 /*
@@ -1916,7 +1907,7 @@ static ssize_t lanes_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%u\n", sw->link_width);
+	return sprintf(buf, "%u\n", sw->link_width);
 }
 
 /*
@@ -1933,7 +1924,7 @@ static ssize_t nvm_authenticate_show(struct device *dev,
 	u32 status;
 
 	nvm_get_auth_status(sw, &status);
-	return sysfs_emit(buf, "%#x\n", status);
+	return sprintf(buf, "%#x\n", status);
 }
 
 static ssize_t nvm_authenticate_sysfs(struct device *dev, const char *buf,
@@ -2042,7 +2033,7 @@ static ssize_t nvm_version_show(struct device *dev,
 	else if (!sw->nvm)
 		ret = -EAGAIN;
 	else
-		ret = sysfs_emit(buf, "%x.%x\n", sw->nvm->major, sw->nvm->minor);
+		ret = sprintf(buf, "%x.%x\n", sw->nvm->major, sw->nvm->minor);
 
 	mutex_unlock(&sw->tb->lock);
 
@@ -2055,7 +2046,7 @@ static ssize_t vendor_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%#x\n", sw->vendor);
+	return sprintf(buf, "%#x\n", sw->vendor);
 }
 static DEVICE_ATTR_RO(vendor);
 
@@ -2064,7 +2055,7 @@ vendor_name_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%s\n", sw->vendor_name ?: "");
+	return sprintf(buf, "%s\n", sw->vendor_name ? sw->vendor_name : "");
 }
 static DEVICE_ATTR_RO(vendor_name);
 
@@ -2073,7 +2064,7 @@ static ssize_t unique_id_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_switch *sw = tb_to_switch(dev);
 
-	return sysfs_emit(buf, "%pUb\n", sw->uuid);
+	return sprintf(buf, "%pUb\n", sw->uuid);
 }
 static DEVICE_ATTR_RO(unique_id);
 
@@ -2184,9 +2175,9 @@ static void tb_switch_release(struct device *dev)
 	kfree(sw);
 }
 
-static int tb_switch_uevent(const struct device *dev, struct kobj_uevent_env *env)
+static int tb_switch_uevent(struct device *dev, struct kobj_uevent_env *env)
 {
-	const struct tb_switch *sw = tb_to_switch(dev);
+	struct tb_switch *sw = tb_to_switch(dev);
 	const char *type;
 
 	if (sw->config.thunderbolt_version == USB4_VERSION_1_0) {
@@ -2910,26 +2901,6 @@ static void tb_switch_credits_init(struct tb_switch *sw)
 		tb_sw_info(sw, "failed to determine preferred buffer allocation, using defaults\n");
 }
 
-static int tb_switch_port_hotplug_enable(struct tb_switch *sw)
-{
-	struct tb_port *port;
-
-	if (tb_switch_is_icm(sw))
-		return 0;
-
-	tb_switch_for_each_port(sw, port) {
-		int res;
-
-		if (!port->cap_usb4)
-			continue;
-
-		res = usb4_port_hotplug_enable(port);
-		if (res)
-			return res;
-	}
-	return 0;
-}
-
 /**
  * tb_switch_add() - Add a switch to the domain
  * @sw: Switch to add
@@ -2968,6 +2939,8 @@ int tb_switch_add(struct tb_switch *sw)
 			dev_warn(&sw->dev, "reading DROM failed: %d\n", ret);
 		tb_sw_dbg(sw, "uid: %#llx\n", sw->uid);
 
+		tb_check_quirks(sw);
+
 		ret = tb_switch_set_uuid(sw);
 		if (ret) {
 			dev_err(&sw->dev, "failed to set UUID\n");
@@ -2986,8 +2959,6 @@ int tb_switch_add(struct tb_switch *sw)
 			}
 		}
 
-		tb_check_quirks(sw);
-
 		tb_switch_default_link_ports(sw);
 
 		ret = tb_switch_update_link_attributes(sw);
@@ -2998,10 +2969,6 @@ int tb_switch_add(struct tb_switch *sw)
 		if (ret)
 			return ret;
 	}
-
-	ret = tb_switch_port_hotplug_enable(sw);
-	if (ret)
-		return ret;
 
 	ret = device_add(&sw->dev);
 	if (ret) {

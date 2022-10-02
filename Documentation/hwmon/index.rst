@@ -1,14 +1,13 @@
-.. SPDX-License-Identifier: GPL-2.0
-
-===================
-Hardware Monitoring
-===================
+=========================
+Linux Hardware Monitoring
+=========================
 
 .. toctree::
    :maxdepth: 1
 
    hwmon-kernel-api
    pmbus-core
+   inspur-ipsps1
    submitting-patches
    sysfs-interface
    userspace-tools
@@ -21,7 +20,6 @@ Hardware Monitoring Kernel Drivers
 
    abituguru
    abituguru3
-   acbel-fsg032
    acpi_power_meter
    ad7314
    adc128d818
@@ -75,7 +73,6 @@ Hardware Monitoring Kernel Drivers
    g762
    gsc-hwmon
    gl518sm
-   gxp-fan-ctrl
    hih6130
    ibmaem
    ibm-cffps
@@ -84,7 +81,6 @@ Hardware Monitoring Kernel Drivers
    ina2xx
    ina238
    ina3221
-   inspur-ipsps1
    intel-m10-bmc-hwmon
    ir35221
    ir38064
@@ -148,7 +144,6 @@ Hardware Monitoring Kernel Drivers
    max6697
    max8688
    mc13783-adc
-   mc34vr500
    mcp3021
    menf21bmc
    mlxreg-fan
@@ -165,7 +160,6 @@ Hardware Monitoring Kernel Drivers
    nzxt-kraken2
    nzxt-smart2
    occ
-   oxp-sensors
    pc87360
    pc87427
    pcf8591
@@ -185,7 +179,6 @@ Hardware Monitoring Kernel Drivers
    sch5627
    sch5636
    scpi-hwmon
-   sfctemp
    sht15
    sht21
    sht3x
@@ -194,7 +187,6 @@ Hardware Monitoring Kernel Drivers
    sis5595
    sl28cpld
    smm665
-   smpro-hwmon
    smsc47b397
    smsc47m192
    smsc47m1

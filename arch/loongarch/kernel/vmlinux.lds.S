@@ -4,7 +4,6 @@
 #include <asm/thread_info.h>
 
 #define PAGE_SIZE _PAGE_SIZE
-#define RO_EXCEPTION_TABLE_ALIGN	4
 
 /*
  * Put .bss..swapper_pg_dir as the first thing in .bss. This will
@@ -43,6 +42,7 @@ SECTIONS
 	.text : {
 		TEXT_TEXT
 		SCHED_TEXT
+		CPUIDLE_TEXT
 		LOCK_TEXT
 		KPROBES_TEXT
 		IRQENTRY_TEXT
@@ -53,32 +53,7 @@ SECTIONS
 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
 	_etext = .;
 
-	/*
-	 * struct alt_inst entries. From the header (alternative.h):
-	 * "Alternative instructions for different CPU types or capabilities"
-	 * Think locking instructions on spinlocks.
-	 */
-	. = ALIGN(4);
-	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
-		__alt_instructions = .;
-		*(.altinstructions)
-		__alt_instructions_end = .;
-	}
-
-#ifdef CONFIG_RELOCATABLE
-	. = ALIGN(8);
-	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
-		__la_abs_begin = .;
-		*(.la_abs)
-		__la_abs_end = .;
-	}
-#endif
-
-	.got : ALIGN(16) { *(.got) }
-	.plt : ALIGN(16) { *(.plt) }
-	.got.plt : ALIGN(16) { *(.got.plt) }
-
-	.data.rel : { *(.data.rel*) }
+	EXCEPTION_TABLE(16)
 
 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
 	__init_begin = .;
@@ -103,6 +78,8 @@ SECTIONS
 	PERCPU_SECTION(1 << CONFIG_L1_CACHE_SHIFT)
 #endif
 
+	.rela.dyn : ALIGN(8) { *(.rela.dyn) *(.rela*) }
+
 	.init.bss : {
 		*(.init.bss)
 	}
@@ -114,12 +91,6 @@ SECTIONS
 	_sdata = .;
 	RO_DATA(4096)
 	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
-
-	.rela.dyn : ALIGN(8) {
-		__rela_dyn_begin = .;
-		 *(.rela.dyn) *(.rela*)
-		__rela_dyn_end = .;
-	}
 
 	.sdata : {
 		*(.sdata)
@@ -147,7 +118,6 @@ SECTIONS
 
 	DISCARDS
 	/DISCARD/ : {
-		*(.dynamic .dynsym .dynstr .hash .gnu.hash)
 		*(.gnu.attributes)
 		*(.options)
 		*(.eh_frame)

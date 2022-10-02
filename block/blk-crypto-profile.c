@@ -32,7 +32,6 @@
 #include <linux/wait.h>
 #include <linux/blkdev.h>
 #include <linux/blk-integrity.h>
-#include "blk-crypto-internal.h"
 
 struct blk_crypto_keyslot {
 	atomic_t slot_refs;
@@ -227,12 +226,13 @@ EXPORT_SYMBOL_GPL(blk_crypto_keyslot_index);
  * @profile: the crypto profile of the device the key will be used on
  * @key: the key that will be used
  * @slot_ptr: If a keyslot is allocated, an opaque pointer to the keyslot struct
- *	      will be stored here.  blk_crypto_put_keyslot() must be called
- *	      later to release it.  Otherwise, NULL will be stored here.
+ *	      will be stored here; otherwise NULL will be stored here.
  *
  * If the device has keyslots, this gets a keyslot that's been programmed with
  * the specified key.  If the key is already in a slot, this reuses it;
  * otherwise this waits for a slot to become idle and programs the key into it.
+ *
+ * This must be paired with a call to blk_crypto_put_keyslot().
  *
  * Context: Process context. Takes and releases profile->lock.
  * Return: BLK_STS_OK on success, meaning that either a keyslot was allocated or
@@ -311,14 +311,19 @@ success:
 
 /**
  * blk_crypto_put_keyslot() - Release a reference to a keyslot
- * @slot: The keyslot to release the reference of
+ * @slot: The keyslot to release the reference of (may be NULL).
  *
  * Context: Any context.
  */
 void blk_crypto_put_keyslot(struct blk_crypto_keyslot *slot)
 {
-	struct blk_crypto_profile *profile = slot->profile;
+	struct blk_crypto_profile *profile;
 	unsigned long flags;
+
+	if (!slot)
+		return;
+
+	profile = slot->profile;
 
 	if (atomic_dec_and_lock_irqsave(&slot->slot_refs,
 					&profile->idle_slots_lock, flags)) {
@@ -348,16 +353,28 @@ bool __blk_crypto_cfg_supported(struct blk_crypto_profile *profile,
 	return true;
 }
 
-/*
- * This is an internal function that evicts a key from an inline encryption
- * device that can be either a real device or the blk-crypto-fallback "device".
- * It is used only by blk_crypto_evict_key(); see that function for details.
+/**
+ * __blk_crypto_evict_key() - Evict a key from a device.
+ * @profile: the crypto profile of the device
+ * @key: the key to evict.  It must not still be used in any I/O.
+ *
+ * If the device has keyslots, this finds the keyslot (if any) that contains the
+ * specified key and calls the driver's keyslot_evict function to evict it.
+ *
+ * Otherwise, this just calls the driver's keyslot_evict function if it is
+ * implemented, passing just the key (without any particular keyslot).  This
+ * allows layered devices to evict the key from their underlying devices.
+ *
+ * Context: Process context. Takes and releases profile->lock.
+ * Return: 0 on success or if there's no keyslot with the specified key, -EBUSY
+ *	   if the keyslot is still in use, or another -errno value on other
+ *	   error.
  */
 int __blk_crypto_evict_key(struct blk_crypto_profile *profile,
 			   const struct blk_crypto_key *key)
 {
 	struct blk_crypto_keyslot *slot;
-	int err;
+	int err = 0;
 
 	if (profile->num_slots == 0) {
 		if (profile->ll_ops.keyslot_evict) {
@@ -371,30 +388,22 @@ int __blk_crypto_evict_key(struct blk_crypto_profile *profile,
 
 	blk_crypto_hw_enter(profile);
 	slot = blk_crypto_find_keyslot(profile, key);
-	if (!slot) {
-		/*
-		 * Not an error, since a key not in use by I/O is not guaranteed
-		 * to be in a keyslot.  There can be more keys than keyslots.
-		 */
-		err = 0;
-		goto out;
-	}
+	if (!slot)
+		goto out_unlock;
 
 	if (WARN_ON_ONCE(atomic_read(&slot->slot_refs) != 0)) {
-		/* BUG: key is still in use by I/O */
 		err = -EBUSY;
-		goto out_remove;
+		goto out_unlock;
 	}
 	err = profile->ll_ops.keyslot_evict(profile, key,
 					    blk_crypto_keyslot_index(slot));
-out_remove:
-	/*
-	 * Callers free the key even on error, so unlink the key from the hash
-	 * table and clear slot->key even on error.
-	 */
+	if (err)
+		goto out_unlock;
+
 	hlist_del(&slot->hash_node);
 	slot->key = NULL;
-out:
+	err = 0;
+out_unlock:
 	blk_crypto_hw_exit(profile);
 	return err;
 }

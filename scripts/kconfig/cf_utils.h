@@ -1,31 +1,31 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
  */
 
 #ifndef CF_UTILS_H
 #define CF_UTILS_H
 
 /* parse Kconfig-file and read .config */
-void init_config(const char *Kconfig_file);
+void init_config (const char *Kconfig_file);
 
 /* initialize satmap and cnf_clauses */
-void init_data(struct cfdata *data);
+void init_data(void);
 
 /* assign SAT-variables to all fexpr and create the sat_map */
-void create_sat_variables(struct cfdata *data);
+void create_sat_variables(void);
 
 /* create True/False constants */
-void create_constants(struct cfdata *data);
+void create_constants(void);
 
 /* create a temporary SAT-variable */
-struct fexpr *create_tmpsatvar(struct cfdata *data);
+struct fexpr * create_tmpsatvar(void);
 
 /* return a temporary SAT variable as string */
-char *get_tmp_var_as_char(int i);
+char * get_tmp_var_as_char(int i);
 
 /* return a tristate value as a char * */
-char *tristate_get_char(tristate val);
+char * tristate_get_char(tristate val);
 
 /* check whether an expr can evaluate to mod */
 bool expr_can_evaluate_to_mod(struct expr *e);
@@ -55,10 +55,10 @@ bool sym_is_nonboolean(struct symbol *sym);
 bool sym_has_prompt(struct symbol *sym);
 
 /* return the prompt of the symbol, if there is one */
-struct property *sym_get_prompt(struct symbol *sym);
+struct property * sym_get_prompt(struct symbol *sym);
 
 /* return the condition for the property, True if there is none */
-struct pexpr *prop_get_condition(struct property *prop, struct cfdata *data);
+struct pexpr * prop_get_condition(struct property *prop);
 
 /* return the default property, NULL if none exists or can be satisfied */
 struct property *sym_get_default_prop(struct symbol *sym);
@@ -67,7 +67,7 @@ struct property *sym_get_default_prop(struct symbol *sym);
 bool sym_nonbool_has_value_set(struct symbol *sym);
 
 /* return the name of the symbol */
-char *sym_get_name(struct symbol *sym);
+char * sym_get_name(struct symbol *sym);
 
 /* check whether symbol is to be changed */
 bool sym_is_sdv(struct sdv_list *list, struct symbol *sym);
@@ -88,16 +88,16 @@ bool string_is_number(char *s);
 bool string_is_hex(char *s);
 
 /* initialize PicoSAT */
-PicoSAT *initialize_picosat(void);
+PicoSAT * initialize_picosat(void);
 
 /* construct the CNF-clauses from the constraints */
-void construct_cnf_clauses(PicoSAT *pico, struct cfdata *data);
+void construct_cnf_clauses(PicoSAT *pico);
 
-/* add a clause to PicoSAT */
+/* add a clause to to PicoSAT */
 void sat_add_clause(int num, ...);
 
 /* start PicoSAT */
-void picosat_solve(PicoSAT *pico, struct cfdata *data);
+void picosat_solve(PicoSAT *pico);
 
 /* add assumption for a symbol to the SAT-solver */
 void sym_add_assumption(PicoSAT *pico, struct symbol *sym);

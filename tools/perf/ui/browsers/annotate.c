@@ -19,6 +19,11 @@
 #include <sys/ttydefaults.h>
 #include <asm/bug.h>
 
+struct disasm_line_samples {
+	double		      percent;
+	struct sym_hist_entry he;
+};
+
 struct arch;
 
 struct annotate_browser {
@@ -441,8 +446,7 @@ static void ui_browser__init_asm_mode(struct ui_browser *browser)
 static int sym_title(struct symbol *sym, struct map *map, char *title,
 		     size_t sz, int percent_type)
 {
-	return snprintf(title, sz, "%s  %s [Percent: %s]", sym->name,
-			map__dso(map)->long_name,
+	return snprintf(title, sz, "%s  %s [Percent: %s]", sym->name, map->dso->long_name,
 			percent_type_str(percent_type));
 }
 
@@ -801,8 +805,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
 		"r             Run available scripts\n"
 		"p             Toggle percent type [local/global]\n"
 		"b             Toggle percent base [period/hits]\n"
-		"?             Search string backwards\n"
-		"f             Toggle showing offsets to full address\n");
+		"?             Search string backwards\n");
 			continue;
 		case 'r':
 			script_browse(NULL, NULL);
@@ -909,9 +912,6 @@ show_sup_ins:
 			hists__scnprintf_title(hists, title, sizeof(title));
 			annotate_browser__show(&browser->b, title, help);
 			continue;
-		case 'f':
-			annotation__toggle_full_addr(notes, ms);
-			continue;
 		case K_LEFT:
 		case K_ESC:
 		case 'q':
@@ -965,22 +965,20 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
 		},
 		.opts = opts,
 	};
-	struct dso *dso;
 	int ret = -1, err;
 	int not_annotated = list_empty(&notes->src->source);
 
 	if (sym == NULL)
 		return -1;
 
-	dso = map__dso(ms->map);
-	if (dso->annotate_warned)
+	if (ms->map->dso->annotate_warned)
 		return -1;
 
 	if (not_annotated) {
 		err = symbol__annotate2(ms, evsel, opts, &browser.arch);
 		if (err) {
 			char msg[BUFSIZ];
-			dso->annotate_warned = true;
+			ms->map->dso->annotate_warned = true;
 			symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
 			ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
 			goto out_free_offsets;

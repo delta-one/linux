@@ -22,7 +22,7 @@
  * Then:
  *
  * # insmod kernel/trace/synth_event_gen_test.ko
- * # cat /sys/kernel/tracing/trace
+ * # cat /sys/kernel/debug/tracing/trace
  *
  * You should see several events in the trace buffer -
  * "create_synth_test", "empty_synth_test", and several instances of
@@ -120,13 +120,15 @@ static int __init test_gen_synth_cmd(void)
 
 	/* Now generate a gen_synth_test event */
 	ret = synth_event_trace_array(gen_synth_test, vals, ARRAY_SIZE(vals));
- free:
-	kfree(buf);
+ out:
 	return ret;
  delete:
 	/* We got an error after creating the event, delete it */
 	synth_event_delete("gen_synth_test");
-	goto free;
+ free:
+	kfree(buf);
+
+	goto out;
 }
 
 /*
@@ -225,13 +227,15 @@ static int __init test_empty_synth_event(void)
 
 	/* Now trace an empty_synth_test event */
 	ret = synth_event_trace_array(empty_synth_test, vals, ARRAY_SIZE(vals));
- free:
-	kfree(buf);
+ out:
 	return ret;
  delete:
 	/* We got an error after creating the event, delete it */
 	synth_event_delete("empty_synth_test");
-	goto free;
+ free:
+	kfree(buf);
+
+	goto out;
 }
 
 static struct synth_field_desc create_synth_test_fields[] = {

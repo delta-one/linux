@@ -52,14 +52,12 @@
 #include "intel-pt.h"
 #include "intel-bts.h"
 #include "arm-spe.h"
-#include "hisi-ptt.h"
 #include "s390-cpumsf.h"
 #include "util/mmap.h"
 
 #include <linux/ctype.h>
 #include "symbol/kallsyms.h"
 #include <internal/lib.h>
-#include "util/sample.h"
 
 /*
  * Make a group from 'leader' to 'last', requiring that the events were not
@@ -1133,9 +1131,6 @@ int auxtrace_queue_data(struct perf_session *session, bool samples, bool events)
 	if (auxtrace__dont_decode(session))
 		return 0;
 
-	if (perf_data__is_pipe(session->data))
-		return 0;
-
 	if (!session->auxtrace || !session->auxtrace->queue_data)
 		return -EINVAL;
 
@@ -1325,9 +1320,6 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
 	case PERF_AUXTRACE_S390_CPUMSF:
 		err = s390_cpumsf_process_auxtrace_info(event, session);
 		break;
-	case PERF_AUXTRACE_HISI_PTT:
-		err = hisi_ptt_process_auxtrace_info(event, session);
-		break;
 	case PERF_AUXTRACE_UNKNOWN:
 	default:
 		return -EINVAL;
@@ -1394,7 +1386,6 @@ void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
 		synth_opts->calls = true;
 	} else {
 		synth_opts->instructions = true;
-		synth_opts->cycles = true;
 		synth_opts->period_type = PERF_ITRACE_DEFAULT_PERIOD_TYPE;
 		synth_opts->period = PERF_ITRACE_DEFAULT_PERIOD;
 	}
@@ -1483,11 +1474,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
 	for (p = str; *p;) {
 		switch (*p++) {
 		case 'i':
-		case 'y':
-			if (p[-1] == 'y')
-				synth_opts->cycles = true;
-			else
-				synth_opts->instructions = true;
+			synth_opts->instructions = true;
 			while (*p == ' ' || *p == ',')
 				p += 1;
 			if (isdigit(*p)) {
@@ -1646,7 +1633,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
 		}
 	}
 out:
-	if (synth_opts->instructions || synth_opts->cycles) {
+	if (synth_opts->instructions) {
 		if (!period_type_set)
 			synth_opts->period_type =
 					PERF_ITRACE_DEFAULT_PERIOD_TYPE;
@@ -2334,19 +2321,11 @@ struct sym_args {
 	bool		near;
 };
 
-static bool kern_sym_name_match(const char *kname, const char *name)
-{
-	size_t n = strlen(name);
-
-	return !strcmp(kname, name) ||
-	       (!strncmp(kname, name, n) && kname[n] == '\t');
-}
-
 static bool kern_sym_match(struct sym_args *args, const char *name, char type)
 {
 	/* A function with the same name, and global or the n'th found or any */
 	return kallsyms__is_function(type) &&
-	       kern_sym_name_match(name, args->name) &&
+	       !strcmp(name, args->name) &&
 	       ((args->global && isupper(type)) ||
 		(args->selected && ++(args->cnt) == args->idx) ||
 		(!args->global && !args->selected));
@@ -2449,7 +2428,6 @@ static int find_entire_kern_cb(void *arg, const char *name __maybe_unused,
 			       char type, u64 start)
 {
 	struct sym_args *args = arg;
-	u64 size;
 
 	if (!kallsyms__is_function(type))
 		return 0;
@@ -2459,9 +2437,7 @@ static int find_entire_kern_cb(void *arg, const char *name __maybe_unused,
 		args->start = start;
 	}
 	/* Don't know exactly where the kernel ends, so we add a page */
-	size = round_up(start, page_size) + page_size - args->start;
-	if (size > args->size)
-		args->size = size;
+	args->size = round_up(start, page_size) + page_size - args->start;
 
 	return 0;
 }
@@ -2560,7 +2536,7 @@ static struct dso *load_dso(const char *name)
 	if (map__load(map) < 0)
 		pr_err("File '%s' not found or has no symbols.\n", name);
 
-	dso = dso__get(map__dso(map));
+	dso = dso__get(map->dso);
 
 	map__put(map);
 
@@ -2622,7 +2598,7 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
 				*size = sym->start - *start;
 			if (idx > 0) {
 				if (*size)
-					return 0;
+					return 1;
 			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
 				print_duplicate_syms(dso, sym_name);
 				return -EINVAL;

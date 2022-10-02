@@ -324,3 +324,4 @@ static struct platform_driver hisi_pcie_error_handler_driver = {
 module_platform_driver(hisi_pcie_error_handler_driver);
 
 MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling driver");
+MODULE_LICENSE("GPL v2");

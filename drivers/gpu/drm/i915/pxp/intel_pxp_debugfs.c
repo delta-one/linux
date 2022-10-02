@@ -9,20 +9,18 @@
 #include <drm/drm_print.h>
 
 #include "gt/intel_gt_debugfs.h"
-
 #include "i915_drv.h"
-
 #include "intel_pxp.h"
 #include "intel_pxp_debugfs.h"
 #include "intel_pxp_irq.h"
-#include "intel_pxp_types.h"
 
 static int pxp_info_show(struct seq_file *m, void *data)
 {
 	struct intel_pxp *pxp = m->private;
 	struct drm_printer p = drm_seq_file_printer(m);
+	bool enabled = intel_pxp_is_enabled(pxp);
 
-	if (!intel_pxp_is_enabled(pxp)) {
+	if (!enabled) {
 		drm_printf(&p, "pxp disabled\n");
 		return 0;
 	}
@@ -32,8 +30,7 @@ static int pxp_info_show(struct seq_file *m, void *data)
 
 	return 0;
 }
-
-DEFINE_SHOW_ATTRIBUTE(pxp_info);
+DEFINE_INTEL_GT_DEBUGFS_ATTRIBUTE(pxp_info);
 
 static int pxp_terminate_get(void *data, u64 *val)
 {
@@ -44,7 +41,7 @@ static int pxp_terminate_get(void *data, u64 *val)
 static int pxp_terminate_set(void *data, u64 val)
 {
 	struct intel_pxp *pxp = data;
-	struct intel_gt *gt = pxp->ctrl_gt;
+	struct intel_gt *gt = pxp_to_gt(pxp);
 
 	if (!intel_pxp_is_active(pxp))
 		return -ENODEV;
@@ -62,26 +59,23 @@ static int pxp_terminate_set(void *data, u64 val)
 }
 
 DEFINE_SIMPLE_ATTRIBUTE(pxp_terminate_fops, pxp_terminate_get, pxp_terminate_set, "%llx\n");
-
-void intel_pxp_debugfs_register(struct intel_pxp *pxp)
+void intel_pxp_debugfs_register(struct intel_pxp *pxp, struct dentry *gt_root)
 {
-	struct drm_minor *minor;
-	struct dentry *pxproot;
+	static const struct intel_gt_debugfs_file files[] = {
+		{ "info", &pxp_info_fops, NULL },
+		{ "terminate_state", &pxp_terminate_fops, NULL },
+	};
+	struct dentry *root;
 
-	if (!intel_pxp_is_supported(pxp))
+	if (!gt_root)
 		return;
 
-	minor = pxp->ctrl_gt->i915->drm.primary;
-	if (!minor->debugfs_root)
+	if (!HAS_PXP((pxp_to_gt(pxp)->i915)))
 		return;
 
-	pxproot = debugfs_create_dir("pxp", minor->debugfs_root);
-	if (IS_ERR(pxproot))
+	root = debugfs_create_dir("pxp", gt_root);
+	if (IS_ERR(root))
 		return;
 
-	debugfs_create_file("info", 0444, pxproot,
-			    pxp, &pxp_info_fops);
-
-	debugfs_create_file("terminate_state", 0644, pxproot,
-			    pxp, &pxp_terminate_fops);
+	intel_gt_debugfs_register_files(root, files, ARRAY_SIZE(files), pxp);
 }

@@ -15,6 +15,7 @@
 #include <linux/regmap.h>
 #include <linux/thermal.h>
 
+#include "../thermal_core.h"
 #include "../thermal_hwmon.h"
 
 #define QPNP_TM_REG_DIG_MAJOR		0x01
@@ -187,7 +188,7 @@ static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
 
 static int qpnp_tm_get_temp(struct thermal_zone_device *tz, int *temp)
 {
-	struct qpnp_tm_chip *chip = thermal_zone_device_priv(tz);
+	struct qpnp_tm_chip *chip = tz->devdata;
 	int ret, mili_celsius;
 
 	if (!temp)
@@ -251,8 +252,7 @@ static int qpnp_tm_update_critical_trip_temp(struct qpnp_tm_chip *chip,
 			disable_s2_shutdown = true;
 		else
 			dev_warn(chip->dev,
-				 "No ADC is configured and critical temperature %d mC is above the maximum stage 2 threshold of %ld mC! Configuring stage 2 shutdown at %ld mC.\n",
-				 temp, stage2_threshold_max, stage2_threshold_max);
+				 "No ADC is configured and critical temperature is above the maximum stage 2 threshold of 140 C! Configuring stage 2 shutdown at 140 C.\n");
 	}
 
 skip:
@@ -265,11 +265,11 @@ skip:
 
 static int qpnp_tm_set_trip_temp(struct thermal_zone_device *tz, int trip_id, int temp)
 {
-	struct qpnp_tm_chip *chip = thermal_zone_device_priv(tz);
+	struct qpnp_tm_chip *chip = tz->devdata;
 	struct thermal_trip trip;
 	int ret;
 
-	ret = __thermal_zone_get_trip(chip->tz_dev, trip_id, &trip);
+	ret = thermal_zone_get_trip(chip->tz_dev, trip_id, &trip);
 	if (ret)
 		return ret;
 
@@ -347,12 +347,7 @@ static int qpnp_tm_init(struct qpnp_tm_chip *chip)
 	if (stage)
 		chip->temp = qpnp_tm_decode_temp(chip, stage);
 
-	mutex_unlock(&chip->lock);
-
 	crit_temp = qpnp_tm_get_critical_trip_temp(chip);
-
-	mutex_lock(&chip->lock);
-
 	ret = qpnp_tm_update_critical_trip_temp(chip, crit_temp);
 	if (ret < 0)
 		goto out;
@@ -459,7 +454,7 @@ static int qpnp_tm_probe(struct platform_device *pdev)
 		return ret;
 	}
 
-	if (devm_thermal_add_hwmon_sysfs(&pdev->dev, chip->tz_dev))
+	if (devm_thermal_add_hwmon_sysfs(chip->tz_dev))
 		dev_warn(&pdev->dev,
 			 "Failed to add hwmon sysfs attributes\n");
 

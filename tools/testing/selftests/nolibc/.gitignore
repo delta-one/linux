@@ -1,5 +1,4 @@
 /initramfs/
-/libc-test
 /nolibc-test
 /run.out
 /sysroot/

@@ -90,32 +90,32 @@ enum {
 	ATA_DFLAG_ACPI_FAILED	= (1 << 6), /* ACPI on devcfg has failed */
 	ATA_DFLAG_AN		= (1 << 7), /* AN configured */
 	ATA_DFLAG_TRUSTED	= (1 << 8), /* device supports trusted send/recv */
-	ATA_DFLAG_FUA		= (1 << 9), /* device supports FUA */
 	ATA_DFLAG_DMADIR	= (1 << 10), /* device requires DMADIR */
-	ATA_DFLAG_NCQ_SEND_RECV = (1 << 11), /* device supports NCQ SEND and RECV */
-	ATA_DFLAG_NCQ_PRIO	= (1 << 12), /* device supports NCQ priority */
-	ATA_DFLAG_CFG_MASK	= (1 << 13) - 1,
+	ATA_DFLAG_CFG_MASK	= (1 << 12) - 1,
 
-	ATA_DFLAG_PIO		= (1 << 13), /* device limited to PIO mode */
-	ATA_DFLAG_NCQ_OFF	= (1 << 14), /* device limited to non-NCQ mode */
+	ATA_DFLAG_PIO		= (1 << 12), /* device limited to PIO mode */
+	ATA_DFLAG_NCQ_OFF	= (1 << 13), /* device limited to non-NCQ mode */
 	ATA_DFLAG_SLEEPING	= (1 << 15), /* device is sleeping */
 	ATA_DFLAG_DUBIOUS_XFER	= (1 << 16), /* data transfer not verified */
 	ATA_DFLAG_NO_UNLOAD	= (1 << 17), /* device doesn't support unload */
 	ATA_DFLAG_UNLOCK_HPA	= (1 << 18), /* unlock HPA */
-	ATA_DFLAG_INIT_MASK	= (1 << 19) - 1,
+	ATA_DFLAG_NCQ_SEND_RECV = (1 << 19), /* device supports NCQ SEND and RECV */
+	ATA_DFLAG_NCQ_PRIO	= (1 << 20), /* device supports NCQ priority */
+	ATA_DFLAG_NCQ_PRIO_ENABLED = (1 << 21), /* Priority cmds sent to dev */
+	ATA_DFLAG_INIT_MASK	= (1 << 24) - 1,
 
-	ATA_DFLAG_NCQ_PRIO_ENABLED = (1 << 19), /* Priority cmds sent to dev */
 	ATA_DFLAG_DETACH	= (1 << 24),
 	ATA_DFLAG_DETACHED	= (1 << 25),
+
 	ATA_DFLAG_DA		= (1 << 26), /* device supports Device Attention */
 	ATA_DFLAG_DEVSLP	= (1 << 27), /* device supports Device Sleep */
 	ATA_DFLAG_ACPI_DISABLED = (1 << 28), /* ACPI for the device is disabled */
 	ATA_DFLAG_D_SENSE	= (1 << 29), /* Descriptor sense requested */
 	ATA_DFLAG_ZAC		= (1 << 30), /* ZAC device */
 
-	ATA_DFLAG_FEATURES_MASK	= (ATA_DFLAG_TRUSTED | ATA_DFLAG_DA |	\
-				   ATA_DFLAG_DEVSLP | ATA_DFLAG_NCQ_SEND_RECV | \
-				   ATA_DFLAG_NCQ_PRIO | ATA_DFLAG_FUA),
+	ATA_DFLAG_FEATURES_MASK	= ATA_DFLAG_TRUSTED | ATA_DFLAG_DA | \
+				  ATA_DFLAG_DEVSLP | ATA_DFLAG_NCQ_SEND_RECV | \
+				  ATA_DFLAG_NCQ_PRIO,
 
 	ATA_DEV_UNKNOWN		= 0,	/* unknown device */
 	ATA_DEV_ATA		= 1,	/* ATA device */
@@ -200,14 +200,13 @@ enum {
 	/* struct ata_queued_cmd flags */
 	ATA_QCFLAG_ACTIVE	= (1 << 0), /* cmd not yet ack'd to scsi lyer */
 	ATA_QCFLAG_DMAMAP	= (1 << 1), /* SG table is DMA mapped */
-	ATA_QCFLAG_RTF_FILLED	= (1 << 2), /* result TF has been filled */
 	ATA_QCFLAG_IO		= (1 << 3), /* standard IO command */
 	ATA_QCFLAG_RESULT_TF	= (1 << 4), /* result TF requested */
 	ATA_QCFLAG_CLEAR_EXCL	= (1 << 5), /* clear excl_link on completion */
 	ATA_QCFLAG_QUIET	= (1 << 6), /* don't report device error */
 	ATA_QCFLAG_RETRY	= (1 << 7), /* retry after failure */
 
-	ATA_QCFLAG_EH		= (1 << 16), /* cmd aborted and owned by EH */
+	ATA_QCFLAG_FAILED	= (1 << 16), /* cmd failed and is owned by EH */
 	ATA_QCFLAG_SENSE_VALID	= (1 << 17), /* sense data valid */
 	ATA_QCFLAG_EH_SCHEDULED = (1 << 18), /* EH scheduled (obsolete) */
 
@@ -382,7 +381,6 @@ enum {
 	ATA_HORKAGE_NO_NCQ_ON_ATI = (1 << 27),	/* Disable NCQ on ATI chipset */
 	ATA_HORKAGE_NO_ID_DEV_LOG = (1 << 28),	/* Identify device log missing */
 	ATA_HORKAGE_NO_LOG_DIR	= (1 << 29),	/* Do not read log directory */
-	ATA_HORKAGE_NO_FUA	= (1 << 30),	/* Do not use FUA */
 
 	 /* DMA mask for user DMA control: User visible values; DO NOT
 	    renumber */
@@ -878,8 +876,7 @@ struct ata_port_operations {
 	int (*check_atapi_dma)(struct ata_queued_cmd *qc);
 	enum ata_completion_errors (*qc_prep)(struct ata_queued_cmd *qc);
 	unsigned int (*qc_issue)(struct ata_queued_cmd *qc);
-	void (*qc_fill_rtf)(struct ata_queued_cmd *qc);
-	void (*qc_ncq_fill_rtf)(struct ata_port *ap, u64 done_mask);
+	bool (*qc_fill_rtf)(struct ata_queued_cmd *qc);
 
 	/*
 	 * Configuration and exception handling
@@ -1046,11 +1043,6 @@ static inline int ata_port_is_dummy(struct ata_port *ap)
 	return ap->ops == &ata_dummy_port_ops;
 }
 
-static inline bool ata_port_is_frozen(const struct ata_port *ap)
-{
-	return ap->pflags & ATA_PFLAG_FROZEN;
-}
-
 extern int ata_std_prereset(struct ata_link *link, unsigned long deadline);
 extern int ata_wait_after_reset(struct ata_link *link, unsigned long deadline,
 				int (*check_ready)(struct ata_link *link));
@@ -1065,10 +1057,10 @@ extern void ata_host_get(struct ata_host *host);
 extern void ata_host_put(struct ata_host *host);
 extern int ata_host_start(struct ata_host *host);
 extern int ata_host_register(struct ata_host *host,
-			     const struct scsi_host_template *sht);
+			     struct scsi_host_template *sht);
 extern int ata_host_activate(struct ata_host *host, int irq,
 			     irq_handler_t irq_handler, unsigned long irq_flags,
-			     const struct scsi_host_template *sht);
+			     struct scsi_host_template *sht);
 extern void ata_host_detach(struct ata_host *host);
 extern void ata_host_init(struct ata_host *, struct device *, struct ata_port_operations *);
 extern int ata_scsi_detect(struct scsi_host_template *sht);
@@ -1144,8 +1136,8 @@ extern int ata_scsi_slave_config(struct scsi_device *sdev);
 extern void ata_scsi_slave_destroy(struct scsi_device *sdev);
 extern int ata_scsi_change_queue_depth(struct scsi_device *sdev,
 				       int queue_depth);
-extern int ata_change_queue_depth(struct ata_port *ap, struct ata_device *dev,
-				  struct scsi_device *sdev, int queue_depth);
+extern int __ata_change_queue_depth(struct ata_port *ap, struct scsi_device *sdev,
+				    int queue_depth);
 extern struct ata_device *ata_dev_pair(struct ata_device *adev);
 extern int ata_do_set_mode(struct ata_link *link, struct ata_device **r_failed_dev);
 extern void ata_scsi_port_error_handler(struct Scsi_Host *host, struct ata_port *ap);
@@ -1693,35 +1685,21 @@ extern struct ata_device *ata_dev_next(struct ata_device *dev,
 	     (dev) = ata_dev_next((dev), (link), ATA_DITER_##mode))
 
 /**
- *	ata_ncq_supported - Test whether NCQ is supported
- *	@dev: ATA device to test
+ *	ata_ncq_enabled - Test whether NCQ is enabled
+ *	@dev: ATA device to test for
  *
  *	LOCKING:
  *	spin_lock_irqsave(host lock)
  *
  *	RETURNS:
- *	true if @dev supports NCQ, false otherwise.
+ *	1 if NCQ is enabled for @dev, 0 otherwise.
  */
-static inline bool ata_ncq_supported(struct ata_device *dev)
+static inline int ata_ncq_enabled(struct ata_device *dev)
 {
 	if (!IS_ENABLED(CONFIG_SATA_HOST))
-		return false;
-	return (dev->flags & (ATA_DFLAG_PIO | ATA_DFLAG_NCQ)) == ATA_DFLAG_NCQ;
-}
-
-/**
- *	ata_ncq_enabled - Test whether NCQ is enabled
- *	@dev: ATA device to test
- *
- *	LOCKING:
- *	spin_lock_irqsave(host lock)
- *
- *	RETURNS:
- *	true if NCQ is enabled for @dev, false otherwise.
- */
-static inline bool ata_ncq_enabled(struct ata_device *dev)
-{
-	return ata_ncq_supported(dev) && !(dev->flags & ATA_DFLAG_NCQ_OFF);
+		return 0;
+	return (dev->flags & (ATA_DFLAG_PIO | ATA_DFLAG_NCQ_OFF |
+			      ATA_DFLAG_NCQ)) == ATA_DFLAG_NCQ;
 }
 
 static inline bool ata_fpdma_dsm_supported(struct ata_device *dev)
@@ -1773,7 +1751,7 @@ static inline struct ata_queued_cmd *ata_qc_from_tag(struct ata_port *ap,
 		return qc;
 
 	if ((qc->flags & (ATA_QCFLAG_ACTIVE |
-			  ATA_QCFLAG_EH)) == ATA_QCFLAG_ACTIVE)
+			  ATA_QCFLAG_FAILED)) == ATA_QCFLAG_ACTIVE)
 		return qc;
 
 	return NULL;
@@ -1935,6 +1913,8 @@ extern void ata_sff_dev_select(struct ata_port *ap, unsigned int device);
 extern u8 ata_sff_check_status(struct ata_port *ap);
 extern void ata_sff_pause(struct ata_port *ap);
 extern void ata_sff_dma_pause(struct ata_port *ap);
+extern int ata_sff_busy_sleep(struct ata_port *ap,
+			      unsigned long timeout_pat, unsigned long timeout);
 extern int ata_sff_wait_ready(struct ata_link *link, unsigned long deadline);
 extern void ata_sff_tf_load(struct ata_port *ap, const struct ata_taskfile *tf);
 extern void ata_sff_tf_read(struct ata_port *ap, struct ata_taskfile *tf);
@@ -1953,7 +1933,7 @@ extern void ata_sff_queue_delayed_work(struct delayed_work *dwork,
 		unsigned long delay);
 extern void ata_sff_queue_pio_task(struct ata_link *link, unsigned long delay);
 extern unsigned int ata_sff_qc_issue(struct ata_queued_cmd *qc);
-extern void ata_sff_qc_fill_rtf(struct ata_queued_cmd *qc);
+extern bool ata_sff_qc_fill_rtf(struct ata_queued_cmd *qc);
 extern unsigned int ata_sff_port_intr(struct ata_port *ap,
 				      struct ata_queued_cmd *qc);
 extern irqreturn_t ata_sff_interrupt(int irq, void *dev_instance);
@@ -1980,10 +1960,10 @@ extern int ata_pci_sff_prepare_host(struct pci_dev *pdev,
 				    struct ata_host **r_host);
 extern int ata_pci_sff_activate_host(struct ata_host *host,
 				     irq_handler_t irq_handler,
-				     const struct scsi_host_template *sht);
+				     struct scsi_host_template *sht);
 extern int ata_pci_sff_init_one(struct pci_dev *pdev,
 		const struct ata_port_info * const * ppi,
-		const struct scsi_host_template *sht, void *host_priv, int hflags);
+		struct scsi_host_template *sht, void *host_priv, int hflags);
 #endif /* CONFIG_PCI */
 
 #ifdef CONFIG_ATA_BMDMA
@@ -2019,7 +1999,7 @@ extern int ata_pci_bmdma_prepare_host(struct pci_dev *pdev,
 				      struct ata_host **r_host);
 extern int ata_pci_bmdma_init_one(struct pci_dev *pdev,
 				  const struct ata_port_info * const * ppi,
-				  const struct scsi_host_template *sht,
+				  struct scsi_host_template *sht,
 				  void *host_priv, int hflags);
 #endif /* CONFIG_PCI */
 #endif /* CONFIG_ATA_BMDMA */

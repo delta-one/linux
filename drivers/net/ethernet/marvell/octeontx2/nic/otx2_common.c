@@ -898,7 +898,6 @@ static int otx2_sq_init(struct otx2_nic *pfvf, u16 qidx, u16 sqb_aura)
 	}
 
 	sq->head = 0;
-	sq->cons_head = 0;
 	sq->sqe_per_sqb = (pfvf->hw.sqb_size / sq->sqe_size) - 1;
 	sq->num_sqbs = (qset->sqe_cnt + sq->sqe_per_sqb) / sq->sqe_per_sqb;
 	/* Set SQE threshold to 10% of total SQEs */
@@ -1376,23 +1375,18 @@ int otx2_sq_aura_pool_init(struct otx2_nic *pfvf)
 		sq = &qset->sq[qidx];
 		sq->sqb_count = 0;
 		sq->sqb_ptrs = kcalloc(num_sqbs, sizeof(*sq->sqb_ptrs), GFP_KERNEL);
-		if (!sq->sqb_ptrs) {
-			err = -ENOMEM;
-			goto err_mem;
-		}
+		if (!sq->sqb_ptrs)
+			return -ENOMEM;
 
 		for (ptr = 0; ptr < num_sqbs; ptr++) {
-			err = otx2_alloc_rbuf(pfvf, pool, &bufptr);
-			if (err)
-				goto err_mem;
+			if (otx2_alloc_rbuf(pfvf, pool, &bufptr))
+				return -ENOMEM;
 			pfvf->hw_ops->aura_freeptr(pfvf, pool_id, bufptr);
 			sq->sqb_ptrs[sq->sqb_count++] = (u64)bufptr;
 		}
 	}
 
-err_mem:
-	return err ? -ENOMEM : 0;
-
+	return 0;
 fail:
 	otx2_mbox_reset(&pfvf->mbox.mbox, 0);
 	otx2_aura_pool_free(pfvf);
@@ -1435,13 +1429,13 @@ int otx2_rq_aura_pool_init(struct otx2_nic *pfvf)
 	for (pool_id = 0; pool_id < hw->rqpool_cnt; pool_id++) {
 		pool = &pfvf->qset.pool[pool_id];
 		for (ptr = 0; ptr < num_ptrs; ptr++) {
-			err = otx2_alloc_rbuf(pfvf, pool, &bufptr);
-			if (err)
+			if (otx2_alloc_rbuf(pfvf, pool, &bufptr))
 				return -ENOMEM;
 			pfvf->hw_ops->aura_freeptr(pfvf, pool_id,
 						   bufptr + OTX2_HEAD_ROOM);
 		}
 	}
+
 	return 0;
 fail:
 	otx2_mbox_reset(&pfvf->mbox.mbox, 0);
@@ -1833,5 +1827,4 @@ otx2_mbox_up_handler_ ## _fn_name(struct otx2_nic *pfvf,		\
 }									\
 EXPORT_SYMBOL(otx2_mbox_up_handler_ ## _fn_name);
 MBOX_UP_CGX_MESSAGES
-MBOX_UP_MCS_MESSAGES
 #undef M

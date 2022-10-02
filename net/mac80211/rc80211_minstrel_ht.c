@@ -10,7 +10,6 @@
 #include <linux/random.h>
 #include <linux/moduleparam.h>
 #include <linux/ieee80211.h>
-#include <linux/minmax.h>
 #include <net/mac80211.h>
 #include "rate.h"
 #include "sta_info.h"
@@ -1551,7 +1550,6 @@ minstrel_ht_update_rates(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
 {
 	struct ieee80211_sta_rates *rates;
 	int i = 0;
-	int max_rates = min_t(int, mp->hw->max_rates, IEEE80211_TX_RATE_TABLE_SIZE);
 
 	rates = kzalloc(sizeof(*rates), GFP_ATOMIC);
 	if (!rates)
@@ -1561,10 +1559,10 @@ minstrel_ht_update_rates(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
 	minstrel_ht_set_rate(mp, mi, rates, i++, mi->max_tp_rate[0]);
 
 	/* Fill up remaining, keep one entry for max_probe_rate */
-	for (; i < (max_rates - 1); i++)
+	for (; i < (mp->hw->max_rates - 1); i++)
 		minstrel_ht_set_rate(mp, mi, rates, i, mi->max_tp_rate[i]);
 
-	if (i < max_rates)
+	if (i < mp->hw->max_rates)
 		minstrel_ht_set_rate(mp, mi, rates, i++, mi->max_prob_rate);
 
 	if (i < IEEE80211_TX_RATE_TABLE_SIZE)
@@ -1708,6 +1706,7 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
 	struct sta_info *sta_info;
 	bool ldpc, erp;
 	int use_vht;
+	int n_supported = 0;
 	int ack_dur;
 	int stbc;
 	int i;
@@ -1790,6 +1789,8 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
 				continue;
 
 			mi->supported[i] = mcs->rx_mask[nss - 1];
+			if (mi->supported[i])
+				n_supported++;
 			continue;
 		}
 
@@ -1816,6 +1817,9 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
 
 		mi->supported[i] = minstrel_get_valid_vht_rates(bw, nss,
 				vht_cap->vht_mcs.tx_mcs_map);
+
+		if (mi->supported[i])
+			n_supported++;
 	}
 
 	sta_info = container_of(sta, struct sta_info, sta);
@@ -1957,6 +1961,9 @@ minstrel_ht_alloc(struct ieee80211_hw *hw)
 		/* safe default, does not necessarily have to match hw properties */
 		mp->max_retry = 7;
 
+	if (hw->max_rates >= 4)
+		mp->has_mrr = true;
+
 	mp->hw = hw;
 	mp->update_interval = HZ / 20;
 
@@ -2027,7 +2034,7 @@ static void __init init_sample_table(void)
 
 	memset(sample_table, 0xff, sizeof(sample_table));
 	for (col = 0; col < SAMPLE_COLUMNS; col++) {
-		get_random_bytes(rnd, sizeof(rnd));
+		prandom_bytes(rnd, sizeof(rnd));
 		for (i = 0; i < MCS_GROUP_RATES; i++) {
 			new_idx = (i + rnd[i]) % MCS_GROUP_RATES;
 			while (sample_table[col][new_idx] != 0xff)

@@ -619,12 +619,10 @@ process migrations.
 and is an example of this type.
 
 
-.. _cgroupv2-limits-distributor:
-
 Limits
 ------
 
-A child can only consume up to the configured amount of the resource.
+A child can only consume upto the configured amount of the resource.
 Limits can be over-committed - the sum of the limits of children can
 exceed the amount of resource available to the parent.
 
@@ -637,16 +635,15 @@ process migrations.
 "io.max" limits the maximum BPS and/or IOPS that a cgroup can consume
 on an IO device and is an example of this type.
 
-.. _cgroupv2-protections-distributor:
 
 Protections
 -----------
 
-A cgroup is protected up to the configured amount of the resource
+A cgroup is protected upto the configured amount of the resource
 as long as the usages of all its ancestors are under their
 protected levels.  Protections can be hard guarantees or best effort
 soft boundaries.  Protections can also be over-committed in which case
-only up to the amount available to the parent is protected among
+only upto the amount available to the parent is protected among
 children.
 
 Protections are in the range [0, max] and defaults to 0, which is
@@ -1079,7 +1076,7 @@ All time durations are in microseconds.
 
 	  $MAX $PERIOD
 
-	which indicates that the group may consume up to $MAX in each
+	which indicates that the group may consume upto $MAX in each
 	$PERIOD duration.  "max" for $MAX indicates no limit.  If only
 	one number is written, $MAX is updated.
 
@@ -1381,11 +1378,6 @@ PAGE_SIZE multiple when read back.
 	  pagetables
                 Amount of memory allocated for page tables.
 
-	  sec_pagetables
-		Amount of memory allocated for secondary page tables,
-		this currently includes KVM mmu allocations on x86
-		and arm64.
-
 	  percpu (npn)
 		Amount of memory used for storing per-cpu kernel
 		data structures.
@@ -1491,17 +1483,11 @@ PAGE_SIZE multiple when read back.
 	  pgscan_direct (npn)
 		Amount of scanned pages directly  (in an inactive LRU list)
 
-	  pgscan_khugepaged (npn)
-		Amount of scanned pages by khugepaged  (in an inactive LRU list)
-
 	  pgsteal_kswapd (npn)
 		Amount of reclaimed pages by kswapd
 
 	  pgsteal_direct (npn)
 		Amount of reclaimed pages directly
-
-	  pgsteal_khugepaged (npn)
-		Amount of reclaimed pages by khugepaged
 
 	  pgfault (npn)
 		Total number of page faults incurred
@@ -2289,7 +2275,7 @@ Cpuset Interface Files
 	For a valid partition root with the sibling cpu exclusivity
 	rule enabled, changes made to "cpuset.cpus" that violate the
 	exclusivity rule will invalidate the partition as well as its
-	sibling partitions with conflicting cpuset.cpus values. So
+	sibiling partitions with conflicting cpuset.cpus values. So
 	care must be taking in changing "cpuset.cpus".
 
 	A valid non-root parent partition may distribute out all its CPUs

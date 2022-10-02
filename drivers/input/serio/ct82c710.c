@@ -7,6 +7,9 @@
  *  82C710 C&T mouse port chip driver for Linux
  */
 
+/*
+ */
+
 #include <linux/delay.h>
 #include <linux/module.h>
 #include <linux/ioport.h>

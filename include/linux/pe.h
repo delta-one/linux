@@ -29,14 +29,7 @@
  * handover_offset and xloadflags fields in the bootparams structure.
  */
 #define LINUX_EFISTUB_MAJOR_VERSION		0x1
-#define LINUX_EFISTUB_MINOR_VERSION		0x1
-
-/*
- * LINUX_PE_MAGIC appears at offset 0x38 into the MS-DOS header of EFI bootable
- * Linux kernel images that target the architecture as specified by the PE/COFF
- * header machine type field.
- */
-#define LINUX_PE_MAGIC	0x818223cd
+#define LINUX_EFISTUB_MINOR_VERSION		0x0
 
 #define MZ_MAGIC	0x5a4d	/* "MZ" */
 
@@ -118,9 +111,6 @@
 #define IMAGE_DLLCHARACTERISTICS_WDM_DRIVER             0x2000
 #define IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE  0x8000
 
-#define IMAGE_DLLCHARACTERISTICS_EX_CET_COMPAT		0x0001
-#define IMAGE_DLLCHARACTERISTICS_EX_FORWARD_CFI_COMPAT	0x0040
-
 /* they actually defined 0x00000000 as well, but I think we'll skip that one. */
 #define IMAGE_SCN_RESERVED_0	0x00000001
 #define IMAGE_SCN_RESERVED_1	0x00000002
@@ -168,7 +158,6 @@
 #define IMAGE_SCN_MEM_WRITE	0x80000000 /* writeable */
 
 #define IMAGE_DEBUG_TYPE_CODEVIEW	2
-#define IMAGE_DEBUG_TYPE_EX_DLLCHARACTERISTICS	20
 
 #ifndef __ASSEMBLY__
 

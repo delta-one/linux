@@ -93,8 +93,6 @@ SECTIONS
 		_decompressor_syms_end = .;
 	}
 
-	_decompressor_end = .;
-
 #ifdef CONFIG_KERNEL_UNCOMPRESSED
 	. = 0x100000;
 #else
@@ -104,17 +102,8 @@ SECTIONS
 		_compressed_start = .;
 		*(.vmlinux.bin.compressed)
 		_compressed_end = .;
-	}
-
-#define SB_TRAILER_SIZE 32
-	/* Trailer needed for Secure Boot */
-	. += SB_TRAILER_SIZE; /* make sure .sb.trailer does not overwrite the previous section */
-	. = ALIGN(4096) - SB_TRAILER_SIZE;
-	.sb.trailer : {
-		QUAD(0)
-		QUAD(0)
-		QUAD(0)
-		QUAD(0x000000207a49504c)
+		FILL(0xff);
+		. = ALIGN(4096);
 	}
 	_end = .;
 

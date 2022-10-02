@@ -26,8 +26,6 @@
  *   Yaozu (Eddie) Dong <Eddie.dong@intel.com>
  *   Port from Qemu.
  */
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
 #include <linux/mm.h>
 #include <linux/slab.h>
 #include <linux/bitops.h>
@@ -37,7 +35,7 @@
 #include "trace.h"
 
 #define pr_pic_unimpl(fmt, ...)	\
-	pr_err_ratelimited("pic: " fmt, ## __VA_ARGS__)
+	pr_err_ratelimited("kvm: pic: " fmt, ## __VA_ARGS__)
 
 static void pic_irq_request(struct kvm *kvm, int level);
 

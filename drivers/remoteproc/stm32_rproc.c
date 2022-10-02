@@ -223,13 +223,11 @@ static int stm32_rproc_prepare(struct rproc *rproc)
 	while (of_phandle_iterator_next(&it) == 0) {
 		rmem = of_reserved_mem_lookup(it.node);
 		if (!rmem) {
-			of_node_put(it.node);
 			dev_err(dev, "unable to acquire memory-region\n");
 			return -EINVAL;
 		}
 
 		if (stm32_rproc_pa_to_da(rproc, rmem->base, &da) < 0) {
-			of_node_put(it.node);
 			dev_err(dev, "memory region not valid %pa\n",
 				&rmem->base);
 			return -EINVAL;
@@ -256,10 +254,8 @@ static int stm32_rproc_prepare(struct rproc *rproc)
 							   it.node->name);
 		}
 
-		if (!mem) {
-			of_node_put(it.node);
+		if (!mem)
 			return -ENOMEM;
-		}
 
 		rproc_add_carveout(rproc, mem);
 		index++;
@@ -291,16 +287,8 @@ static void stm32_rproc_mb_vq_work(struct work_struct *work)
 	struct stm32_mbox *mb = container_of(work, struct stm32_mbox, vq_work);
 	struct rproc *rproc = dev_get_drvdata(mb->client.dev);
 
-	mutex_lock(&rproc->lock);
-
-	if (rproc->state != RPROC_RUNNING)
-		goto unlock_mutex;
-
 	if (rproc_vq_interrupt(rproc, mb->vq_id) == IRQ_NONE)
 		dev_dbg(&rproc->dev, "no message found in vq%d\n", mb->vq_id);
-
-unlock_mutex:
-	mutex_unlock(&rproc->lock);
 }
 
 static void stm32_rproc_mb_callback(struct mbox_client *cl, void *data)
@@ -867,7 +855,7 @@ free_rproc:
 	return ret;
 }
 
-static void stm32_rproc_remove(struct platform_device *pdev)
+static int stm32_rproc_remove(struct platform_device *pdev)
 {
 	struct rproc *rproc = platform_get_drvdata(pdev);
 	struct stm32_rproc *ddata = rproc->priv;
@@ -885,6 +873,8 @@ static void stm32_rproc_remove(struct platform_device *pdev)
 		device_init_wakeup(dev, false);
 	}
 	rproc_free(rproc);
+
+	return 0;
 }
 
 static int __maybe_unused stm32_rproc_suspend(struct device *dev)
@@ -914,7 +904,7 @@ static SIMPLE_DEV_PM_OPS(stm32_rproc_pm_ops,
 
 static struct platform_driver stm32_rproc_driver = {
 	.probe = stm32_rproc_probe,
-	.remove_new = stm32_rproc_remove,
+	.remove = stm32_rproc_remove,
 	.driver = {
 		.name = "stm32-rproc",
 		.pm = &stm32_rproc_pm_ops,

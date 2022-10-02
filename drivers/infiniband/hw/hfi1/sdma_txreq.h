@@ -19,7 +19,6 @@
 struct sdma_desc {
 	/* private:  don't use directly */
 	u64 qw[2];
-	void *pinning_ctx;
 };
 
 /**

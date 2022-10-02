@@ -3,7 +3,6 @@
 #include <linux/irqchip/arm-gic-v3.h>
 #include <linux/irq.h>
 #include <linux/irqdomain.h>
-#include <linux/kstrtox.h>
 #include <linux/kvm.h>
 #include <linux/kvm_host.h>
 #include <kvm/arm_vgic.h>
@@ -340,7 +339,7 @@ retry:
 	if (status) {
 		/* clear consumed data */
 		val &= ~(1 << bit_nr);
-		ret = vgic_write_guest_lock(kvm, ptr, &val, 1);
+		ret = kvm_write_guest_lock(kvm, ptr, &val, 1);
 		if (ret)
 			return ret;
 	}
@@ -351,23 +350,26 @@ retry:
  * The deactivation of the doorbell interrupt will trigger the
  * unmapping of the associated vPE.
  */
-static void unmap_all_vpes(struct kvm *kvm)
+static void unmap_all_vpes(struct vgic_dist *dist)
 {
-	struct vgic_dist *dist = &kvm->arch.vgic;
+	struct irq_desc *desc;
 	int i;
 
-	for (i = 0; i < dist->its_vm.nr_vpes; i++)
-		free_irq(dist->its_vm.vpes[i]->irq, kvm_get_vcpu(kvm, i));
+	for (i = 0; i < dist->its_vm.nr_vpes; i++) {
+		desc = irq_to_desc(dist->its_vm.vpes[i]->irq);
+		irq_domain_deactivate_irq(irq_desc_get_irq_data(desc));
+	}
 }
 
-static void map_all_vpes(struct kvm *kvm)
+static void map_all_vpes(struct vgic_dist *dist)
 {
-	struct vgic_dist *dist = &kvm->arch.vgic;
+	struct irq_desc *desc;
 	int i;
 
-	for (i = 0; i < dist->its_vm.nr_vpes; i++)
-		WARN_ON(vgic_v4_request_vpe_irq(kvm_get_vcpu(kvm, i),
-						dist->its_vm.vpes[i]->irq));
+	for (i = 0; i < dist->its_vm.nr_vpes; i++) {
+		desc = irq_to_desc(dist->its_vm.vpes[i]->irq);
+		irq_domain_activate_irq(irq_desc_get_irq_data(desc), false);
+	}
 }
 
 /**
@@ -392,7 +394,7 @@ int vgic_v3_save_pending_tables(struct kvm *kvm)
 	 * and enabling of the doorbells have already been done.
 	 */
 	if (kvm_vgic_global_state.has_gicv4_1) {
-		unmap_all_vpes(kvm);
+		unmap_all_vpes(dist);
 		vlpi_avail = true;
 	}
 
@@ -435,14 +437,14 @@ int vgic_v3_save_pending_tables(struct kvm *kvm)
 		else
 			val &= ~(1 << bit_nr);
 
-		ret = vgic_write_guest_lock(kvm, ptr, &val, 1);
+		ret = kvm_write_guest_lock(kvm, ptr, &val, 1);
 		if (ret)
 			goto out;
 	}
 
 out:
 	if (vlpi_avail)
-		map_all_vpes(kvm);
+		map_all_vpes(dist);
 
 	return ret;
 }
@@ -585,25 +587,25 @@ DEFINE_STATIC_KEY_FALSE(vgic_v3_cpuif_trap);
 
 static int __init early_group0_trap_cfg(char *buf)
 {
-	return kstrtobool(buf, &group0_trap);
+	return strtobool(buf, &group0_trap);
 }
 early_param("kvm-arm.vgic_v3_group0_trap", early_group0_trap_cfg);
 
 static int __init early_group1_trap_cfg(char *buf)
 {
-	return kstrtobool(buf, &group1_trap);
+	return strtobool(buf, &group1_trap);
 }
 early_param("kvm-arm.vgic_v3_group1_trap", early_group1_trap_cfg);
 
 static int __init early_common_trap_cfg(char *buf)
 {
-	return kstrtobool(buf, &common_trap);
+	return strtobool(buf, &common_trap);
 }
 early_param("kvm-arm.vgic_v3_common_trap", early_common_trap_cfg);
 
 static int __init early_gicv4_enable(char *buf)
 {
-	return kstrtobool(buf, &gicv4_enable);
+	return strtobool(buf, &gicv4_enable);
 }
 early_param("kvm-arm.vgic_v4_enable", early_gicv4_enable);
 
@@ -614,8 +616,6 @@ static const struct midr_range broken_seis[] = {
 	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_FIRESTORM_PRO),
 	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_ICESTORM_MAX),
 	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_FIRESTORM_MAX),
-	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_BLIZZARD),
-	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_AVALANCHE),
 	{},
 };
 

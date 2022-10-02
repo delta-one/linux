@@ -297,7 +297,7 @@ of the VFIO AP mediated device driver::
    |  MDEV CORE  |
    |   MODULE    |
    |   mdev.ko   |
-   | +---------+ | mdev_register_parent() +--------------+
+   | +---------+ | mdev_register_device() +--------------+
    | |Physical | +<-----------------------+              |
    | | device  | |                        |  vfio_ap.ko  |<-> matrix
    | |interface| +----------------------->+              |    device
@@ -553,6 +553,7 @@ These are the steps:
    * ZCRYPT
    * S390_AP_IOMMU
    * VFIO
+   * VFIO_MDEV
    * KVM
 
    If using make menuconfig select the following to build the vfio_ap module::

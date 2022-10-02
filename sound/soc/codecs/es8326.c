@@ -729,16 +729,14 @@ static int es8326_probe(struct snd_soc_component *component)
 	}
 	dev_dbg(component->dev, "jack-pol %x", es8326->jack_pol);
 
-	ret = device_property_read_u8(component->dev, "everest,interrupt-src",
-				      &es8326->interrupt_src);
+	ret = device_property_read_u8(component->dev, "everest,interrupt-src", &es8326->jack_pol);
 	if (ret != 0) {
 		dev_dbg(component->dev, "interrupt-src return %d", ret);
 		es8326->interrupt_src = ES8326_HP_DET_SRC_PIN9;
 	}
 	dev_dbg(component->dev, "interrupt-src %x", es8326->interrupt_src);
 
-	ret = device_property_read_u8(component->dev, "everest,interrupt-clk",
-				      &es8326->interrupt_clk);
+	ret = device_property_read_u8(component->dev, "everest,interrupt-clk", &es8326->jack_pol);
 	if (ret != 0) {
 		dev_dbg(component->dev, "interrupt-clk return %d", ret);
 		es8326->interrupt_clk = 0x45;
@@ -816,7 +814,8 @@ static const struct snd_soc_component_driver soc_component_dev_es8326 = {
 	.endianness		= 1,
 };
 
-static int es8326_i2c_probe(struct i2c_client *i2c)
+static int es8326_i2c_probe(struct i2c_client *i2c,
+			    const struct i2c_device_id *id)
 {
 	struct es8326_priv *es8326;
 	int ret;

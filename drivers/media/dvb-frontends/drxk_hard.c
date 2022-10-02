@@ -1585,7 +1585,7 @@ static int ctrl_power_mode(struct drxk_state *state, enum drx_power_mode *mode)
 		sio_cc_pwd_mode = SIO_CC_PWD_MODE_LEVEL_OSC;
 		break;
 	default:
-		/* Unknown sleep mode */
+		/* Unknow sleep mode */
 		return -EINVAL;
 	}
 
@@ -6660,7 +6660,7 @@ static int drxk_read_snr(struct dvb_frontend *fe, u16 *snr)
 static int drxk_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
 {
 	struct drxk_state *state = fe->demodulator_priv;
-	u16 err = 0;
+	u16 err;
 
 	dprintk(1, "\n");
 

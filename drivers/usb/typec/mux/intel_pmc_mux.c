@@ -369,22 +369,11 @@ pmc_usb_mux_usb4(struct pmc_usb_port *port, struct typec_mux_state *state)
 	return pmc_usb_command(port, (void *)&req, sizeof(req));
 }
 
-static int pmc_usb_mux_safe_state(struct pmc_usb_port *port,
-				  struct typec_mux_state *state)
+static int pmc_usb_mux_safe_state(struct pmc_usb_port *port)
 {
 	u8 msg;
 
 	if (IOM_PORT_ACTIVITY_IS(port->iom_status, SAFE_MODE))
-		return 0;
-
-	if ((IOM_PORT_ACTIVITY_IS(port->iom_status, DP) ||
-	     IOM_PORT_ACTIVITY_IS(port->iom_status, DP_MFD)) &&
-	     state->alt && state->alt->svid == USB_TYPEC_DP_SID)
-		return 0;
-
-	if ((IOM_PORT_ACTIVITY_IS(port->iom_status, TBT) ||
-	     IOM_PORT_ACTIVITY_IS(port->iom_status, ALT_MODE_TBT_USB)) &&
-	     state->alt && state->alt->svid == USB_TYPEC_TBT_SID)
 		return 0;
 
 	msg = PMC_USB_SAFE_MODE;
@@ -454,7 +443,7 @@ pmc_usb_mux_set(struct typec_mux_dev *mux, struct typec_mux_state *state)
 		return 0;
 
 	if (state->mode == TYPEC_STATE_SAFE)
-		return pmc_usb_mux_safe_state(port, state);
+		return pmc_usb_mux_safe_state(port);
 	if (state->mode == TYPEC_STATE_USB)
 		return pmc_usb_connect(port, port->role);
 
@@ -602,21 +591,20 @@ static int pmc_usb_probe_iom(struct pmc_usb *pmc)
 	int ret;
 
 	for (dev_id = &iom_acpi_ids[0]; dev_id->id[0]; dev_id++) {
-		adev = acpi_dev_get_first_match_dev(dev_id->id, NULL, -1);
-		if (adev)
+		if (acpi_dev_present(dev_id->id, NULL, -1)) {
+			pmc->iom_port_status_offset = (u32)dev_id->driver_data;
+			adev = acpi_dev_get_first_match_dev(dev_id->id, NULL, -1);
 			break;
+		}
 	}
+
 	if (!adev)
 		return -ENODEV;
 
-	pmc->iom_port_status_offset = (u32)dev_id->driver_data;
-
 	INIT_LIST_HEAD(&resource_list);
 	ret = acpi_dev_get_memory_resources(adev, &resource_list);
-	if (ret < 0) {
-		acpi_dev_put(adev);
+	if (ret < 0)
 		return ret;
-	}
 
 	rentry = list_first_entry_or_null(&resource_list, struct resource_entry, node);
 	if (rentry)

@@ -776,7 +776,8 @@ static void remove_sysfs_files(struct devfreq *devfreq,
  * @dev:	the device to add devfreq feature.
  * @profile:	device-specific profile to run devfreq.
  * @governor_name:	name of the policy to choose frequency.
- * @data:	devfreq driver pass to governors, governor should not change it.
+ * @data:	private data for the governor. The devfreq framework does not
+ *		touch this value.
  */
 struct devfreq *devfreq_add_device(struct device *dev,
 				   struct devfreq_dev_profile *profile,
@@ -1010,7 +1011,8 @@ static void devm_devfreq_dev_release(struct device *dev, void *res)
  * @dev:	the device to add devfreq feature.
  * @profile:	device-specific profile to run devfreq.
  * @governor_name:	name of the policy to choose frequency.
- * @data:	 devfreq driver pass to governors, governor should not change it.
+ * @data:	private data for the governor. The devfreq framework does not
+ *		touch this value.
  *
  * This function manages automatically the memory of devfreq device using device
  * resource management and simplify the free operation for memory of devfreq
@@ -1057,7 +1059,7 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
 	mutex_lock(&devfreq_list_lock);
 	list_for_each_entry(devfreq, &devfreq_list, node) {
 		if (devfreq->dev.parent
-			&& device_match_of_node(devfreq->dev.parent, node)) {
+			&& devfreq->dev.parent->of_node == node) {
 			mutex_unlock(&devfreq_list_lock);
 			return devfreq;
 		}
@@ -1988,7 +1990,7 @@ DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
 
 static int __init devfreq_init(void)
 {
-	devfreq_class = class_create("devfreq");
+	devfreq_class = class_create(THIS_MODULE, "devfreq");
 	if (IS_ERR(devfreq_class)) {
 		pr_err("%s: couldn't create class\n", __FILE__);
 		return PTR_ERR(devfreq_class);

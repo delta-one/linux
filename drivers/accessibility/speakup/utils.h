@@ -54,7 +54,7 @@ static inline int oops(const char *msg, const char *info)
 
 static inline struct st_key *hash_name(char *name)
 {
-	unsigned char *pn = (unsigned char *)name;
+	u_char *pn = (u_char *)name;
 	int hash = 0;
 
 	while (*pn) {

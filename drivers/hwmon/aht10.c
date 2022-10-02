@@ -79,6 +79,7 @@ struct aht10_data {
 
 /**
  * aht10_init() - Initialize an AHT10 chip
+ * @client: the i2c client associated with the AHT10
  * @data: the data associated with this AHT10 chip
  * Return: 0 if succesfull, 1 if not
  */
@@ -123,7 +124,7 @@ static int aht10_polltime_expired(struct aht10_data *data)
 
 /**
  * aht10_read_values() - read and parse the raw data from the AHT10
- * @data: the struct aht10_data to use for the lock
+ * @aht10_data: the struct aht10_data to use for the lock
  * Return: 0 if succesfull, 1 if not
  */
 static int aht10_read_values(struct aht10_data *data)
@@ -270,7 +271,7 @@ static int aht10_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
 	}
 }
 
-static const struct hwmon_channel_info * const aht10_info[] = {
+static const struct hwmon_channel_info *aht10_info[] = {
 	HWMON_CHANNEL_INFO(chip, HWMON_C_UPDATE_INTERVAL),
 	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
 	HWMON_CHANNEL_INFO(humidity, HWMON_H_INPUT),
@@ -288,7 +289,8 @@ static const struct hwmon_chip_info aht10_chip_info = {
 	.info = aht10_info,
 };
 
-static int aht10_probe(struct i2c_client *client)
+static int aht10_probe(struct i2c_client *client,
+		       const struct i2c_device_id *aht10_id)
 {
 	struct device *device = &client->dev;
 	struct device *hwmon_dev;

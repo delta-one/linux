@@ -67,6 +67,8 @@ static void omap_ohci_clock_power(struct ohci_omap_priv *priv, int on)
 	}
 }
 
+#ifdef	CONFIG_USB_OTG
+
 static void start_hnp(struct ohci_hcd *ohci)
 {
 	struct usb_hcd *hcd = ohci_to_hcd(ohci);
@@ -84,6 +86,8 @@ static void start_hnp(struct ohci_hcd *ohci)
 	omap_writel(l, OTG_CTRL);
 	local_irq_restore(flags);
 }
+
+#endif
 
 /*-------------------------------------------------------------------------*/
 
@@ -103,11 +107,16 @@ static int ohci_omap_reset(struct usb_hcd *hcd)
 		hcd->power_budget = 8;
 	}
 
+	/* boards can use OTG transceivers in non-OTG modes */
+	need_transceiver = need_transceiver
+			|| machine_is_omap_h2() || machine_is_omap_h3();
+
 	/* XXX OMAP16xx only */
 	if (config->ocpi_enable)
 		config->ocpi_enable();
 
-	if (IS_ENABLED(CONFIG_USB_OTG) && need_transceiver) {
+#ifdef	CONFIG_USB_OTG
+	if (need_transceiver) {
 		hcd->usb_phy = usb_get_phy(USB_PHY_TYPE_USB2);
 		if (!IS_ERR_OR_NULL(hcd->usb_phy)) {
 			int	status = otg_set_host(hcd->usb_phy->otg,
@@ -124,6 +133,7 @@ static int ohci_omap_reset(struct usb_hcd *hcd)
 		hcd->skip_phy_initialization = 1;
 		ohci->start_hnp = start_hnp;
 	}
+#endif
 
 	omap_ohci_clock_power(priv, 1);
 
@@ -140,7 +150,7 @@ static int ohci_omap_reset(struct usb_hcd *hcd)
 	}
 
 	/* board-specific power switching and overcurrent support */
-	if (machine_is_omap_osk()) {
+	if (machine_is_omap_osk() || machine_is_omap_innovator()) {
 		u32	rh = roothub_a (ohci);
 
 		/* power switching (ganged by default) */

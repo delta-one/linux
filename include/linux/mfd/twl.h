@@ -69,8 +69,6 @@ enum twl6030_module_ids {
 	TWL6030_MODULE_GPADC,
 	TWL6030_MODULE_GASGAUGE,
 
-	/* A few extra registers before the registers shared with the 6030 */
-	TWL6032_MODULE_CHARGE,
 	TWL6030_MODULE_LAST,
 };
 

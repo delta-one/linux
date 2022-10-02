@@ -78,7 +78,7 @@ static int graph_get_dai_id(struct device_node *ep)
 		 * only of_graph_parse_endpoint().
 		 * We need to check "reg" property
 		 */
-		if (of_property_present(ep,   "reg"))
+		if (of_get_property(ep,   "reg", NULL))
 			return info.id;
 
 		node = of_get_parent(ep);
@@ -417,7 +417,7 @@ static inline bool parse_as_dpcm_link(struct asoc_simple_priv *priv,
 	 * or has convert-xxx property
 	 */
 	if ((of_get_child_count(codec_port) > 1) ||
-	    asoc_simple_is_convert_required(adata))
+	    (adata->convert_rate || adata->convert_channels))
 		return true;
 
 	return false;
@@ -485,10 +485,8 @@ static int __graph_for_each_link(struct asoc_simple_priv *priv,
 			of_node_put(codec_ep);
 			of_node_put(codec_port);
 
-			if (ret < 0) {
-				of_node_put(cpu_ep);
+			if (ret < 0)
 				return ret;
-			}
 
 			codec_port_old = codec_port;
 		}
@@ -613,15 +611,9 @@ static int graph_count_noml(struct asoc_simple_priv *priv,
 		return -EINVAL;
 	}
 
-	/*
-	 * DON'T REMOVE platforms
-	 * see
-	 *	simple-card.c :: simple_count_noml()
-	 */
 	li->num[li->link].cpus		= 1;
-	li->num[li->link].platforms     = 1;
-
 	li->num[li->link].codecs	= 1;
+	li->num[li->link].platforms     = 1;
 
 	li->link += 1; /* 1xCPU-Codec */
 
@@ -643,11 +635,6 @@ static int graph_count_dpcm(struct asoc_simple_priv *priv,
 	}
 
 	if (li->cpu) {
-		/*
-		 * DON'T REMOVE platforms
-		 * see
-		 *	simple-card.c :: simple_count_noml()
-		 */
 		li->num[li->link].cpus		= 1;
 		li->num[li->link].platforms     = 1;
 

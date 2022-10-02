@@ -61,11 +61,11 @@ struct rxe_queue *rxe_queue_init(struct rxe_dev *rxe, int *num_elem,
 
 	/* num_elem == 0 is allowed, but uninteresting */
 	if (*num_elem < 0)
-		return NULL;
+		goto err1;
 
 	q = kzalloc(sizeof(*q), GFP_KERNEL);
 	if (!q)
-		return NULL;
+		goto err1;
 
 	q->rxe = rxe;
 	q->type = type;
@@ -100,6 +100,7 @@ struct rxe_queue *rxe_queue_init(struct rxe_dev *rxe, int *num_elem,
 
 err2:
 	kfree(q);
+err1:
 	return NULL;
 }
 
@@ -111,25 +112,23 @@ static int resize_finish(struct rxe_queue *q, struct rxe_queue *new_q,
 			 unsigned int num_elem)
 {
 	enum queue_type type = q->type;
-	u32 new_prod;
 	u32 prod;
 	u32 cons;
 
 	if (!queue_empty(q, q->type) && (num_elem < queue_count(q, type)))
 		return -EINVAL;
 
-	new_prod = queue_get_producer(new_q, type);
-	prod = queue_get_producer(q, type);
+	prod = queue_get_producer(new_q, type);
 	cons = queue_get_consumer(q, type);
 
-	while ((prod - cons) & q->index_mask) {
-		memcpy(queue_addr_from_index(new_q, new_prod),
+	while (!queue_empty(q, type)) {
+		memcpy(queue_addr_from_index(new_q, prod),
 		       queue_addr_from_index(q, cons), new_q->elem_size);
-		new_prod = queue_next_index(new_q, new_prod);
+		prod = queue_next_index(new_q, prod);
 		cons = queue_next_index(q, cons);
 	}
 
-	new_q->buf->producer_index = new_prod;
+	new_q->buf->producer_index = prod;
 	q->buf->consumer_index = cons;
 
 	/* update private index copies */

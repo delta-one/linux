@@ -511,7 +511,7 @@ pnfs_layout_io_set_failed(struct pnfs_layout_hdr *lo, u32 iomode)
 
 	spin_lock(&inode->i_lock);
 	pnfs_layout_set_fail_bit(lo, pnfs_iomode_to_fail_bit(iomode));
-	pnfs_mark_matching_lsegs_return(lo, &head, &range, 0);
+	pnfs_mark_matching_lsegs_invalid(lo, &head, &range, 0);
 	spin_unlock(&inode->i_lock);
 	pnfs_free_lseg_list(&head);
 	dprintk("%s Setting layout IOMODE_%s fail bit\n", __func__,
@@ -710,7 +710,6 @@ pnfs_mark_matching_lsegs_invalid(struct pnfs_layout_hdr *lo,
 			    u32 seq)
 {
 	struct pnfs_layout_segment *lseg, *next;
-	struct nfs_server *server = NFS_SERVER(lo->plh_inode);
 	int remaining = 0;
 
 	dprintk("%s:Begin lo %p\n", __func__, lo);
@@ -723,10 +722,8 @@ pnfs_mark_matching_lsegs_invalid(struct pnfs_layout_hdr *lo,
 				"offset %llu length %llu\n", __func__,
 				lseg, lseg->pls_range.iomode, lseg->pls_seq,
 				lseg->pls_range.offset, lseg->pls_range.length);
-			if (mark_lseg_invalid(lseg, tmp_list))
-				continue;
-			remaining++;
-			pnfs_lseg_cancel_io(server, lseg);
+			if (!mark_lseg_invalid(lseg, tmp_list))
+				remaining++;
 		}
 	dprintk("%s:Return %i\n", __func__, remaining);
 	return remaining;
@@ -2488,7 +2485,6 @@ pnfs_mark_matching_lsegs_return(struct pnfs_layout_hdr *lo,
 				u32 seq)
 {
 	struct pnfs_layout_segment *lseg, *next;
-	struct nfs_server *server = NFS_SERVER(lo->plh_inode);
 	int remaining = 0;
 
 	dprintk("%s:Begin lo %p\n", __func__, lo);
@@ -2511,7 +2507,6 @@ pnfs_mark_matching_lsegs_return(struct pnfs_layout_hdr *lo,
 				continue;
 			remaining++;
 			set_bit(NFS_LSEG_LAYOUTRETURN, &lseg->pls_flags);
-			pnfs_lseg_cancel_io(server, lseg);
 		}
 
 	if (remaining) {

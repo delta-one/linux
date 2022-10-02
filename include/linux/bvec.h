@@ -12,6 +12,7 @@
 #include <linux/errno.h>
 #include <linux/limits.h>
 #include <linux/minmax.h>
+#include <linux/mm.h>
 #include <linux/types.h>
 
 struct page;
@@ -33,46 +34,6 @@ struct bio_vec {
 	unsigned int	bv_len;
 	unsigned int	bv_offset;
 };
-
-/**
- * bvec_set_page - initialize a bvec based off a struct page
- * @bv:		bvec to initialize
- * @page:	page the bvec should point to
- * @len:	length of the bvec
- * @offset:	offset into the page
- */
-static inline void bvec_set_page(struct bio_vec *bv, struct page *page,
-		unsigned int len, unsigned int offset)
-{
-	bv->bv_page = page;
-	bv->bv_len = len;
-	bv->bv_offset = offset;
-}
-
-/**
- * bvec_set_folio - initialize a bvec based off a struct folio
- * @bv:		bvec to initialize
- * @folio:	folio the bvec should point to
- * @len:	length of the bvec
- * @offset:	offset into the folio
- */
-static inline void bvec_set_folio(struct bio_vec *bv, struct folio *folio,
-		unsigned int len, unsigned int offset)
-{
-	bvec_set_page(bv, &folio->page, len, offset);
-}
-
-/**
- * bvec_set_virt - initialize a bvec based on a virtual address
- * @bv:		bvec to initialize
- * @vaddr:	virtual address to set the bvec to
- * @len:	length of the bvec
- */
-static inline void bvec_set_virt(struct bio_vec *bv, void *vaddr,
-		unsigned int len)
-{
-	bvec_set_page(bv, virt_to_page(vaddr), len, offset_in_page(vaddr));
-}
 
 struct bvec_iter {
 	sector_t		bi_sector;	/* device address in 512 byte
@@ -279,5 +240,42 @@ static inline void *bvec_virt(struct bio_vec *bvec)
 	WARN_ON_ONCE(PageHighMem(bvec->bv_page));
 	return page_address(bvec->bv_page) + bvec->bv_offset;
 }
+
+#ifdef CONFIG_BLK_USE_PIN_USER_PAGES_FOR_DIO
+#define dio_w_pin_user_pages_fast(s, n, p, f)	pin_user_pages_fast(s, n, p, f)
+#define dio_w_pin_user_page(p)			pin_user_page(p)
+#define dio_w_iov_iter_pin_pages(i, p, m, n, s) iov_iter_pin_pages(i, p, m, n, s)
+#define dio_w_iov_iter_pin_pages_alloc(i, p, m, s) iov_iter_pin_pages_alloc(i, p, m, s)
+#define dio_w_unpin_user_page(p)		unpin_user_page(p)
+#define dio_w_unpin_user_pages(p, n)		unpin_user_pages(p, n)
+#define dio_w_unpin_user_pages_dirty_lock(p, n, d) unpin_user_pages_dirty_lock(p, n, d)
+
+#else
+#define dio_w_pin_user_pages_fast(s, n, p, f)	get_user_pages_fast(s, n, p, f)
+#define dio_w_pin_user_page(p)			get_page(p)
+#define dio_w_iov_iter_pin_pages(i, p, m, n, s) iov_iter_get_pages2(i, p, m, n, s)
+#define dio_w_iov_iter_pin_pages_alloc(i, p, m, s) iov_iter_get_pages_alloc2(i, p, m, s)
+#define dio_w_unpin_user_page(p)		put_page(p)
+
+static inline void dio_w_unpin_user_pages(struct page **pages,
+					  unsigned long npages)
+{
+	release_pages(pages, npages);
+}
+
+static inline void dio_w_unpin_user_pages_dirty_lock(struct page **pages,
+						     unsigned long npages,
+						     bool make_dirty)
+{
+	unsigned long i;
+
+	for (i = 0; i < npages; i++) {
+		if (make_dirty)
+			set_page_dirty_lock(pages[i]);
+		put_page(pages[i]);
+	}
+}
+
+#endif
 
 #endif /* __LINUX_BVEC_H */

@@ -58,7 +58,7 @@ put_task_struct_rcu_user(). This deferring of destruction ensures that
 any readers traversing the list will see valid ``p->tasks.next`` pointers
 and deletion/freeing can happen in parallel with traversal of the list.
 This pattern is also called an **existence lock**, since RCU refrains
-from invoking the delayed_put_task_struct() callback function until
+from invoking the delayed_put_task_struct() callback function until until
 all existing readers finish, which guarantees that the ``task_struct``
 object in question will remain in existence until after the completion
 of all RCU readers that might possibly have a reference to that object.

@@ -108,9 +108,9 @@ static inline void sun4i_pwm_writel(struct sun4i_pwm_chip *chip,
 	writel(val, chip->base + offset);
 }
 
-static int sun4i_pwm_get_state(struct pwm_chip *chip,
-			       struct pwm_device *pwm,
-			       struct pwm_state *state)
+static void sun4i_pwm_get_state(struct pwm_chip *chip,
+				struct pwm_device *pwm,
+				struct pwm_state *state)
 {
 	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
 	u64 clk_rate, tmp;
@@ -118,8 +118,6 @@ static int sun4i_pwm_get_state(struct pwm_chip *chip,
 	unsigned int prescaler;
 
 	clk_rate = clk_get_rate(sun4i_pwm->clk);
-	if (!clk_rate)
-		return -EINVAL;
 
 	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
 
@@ -134,7 +132,7 @@ static int sun4i_pwm_get_state(struct pwm_chip *chip,
 		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
 		state->polarity = PWM_POLARITY_NORMAL;
 		state->enabled = true;
-		return 0;
+		return;
 	}
 
 	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
@@ -144,7 +142,7 @@ static int sun4i_pwm_get_state(struct pwm_chip *chip,
 		prescaler = prescaler_table[PWM_REG_PRESCAL(val, pwm->hwpwm)];
 
 	if (prescaler == 0)
-		return -EINVAL;
+		return;
 
 	if (val & BIT_CH(PWM_ACT_STATE, pwm->hwpwm))
 		state->polarity = PWM_POLARITY_NORMAL;
@@ -164,8 +162,6 @@ static int sun4i_pwm_get_state(struct pwm_chip *chip,
 
 	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
 	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-
-	return 0;
 }
 
 static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
@@ -477,7 +473,7 @@ err_bus:
 	return ret;
 }
 
-static void sun4i_pwm_remove(struct platform_device *pdev)
+static int sun4i_pwm_remove(struct platform_device *pdev)
 {
 	struct sun4i_pwm_chip *sun4ichip = platform_get_drvdata(pdev);
 
@@ -485,6 +481,8 @@ static void sun4i_pwm_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(sun4ichip->bus_clk);
 	reset_control_assert(sun4ichip->rst);
+
+	return 0;
 }
 
 static struct platform_driver sun4i_pwm_driver = {
@@ -493,7 +491,7 @@ static struct platform_driver sun4i_pwm_driver = {
 		.of_match_table = sun4i_pwm_dt_ids,
 	},
 	.probe = sun4i_pwm_probe,
-	.remove_new = sun4i_pwm_remove,
+	.remove = sun4i_pwm_remove,
 };
 module_platform_driver(sun4i_pwm_driver);
 

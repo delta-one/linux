@@ -180,6 +180,7 @@ static struct pmbus_driver_info fsp3y_info[] = {
 			PMBUS_HAVE_FAN12,
 		.func[YM2151_PAGE_5VSB_LOG] =
 			PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT,
+			PMBUS_HAVE_IIN,
 		.read_word_data = fsp3y_read_word_data,
 		.read_byte_data = fsp3y_read_byte_data,
 	},
@@ -282,7 +283,7 @@ static struct i2c_driver fsp3y_driver = {
 	.driver = {
 		   .name = "fsp3y",
 		   },
-	.probe = fsp3y_probe,
+	.probe_new = fsp3y_probe,
 	.id_table = fsp3y_id
 };
 

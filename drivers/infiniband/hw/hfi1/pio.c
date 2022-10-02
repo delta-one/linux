@@ -820,7 +820,7 @@ struct send_context *sc_alloc(struct hfi1_devdata *dd, int type,
 	}
 
 	hfi1_cdbg(PIO,
-		  "Send context %u(%u) %s group %u credits %u credit_ctrl 0x%llx threshold %u",
+		  "Send context %u(%u) %s group %u credits %u credit_ctrl 0x%llx threshold %u\n",
 		  sw_index,
 		  hw_context,
 		  sc_type_name(type),
@@ -913,7 +913,8 @@ void sc_disable(struct send_context *sc)
 	spin_unlock(&sc->release_lock);
 
 	write_seqlock(&sc->waitlock);
-	list_splice_init(&sc->piowait, &wake_list);
+	if (!list_empty(&sc->piowait))
+		list_move(&sc->piowait, &wake_list);
 	write_sequnlock(&sc->waitlock);
 	while (!list_empty(&wake_list)) {
 		struct iowait *wait;

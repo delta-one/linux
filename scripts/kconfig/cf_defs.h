@@ -1,20 +1,27 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
  */
 
 #ifndef DEFS_H
 #define DEFS_H
 
-/* global variables */
+/* external variables */
+extern unsigned int sat_variable_nr;
+extern unsigned int tmp_variable_nr;
+extern struct fexpr *satmap; // map SAT variables to fexpr
+extern size_t satmap_size;
+
+extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
+extern struct fexpr *const_false;
+extern struct fexpr *const_true;
+extern struct fexpr *symbol_yes_fexpr;
+extern struct fexpr *symbol_mod_fexpr;
+extern struct fexpr *symbol_no_fexpr;
 
-#define printd(fmt...) do { \
-	if (CFDEBUG) \
-		printf(fmt); \
-} while (0)
-
+#define printd(fmt...) if (CFDEBUG) printf(fmt)
 
 /* different types for f_expr */
 enum fexpr_type {
@@ -221,23 +228,6 @@ struct prop_list {
 struct prop_node {
 	struct property *elem;
 	struct prop_node *next, *prev;
-};
-
-struct constants {
-	struct fexpr *const_false;
-	struct fexpr *const_true;
-	struct fexpr *symbol_yes_fexpr;
-	struct fexpr *symbol_mod_fexpr;
-	struct fexpr *symbol_no_fexpr;
-};
-
-struct cfdata {
-	unsigned int sat_variable_nr;
-	unsigned int tmp_variable_nr;
-	struct fexpr *satmap; // map SAT variables to fexpr
-	size_t satmap_size;
-	struct constants *constants;
-	struct sdv_list *sdv_symbols; // array with conflict-symbols
 };
 
 #endif

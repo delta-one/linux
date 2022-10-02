@@ -5,6 +5,7 @@
  * Copyright (C) 2021, Alibaba Cloud
  */
 #include <linux/module.h>
+#include <linux/buffer_head.h>
 #include <linux/statfs.h>
 #include <linux/parser.h>
 #include <linux/seq_file.h>
@@ -52,21 +53,18 @@ void _erofs_info(struct super_block *sb, const char *function,
 
 static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
 {
-	size_t len = 1 << EROFS_SB(sb)->blkszbits;
 	struct erofs_super_block *dsb;
 	u32 expected_crc, crc;
 
-	if (len > EROFS_SUPER_OFFSET)
-		len -= EROFS_SUPER_OFFSET;
-
-	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET, len, GFP_KERNEL);
+	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
+		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
 	if (!dsb)
 		return -ENOMEM;
 
 	expected_crc = le32_to_cpu(dsb->checksum);
 	dsb->checksum = 0;
 	/* to allow for x86 boot sectors and other oddities. */
-	crc = crc32c(~0, dsb, len);
+	crc = crc32c(~0, dsb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
 	kfree(dsb);
 
 	if (crc != expected_crc) {
@@ -126,19 +124,20 @@ static bool check_layout_compatibility(struct super_block *sb,
 	return true;
 }
 
+#ifdef CONFIG_EROFS_FS_ZIP
 /* read variable-sized metadata, offset will be aligned by 4-byte */
-void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
-			  erofs_off_t *offset, int *lengthp)
+static void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
+				 erofs_off_t *offset, int *lengthp)
 {
 	u8 *buffer, *ptr;
 	int len, i, cnt;
 
 	*offset = round_up(*offset, 4);
-	ptr = erofs_bread(buf, erofs_blknr(sb, *offset), EROFS_KMAP);
+	ptr = erofs_read_metabuf(buf, sb, erofs_blknr(*offset), EROFS_KMAP);
 	if (IS_ERR(ptr))
 		return ptr;
 
-	len = le16_to_cpu(*(__le16 *)&ptr[erofs_blkoff(sb, *offset)]);
+	len = le16_to_cpu(*(__le16 *)&ptr[erofs_blkoff(*offset)]);
 	if (!len)
 		len = U16_MAX + 1;
 	buffer = kmalloc(len, GFP_KERNEL);
@@ -148,20 +147,19 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
 	*lengthp = len;
 
 	for (i = 0; i < len; i += cnt) {
-		cnt = min_t(int, sb->s_blocksize - erofs_blkoff(sb, *offset),
-			    len - i);
-		ptr = erofs_bread(buf, erofs_blknr(sb, *offset), EROFS_KMAP);
+		cnt = min(EROFS_BLKSIZ - (int)erofs_blkoff(*offset), len - i);
+		ptr = erofs_read_metabuf(buf, sb, erofs_blknr(*offset),
+					 EROFS_KMAP);
 		if (IS_ERR(ptr)) {
 			kfree(buffer);
 			return ptr;
 		}
-		memcpy(buffer + i, ptr + erofs_blkoff(sb, *offset), cnt);
+		memcpy(buffer + i, ptr + erofs_blkoff(*offset), cnt);
 		*offset += cnt;
 	}
 	return buffer;
 }
 
-#ifdef CONFIG_EROFS_FS_ZIP
 static int erofs_load_compr_cfgs(struct super_block *sb,
 				 struct erofs_super_block *dsb)
 {
@@ -178,7 +176,6 @@ static int erofs_load_compr_cfgs(struct super_block *sb,
 		return -EINVAL;
 	}
 
-	erofs_init_metabuf(&buf, sb);
 	offset = EROFS_SUPER_OFFSET + sbi->sb_size;
 	alg = 0;
 	for (algs = sbi->available_compr_algs; algs; algs >>= 1, ++alg) {
@@ -232,10 +229,10 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
 	struct block_device *bdev;
 	void *ptr;
 
-	ptr = erofs_read_metabuf(buf, sb, erofs_blknr(sb, *pos), EROFS_KMAP);
+	ptr = erofs_read_metabuf(buf, sb, erofs_blknr(*pos), EROFS_KMAP);
 	if (IS_ERR(ptr))
 		return PTR_ERR(ptr);
-	dis = ptr + erofs_blkoff(sb, *pos);
+	dis = ptr + erofs_blkoff(*pos);
 
 	if (!dif->path) {
 		if (!dis->tag[0]) {
@@ -248,11 +245,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
 	}
 
 	if (erofs_is_fscache_mode(sb)) {
-		fscache = erofs_fscache_register_cookie(sb, dif->path, 0);
+		fscache = erofs_fscache_register_cookie(sb, dif->path, false);
 		if (IS_ERR(fscache))
 			return PTR_ERR(fscache);
 		dif->fscache = fscache;
-	} else if (!sbi->devs->flatdev) {
+	} else {
 		bdev = blkdev_get_by_path(dif->path, FMODE_READ | FMODE_EXCL,
 					  sb->s_type);
 		if (IS_ERR(bdev))
@@ -294,9 +291,6 @@ static int erofs_scan_devices(struct super_block *sb,
 	if (!ondisk_extradevs)
 		return 0;
 
-	if (!sbi->devs->extra_devices && !erofs_is_fscache_mode(sb))
-		sbi->devs->flatdev = true;
-
 	sbi->device_id_mask = roundup_pow_of_two(ondisk_extradevs + 1) - 1;
 	pos = le16_to_cpu(dsb->devt_slotoff) * EROFS_DEVT_SLOT_SIZE;
 	down_read(&sbi->devs->rwsem);
@@ -336,6 +330,7 @@ static int erofs_read_superblock(struct super_block *sb)
 	struct erofs_sb_info *sbi;
 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
 	struct erofs_super_block *dsb;
+	unsigned int blkszbits;
 	void *data;
 	int ret;
 
@@ -354,16 +349,6 @@ static int erofs_read_superblock(struct super_block *sb)
 		goto out;
 	}
 
-	sbi->blkszbits  = dsb->blkszbits;
-	if (sbi->blkszbits < 9 || sbi->blkszbits > PAGE_SHIFT) {
-		erofs_err(sb, "blkszbits %u isn't supported", sbi->blkszbits);
-		goto out;
-	}
-	if (dsb->dirblkbits) {
-		erofs_err(sb, "dirblkbits %u isn't supported", dsb->dirblkbits);
-		goto out;
-	}
-
 	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
 	if (erofs_sb_has_sb_chksum(sbi)) {
 		ret = erofs_superblock_csum_verify(sb, data);
@@ -372,11 +357,19 @@ static int erofs_read_superblock(struct super_block *sb)
 	}
 
 	ret = -EINVAL;
+	blkszbits = dsb->blkszbits;
+	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+	if (blkszbits != LOG_BLOCK_SIZE) {
+		erofs_err(sb, "blkszbits %u isn't supported on this platform",
+			  blkszbits);
+		goto out;
+	}
+
 	if (!check_layout_compatibility(sb, dsb))
 		goto out;
 
 	sbi->sb_size = 128 + dsb->sb_extslots * EROFS_SB_EXTSLOT_SIZE;
-	if (sbi->sb_size > PAGE_SIZE - EROFS_SUPER_OFFSET) {
+	if (sbi->sb_size > EROFS_BLKSIZ) {
 		erofs_err(sb, "invalid sb_extslots %u (more than a fs block)",
 			  sbi->sb_size);
 		goto out;
@@ -385,12 +378,9 @@ static int erofs_read_superblock(struct super_block *sb)
 	sbi->meta_blkaddr = le32_to_cpu(dsb->meta_blkaddr);
 #ifdef CONFIG_EROFS_FS_XATTR
 	sbi->xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
-	sbi->xattr_prefix_start = le32_to_cpu(dsb->xattr_prefix_start);
-	sbi->xattr_prefix_count = dsb->xattr_prefix_count;
 #endif
 	sbi->islotbits = ilog2(sizeof(struct erofs_inode_compact));
 	sbi->root_nid = le16_to_cpu(dsb->root_nid);
-	sbi->packed_nid = le64_to_cpu(dsb->packed_nid);
 	sbi->inos = le64_to_cpu(dsb->inos);
 
 	sbi->build_time = le64_to_cpu(dsb->build_time);
@@ -417,12 +407,10 @@ static int erofs_read_superblock(struct super_block *sb)
 	/* handle multiple devices */
 	ret = erofs_scan_devices(sb, dsb);
 
+	if (erofs_sb_has_ztailpacking(sbi))
+		erofs_info(sb, "EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
 	if (erofs_is_fscache_mode(sb))
 		erofs_info(sb, "EXPERIMENTAL fscache-based on-demand read feature in use. Use at your own risk!");
-	if (erofs_sb_has_fragments(sbi))
-		erofs_info(sb, "EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
-	if (erofs_sb_has_dedupe(sbi))
-		erofs_info(sb, "EXPERIMENTAL global deduplication feature in use. Use at your own risk!");
 out:
 	erofs_put_metabuf(&buf);
 	return ret;
@@ -574,25 +562,26 @@ static int erofs_fc_parse_param(struct fs_context *fc,
 		}
 		++ctx->devs->extra_devices;
 		break;
+	case Opt_fsid:
 #ifdef CONFIG_EROFS_FS_ONDEMAND
-	case Opt_fsid:
-		kfree(ctx->fsid);
-		ctx->fsid = kstrdup(param->string, GFP_KERNEL);
-		if (!ctx->fsid)
+		kfree(ctx->opt.fsid);
+		ctx->opt.fsid = kstrdup(param->string, GFP_KERNEL);
+		if (!ctx->opt.fsid)
 			return -ENOMEM;
-		break;
-	case Opt_domain_id:
-		kfree(ctx->domain_id);
-		ctx->domain_id = kstrdup(param->string, GFP_KERNEL);
-		if (!ctx->domain_id)
-			return -ENOMEM;
-		break;
 #else
-	case Opt_fsid:
-	case Opt_domain_id:
-		errorfc(fc, "%s option not supported", erofs_fs_parameters[opt].name);
-		break;
+		errorfc(fc, "fsid option not supported");
 #endif
+		break;
+	case Opt_domain_id:
+#ifdef CONFIG_EROFS_FS_ONDEMAND
+		kfree(ctx->opt.domain_id);
+		ctx->opt.domain_id = kstrdup(param->string, GFP_KERNEL);
+		if (!ctx->opt.domain_id)
+			return -ENOMEM;
+#else
+		errorfc(fc, "domain_id option not supported");
+#endif
+		break;
 	default:
 		return -ENOPARAM;
 	}
@@ -664,7 +653,7 @@ static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
 static struct inode *erofs_nfs_get_inode(struct super_block *sb,
 					 u64 ino, u32 generation)
 {
-	return erofs_iget(sb, ino);
+	return erofs_iget(sb, ino, false);
 }
 
 static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
@@ -690,7 +679,7 @@ static struct dentry *erofs_get_parent(struct dentry *child)
 	err = erofs_namei(d_inode(child), &dotdot_name, &nid, &d_type);
 	if (err)
 		return ERR_PTR(err);
-	return d_obtain_alias(erofs_iget(child->d_sb, nid));
+	return d_obtain_alias(erofs_iget(child->d_sb, nid, d_type == FT_DIR));
 }
 
 static const struct export_operations erofs_export_ops = {
@@ -724,17 +713,14 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
 
 	sb->s_fs_info = sbi;
 	sbi->opt = ctx->opt;
+	ctx->opt.fsid = NULL;
+	ctx->opt.domain_id = NULL;
 	sbi->devs = ctx->devs;
 	ctx->devs = NULL;
-	sbi->fsid = ctx->fsid;
-	ctx->fsid = NULL;
-	sbi->domain_id = ctx->domain_id;
-	ctx->domain_id = NULL;
 
-	sbi->blkszbits = PAGE_SHIFT;
 	if (erofs_is_fscache_mode(sb)) {
-		sb->s_blocksize = PAGE_SIZE;
-		sb->s_blocksize_bits = PAGE_SHIFT;
+		sb->s_blocksize = EROFS_BLKSIZ;
+		sb->s_blocksize_bits = LOG_BLOCK_SIZE;
 
 		err = erofs_fscache_register_fs(sb);
 		if (err)
@@ -744,8 +730,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
 		if (err)
 			return err;
 	} else {
-		if (!sb_set_blocksize(sb, PAGE_SIZE)) {
-			errorfc(fc, "failed to set initial blksize");
+		if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
+			erofs_err(sb, "failed to set erofs blksize");
 			return -EINVAL;
 		}
 
@@ -758,23 +744,11 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
 	if (err)
 		return err;
 
-	if (sb->s_blocksize_bits != sbi->blkszbits) {
-		if (erofs_is_fscache_mode(sb)) {
-			errorfc(fc, "unsupported blksize for fscache mode");
-			return -EINVAL;
-		}
-		if (!sb_set_blocksize(sb, 1 << sbi->blkszbits)) {
-			errorfc(fc, "failed to set erofs blksize");
-			return -EINVAL;
-		}
-	}
-
 	if (test_opt(&sbi->opt, DAX_ALWAYS)) {
+		BUILD_BUG_ON(EROFS_BLKSIZ != PAGE_SIZE);
+
 		if (!sbi->dax_dev) {
 			errorfc(fc, "DAX unsupported by block device. Turning off DAX.");
-			clear_opt(&sbi->opt, DAX_ALWAYS);
-		} else if (sbi->blkszbits != PAGE_SHIFT) {
-			errorfc(fc, "unsupported blocksize for DAX");
 			clear_opt(&sbi->opt, DAX_ALWAYS);
 		}
 	}
@@ -793,7 +767,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
 #endif
 
 	/* get the root inode */
-	inode = erofs_iget(sb, ROOT_NID(sbi));
+	inode = erofs_iget(sb, ROOT_NID(sbi), true);
 	if (IS_ERR(inode))
 		return PTR_ERR(inode);
 
@@ -810,19 +784,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
 
 	erofs_shrinker_register(sb);
 	/* sb->s_umount is already locked, SB_ACTIVE and SB_BORN are not set */
-	if (erofs_sb_has_fragments(sbi) && sbi->packed_nid) {
-		sbi->packed_inode = erofs_iget(sb, sbi->packed_nid);
-		if (IS_ERR(sbi->packed_inode)) {
-			err = PTR_ERR(sbi->packed_inode);
-			sbi->packed_inode = NULL;
-			return err;
-		}
-	}
 	err = erofs_init_managed_cache(sb);
-	if (err)
-		return err;
-
-	err = erofs_xattr_prefixes_init(sb);
 	if (err)
 		return err;
 
@@ -843,7 +805,7 @@ static int erofs_fc_get_tree(struct fs_context *fc)
 {
 	struct erofs_fs_context *ctx = fc->fs_private;
 
-	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->opt.fsid)
 		return get_tree_nodev(fc, erofs_fc_fill_super);
 
 	return get_tree_bdev(fc, erofs_fc_fill_super);
@@ -856,9 +818,6 @@ static int erofs_fc_reconfigure(struct fs_context *fc)
 	struct erofs_fs_context *ctx = fc->fs_private;
 
 	DBG_BUGON(!sb_rdonly(sb));
-
-	if (ctx->fsid || ctx->domain_id)
-		erofs_info(sb, "ignoring reconfiguration for fsid|domain_id.");
 
 	if (test_opt(&ctx->opt, POSIX_ACL))
 		fc->sb_flags |= SB_POSIXACL;
@@ -899,8 +858,8 @@ static void erofs_fc_free(struct fs_context *fc)
 	struct erofs_fs_context *ctx = fc->fs_private;
 
 	erofs_free_dev_context(ctx->devs);
-	kfree(ctx->fsid);
-	kfree(ctx->domain_id);
+	kfree(ctx->opt.fsid);
+	kfree(ctx->opt.domain_id);
 	kfree(ctx);
 }
 
@@ -970,8 +929,8 @@ static void erofs_kill_sb(struct super_block *sb)
 	erofs_free_dev_context(sbi->devs);
 	fs_put_dax(sbi->dax_dev, NULL);
 	erofs_fscache_unregister_fs(sb);
-	kfree(sbi->fsid);
-	kfree(sbi->domain_id);
+	kfree(sbi->opt.fsid);
+	kfree(sbi->opt.domain_id);
 	kfree(sbi);
 	sb->s_fs_info = NULL;
 }
@@ -985,15 +944,10 @@ static void erofs_put_super(struct super_block *sb)
 
 	erofs_unregister_sysfs(sb);
 	erofs_shrinker_unregister(sb);
-	erofs_xattr_prefixes_cleanup(sb);
 #ifdef CONFIG_EROFS_FS_ZIP
 	iput(sbi->managed_cache);
 	sbi->managed_cache = NULL;
 #endif
-	iput(sbi->packed_inode);
-	sbi->packed_inode = NULL;
-	erofs_free_dev_context(sbi->devs);
-	sbi->devs = NULL;
 	erofs_fscache_unregister_fs(sb);
 }
 
@@ -1084,7 +1038,7 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
 		id = huge_encode_dev(sb->s_bdev->bd_dev);
 
 	buf->f_type = sb->s_magic;
-	buf->f_bsize = sb->s_blocksize;
+	buf->f_bsize = EROFS_BLKSIZ;
 	buf->f_blocks = sbi->total_blocks;
 	buf->f_bfree = buf->f_bavail = 0;
 
@@ -1127,10 +1081,10 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
 	if (test_opt(opt, DAX_NEVER))
 		seq_puts(seq, ",dax=never");
 #ifdef CONFIG_EROFS_FS_ONDEMAND
-	if (sbi->fsid)
-		seq_printf(seq, ",fsid=%s", sbi->fsid);
-	if (sbi->domain_id)
-		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
+	if (opt->fsid)
+		seq_printf(seq, ",fsid=%s", opt->fsid);
+	if (opt->domain_id)
+		seq_printf(seq, ",domain_id=%s", opt->domain_id);
 #endif
 	return 0;
 }

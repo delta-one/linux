@@ -8,11 +8,12 @@
 
 #define pr_fmt(fmt) "Power allocator: " fmt
 
+#include <linux/rculist.h>
 #include <linux/slab.h>
 #include <linux/thermal.h>
 
 #define CREATE_TRACE_POINTS
-#include "thermal_trace_ipa.h"
+#include <trace/events/thermal_power_allocator.h>
 
 #include "thermal_core.h"
 
@@ -129,7 +130,7 @@ static void estimate_pid_constants(struct thermal_zone_device *tz,
 	int ret;
 	s32 k_i;
 
-	ret = __thermal_zone_get_trip(tz, trip_switch_on, &trip);
+	ret = thermal_zone_get_trip(tz, trip_switch_on, &trip);
 	if (!ret)
 		temperature_threshold -= trip.temperature;
 
@@ -521,7 +522,7 @@ static void get_governor_trips(struct thermal_zone_device *tz,
 		struct thermal_trip trip;
 		int ret;
 
-		ret = __thermal_zone_get_trip(tz, i, &trip);
+		ret = thermal_zone_get_trip(tz, i, &trip);
 		if (ret) {
 			dev_warn(&tz->device,
 				 "Failed to get trip point %d type: %d\n", i,
@@ -657,8 +658,8 @@ static int power_allocator_bind(struct thermal_zone_device *tz)
 	get_governor_trips(tz, params);
 
 	if (tz->num_trips > 0) {
-		ret = __thermal_zone_get_trip(tz, params->trip_max_desired_temperature,
-					      &trip);
+		ret = thermal_zone_get_trip(tz, params->trip_max_desired_temperature,
+					    &trip);
 		if (!ret)
 			estimate_pid_constants(tz, tz->tzp->sustainable_power,
 					       params->trip_switch_on,
@@ -708,7 +709,7 @@ static int power_allocator_throttle(struct thermal_zone_device *tz, int trip_id)
 	if (trip_id != params->trip_max_desired_temperature)
 		return 0;
 
-	ret = __thermal_zone_get_trip(tz, params->trip_switch_on, &trip);
+	ret = thermal_zone_get_trip(tz, params->trip_switch_on, &trip);
 	if (!ret && (tz->temperature < trip.temperature)) {
 		update = (tz->last_temperature >= trip.temperature);
 		tz->passive = 0;
@@ -719,7 +720,7 @@ static int power_allocator_throttle(struct thermal_zone_device *tz, int trip_id)
 
 	tz->passive = 1;
 
-	ret = __thermal_zone_get_trip(tz, params->trip_max_desired_temperature, &trip);
+	ret = thermal_zone_get_trip(tz, params->trip_max_desired_temperature, &trip);
 	if (ret) {
 		dev_warn(&tz->device, "Failed to get the maximum desired temperature: %d\n",
 			 ret);

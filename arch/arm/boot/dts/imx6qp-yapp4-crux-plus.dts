@@ -33,10 +33,6 @@
 	status = "okay";
 };
 
-&reg_pu {
-	regulator-always-on;
-};
-
 &reg_usb_h1_vbus {
 	status = "okay";
 };

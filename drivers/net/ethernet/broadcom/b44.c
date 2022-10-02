@@ -196,6 +196,28 @@ static int b44_wait_bit(struct b44 *bp, unsigned long reg,
 	return 0;
 }
 
+static inline void __b44_cam_read(struct b44 *bp, unsigned char *data, int index)
+{
+	u32 val;
+
+	bw32(bp, B44_CAM_CTRL, (CAM_CTRL_READ |
+			    (index << CAM_CTRL_INDEX_SHIFT)));
+
+	b44_wait_bit(bp, B44_CAM_CTRL, CAM_CTRL_BUSY, 100, 1);
+
+	val = br32(bp, B44_CAM_DATA_LO);
+
+	data[2] = (val >> 24) & 0xFF;
+	data[3] = (val >> 16) & 0xFF;
+	data[4] = (val >> 8) & 0xFF;
+	data[5] = (val >> 0) & 0xFF;
+
+	val = br32(bp, B44_CAM_DATA_HI);
+
+	data[0] = (val >> 8) & 0xFF;
+	data[1] = (val >> 0) & 0xFF;
+}
+
 static inline void __b44_cam_write(struct b44 *bp,
 				   const unsigned char *data, int index)
 {
@@ -1658,7 +1680,7 @@ static void b44_get_stats64(struct net_device *dev,
 	unsigned int start;
 
 	do {
-		start = u64_stats_fetch_begin(&hwstat->syncp);
+		start = u64_stats_fetch_begin_irq(&hwstat->syncp);
 
 		/* Convert HW stats into rtnl_link_stats64 stats. */
 		nstat->rx_packets = hwstat->rx_pkts;
@@ -1692,7 +1714,7 @@ static void b44_get_stats64(struct net_device *dev,
 		/* Carrier lost counter seems to be broken for some devices */
 		nstat->tx_carrier_errors = hwstat->tx_carrier_lost;
 #endif
-	} while (u64_stats_fetch_retry(&hwstat->syncp, start));
+	} while (u64_stats_fetch_retry_irq(&hwstat->syncp, start));
 
 }
 
@@ -2060,12 +2082,12 @@ static void b44_get_ethtool_stats(struct net_device *dev,
 	do {
 		data_src = &hwstat->tx_good_octets;
 		data_dst = data;
-		start = u64_stats_fetch_begin(&hwstat->syncp);
+		start = u64_stats_fetch_begin_irq(&hwstat->syncp);
 
 		for (i = 0; i < ARRAY_SIZE(b44_gstrings); i++)
 			*data_dst++ = *data_src++;
 
-	} while (u64_stats_fetch_retry(&hwstat->syncp, start));
+	} while (u64_stats_fetch_retry_irq(&hwstat->syncp, start));
 }
 
 static void b44_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
@@ -2353,7 +2375,7 @@ static int b44_init_one(struct ssb_device *sdev,
 	bp->tx_pending = B44_DEF_TX_RING_PENDING;
 
 	dev->netdev_ops = &b44_netdev_ops;
-	netif_napi_add(dev, &bp->napi, b44_poll);
+	netif_napi_add(dev, &bp->napi, b44_poll, 64);
 	dev->watchdog_timeo = B44_TX_TIMEOUT;
 	dev->min_mtu = B44_MIN_MTU;
 	dev->max_mtu = B44_MAX_MTU;

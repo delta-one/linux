@@ -47,14 +47,13 @@
 #define decode_deallocate_maxsz		(op_decode_hdr_maxsz)
 #define encode_read_plus_maxsz		(op_encode_hdr_maxsz + \
 					 encode_stateid_maxsz + 3)
-#define NFS42_READ_PLUS_DATA_SEGMENT_SIZE \
-					(1 /* data_content4 */ + \
+#define NFS42_READ_PLUS_SEGMENT_SIZE	(1 /* data_content4 */ + \
 					 2 /* data_info4.di_offset */ + \
-					 1 /* data_info4.di_length */)
+					 2 /* data_info4.di_length */)
 #define decode_read_plus_maxsz		(op_decode_hdr_maxsz + \
 					 1 /* rpr_eof */ + \
 					 1 /* rpr_contents count */ + \
-					 NFS42_READ_PLUS_DATA_SEGMENT_SIZE)
+					 2 * NFS42_READ_PLUS_SEGMENT_SIZE)
 #define encode_seek_maxsz		(op_encode_hdr_maxsz + \
 					 encode_stateid_maxsz + \
 					 2 /* offset */ + \
@@ -570,14 +569,6 @@ static int decode_listxattrs(struct xdr_stream *xdr,
 		 */
 		if (status == -ETOOSMALL)
 			status = -ERANGE;
-		/*
-		 * Special case: for LISTXATTRS, NFS4ERR_NOXATTR
-		 * should be translated to success with zero-length reply.
-		 */
-		if (status == -ENODATA) {
-			res->eof = true;
-			status = 0;
-		}
 		goto out;
 	}
 
@@ -1122,6 +1113,7 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
 	uint32_t segments;
 	struct read_plus_segment *segs;
 	int status, i;
+	char scratch_buf[16];
 	__be32 *p;
 
 	status = decode_op_hdr(xdr, OP_READ_PLUS);
@@ -1142,6 +1134,7 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
 	if (!segs)
 		return -ENOMEM;
 
+	xdr_set_scratch_buffer(xdr, &scratch_buf, 32);
 	status = -EIO;
 	for (i = 0; i < segments; i++) {
 		status = decode_read_plus_segment(xdr, &segs[i]);
@@ -1345,8 +1338,6 @@ static int nfs4_xdr_dec_read_plus(struct rpc_rqst *rqstp,
 	struct nfs_pgio_res *res = data;
 	struct compound_hdr hdr;
 	int status;
-
-	xdr_set_scratch_buffer(xdr, res->scratch, sizeof(res->scratch));
 
 	status = decode_compound_hdr(xdr, &hdr);
 	if (status)

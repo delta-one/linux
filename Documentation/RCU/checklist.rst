@@ -70,7 +70,7 @@ over a rather long period of time, but improvements are always welcome!
 	can serve as rcu_read_lock_sched(), but is less readable and
 	prevents lockdep from detecting locking issues.
 
-	Please note that you *cannot* rely on code known to be built
+	Please not that you *cannot* rely on code known to be built
 	only in non-preemptible kernels.  Such code can and will break,
 	especially in kernels built with CONFIG_PREEMPT_COUNT=y.
 
@@ -526,8 +526,5 @@ over a rather long period of time, but improvements are always welcome!
 	-	synchronize_rcu_tasks() and rcu_barrier_tasks()
 	-	synchronize_tasks_rude() and rcu_barrier_tasks_rude()
 	-	synchronize_tasks_trace() and rcu_barrier_tasks_trace()
-
-	If necessary, you can use something like workqueues to execute
-	the requisite pair of functions concurrently.
 
 	See rcubarrier.rst for more information.

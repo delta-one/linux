@@ -17,7 +17,6 @@
 #include <net/netlink.h>
 #include <net/act_api.h>
 #include <net/pkt_cls.h>
-#include <net/tc_wrapper.h>
 
 /*
  * 1. For now we assume that route tags < 256.
@@ -122,9 +121,8 @@ static inline int route4_hash_wild(void)
 	return 0;						\
 }
 
-TC_INDIRECT_SCOPE int route4_classify(struct sk_buff *skb,
-				      const struct tcf_proto *tp,
-				      struct tcf_result *res)
+static int route4_classify(struct sk_buff *skb, const struct tcf_proto *tp,
+			   struct tcf_result *res)
 {
 	struct route4_head *head = rcu_dereference_bh(tp->root);
 	struct dst_entry *dst;
@@ -651,7 +649,12 @@ static void route4_bind_class(void *fh, u32 classid, unsigned long cl, void *q,
 {
 	struct route4_filter *f = fh;
 
-	tc_cls_bind_class(classid, cl, q, &f->res, base);
+	if (f && f->res.classid == classid) {
+		if (cl)
+			__tcf_bind_filter(q, &f->res, base);
+		else
+			__tcf_unbind_filter(q, &f->res);
+	}
 }
 
 static struct tcf_proto_ops cls_route4_ops __read_mostly = {

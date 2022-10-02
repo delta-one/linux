@@ -47,7 +47,7 @@ static const struct i2c_device_id tps546d24_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, tps546d24_id);
 
-static const struct of_device_id __maybe_unused tps546d24_of_match[] = {
+static const struct of_device_id tps546d24_of_match[] = {
 	{.compatible = "ti,tps546d24"},
 	{}
 };
@@ -59,7 +59,7 @@ static struct i2c_driver tps546d24_driver = {
 		   .name = "tps546d24",
 		   .of_match_table = of_match_ptr(tps546d24_of_match),
 	   },
-	.probe = tps546d24_probe,
+	.probe_new = tps546d24_probe,
 	.id_table = tps546d24_id,
 };
 

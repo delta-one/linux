@@ -1166,13 +1166,6 @@ static const struct dmi_system_id force_combo_jack_table[] = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "Geminilake")
 		}
 	},
-	{
-		.ident = "Intel Kabylake R RVP",
-		.matches = {
-			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "Kabylake Client platform")
-		}
-	},
 	{ }
 };
 
@@ -1311,7 +1304,7 @@ static struct i2c_driver rt298_i2c_driver = {
 		   .name = "rt298",
 		   .acpi_match_table = ACPI_PTR(rt298_acpi_match),
 		   },
-	.probe = rt298_i2c_probe,
+	.probe_new = rt298_i2c_probe,
 	.remove = rt298_i2c_remove,
 	.id_table = rt298_i2c_id,
 };

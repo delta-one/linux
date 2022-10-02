@@ -20,9 +20,10 @@
 #include <linux/of_irq.h>
 #include <linux/platform_device.h>
 #include <linux/regulator/consumer.h>
-#include <linux/thermal.h>
 
 #include <dt-bindings/thermal/thermal_exynos.h>
+
+#include "../thermal_core.h"
 
 /* Exynos generic registers */
 #define EXYNOS_TMU_REG_TRIMINFO		0x0
@@ -263,8 +264,9 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
 	unsigned int status;
 	int ret = 0, temp;
 
-	ret = thermal_zone_get_crit_temp(tzd, &temp);
-	if (ret && data->soc != SOC_ARCH_EXYNOS5433) { /* FIXME */
+	if (data->soc != SOC_ARCH_EXYNOS5433) /* FIXME */
+		ret = tzd->ops->get_crit_temp(tzd, &temp);
+	if (ret) {
 		dev_err(&pdev->dev,
 			"No CRITICAL trip point defined in device tree!\n");
 		goto out;
@@ -645,7 +647,7 @@ static void exynos7_tmu_control(struct platform_device *pdev, bool on)
 
 static int exynos_get_temp(struct thermal_zone_device *tz, int *temp)
 {
-	struct exynos_tmu_data *data = thermal_zone_device_priv(tz);
+	struct exynos_tmu_data *data = tz->devdata;
 	int value, ret = 0;
 
 	if (!data || !data->tmu_read)
@@ -723,7 +725,7 @@ static void exynos4412_tmu_set_emulation(struct exynos_tmu_data *data,
 
 static int exynos_tmu_set_emulation(struct thermal_zone_device *tz, int temp)
 {
-	struct exynos_tmu_data *data = thermal_zone_device_priv(tz);
+	struct exynos_tmu_data *data = tz->devdata;
 	int ret = -EINVAL;
 
 	if (data->soc == SOC_ARCH_EXYNOS4210)

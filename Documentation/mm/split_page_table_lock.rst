@@ -1,3 +1,5 @@
+.. _split_page_table_lock:
+
 =====================
 Split page table lock
 =====================

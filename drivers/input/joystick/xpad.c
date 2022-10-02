@@ -61,7 +61,6 @@
  * Later changes can be tracked in SCM.
  */
 
-#include <linux/bits.h>
 #include <linux/kernel.h>
 #include <linux/input.h>
 #include <linux/rcupdate.h>
@@ -81,9 +80,7 @@
 #define MAP_TRIGGERS_TO_BUTTONS		(1 << 1)
 #define MAP_STICKS_TO_NULL		(1 << 2)
 #define MAP_SELECT_BUTTON		(1 << 3)
-#define MAP_PADDLES			(1 << 4)
-#define MAP_PROFILE_BUTTON		(1 << 5)
-
+#define MAP_PADDLES				(1 << 4)
 #define DANCEPAD_MAP_CONFIG	(MAP_DPAD_TO_BUTTONS |			\
 				MAP_TRIGGERS_TO_BUTTONS | MAP_STICKS_TO_NULL)
 
@@ -126,6 +123,7 @@ static const struct xpad_device {
 	char *name;
 	u8 mapping;
 	u8 xtype;
+	u8 packet_type;
 } xpad_device[] = {
 	{ 0x0079, 0x18d4, "GPD Win 2 X-Box Controller", 0, XTYPE_XBOX360 },
 	{ 0x03eb, 0xff01, "Wooting One (Legacy)", 0, XTYPE_XBOX360 },
@@ -149,7 +147,6 @@ static const struct xpad_device {
 	{ 0x045e, 0x0b00, "Microsoft X-Box One Elite 2 pad", MAP_PADDLES, XTYPE_XBOXONE },
 	{ 0x045e, 0x02ea, "Microsoft X-Box One S pad", 0, XTYPE_XBOXONE },
 	{ 0x045e, 0x0719, "Xbox 360 Wireless Receiver", MAP_DPAD_TO_BUTTONS, XTYPE_XBOX360W },
-	{ 0x045e, 0x0b0a, "Microsoft X-Box Adaptive Controller", MAP_PROFILE_BUTTON, XTYPE_XBOXONE },
 	{ 0x045e, 0x0b12, "Microsoft Xbox Series S|X Controller", MAP_SELECT_BUTTON, XTYPE_XBOXONE },
 	{ 0x046d, 0xc21d, "Logitech Gamepad F310", 0, XTYPE_XBOX360 },
 	{ 0x046d, 0xc21e, "Logitech Gamepad F510", 0, XTYPE_XBOX360 },
@@ -358,7 +355,6 @@ static const struct xpad_device {
 	{ 0x24c6, 0xfafe, "Rock Candy Gamepad for Xbox 360", 0, XTYPE_XBOX360 },
 	{ 0x2563, 0x058d, "OneXPlayer Gamepad", 0, XTYPE_XBOX360 },
 	{ 0x2dc8, 0x2000, "8BitDo Pro 2 Wired Controller fox Xbox", 0, XTYPE_XBOXONE },
-	{ 0x2dc8, 0x3106, "8BitDo Pro 2 Wired Controller", 0, XTYPE_XBOX360 },
 	{ 0x31e3, 0x1100, "Wooting One", 0, XTYPE_XBOX360 },
 	{ 0x31e3, 0x1200, "Wooting Two", 0, XTYPE_XBOX360 },
 	{ 0x31e3, 0x1210, "Wooting Lekker", 0, XTYPE_XBOX360 },
@@ -474,7 +470,6 @@ static const struct usb_device_id xpad_table[] = {
 	XPAD_XBOX360_VENDOR(0x0f0d),		/* Hori Controllers */
 	XPAD_XBOXONE_VENDOR(0x0f0d),		/* Hori Controllers */
 	XPAD_XBOX360_VENDOR(0x1038),		/* SteelSeries Controllers */
-	XPAD_XBOXONE_VENDOR(0x10f5),		/* Turtle Beach Controllers */
 	XPAD_XBOX360_VENDOR(0x11c9),		/* Nacon GC100XF */
 	XPAD_XBOX360_VENDOR(0x1209),		/* Ardwiino Controllers */
 	XPAD_XBOX360_VENDOR(0x12ab),		/* X-Box 360 dance pads */
@@ -493,8 +488,6 @@ static const struct usb_device_id xpad_table[] = {
 	XPAD_XBOXONE_VENDOR(0x24c6),		/* PowerA Controllers */
 	XPAD_XBOX360_VENDOR(0x2563),		/* OneXPlayer Gamepad */
 	XPAD_XBOX360_VENDOR(0x260d),		/* Dareu H101 */
-	XPAD_XBOX360_VENDOR(0x2c22),		/* Qanba Controllers */
-	XPAD_XBOX360_VENDOR(0x2dc8),            /* 8BitDo Pro 2 Wired Controller */
 	XPAD_XBOXONE_VENDOR(0x2dc8),		/* 8BitDo Pro 2 Wired Controller for Xbox */
 	XPAD_XBOXONE_VENDOR(0x2e24),		/* Hyperkin Duke X-Box One pad */
 	XPAD_XBOX360_VENDOR(0x2f24),		/* GameSir Controllers */
@@ -520,55 +513,13 @@ struct xboxone_init_packet {
 		.len		= ARRAY_SIZE(_data),	\
 	}
 
-/*
- * starting with xbox one, the game input protocol is used
- * magic numbers are taken from
- * - https://github.com/xpadneo/gip-dissector/blob/main/src/gip-dissector.lua
- * - https://github.com/medusalix/xone/blob/master/bus/protocol.c
- */
-#define GIP_CMD_ACK      0x01
-#define GIP_CMD_IDENTIFY 0x04
-#define GIP_CMD_POWER    0x05
-#define GIP_CMD_AUTHENTICATE 0x06
-#define GIP_CMD_VIRTUAL_KEY  0x07
-#define GIP_CMD_RUMBLE   0x09
-#define GIP_CMD_LED      0x0a
-#define GIP_CMD_FIRMWARE 0x0c
-#define GIP_CMD_INPUT    0x20
-
-#define GIP_SEQ0 0x00
-
-#define GIP_OPT_ACK      0x10
-#define GIP_OPT_INTERNAL 0x20
-
-/*
- * length of the command payload encoded with
- * https://en.wikipedia.org/wiki/LEB128
- * which is a no-op for N < 128
- */
-#define GIP_PL_LEN(N) (N)
-
-/*
- * payload specific defines
- */
-#define GIP_PWR_ON 0x00
-#define GIP_LED_ON 0x01
-
-#define GIP_MOTOR_R  BIT(0)
-#define GIP_MOTOR_L  BIT(1)
-#define GIP_MOTOR_RT BIT(2)
-#define GIP_MOTOR_LT BIT(3)
-#define GIP_MOTOR_ALL (GIP_MOTOR_R | GIP_MOTOR_L | GIP_MOTOR_RT | GIP_MOTOR_LT)
-
-#define GIP_WIRED_INTF_DATA 0
-#define GIP_WIRED_INTF_AUDIO 1
 
 /*
  * This packet is required for all Xbox One pads with 2015
  * or later firmware installed (or present from the factory).
  */
-static const u8 xboxone_power_on[] = {
-	GIP_CMD_POWER, GIP_OPT_INTERNAL, GIP_SEQ0, GIP_PL_LEN(1), GIP_PWR_ON
+static const u8 xboxone_fw2015_init[] = {
+	0x05, 0x20, 0x00, 0x01, 0x00
 };
 
 /*
@@ -578,7 +529,7 @@ static const u8 xboxone_power_on[] = {
  * Bluetooth mode.
  */
 static const u8 xboxone_s_init[] = {
-	GIP_CMD_POWER, GIP_OPT_INTERNAL, GIP_SEQ0, 0x0f, 0x06
+	0x05, 0x20, 0x00, 0x0f, 0x06
 };
 
 /*
@@ -595,9 +546,9 @@ static const u8 extra_input_packet_init[] = {
  * (0x0e6f:0x0165) to finish initialization and for Hori pads
  * (0x0f0d:0x0067) to make the analog sticks work.
  */
-static const u8 xboxone_hori_ack_id[] = {
-	GIP_CMD_ACK, GIP_OPT_INTERNAL, GIP_SEQ0, GIP_PL_LEN(9),
-	0x00, GIP_CMD_IDENTIFY, GIP_OPT_INTERNAL, 0x3a, 0x00, 0x00, 0x00, 0x80, 0x00
+static const u8 xboxone_hori_init[] = {
+	0x01, 0x20, 0x00, 0x09, 0x00, 0x04, 0x20, 0x3a,
+	0x00, 0x00, 0x00, 0x80, 0x00
 };
 
 /*
@@ -605,8 +556,8 @@ static const u8 xboxone_hori_ack_id[] = {
  * sending input reports. These pads include: (0x0e6f:0x02ab),
  * (0x0e6f:0x02a4), (0x0e6f:0x02a6).
  */
-static const u8 xboxone_pdp_led_on[] = {
-	GIP_CMD_LED, GIP_OPT_INTERNAL, GIP_SEQ0, GIP_PL_LEN(3), 0x00, GIP_LED_ON, 0x14
+static const u8 xboxone_pdp_init1[] = {
+	0x0a, 0x20, 0x00, 0x03, 0x00, 0x01, 0x14
 };
 
 /*
@@ -614,8 +565,8 @@ static const u8 xboxone_pdp_led_on[] = {
  * sending input reports. These pads include: (0x0e6f:0x02ab),
  * (0x0e6f:0x02a4), (0x0e6f:0x02a6).
  */
-static const u8 xboxone_pdp_auth[] = {
-	GIP_CMD_AUTHENTICATE, GIP_OPT_INTERNAL, GIP_SEQ0, GIP_PL_LEN(2), 0x01, 0x00
+static const u8 xboxone_pdp_init2[] = {
+	0x06, 0x20, 0x00, 0x02, 0x01, 0x00
 };
 
 /*
@@ -623,8 +574,8 @@ static const u8 xboxone_pdp_auth[] = {
  * sending input reports. One of those pads is (0x24c6:0x543a).
  */
 static const u8 xboxone_rumblebegin_init[] = {
-	GIP_CMD_RUMBLE, 0x00, GIP_SEQ0, GIP_PL_LEN(9),
-	0x00, GIP_MOTOR_ALL, 0x00, 0x00, 0x1D, 0x1D, 0xFF, 0x00, 0x00
+	0x09, 0x00, 0x00, 0x09, 0x00, 0x0F, 0x00, 0x00,
+	0x1D, 0x1D, 0xFF, 0x00, 0x00
 };
 
 /*
@@ -634,8 +585,8 @@ static const u8 xboxone_rumblebegin_init[] = {
  * spin up to enough speed to actually vibrate the gamepad.
  */
 static const u8 xboxone_rumbleend_init[] = {
-	GIP_CMD_RUMBLE, 0x00, GIP_SEQ0, GIP_PL_LEN(9),
-	0x00, GIP_MOTOR_ALL, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	0x09, 0x00, 0x00, 0x09, 0x00, 0x0F, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 /*
@@ -645,14 +596,14 @@ static const u8 xboxone_rumbleend_init[] = {
  * packet is going to be sent.
  */
 static const struct xboxone_init_packet xboxone_init_packets[] = {
-	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_ack_id),
-	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_ack_id),
-	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_power_on),
+	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
+	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
+	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
 	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
 	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
 	XBOXONE_INIT_PKT(0x045e, 0x0b00, extra_input_packet_init),
-	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_led_on),
-	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_auth),
+	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
+	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x542a, xboxone_rumblebegin_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x543a, xboxone_rumblebegin_init),
@@ -758,10 +709,10 @@ static void xpad_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char *d
 	/* digital pad */
 	if (xpad->mapping & MAP_DPAD_TO_BUTTONS) {
 		/* dpad as buttons (left, right, up, down) */
-		input_report_key(dev, BTN_TRIGGER_HAPPY1, data[2] & BIT(2));
-		input_report_key(dev, BTN_TRIGGER_HAPPY2, data[2] & BIT(3));
-		input_report_key(dev, BTN_TRIGGER_HAPPY3, data[2] & BIT(0));
-		input_report_key(dev, BTN_TRIGGER_HAPPY4, data[2] & BIT(1));
+		input_report_key(dev, BTN_TRIGGER_HAPPY1, data[2] & 0x04);
+		input_report_key(dev, BTN_TRIGGER_HAPPY2, data[2] & 0x08);
+		input_report_key(dev, BTN_TRIGGER_HAPPY3, data[2] & 0x01);
+		input_report_key(dev, BTN_TRIGGER_HAPPY4, data[2] & 0x02);
 	} else {
 		input_report_abs(dev, ABS_HAT0X,
 				 !!(data[2] & 0x08) - !!(data[2] & 0x04));
@@ -770,10 +721,10 @@ static void xpad_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char *d
 	}
 
 	/* start/back buttons and stick press left/right */
-	input_report_key(dev, BTN_START,  data[2] & BIT(4));
-	input_report_key(dev, BTN_SELECT, data[2] & BIT(5));
-	input_report_key(dev, BTN_THUMBL, data[2] & BIT(6));
-	input_report_key(dev, BTN_THUMBR, data[2] & BIT(7));
+	input_report_key(dev, BTN_START,  data[2] & 0x10);
+	input_report_key(dev, BTN_SELECT, data[2] & 0x20);
+	input_report_key(dev, BTN_THUMBL, data[2] & 0x40);
+	input_report_key(dev, BTN_THUMBR, data[2] & 0x80);
 
 	/* "analog" buttons A, B, X, Y */
 	input_report_key(dev, BTN_A, data[4]);
@@ -784,7 +735,6 @@ static void xpad_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char *d
 	/* "analog" buttons black, white */
 	input_report_key(dev, BTN_C, data[8]);
 	input_report_key(dev, BTN_Z, data[9]);
-
 
 	input_sync(dev);
 }
@@ -809,10 +759,10 @@ static void xpad360_process_packet(struct usb_xpad *xpad, struct input_dev *dev,
 	/* digital pad */
 	if (xpad->mapping & MAP_DPAD_TO_BUTTONS) {
 		/* dpad as buttons (left, right, up, down) */
-		input_report_key(dev, BTN_TRIGGER_HAPPY1, data[2] & BIT(2));
-		input_report_key(dev, BTN_TRIGGER_HAPPY2, data[2] & BIT(3));
-		input_report_key(dev, BTN_TRIGGER_HAPPY3, data[2] & BIT(0));
-		input_report_key(dev, BTN_TRIGGER_HAPPY4, data[2] & BIT(1));
+		input_report_key(dev, BTN_TRIGGER_HAPPY1, data[2] & 0x04);
+		input_report_key(dev, BTN_TRIGGER_HAPPY2, data[2] & 0x08);
+		input_report_key(dev, BTN_TRIGGER_HAPPY3, data[2] & 0x01);
+		input_report_key(dev, BTN_TRIGGER_HAPPY4, data[2] & 0x02);
 	}
 
 	/*
@@ -830,21 +780,21 @@ static void xpad360_process_packet(struct usb_xpad *xpad, struct input_dev *dev,
 	}
 
 	/* start/back buttons */
-	input_report_key(dev, BTN_START,  data[2] & BIT(4));
-	input_report_key(dev, BTN_SELECT, data[2] & BIT(5));
+	input_report_key(dev, BTN_START,  data[2] & 0x10);
+	input_report_key(dev, BTN_SELECT, data[2] & 0x20);
 
 	/* stick press left/right */
-	input_report_key(dev, BTN_THUMBL, data[2] & BIT(6));
-	input_report_key(dev, BTN_THUMBR, data[2] & BIT(7));
+	input_report_key(dev, BTN_THUMBL, data[2] & 0x40);
+	input_report_key(dev, BTN_THUMBR, data[2] & 0x80);
 
 	/* buttons A,B,X,Y,TL,TR and MODE */
-	input_report_key(dev, BTN_A,	data[3] & BIT(4));
-	input_report_key(dev, BTN_B,	data[3] & BIT(5));
-	input_report_key(dev, BTN_X,	data[3] & BIT(6));
-	input_report_key(dev, BTN_Y,	data[3] & BIT(7));
-	input_report_key(dev, BTN_TL,	data[3] & BIT(0));
-	input_report_key(dev, BTN_TR,	data[3] & BIT(1));
-	input_report_key(dev, BTN_MODE,	data[3] & BIT(2));
+	input_report_key(dev, BTN_A,	data[3] & 0x10);
+	input_report_key(dev, BTN_B,	data[3] & 0x20);
+	input_report_key(dev, BTN_X,	data[3] & 0x40);
+	input_report_key(dev, BTN_Y,	data[3] & 0x80);
+	input_report_key(dev, BTN_TL,	data[3] & 0x01);
+	input_report_key(dev, BTN_TR,	data[3] & 0x02);
+	input_report_key(dev, BTN_MODE,	data[3] & 0x04);
 
 	if (!(xpad->mapping & MAP_STICKS_TO_NULL)) {
 		/* left stick */
@@ -882,7 +832,7 @@ static void xpad360_process_packet(struct usb_xpad *xpad, struct input_dev *dev,
 		}
 
 		/* mode button down/up */
-		if (data[3] & BIT(2))
+		if (data[3] & 0x04)
 			xpad->mode_btn_down_ts = ktime_get_seconds();
 		else
 			xpad->mode_btn_down_ts = 0;
@@ -969,20 +919,19 @@ static void xpadone_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char
 	bool do_sync = false;
 
 	/* the xbox button has its own special report */
-	if (data[0] == GIP_CMD_VIRTUAL_KEY) {
+	if (data[0] == 0X07) {
 		/*
 		 * The Xbox One S controller requires these reports to be
 		 * acked otherwise it continues sending them forever and
 		 * won't report further mode button events.
 		 */
-		if (data[1] == (GIP_OPT_ACK | GIP_OPT_INTERNAL))
+		if (data[1] == 0x30)
 			xpadone_ack_mode_report(xpad, data[2]);
 
-		input_report_key(dev, BTN_MODE, data[4] & GENMASK(1, 0));
-		input_sync(dev);
+		input_report_key(dev, BTN_MODE, data[4] & 0x01);
 
 		do_sync = true;
-	} else if (data[0] == GIP_CMD_FIRMWARE) {
+	} else if (data[0] == 0X0C) {
 		/* Some packet formats force us to use this separate to poll paddle inputs */
 		if (xpad->packet_type == PKT_XBE2_FW_5_11) {
 			/* Mute paddles if controller is in a custom profile slot
@@ -993,33 +942,33 @@ static void xpadone_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char
 				data[18] = 0;
 
 			/* Elite Series 2 split packet paddle bits */
-			input_report_key(dev, BTN_TRIGGER_HAPPY5, data[18] & BIT(0));
-			input_report_key(dev, BTN_TRIGGER_HAPPY6, data[18] & BIT(1));
-			input_report_key(dev, BTN_TRIGGER_HAPPY7, data[18] & BIT(2));
-			input_report_key(dev, BTN_TRIGGER_HAPPY8, data[18] & BIT(3));
+			input_report_key(dev, BTN_TRIGGER_HAPPY5, data[18] & 0x01);
+			input_report_key(dev, BTN_TRIGGER_HAPPY6, data[18] & 0x02);
+			input_report_key(dev, BTN_TRIGGER_HAPPY7, data[18] & 0x04);
+			input_report_key(dev, BTN_TRIGGER_HAPPY8, data[18] & 0x08);
 
 			do_sync = true;
 		}
-	} else if (data[0] == GIP_CMD_INPUT) { /* The main valid packet type for inputs */
+	} else if (data[0] == 0X20) { /* The main valid packet type for inputs */
 		/* menu/view buttons */
-		input_report_key(dev, BTN_START,  data[4] & BIT(2));
-		input_report_key(dev, BTN_SELECT, data[4] & BIT(3));
+		input_report_key(dev, BTN_START,  data[4] & 0x04);
+		input_report_key(dev, BTN_SELECT, data[4] & 0x08);
 		if (xpad->mapping & MAP_SELECT_BUTTON)
-			input_report_key(dev, KEY_RECORD, data[22] & BIT(0));
+			input_report_key(dev, KEY_RECORD, data[22] & 0x01);
 
 		/* buttons A,B,X,Y */
-		input_report_key(dev, BTN_A,	data[4] & BIT(4));
-		input_report_key(dev, BTN_B,	data[4] & BIT(5));
-		input_report_key(dev, BTN_X,	data[4] & BIT(6));
-		input_report_key(dev, BTN_Y,	data[4] & BIT(7));
+		input_report_key(dev, BTN_A,	data[4] & 0x10);
+		input_report_key(dev, BTN_B,	data[4] & 0x20);
+		input_report_key(dev, BTN_X,	data[4] & 0x40);
+		input_report_key(dev, BTN_Y,	data[4] & 0x80);
 
 		/* digital pad */
 		if (xpad->mapping & MAP_DPAD_TO_BUTTONS) {
 			/* dpad as buttons (left, right, up, down) */
-			input_report_key(dev, BTN_TRIGGER_HAPPY1, data[5] & BIT(2));
-			input_report_key(dev, BTN_TRIGGER_HAPPY2, data[5] & BIT(3));
-			input_report_key(dev, BTN_TRIGGER_HAPPY3, data[5] & BIT(0));
-			input_report_key(dev, BTN_TRIGGER_HAPPY4, data[5] & BIT(1));
+			input_report_key(dev, BTN_TRIGGER_HAPPY1, data[5] & 0x04);
+			input_report_key(dev, BTN_TRIGGER_HAPPY2, data[5] & 0x08);
+			input_report_key(dev, BTN_TRIGGER_HAPPY3, data[5] & 0x01);
+			input_report_key(dev, BTN_TRIGGER_HAPPY4, data[5] & 0x02);
 		} else {
 			input_report_abs(dev, ABS_HAT0X,
 					!!(data[5] & 0x08) - !!(data[5] & 0x04));
@@ -1028,12 +977,12 @@ static void xpadone_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char
 		}
 
 		/* TL/TR */
-		input_report_key(dev, BTN_TL,	data[5] & BIT(4));
-		input_report_key(dev, BTN_TR,	data[5] & BIT(5));
+		input_report_key(dev, BTN_TL,	data[5] & 0x10);
+		input_report_key(dev, BTN_TR,	data[5] & 0x20);
 
 		/* stick press left/right */
-		input_report_key(dev, BTN_THUMBL, data[5] & BIT(6));
-		input_report_key(dev, BTN_THUMBR, data[5] & BIT(7));
+		input_report_key(dev, BTN_THUMBL, data[5] & 0x40);
+		input_report_key(dev, BTN_THUMBR, data[5] & 0x80);
 
 		if (!(xpad->mapping & MAP_STICKS_TO_NULL)) {
 			/* left stick */
@@ -1062,10 +1011,6 @@ static void xpadone_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char
 					(__u16) le16_to_cpup((__le16 *)(data + 8)));
 		}
 
-		/* Profile button has a value of 0-3, so it is reported as an axis */
-		if (xpad->mapping & MAP_PROFILE_BUTTON)
-			input_report_abs(dev, ABS_PROFILE, data[34]);
-
 		/* paddle handling */
 		/* based on SDL's SDL_hidapi_xboxone.c */
 		if (xpad->mapping & MAP_PADDLES) {
@@ -1078,10 +1023,10 @@ static void xpadone_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char
 					data[32] = 0;
 
 				/* OG Elite Series Controller paddle bits */
-				input_report_key(dev, BTN_TRIGGER_HAPPY5, data[32] & BIT(1));
-				input_report_key(dev, BTN_TRIGGER_HAPPY6, data[32] & BIT(3));
-				input_report_key(dev, BTN_TRIGGER_HAPPY7, data[32] & BIT(0));
-				input_report_key(dev, BTN_TRIGGER_HAPPY8, data[32] & BIT(2));
+				input_report_key(dev, BTN_TRIGGER_HAPPY5, data[32] & 0x02);
+				input_report_key(dev, BTN_TRIGGER_HAPPY6, data[32] & 0x08);
+				input_report_key(dev, BTN_TRIGGER_HAPPY7, data[32] & 0x01);
+				input_report_key(dev, BTN_TRIGGER_HAPPY8, data[32] & 0x04);
 			} else if (xpad->packet_type == PKT_XBE2_FW_OLD) {
 				/* Mute paddles if controller has a custom mapping applied.
 				 * Checked by comparing the current mapping
@@ -1091,10 +1036,10 @@ static void xpadone_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char
 					data[18] = 0;
 
 				/* Elite Series 2 4.x firmware paddle bits */
-				input_report_key(dev, BTN_TRIGGER_HAPPY5, data[18] & BIT(0));
-				input_report_key(dev, BTN_TRIGGER_HAPPY6, data[18] & BIT(1));
-				input_report_key(dev, BTN_TRIGGER_HAPPY7, data[18] & BIT(2));
-				input_report_key(dev, BTN_TRIGGER_HAPPY8, data[18] & BIT(3));
+				input_report_key(dev, BTN_TRIGGER_HAPPY5, data[18] & 0x01);
+				input_report_key(dev, BTN_TRIGGER_HAPPY6, data[18] & 0x02);
+				input_report_key(dev, BTN_TRIGGER_HAPPY7, data[18] & 0x04);
+				input_report_key(dev, BTN_TRIGGER_HAPPY8, data[18] & 0x08);
 			} else if (xpad->packet_type == PKT_XBE2_FW_5_EARLY) {
 				/* Mute paddles if controller has a custom mapping applied.
 				 * Checked by comparing the current mapping
@@ -1106,10 +1051,10 @@ static void xpadone_process_packet(struct usb_xpad *xpad, u16 cmd, unsigned char
 				/* Elite Series 2 5.x firmware paddle bits
 				 * (before the packet was split)
 				 */
-				input_report_key(dev, BTN_TRIGGER_HAPPY5, data[22] & BIT(0));
-				input_report_key(dev, BTN_TRIGGER_HAPPY6, data[22] & BIT(1));
-				input_report_key(dev, BTN_TRIGGER_HAPPY7, data[22] & BIT(2));
-				input_report_key(dev, BTN_TRIGGER_HAPPY8, data[22] & BIT(3));
+				input_report_key(dev, BTN_TRIGGER_HAPPY5, data[22] & 0x01);
+				input_report_key(dev, BTN_TRIGGER_HAPPY6, data[22] & 0x02);
+				input_report_key(dev, BTN_TRIGGER_HAPPY7, data[22] & 0x04);
+				input_report_key(dev, BTN_TRIGGER_HAPPY8, data[22] & 0x08);
 			}
 		}
 
@@ -1396,21 +1341,6 @@ static int xpad_start_xbox_one(struct usb_xpad *xpad)
 	unsigned long flags;
 	int retval;
 
-	if (usb_ifnum_to_if(xpad->udev, GIP_WIRED_INTF_AUDIO)) {
-		/*
-		 * Explicitly disable the audio interface. This is needed
-		 * for some controllers, such as the PowerA Enhanced Wired
-		 * Controller for Series X|S (0x20d6:0x200e) to report the
-		 * guide button.
-		 */
-		retval = usb_set_interface(xpad->udev,
-					   GIP_WIRED_INTF_AUDIO, 0);
-		if (retval)
-			dev_warn(&xpad->dev->dev,
-				 "unable to disable audio interface: %d\n",
-				 retval);
-	}
-
 	spin_lock_irqsave(&xpad->odata_lock, flags);
 
 	/*
@@ -1432,8 +1362,8 @@ static void xpadone_ack_mode_report(struct usb_xpad *xpad, u8 seq_num)
 	struct xpad_output_packet *packet =
 			&xpad->out_packets[XPAD_OUT_CMD_IDX];
 	static const u8 mode_report_ack[] = {
-		GIP_CMD_ACK, GIP_OPT_INTERNAL, GIP_SEQ0, GIP_PL_LEN(9),
-		0x00, GIP_CMD_VIRTUAL_KEY, GIP_OPT_INTERNAL, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00
+		0x01, 0x20, 0x00, 0x09, 0x00, 0x07, 0x20, 0x02,
+		0x00, 0x00, 0x00, 0x00, 0x00
 	};
 
 	spin_lock_irqsave(&xpad->odata_lock, flags);
@@ -1511,14 +1441,14 @@ static int xpad_play_effect(struct input_dev *dev, void *data, struct ff_effect 
 		break;
 
 	case XTYPE_XBOXONE:
-		packet->data[0] = GIP_CMD_RUMBLE; /* activate rumble */
+		packet->data[0] = 0x09; /* activate rumble */
 		packet->data[1] = 0x00;
 		packet->data[2] = xpad->odata_serial++;
-		packet->data[3] = GIP_PL_LEN(9);
+		packet->data[3] = 0x09;
 		packet->data[4] = 0x00;
-		packet->data[5] = GIP_MOTOR_ALL;
-		packet->data[6] = 0x00; /* left trigger */
-		packet->data[7] = 0x00; /* right trigger */
+		packet->data[5] = 0x0F;
+		packet->data[6] = 0x00;
+		packet->data[7] = 0x00;
 		packet->data[8] = strong / 512;	/* left actuator */
 		packet->data[9] = weak / 512;	/* right actuator */
 		packet->data[10] = 0xFF; /* on period */
@@ -1828,9 +1758,6 @@ static void xpad_set_up_abs(struct input_dev *input_dev, signed short abs)
 	case ABS_HAT0Y:	/* the d-pad (only if dpad is mapped to axes */
 		input_set_abs_params(input_dev, abs, -1, 1, 0, 0);
 		break;
-	case ABS_PROFILE: /* 4 value profile button (such as on XAC) */
-		input_set_abs_params(input_dev, abs, 0, 4, 0, 0);
-		break;
 	default:
 		input_set_abs_params(input_dev, abs, 0, 0, 0, 0);
 		break;
@@ -1929,10 +1856,6 @@ static int xpad_init_input(struct usb_xpad *xpad)
 			xpad_set_up_abs(input_dev, xpad_abs_triggers[i]);
 	}
 
-	/* setup profile button as an axis with 4 possible values */
-	if (xpad->mapping & MAP_PROFILE_BUTTON)
-		xpad_set_up_abs(input_dev, ABS_PROFILE);
-
 	error = xpad_init_ff(xpad);
 	if (error)
 		goto err_free_input;
@@ -2022,7 +1945,7 @@ static int xpad_probe(struct usb_interface *intf, const struct usb_device_id *id
 	}
 
 	if (xpad->xtype == XTYPE_XBOXONE &&
-	    intf->cur_altsetting->desc.bInterfaceNumber != GIP_WIRED_INTF_DATA) {
+	    intf->cur_altsetting->desc.bInterfaceNumber != 0) {
 		/*
 		 * The Xbox One controller lists three interfaces all with the
 		 * same interface class, subclass and protocol. Differentiate by

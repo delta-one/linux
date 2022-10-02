@@ -186,14 +186,12 @@ void __init initialise_paca(struct paca_struct *new_paca, int cpu)
 #ifdef CONFIG_PPC_PSERIES
 	new_paca->lppaca_ptr = NULL;
 #endif
-#ifdef CONFIG_PPC_BOOK3E_64
+#ifdef CONFIG_PPC_BOOK3E
 	new_paca->kernel_pgd = swapper_pg_dir;
 #endif
 	new_paca->lock_token = 0x8000;
 	new_paca->paca_index = cpu;
-#ifndef CONFIG_PPC_KERNEL_PCREL
 	new_paca->kernel_toc = kernel_toc_addr();
-#endif
 	new_paca->kernelbase = (unsigned long) _stext;
 	/* Only set MSR:IR/DR when MMU is initialized */
 	new_paca->kernel_msr = MSR_KERNEL & ~(MSR_IR | MSR_DR);
@@ -205,7 +203,7 @@ void __init initialise_paca(struct paca_struct *new_paca, int cpu)
 	new_paca->slb_shadow_ptr = NULL;
 #endif
 
-#ifdef CONFIG_PPC_BOOK3E_64
+#ifdef CONFIG_PPC_BOOK3E
 	/* For now -- if we have threads this will be adjusted later */
 	new_paca->tcd_ptr = &new_paca->tcd;
 #endif
@@ -217,7 +215,7 @@ void setup_paca(struct paca_struct *new_paca)
 	/* Setup r13 */
 	local_paca = new_paca;
 
-#ifdef CONFIG_PPC_BOOK3E_64
+#ifdef CONFIG_PPC_BOOK3E
 	/* On Book3E, initialize the TLB miss exception frames */
 	mtspr(SPRN_SPRG_TLB_EXFRAME, local_paca->extlb);
 #else

@@ -2407,8 +2407,10 @@ out:
  */
 static void ab8500_fg_external_power_changed(struct power_supply *psy)
 {
-	class_for_each_device(power_supply_class, NULL, psy,
-			      ab8500_fg_get_ext_psy_data);
+	struct ab8500_fg *di = power_supply_get_drvdata(psy);
+
+	class_for_each_device(power_supply_class, NULL,
+		di->fg_psy, ab8500_fg_get_ext_psy_data);
 }
 
 /**
@@ -2451,7 +2453,7 @@ struct ab8500_fg_sysfs_entry {
 
 static ssize_t charge_full_show(struct ab8500_fg *di, char *buf)
 {
-	return sysfs_emit(buf, "%d\n", di->bat_cap.max_mah);
+	return sprintf(buf, "%d\n", di->bat_cap.max_mah);
 }
 
 static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
@@ -2470,7 +2472,7 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
 
 static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
 {
-	return sysfs_emit(buf, "%d\n", di->bat_cap.prev_mah);
+	return sprintf(buf, "%d\n", di->bat_cap.prev_mah);
 }
 
 static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
@@ -2592,7 +2594,7 @@ static ssize_t ab8505_powercut_flagtime_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", (reg_value & 0x7F));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", (reg_value & 0x7F));
 
 fail:
 	return ret;
@@ -2642,7 +2644,7 @@ static ssize_t ab8505_powercut_maxtime_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", (reg_value & 0x7F));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", (reg_value & 0x7F));
 
 fail:
 	return ret;
@@ -2693,7 +2695,7 @@ static ssize_t ab8505_powercut_restart_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", (reg_value & 0xF));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", (reg_value & 0xF));
 
 fail:
 	return ret;
@@ -2744,7 +2746,7 @@ static ssize_t ab8505_powercut_timer_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", (reg_value & 0x7F));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", (reg_value & 0x7F));
 
 fail:
 	return ret;
@@ -2767,7 +2769,7 @@ static ssize_t ab8505_powercut_restart_counter_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", (reg_value & 0xF0) >> 4);
+	return scnprintf(buf, PAGE_SIZE, "%d\n", (reg_value & 0xF0) >> 4);
 
 fail:
 	return ret;
@@ -2788,7 +2790,7 @@ static ssize_t ab8505_powercut_read(struct device *dev,
 	if (ret < 0)
 		goto fail;
 
-	return sysfs_emit(buf, "%d\n", (reg_value & 0x1));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", (reg_value & 0x1));
 
 fail:
 	return ret;
@@ -2839,7 +2841,7 @@ static ssize_t ab8505_powercut_flag_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", ((reg_value & 0x10) >> 4));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", ((reg_value & 0x10) >> 4));
 
 fail:
 	return ret;
@@ -2862,7 +2864,7 @@ static ssize_t ab8505_powercut_debounce_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", (reg_value & 0x7));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", (reg_value & 0x7));
 
 fail:
 	return ret;
@@ -2912,7 +2914,7 @@ static ssize_t ab8505_powercut_enable_status_read(struct device *dev,
 		goto fail;
 	}
 
-	return sysfs_emit(buf, "%d\n", ((reg_value & 0x20) >> 5));
+	return scnprintf(buf, PAGE_SIZE, "%d\n", ((reg_value & 0x20) >> 5));
 
 fail:
 	return ret;

@@ -2,10 +2,10 @@
 %YAML 1.2
 ---
 
-$id: http://devicetree.org/schemas/display/msm/gpu.yaml#
-$schema: http://devicetree.org/meta-schemas/core.yaml#
+$id: "http://devicetree.org/schemas/display/msm/gpu.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 
-title: Adreno or Snapdragon GPUs
+title: Devicetree bindings for the Adreno or Snapdragon GPUs
 
 maintainers:
   - Rob Clark <robdclark@gmail.com>
@@ -89,7 +89,7 @@ properties:
       help bring the GPU out of secure mode.
     properties:
       memory-region:
-        maxItems: 1
+        $ref: /schemas/types.yaml#/definitions/phandle
 
       firmware-name:
         description: |
@@ -149,8 +149,6 @@ allOf:
                 description: GPU 3D engine clock
               - const: rbbmtimer
                 description: GPU RBBM Timer for Adreno 5xx series
-              - const: rbcpr
-                description: GPU RB Core Power Reduction clock
           minItems: 2
           maxItems: 7
 

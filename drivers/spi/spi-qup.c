@@ -1003,7 +1003,8 @@ static int spi_qup_probe(struct platform_device *pdev)
 	int ret, irq, size;
 
 	dev = &pdev->dev;
-	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	base = devm_ioremap_resource(dev, res);
 	if (IS_ERR(base))
 		return PTR_ERR(base);
 
@@ -1056,8 +1057,6 @@ static int spi_qup_probe(struct platform_device *pdev)
 	else
 		master->num_chipselect = num_cs;
 
-	master->use_gpio_descriptors = true;
-	master->max_native_cs = SPI_NUM_CHIPSELECTS;
 	master->bus_num = pdev->id;
 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LOOP;
 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
@@ -1270,31 +1269,29 @@ disable_clk:
 }
 #endif /* CONFIG_PM_SLEEP */
 
-static void spi_qup_remove(struct platform_device *pdev)
+static int spi_qup_remove(struct platform_device *pdev)
 {
 	struct spi_master *master = dev_get_drvdata(&pdev->dev);
 	struct spi_qup *controller = spi_master_get_devdata(master);
 	int ret;
 
-	ret = pm_runtime_get_sync(&pdev->dev);
+	ret = pm_runtime_resume_and_get(&pdev->dev);
+	if (ret < 0)
+		return ret;
 
-	if (ret >= 0) {
-		ret = spi_qup_set_state(controller, QUP_STATE_RESET);
-		if (ret)
-			dev_warn(&pdev->dev, "failed to reset controller (%pe)\n",
-				 ERR_PTR(ret));
-
-		clk_disable_unprepare(controller->cclk);
-		clk_disable_unprepare(controller->iclk);
-	} else {
-		dev_warn(&pdev->dev, "failed to resume, skip hw disable (%pe)\n",
-			 ERR_PTR(ret));
-	}
+	ret = spi_qup_set_state(controller, QUP_STATE_RESET);
+	if (ret)
+		return ret;
 
 	spi_qup_release_dma(master);
 
+	clk_disable_unprepare(controller->cclk);
+	clk_disable_unprepare(controller->iclk);
+
 	pm_runtime_put_noidle(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
+
+	return 0;
 }
 
 static const struct of_device_id spi_qup_dt_match[] = {
@@ -1319,7 +1316,7 @@ static struct platform_driver spi_qup_driver = {
 		.of_match_table = spi_qup_dt_match,
 	},
 	.probe = spi_qup_probe,
-	.remove_new = spi_qup_remove,
+	.remove = spi_qup_remove,
 };
 module_platform_driver(spi_qup_driver);
 

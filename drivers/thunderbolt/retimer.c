@@ -162,7 +162,7 @@ static ssize_t device_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_retimer *rt = tb_to_retimer(dev);
 
-	return sysfs_emit(buf, "%#x\n", rt->device);
+	return sprintf(buf, "%#x\n", rt->device);
 }
 static DEVICE_ATTR_RO(device);
 
@@ -180,27 +180,11 @@ static ssize_t nvm_authenticate_show(struct device *dev,
 	else if (rt->no_nvm_upgrade)
 		ret = -EOPNOTSUPP;
 	else
-		ret = sysfs_emit(buf, "%#x\n", rt->auth_status);
+		ret = sprintf(buf, "%#x\n", rt->auth_status);
 
 	mutex_unlock(&rt->tb->lock);
 
 	return ret;
-}
-
-static void tb_retimer_set_inbound_sbtx(struct tb_port *port)
-{
-	int i;
-
-	for (i = 1; i <= TB_MAX_RETIMER_INDEX; i++)
-		usb4_port_retimer_set_inbound_sbtx(port, i);
-}
-
-static void tb_retimer_unset_inbound_sbtx(struct tb_port *port)
-{
-	int i;
-
-	for (i = TB_MAX_RETIMER_INDEX; i >= 1; i--)
-		usb4_port_retimer_unset_inbound_sbtx(port, i);
 }
 
 static ssize_t nvm_authenticate_store(struct device *dev,
@@ -229,7 +213,6 @@ static ssize_t nvm_authenticate_store(struct device *dev,
 	rt->auth_status = 0;
 
 	if (val) {
-		tb_retimer_set_inbound_sbtx(rt->port);
 		if (val == AUTHENTICATE_ONLY) {
 			ret = tb_retimer_nvm_authenticate(rt, true);
 		} else {
@@ -249,7 +232,6 @@ static ssize_t nvm_authenticate_store(struct device *dev,
 	}
 
 exit_unlock:
-	tb_retimer_unset_inbound_sbtx(rt->port);
 	mutex_unlock(&rt->tb->lock);
 exit_rpm:
 	pm_runtime_mark_last_busy(&rt->dev);
@@ -273,7 +255,7 @@ static ssize_t nvm_version_show(struct device *dev,
 	if (!rt->nvm)
 		ret = -EAGAIN;
 	else
-		ret = sysfs_emit(buf, "%x.%x\n", rt->nvm->major, rt->nvm->minor);
+		ret = sprintf(buf, "%x.%x\n", rt->nvm->major, rt->nvm->minor);
 
 	mutex_unlock(&rt->tb->lock);
 	return ret;
@@ -285,7 +267,7 @@ static ssize_t vendor_show(struct device *dev, struct device_attribute *attr,
 {
 	struct tb_retimer *rt = tb_to_retimer(dev);
 
-	return sysfs_emit(buf, "%#x\n", rt->vendor);
+	return sprintf(buf, "%#x\n", rt->vendor);
 }
 static DEVICE_ATTR_RO(vendor);
 
@@ -445,6 +427,13 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 {
 	u32 status[TB_MAX_RETIMER_INDEX + 1] = {};
 	int ret, i, last_idx = 0;
+	struct usb4_port *usb4;
+
+	usb4 = port->usb4;
+	if (!usb4)
+		return 0;
+
+	pm_runtime_get_sync(&usb4->dev);
 
 	/*
 	 * Send broadcast RT to make sure retimer indices facing this
@@ -452,13 +441,14 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 	 */
 	ret = usb4_port_enumerate_retimers(port);
 	if (ret)
-		return ret;
+		goto out;
 
 	/*
 	 * Enable sideband channel for each retimer. We can do this
 	 * regardless whether there is device connected or not.
 	 */
-	tb_retimer_set_inbound_sbtx(port);
+	for (i = 1; i <= TB_MAX_RETIMER_INDEX; i++)
+		usb4_port_retimer_set_inbound_sbtx(port, i);
 
 	/*
 	 * Before doing anything else, read the authentication status.
@@ -481,13 +471,12 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 			break;
 	}
 
-	tb_retimer_unset_inbound_sbtx(port);
-
-	if (!last_idx)
-		return 0;
+	if (!last_idx) {
+		ret = 0;
+		goto out;
+	}
 
 	/* Add on-board retimers if they do not exist already */
-	ret = 0;
 	for (i = 1; i <= last_idx; i++) {
 		struct tb_retimer *rt;
 
@@ -500,6 +489,10 @@ int tb_retimer_scan(struct tb_port *port, bool add)
 				break;
 		}
 	}
+
+out:
+	pm_runtime_mark_last_busy(&usb4->dev);
+	pm_runtime_put_autosuspend(&usb4->dev);
 
 	return ret;
 }

@@ -36,7 +36,6 @@ int f2fs_check_nid_range(struct f2fs_sb_info *sbi, nid_t nid)
 		set_sbi_flag(sbi, SBI_NEED_FSCK);
 		f2fs_warn(sbi, "%s: out-of-range nid=%x, run fsck to fix.",
 			  __func__, nid);
-		f2fs_handle_error(sbi, ERROR_CORRUPTED_INODE);
 		return -EFSCORRUPTED;
 	}
 	return 0;
@@ -60,7 +59,7 @@ bool f2fs_available_free_memory(struct f2fs_sb_info *sbi, int type)
 	avail_ram = val.totalram - val.totalhigh;
 
 	/*
-	 * give 25%, 25%, 50%, 50%, 25%, 25% memory for each components respectively
+	 * give 25%, 25%, 50%, 50%, 50% memory for each components respectively
 	 */
 	if (type == FREE_NIDS) {
 		mem_size = (nm_i->nid_cnt[FREE_NID] *
@@ -85,16 +84,12 @@ bool f2fs_available_free_memory(struct f2fs_sb_info *sbi, int type)
 						sizeof(struct ino_entry);
 		mem_size >>= PAGE_SHIFT;
 		res = mem_size < ((avail_ram * nm_i->ram_thresh / 100) >> 1);
-	} else if (type == READ_EXTENT_CACHE || type == AGE_EXTENT_CACHE) {
-		enum extent_type etype = type == READ_EXTENT_CACHE ?
-						EX_READ : EX_BLOCK_AGE;
-		struct extent_tree_info *eti = &sbi->extent_tree[etype];
-
-		mem_size = (atomic_read(&eti->total_ext_tree) *
+	} else if (type == EXTENT_CACHE) {
+		mem_size = (atomic_read(&sbi->total_ext_tree) *
 				sizeof(struct extent_tree) +
-				atomic_read(&eti->total_ext_node) *
+				atomic_read(&sbi->total_ext_node) *
 				sizeof(struct extent_node)) >> PAGE_SHIFT;
-		res = mem_size < ((avail_ram * nm_i->ram_thresh / 100) >> 2);
+		res = mem_size < ((avail_ram * nm_i->ram_thresh / 100) >> 1);
 	} else if (type == DISCARD_CACHE) {
 		mem_size = (atomic_read(&dcc->discard_cmd_cnt) *
 				sizeof(struct discard_cmd)) >> PAGE_SHIFT;
@@ -590,7 +585,7 @@ retry:
 		ne = nat_in_journal(journal, i);
 		node_info_from_raw_nat(ni, &ne);
 	}
-	up_read(&curseg->journal_rwsem);
+        up_read(&curseg->journal_rwsem);
 	if (i >= 0) {
 		f2fs_up_read(&nm_i->nat_tree_lock);
 		goto cache;
@@ -863,7 +858,7 @@ int f2fs_get_dnode_of_data(struct dnode_of_data *dn, pgoff_t index, int mode)
 			blkaddr = data_blkaddr(dn->inode, dn->node_page,
 						dn->ofs_in_node + 1);
 
-		f2fs_update_read_extent_tree_range_compressed(dn->inode,
+		f2fs_update_extent_tree_range_compressed(dn->inode,
 					index, blkaddr,
 					F2FS_I(dn->inode)->i_cluster_size,
 					c_len);
@@ -1300,7 +1295,6 @@ struct page *f2fs_new_node_page(struct dnode_of_data *dn, unsigned int ofs)
 	if (unlikely(new_ni.blk_addr != NULL_ADDR)) {
 		err = -EFSCORRUPTED;
 		set_sbi_flag(sbi, SBI_NEED_FSCK);
-		f2fs_handle_error(sbi, ERROR_INVALID_BLKADDR);
 		goto fail;
 	}
 #endif
@@ -1364,7 +1358,8 @@ static int read_node_page(struct page *page, blk_opf_t op_flags)
 		return err;
 
 	/* NEW_ADDR can be seen, after cp_error drops some dirty node pages */
-	if (unlikely(ni.blk_addr == NULL_ADDR || ni.blk_addr == NEW_ADDR)) {
+	if (unlikely(ni.blk_addr == NULL_ADDR || ni.blk_addr == NEW_ADDR) ||
+			is_sbi_flag_set(sbi, SBI_IS_SHUTDOWN)) {
 		ClearPageUptodate(page);
 		return -ENOENT;
 	}
@@ -1518,24 +1513,23 @@ iput_out:
 static struct page *last_fsync_dnode(struct f2fs_sb_info *sbi, nid_t ino)
 {
 	pgoff_t index;
-	struct folio_batch fbatch;
+	struct pagevec pvec;
 	struct page *last_page = NULL;
-	int nr_folios;
+	int nr_pages;
 
-	folio_batch_init(&fbatch);
+	pagevec_init(&pvec);
 	index = 0;
 
-	while ((nr_folios = filemap_get_folios_tag(NODE_MAPPING(sbi), &index,
-					(pgoff_t)-1, PAGECACHE_TAG_DIRTY,
-					&fbatch))) {
+	while ((nr_pages = pagevec_lookup_tag(&pvec, NODE_MAPPING(sbi), &index,
+				PAGECACHE_TAG_DIRTY))) {
 		int i;
 
-		for (i = 0; i < nr_folios; i++) {
-			struct page *page = &fbatch.folios[i]->page;
+		for (i = 0; i < nr_pages; i++) {
+			struct page *page = pvec.pages[i];
 
 			if (unlikely(f2fs_cp_error(sbi))) {
 				f2fs_put_page(last_page, 0);
-				folio_batch_release(&fbatch);
+				pagevec_release(&pvec);
 				return ERR_PTR(-EIO);
 			}
 
@@ -1566,7 +1560,7 @@ continue_unlock:
 			last_page = page;
 			unlock_page(page);
 		}
-		folio_batch_release(&fbatch);
+		pagevec_release(&pvec);
 		cond_resched();
 	}
 	return last_page;
@@ -1587,7 +1581,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
 		.op_flags = wbc_to_write_flags(wbc),
 		.page = page,
 		.encrypted_page = NULL,
-		.submitted = 0,
+		.submitted = false,
 		.io_type = io_type,
 		.io_wbc = wbc,
 	};
@@ -1596,9 +1590,6 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
 	trace_f2fs_writepage(page, NODE);
 
 	if (unlikely(f2fs_cp_error(sbi))) {
-		/* keep node pages in remount-ro mode */
-		if (F2FS_OPTION(sbi).errors == MOUNT_ERRORS_READONLY)
-			goto redirty_out;
 		ClearPageUptodate(page);
 		dec_page_count(sbi, F2FS_DIRTY_NODES);
 		unlock_page(page);
@@ -1654,6 +1645,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
 	}
 
 	set_page_writeback(page);
+	ClearPageError(page);
 
 	fio.old_blkaddr = ni.blk_addr;
 	f2fs_do_write_node_page(nid, &fio);
@@ -1734,12 +1726,12 @@ int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
 			unsigned int *seq_id)
 {
 	pgoff_t index;
-	struct folio_batch fbatch;
+	struct pagevec pvec;
 	int ret = 0;
 	struct page *last_page = NULL;
 	bool marked = false;
 	nid_t ino = inode->i_ino;
-	int nr_folios;
+	int nr_pages;
 	int nwritten = 0;
 
 	if (atomic) {
@@ -1748,21 +1740,20 @@ int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
 			return PTR_ERR_OR_ZERO(last_page);
 	}
 retry:
-	folio_batch_init(&fbatch);
+	pagevec_init(&pvec);
 	index = 0;
 
-	while ((nr_folios = filemap_get_folios_tag(NODE_MAPPING(sbi), &index,
-					(pgoff_t)-1, PAGECACHE_TAG_DIRTY,
-					&fbatch))) {
+	while ((nr_pages = pagevec_lookup_tag(&pvec, NODE_MAPPING(sbi), &index,
+				PAGECACHE_TAG_DIRTY))) {
 		int i;
 
-		for (i = 0; i < nr_folios; i++) {
-			struct page *page = &fbatch.folios[i]->page;
+		for (i = 0; i < nr_pages; i++) {
+			struct page *page = pvec.pages[i];
 			bool submitted = false;
 
 			if (unlikely(f2fs_cp_error(sbi))) {
 				f2fs_put_page(last_page, 0);
-				folio_batch_release(&fbatch);
+				pagevec_release(&pvec);
 				ret = -EIO;
 				goto out;
 			}
@@ -1828,7 +1819,7 @@ continue_unlock:
 				break;
 			}
 		}
-		folio_batch_release(&fbatch);
+		pagevec_release(&pvec);
 		cond_resched();
 
 		if (ret || marked)
@@ -1893,18 +1884,17 @@ static bool flush_dirty_inode(struct page *page)
 void f2fs_flush_inline_data(struct f2fs_sb_info *sbi)
 {
 	pgoff_t index = 0;
-	struct folio_batch fbatch;
-	int nr_folios;
+	struct pagevec pvec;
+	int nr_pages;
 
-	folio_batch_init(&fbatch);
+	pagevec_init(&pvec);
 
-	while ((nr_folios = filemap_get_folios_tag(NODE_MAPPING(sbi), &index,
-					(pgoff_t)-1, PAGECACHE_TAG_DIRTY,
-					&fbatch))) {
+	while ((nr_pages = pagevec_lookup_tag(&pvec,
+			NODE_MAPPING(sbi), &index, PAGECACHE_TAG_DIRTY))) {
 		int i;
 
-		for (i = 0; i < nr_folios; i++) {
-			struct page *page = &fbatch.folios[i]->page;
+		for (i = 0; i < nr_pages; i++) {
+			struct page *page = pvec.pages[i];
 
 			if (!IS_DNODE(page))
 				continue;
@@ -1931,7 +1921,7 @@ continue_unlock:
 			}
 			unlock_page(page);
 		}
-		folio_batch_release(&fbatch);
+		pagevec_release(&pvec);
 		cond_resched();
 	}
 }
@@ -1941,24 +1931,23 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
 				bool do_balance, enum iostat_type io_type)
 {
 	pgoff_t index;
-	struct folio_batch fbatch;
+	struct pagevec pvec;
 	int step = 0;
 	int nwritten = 0;
 	int ret = 0;
-	int nr_folios, done = 0;
+	int nr_pages, done = 0;
 
-	folio_batch_init(&fbatch);
+	pagevec_init(&pvec);
 
 next_step:
 	index = 0;
 
-	while (!done && (nr_folios = filemap_get_folios_tag(NODE_MAPPING(sbi),
-				&index, (pgoff_t)-1, PAGECACHE_TAG_DIRTY,
-				&fbatch))) {
+	while (!done && (nr_pages = pagevec_lookup_tag(&pvec,
+			NODE_MAPPING(sbi), &index, PAGECACHE_TAG_DIRTY))) {
 		int i;
 
-		for (i = 0; i < nr_folios; i++) {
-			struct page *page = &fbatch.folios[i]->page;
+		for (i = 0; i < nr_pages; i++) {
+			struct page *page = pvec.pages[i];
 			bool submitted = false;
 
 			/* give a priority to WB_SYNC threads */
@@ -2033,7 +2022,7 @@ write_node:
 			if (--wbc->nr_to_write == 0)
 				break;
 		}
-		folio_batch_release(&fbatch);
+		pagevec_release(&pvec);
 		cond_resched();
 
 		if (wbc->nr_to_write == 0) {
@@ -2066,6 +2055,7 @@ int f2fs_wait_on_node_pages_writeback(struct f2fs_sb_info *sbi,
 	struct list_head *head = &sbi->fsync_node_list;
 	unsigned long flags;
 	unsigned int cur_seq_id = 0;
+	int ret2, ret = 0;
 
 	while (seq_id && cur_seq_id < seq_id) {
 		spin_lock_irqsave(&sbi->fsync_node_lock, flags);
@@ -2084,11 +2074,20 @@ int f2fs_wait_on_node_pages_writeback(struct f2fs_sb_info *sbi,
 		spin_unlock_irqrestore(&sbi->fsync_node_lock, flags);
 
 		f2fs_wait_on_page_writeback(page, NODE, true, false);
+		if (TestClearPageError(page))
+			ret = -EIO;
 
 		put_page(page);
+
+		if (ret)
+			break;
 	}
 
-	return filemap_check_errors(NODE_MAPPING(sbi));
+	ret2 = filemap_check_errors(NODE_MAPPING(sbi));
+	if (!ret)
+		ret = ret2;
+
+	return ret;
 }
 
 static int f2fs_write_node_pages(struct address_space *mapping,
@@ -2540,8 +2539,10 @@ bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid)
 	struct f2fs_nm_info *nm_i = NM_I(sbi);
 	struct free_nid *i = NULL;
 retry:
-	if (time_to_inject(sbi, FAULT_ALLOC_NID))
+	if (time_to_inject(sbi, FAULT_ALLOC_NID)) {
+		f2fs_show_injection_info(sbi, FAULT_ALLOC_NID);
 		return false;
+	}
 
 	spin_lock(&nm_i->nid_list_lock);
 

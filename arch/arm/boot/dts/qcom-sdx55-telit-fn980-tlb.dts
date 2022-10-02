@@ -98,7 +98,7 @@
 };
 
 &apps_rsc {
-	regulators-0 {
+	pmx55-rpmh-regulators {
 		compatible = "qcom,pmx55-rpmh-regulators";
 		qcom,pmic-id = "e";
 
@@ -233,39 +233,36 @@
 };
 
 &blsp1_uart3 {
-	status = "okay";
+	status = "ok";
 };
 
 &ipa {
-	qcom,gsi-loader = "self";
-	memory-region = <&ipa_fw_mem>;
 	status = "okay";
+
+	memory-region = <&ipa_fw_mem>;
 };
 
-&pcie_phy {
+&pcie0_phy {
+	status = "okay";
+
 	vdda-phy-supply = <&vreg_l1e_bb_1p2>;
 	vdda-pll-supply = <&vreg_l4e_bb_0p875>;
-
-	status = "okay";
 };
 
 &pcie_ep {
+	status = "okay";
+
 	pinctrl-names = "default";
 	pinctrl-0 = <&pcie_ep_clkreq_default &pcie_ep_perst_default
 		     &pcie_ep_wake_default>;
-
-	reset-gpios = <&tlmm 57 GPIO_ACTIVE_LOW>;
-	wake-gpios = <&tlmm 53 GPIO_ACTIVE_LOW>;
-
-	status = "okay";
 };
 
 &qpic_bam {
-	status = "okay";
+	status = "ok";
 };
 
 &qpic_nand {
-	status = "okay";
+	status = "ok";
 
 	nand@0 {
 		reg = <0>;
@@ -280,46 +277,59 @@
 };
 
 &remoteproc_mpss {
-	memory-region = <&mpss_adsp_mem>;
 	status = "okay";
+	memory-region = <&mpss_adsp_mem>;
 };
 
 &tlmm {
-	pcie_ep_clkreq_default: pcie-ep-clkreq-default-state {
-		pins = "gpio56";
-		function = "pcie_clkreq";
-		drive-strength = <2>;
-		bias-disable;
+	pcie_ep_clkreq_default: pcie_ep_clkreq_default {
+		mux {
+			pins = "gpio56";
+			function = "pcie_clkreq";
+		};
+		config {
+			pins = "gpio56";
+			drive-strength = <2>;
+			bias-disable;
+		};
 	};
 
-	pcie_ep_perst_default: pcie-ep-perst-default-state {
-		pins = "gpio57";
-		function = "gpio";
-		drive-strength = <2>;
-		bias-pull-down;
+	pcie_ep_perst_default: pcie_ep_perst_default {
+		mux {
+			pins = "gpio57";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio57";
+			drive-strength = <2>;
+			bias-pull-down;
+		};
 	};
 
-	pcie_ep_wake_default: pcie-ep-wake-default-state {
-		pins = "gpio53";
-		function = "gpio";
-		drive-strength = <2>;
-		bias-disable;
+	pcie_ep_wake_default: pcie_ep_wake_default {
+		mux {
+			pins = "gpio53";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio53";
+			drive-strength = <2>;
+			bias-disable;
+		};
 	};
 };
 
 &usb_hsphy {
+	status = "okay";
 	vdda-pll-supply = <&vreg_l4e_bb_0p875>;
 	vdda33-supply = <&vreg_l10e_3p1>;
 	vdda18-supply = <&vreg_l5e_bb_1p7>;
-
-	status = "okay";
 };
 
 &usb_qmpphy {
+	status = "okay";
 	vdda-phy-supply = <&vreg_l4e_bb_0p875>;
 	vdda-pll-supply = <&vreg_l1e_bb_1p2>;
-
-	status = "okay";
 };
 
 &usb {

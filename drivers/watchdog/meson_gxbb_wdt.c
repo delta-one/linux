@@ -146,11 +146,16 @@ static const struct of_device_id meson_gxbb_wdt_dt_ids[] = {
 };
 MODULE_DEVICE_TABLE(of, meson_gxbb_wdt_dt_ids);
 
+static void meson_clk_disable_unprepare(void *data)
+{
+	clk_disable_unprepare(data);
+}
+
 static int meson_gxbb_wdt_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct meson_gxbb_wdt *data;
-	u32 ctrl_reg;
+	int ret;
 
 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
 	if (!data)
@@ -160,9 +165,17 @@ static int meson_gxbb_wdt_probe(struct platform_device *pdev)
 	if (IS_ERR(data->reg_base))
 		return PTR_ERR(data->reg_base);
 
-	data->clk = devm_clk_get_enabled(dev, NULL);
+	data->clk = devm_clk_get(dev, NULL);
 	if (IS_ERR(data->clk))
 		return PTR_ERR(data->clk);
+
+	ret = clk_prepare_enable(data->clk);
+	if (ret)
+		return ret;
+	ret = devm_add_action_or_reset(dev, meson_clk_disable_unprepare,
+				       data->clk);
+	if (ret)
+		return ret;
 
 	platform_set_drvdata(pdev, data);
 
@@ -176,26 +189,13 @@ static int meson_gxbb_wdt_probe(struct platform_device *pdev)
 	watchdog_set_nowayout(&data->wdt_dev, nowayout);
 	watchdog_set_drvdata(&data->wdt_dev, data);
 
-	ctrl_reg = readl(data->reg_base + GXBB_WDT_CTRL_REG) &
-				GXBB_WDT_CTRL_EN;
-
-	if (ctrl_reg) {
-		/* Watchdog is running - keep it running but extend timeout
-		 * to the maximum while setting the timebase
-		 */
-		set_bit(WDOG_HW_RUNNING, &data->wdt_dev.status);
-		meson_gxbb_wdt_set_timeout(&data->wdt_dev,
-				GXBB_WDT_TCNT_SETUP_MASK / 1000);
-	}
-
 	/* Setup with 1ms timebase */
-	ctrl_reg |= ((clk_get_rate(data->clk) / 1000) &
-			GXBB_WDT_CTRL_DIV_MASK) |
-			GXBB_WDT_CTRL_EE_RESET |
-			GXBB_WDT_CTRL_CLK_EN |
-			GXBB_WDT_CTRL_CLKDIV_EN;
+	writel(((clk_get_rate(data->clk) / 1000) & GXBB_WDT_CTRL_DIV_MASK) |
+		GXBB_WDT_CTRL_EE_RESET |
+		GXBB_WDT_CTRL_CLK_EN |
+		GXBB_WDT_CTRL_CLKDIV_EN,
+		data->reg_base + GXBB_WDT_CTRL_REG);
 
-	writel(ctrl_reg, data->reg_base + GXBB_WDT_CTRL_REG);
 	meson_gxbb_wdt_set_timeout(&data->wdt_dev, data->wdt_dev.timeout);
 
 	return devm_watchdog_register_device(dev, &data->wdt_dev);

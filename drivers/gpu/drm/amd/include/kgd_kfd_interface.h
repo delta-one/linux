@@ -262,9 +262,8 @@ struct kfd2kgd_calls {
 				uint32_t queue_id);
 
 	int (*hqd_destroy)(struct amdgpu_device *adev, void *mqd,
-				enum kfd_preempt_type reset_type,
-				unsigned int timeout, uint32_t pipe_id,
-				uint32_t queue_id);
+				uint32_t reset_type, unsigned int timeout,
+				uint32_t pipe_id, uint32_t queue_id);
 
 	bool (*hqd_sdma_is_occupied)(struct amdgpu_device *adev, void *mqd);
 

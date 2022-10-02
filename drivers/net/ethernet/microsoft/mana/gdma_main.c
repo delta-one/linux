@@ -181,6 +181,62 @@ void mana_gd_free_memory(struct gdma_mem_info *gmi)
 			  gmi->dma_handle);
 }
 
+int mana_gd_destroy_doorbell_page(struct gdma_context *gc, int doorbell_page)
+{
+	struct gdma_destroy_resource_range_req req = {};
+	struct gdma_resp_hdr resp = {};
+	int err;
+
+	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_RESOURCE_RANGE,
+			     sizeof(req), sizeof(resp));
+
+	req.resource_type = GDMA_RESOURCE_DOORBELL_PAGE;
+	req.num_resources = 1;
+	req.allocated_resources = doorbell_page;
+
+	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
+	if (err || resp.status) {
+		dev_err(gc->dev,
+			"Failed to destroy doorbell page: ret %d, 0x%x\n",
+			err, resp.status);
+		return err ? err : -EPROTO;
+	}
+
+	return 0;
+}
+EXPORT_SYMBOL_NS(mana_gd_destroy_doorbell_page, NET_MANA);
+
+int mana_gd_allocate_doorbell_page(struct gdma_context *gc,
+				   int *doorbell_page)
+{
+	struct gdma_allocate_resource_range_req req = {};
+	struct gdma_allocate_resource_range_resp resp = {};
+	int err;
+
+	mana_gd_init_req_hdr(&req.hdr, GDMA_ALLOCATE_RESOURCE_RANGE,
+			     sizeof(req), sizeof(resp));
+
+	req.resource_type = GDMA_RESOURCE_DOORBELL_PAGE;
+	req.num_resources = 1;
+	req.alignment = 1;
+
+	/* Have GDMA start searching from 0 */
+	req.allocated_resources = 0;
+
+	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
+	if (err || resp.hdr.status) {
+		dev_err(gc->dev,
+			"Failed to allocate doorbell page: ret %d, 0x%x\n",
+			err, resp.hdr.status);
+		return err ? err : -EPROTO;
+	}
+
+	*doorbell_page = resp.allocated_resources;
+
+	return 0;
+}
+EXPORT_SYMBOL_NS(mana_gd_allocate_doorbell_page, NET_MANA);
+
 static int mana_gd_create_hw_eq(struct gdma_context *gc,
 				struct gdma_queue *queue)
 {
@@ -671,7 +727,8 @@ free_q:
 	return err;
 }
 
-int mana_gd_destroy_dma_region(struct gdma_context *gc, u64 dma_region_handle)
+int mana_gd_destroy_dma_region(struct gdma_context *gc,
+			       gdma_obj_handle_t dma_region_handle)
 {
 	struct gdma_destroy_dma_region_req req = {};
 	struct gdma_general_resp resp = {};
@@ -1217,9 +1274,9 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
 	unsigned int max_queues_per_port = num_online_cpus();
 	struct gdma_context *gc = pci_get_drvdata(pdev);
 	struct gdma_irq_context *gic;
-	unsigned int max_irqs, cpu;
+	unsigned int max_irqs;
 	int nvec, irq;
-	int err, i = 0, j;
+	int err, i, j;
 
 	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
 		max_queues_per_port = MANA_MAX_NUM_QUEUES;
@@ -1243,25 +1300,15 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
 		gic->handler = NULL;
 		gic->arg = NULL;
 
-		if (!i)
-			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_hwc@pci:%s",
-				 pci_name(pdev));
-		else
-			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
-				 i - 1, pci_name(pdev));
-
 		irq = pci_irq_vector(pdev, i);
 		if (irq < 0) {
 			err = irq;
 			goto free_irq;
 		}
 
-		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+		err = request_irq(irq, mana_gd_intr, 0, "mana_intr", gic);
 		if (err)
 			goto free_irq;
-
-		cpu = cpumask_local_spread(i, gc->numa_node);
-		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
 	}
 
 	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
@@ -1277,8 +1324,6 @@ free_irq:
 	for (j = i - 1; j >= 0; j--) {
 		irq = pci_irq_vector(pdev, j);
 		gic = &gc->irq_contexts[j];
-
-		irq_update_affinity_hint(irq, NULL);
 		free_irq(irq, gic);
 	}
 
@@ -1306,9 +1351,6 @@ static void mana_gd_remove_irqs(struct pci_dev *pdev)
 			continue;
 
 		gic = &gc->irq_contexts[i];
-
-		/* Need to clear the hint before free_irq */
-		irq_update_affinity_hint(irq, NULL);
 		free_irq(irq, gic);
 	}
 
@@ -1414,7 +1456,6 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	if (!bar0_va)
 		goto free_gc;
 
-	gc->numa_node = dev_to_node(&pdev->dev);
 	gc->is_pf = mana_is_pf(pdev->device);
 	gc->bar0_va = bar0_va;
 	gc->dev = &pdev->dev;
@@ -1439,6 +1480,7 @@ free_gc:
 release_region:
 	pci_release_regions(pdev);
 disable_dev:
+	pci_clear_master(pdev);
 	pci_disable_device(pdev);
 	dev_err(&pdev->dev, "gdma probe failed: err = %d\n", err);
 	return err;
@@ -1457,6 +1499,7 @@ static void mana_gd_remove(struct pci_dev *pdev)
 	vfree(gc);
 
 	pci_release_regions(pdev);
+	pci_clear_master(pdev);
 	pci_disable_device(pdev);
 }
 

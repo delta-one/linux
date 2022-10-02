@@ -128,15 +128,12 @@ static int dw_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
 
 	dw_spi_dma_sg_burst_init(dws);
 
-	pci_dev_put(dma_dev);
-
 	return 0;
 
 free_rxchan:
 	dma_release_channel(dws->rxchan);
 	dws->rxchan = NULL;
 err_exit:
-	pci_dev_put(dma_dev);
 	return -EBUSY;
 }
 
@@ -198,26 +195,22 @@ static irqreturn_t dw_spi_dma_transfer_handler(struct dw_spi *dws)
 	return IRQ_HANDLED;
 }
 
-static enum dma_slave_buswidth dw_spi_dma_convert_width(u8 n_bytes)
-{
-	switch (n_bytes) {
-	case 1:
-		return DMA_SLAVE_BUSWIDTH_1_BYTE;
-	case 2:
-		return DMA_SLAVE_BUSWIDTH_2_BYTES;
-	case 4:
-		return DMA_SLAVE_BUSWIDTH_4_BYTES;
-	default:
-		return DMA_SLAVE_BUSWIDTH_UNDEFINED;
-	}
-}
-
 static bool dw_spi_can_dma(struct spi_controller *master,
 			   struct spi_device *spi, struct spi_transfer *xfer)
 {
 	struct dw_spi *dws = spi_controller_get_devdata(master);
 
 	return xfer->len > dws->fifo_len;
+}
+
+static enum dma_slave_buswidth dw_spi_dma_convert_width(u8 n_bytes)
+{
+	if (n_bytes == 1)
+		return DMA_SLAVE_BUSWIDTH_1_BYTE;
+	else if (n_bytes == 2)
+		return DMA_SLAVE_BUSWIDTH_2_BYTES;
+
+	return DMA_SLAVE_BUSWIDTH_UNDEFINED;
 }
 
 static int dw_spi_dma_wait(struct dw_spi *dws, unsigned int len, u32 speed)

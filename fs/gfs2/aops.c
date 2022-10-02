@@ -37,10 +37,10 @@
 #include "aops.h"
 
 
-void gfs2_trans_add_databufs(struct gfs2_inode *ip, struct folio *folio,
-			     unsigned int from, unsigned int len)
+void gfs2_page_add_databufs(struct gfs2_inode *ip, struct page *page,
+			    unsigned int from, unsigned int len)
 {
-	struct buffer_head *head = folio_buffers(folio);
+	struct buffer_head *head = page_buffers(page);
 	unsigned int bsize = head->b_size;
 	struct buffer_head *bh;
 	unsigned int to = from + len;
@@ -127,6 +127,7 @@ static int __gfs2_jdata_writepage(struct page *page, struct writeback_control *w
 {
 	struct inode *inode = page->mapping->host;
 	struct gfs2_inode *ip = GFS2_I(inode);
+	struct gfs2_sbd *sdp = GFS2_SB(inode);
 
 	if (PageChecked(page)) {
 		ClearPageChecked(page);
@@ -134,7 +135,7 @@ static int __gfs2_jdata_writepage(struct page *page, struct writeback_control *w
 			create_empty_buffers(page, inode->i_sb->s_blocksize,
 					     BIT(BH_Dirty)|BIT(BH_Uptodate));
 		}
-		gfs2_trans_add_databufs(ip, page_folio(page), 0, PAGE_SIZE);
+		gfs2_page_add_databufs(ip, page, 0, sdp->sd_vfs->s_blocksize);
 	}
 	return gfs2_write_jdata_page(page, wbc);
 }
@@ -194,71 +195,67 @@ static int gfs2_writepages(struct address_space *mapping,
 }
 
 /**
- * gfs2_write_jdata_batch - Write back a folio batch's worth of folios
+ * gfs2_write_jdata_pagevec - Write back a pagevec's worth of pages
  * @mapping: The mapping
  * @wbc: The writeback control
- * @fbatch: The batch of folios
+ * @pvec: The vector of pages
+ * @nr_pages: The number of pages to write
  * @done_index: Page index
  *
  * Returns: non-zero if loop should terminate, zero otherwise
  */
 
-static int gfs2_write_jdata_batch(struct address_space *mapping,
+static int gfs2_write_jdata_pagevec(struct address_space *mapping,
 				    struct writeback_control *wbc,
-				    struct folio_batch *fbatch,
+				    struct pagevec *pvec,
+				    int nr_pages,
 				    pgoff_t *done_index)
 {
 	struct inode *inode = mapping->host;
 	struct gfs2_sbd *sdp = GFS2_SB(inode);
-	unsigned nrblocks;
+	unsigned nrblocks = nr_pages * (PAGE_SIZE >> inode->i_blkbits);
 	int i;
 	int ret;
-	int nr_pages = 0;
-	int nr_folios = folio_batch_count(fbatch);
-
-	for (i = 0; i < nr_folios; i++)
-		nr_pages += folio_nr_pages(fbatch->folios[i]);
-	nrblocks = nr_pages * (PAGE_SIZE >> inode->i_blkbits);
 
 	ret = gfs2_trans_begin(sdp, nrblocks, nrblocks);
 	if (ret < 0)
 		return ret;
 
-	for (i = 0; i < nr_folios; i++) {
-		struct folio *folio = fbatch->folios[i];
+	for(i = 0; i < nr_pages; i++) {
+		struct page *page = pvec->pages[i];
 
-		*done_index = folio->index;
+		*done_index = page->index;
 
-		folio_lock(folio);
+		lock_page(page);
 
-		if (unlikely(folio->mapping != mapping)) {
+		if (unlikely(page->mapping != mapping)) {
 continue_unlock:
-			folio_unlock(folio);
+			unlock_page(page);
 			continue;
 		}
 
-		if (!folio_test_dirty(folio)) {
+		if (!PageDirty(page)) {
 			/* someone wrote it for us */
 			goto continue_unlock;
 		}
 
-		if (folio_test_writeback(folio)) {
+		if (PageWriteback(page)) {
 			if (wbc->sync_mode != WB_SYNC_NONE)
-				folio_wait_writeback(folio);
+				wait_on_page_writeback(page);
 			else
 				goto continue_unlock;
 		}
 
-		BUG_ON(folio_test_writeback(folio));
-		if (!folio_clear_dirty_for_io(folio))
+		BUG_ON(PageWriteback(page));
+		if (!clear_page_dirty_for_io(page))
 			goto continue_unlock;
 
 		trace_wbc_writepage(wbc, inode_to_bdi(inode));
 
-		ret = __gfs2_jdata_writepage(&folio->page, wbc);
+		ret = __gfs2_jdata_writepage(page, wbc);
 		if (unlikely(ret)) {
 			if (ret == AOP_WRITEPAGE_ACTIVATE) {
-				folio_unlock(folio);
+				unlock_page(page);
 				ret = 0;
 			} else {
 
@@ -271,8 +268,7 @@ continue_unlock:
 				 * not be suitable for data integrity
 				 * writeout).
 				 */
-				*done_index = folio->index +
-					folio_nr_pages(folio);
+				*done_index = page->index + 1;
 				ret = 1;
 				break;
 			}
@@ -309,8 +305,8 @@ static int gfs2_write_cache_jdata(struct address_space *mapping,
 {
 	int ret = 0;
 	int done = 0;
-	struct folio_batch fbatch;
-	int nr_folios;
+	struct pagevec pvec;
+	int nr_pages;
 	pgoff_t writeback_index;
 	pgoff_t index;
 	pgoff_t end;
@@ -319,7 +315,7 @@ static int gfs2_write_cache_jdata(struct address_space *mapping,
 	int range_whole = 0;
 	xa_mark_t tag;
 
-	folio_batch_init(&fbatch);
+	pagevec_init(&pvec);
 	if (wbc->range_cyclic) {
 		writeback_index = mapping->writeback_index; /* prev offset */
 		index = writeback_index;
@@ -345,18 +341,17 @@ retry:
 		tag_pages_for_writeback(mapping, index, end);
 	done_index = index;
 	while (!done && (index <= end)) {
-		nr_folios = filemap_get_folios_tag(mapping, &index, end,
-				tag, &fbatch);
-		if (nr_folios == 0)
+		nr_pages = pagevec_lookup_range_tag(&pvec, mapping, &index, end,
+				tag);
+		if (nr_pages == 0)
 			break;
 
-		ret = gfs2_write_jdata_batch(mapping, wbc, &fbatch,
-				&done_index);
+		ret = gfs2_write_jdata_pagevec(mapping, wbc, &pvec, nr_pages, &done_index);
 		if (ret)
 			done = 1;
 		if (ret > 0)
 			ret = 0;
-		folio_batch_release(&fbatch);
+		pagevec_release(&pvec);
 		cond_resched();
 	}
 
@@ -432,6 +427,8 @@ static int stuffed_readpage(struct gfs2_inode *ip, struct page *page)
 		return error;
 
 	kaddr = kmap_atomic(page);
+	if (dsize > gfs2_max_stuffed_size(ip))
+		dsize = gfs2_max_stuffed_size(ip);
 	memcpy(kaddr, dibh->b_data + sizeof(struct gfs2_dinode), dsize);
 	memset(kaddr + dsize, 0, PAGE_SIZE - dsize);
 	kunmap_atomic(kaddr);

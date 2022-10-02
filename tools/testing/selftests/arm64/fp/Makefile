@@ -3,7 +3,7 @@
 # A proper top_srcdir is needed by KSFT(lib.mk)
 top_srcdir = $(realpath ../../../../../)
 
-CFLAGS += $(KHDR_INCLUDES)
+CFLAGS += -I$(top_srcdir)/usr/include/
 
 TEST_GEN_PROGS := fp-stress \
 	sve-ptrace sve-probe-vls \
@@ -14,8 +14,6 @@ TEST_GEN_PROGS_EXTENDED := fp-pidbench fpsimd-test \
 	sve-test \
 	ssve-test \
 	za-test \
-	zt-ptrace \
-	zt-test \
 	vlset
 TEST_PROGS_EXTENDED := fpsimd-stress sve-stress ssve-stress za-stress
 
@@ -38,13 +36,10 @@ $(OUTPUT)/vec-syscfg: vec-syscfg.c $(OUTPUT)/rdvl.o
 $(OUTPUT)/vlset: vlset.c
 $(OUTPUT)/za-fork: za-fork.c $(OUTPUT)/za-fork-asm.o
 	$(CC) -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib \
-		-include ../../../../include/nolibc/nolibc.h -I../..\
+		-include ../../../../include/nolibc/nolibc.h \
 		-static -ffreestanding -Wall $^ -o $@
 $(OUTPUT)/za-ptrace: za-ptrace.c
 $(OUTPUT)/za-test: za-test.S $(OUTPUT)/asm-utils.o
-	$(CC) -nostdlib $^ -o $@
-$(OUTPUT)/zt-ptrace: zt-ptrace.c
-$(OUTPUT)/zt-test: zt-test.S $(OUTPUT)/asm-utils.o
 	$(CC) -nostdlib $^ -o $@
 
 include ../../lib.mk

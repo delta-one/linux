@@ -416,17 +416,17 @@
 		pinctrl-0 = <&pinctrl_led_gpio_default>;
 		status = "okay";
 
-		led-red {
+		red {
 			label = "red";
 			gpios = <&pioA PIN_PB10 GPIO_ACTIVE_HIGH>;
 		};
 
-		led-green {
+		green {
 			label = "green";
 			gpios = <&pioA PIN_PB8 GPIO_ACTIVE_HIGH>;
 		};
 
-		led-blue {
+		blue {
 			label = "blue";
 			gpios = <&pioA PIN_PB6 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";

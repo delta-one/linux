@@ -82,7 +82,6 @@
 #include <linux/mm.h>
 #include <linux/string.h>
 #include <crypto/hash.h>
-#include "messages.h"
 #include "ctree.h"
 #include "disk-io.h"
 #include "transaction.h"
@@ -93,7 +92,6 @@
 #include "check-integrity.h"
 #include "rcu-string.h"
 #include "compression.h"
-#include "accessors.h"
 
 #define BTRFSIC_BLOCK_HASHTABLE_SIZE 0x10000
 #define BTRFSIC_BLOCK_LINK_HASHTABLE_SIZE 0x10000
@@ -757,7 +755,7 @@ static int btrfsic_process_superblock_dev_mirror(
 			btrfs_info_in_rcu(fs_info,
 			"new initial S-block (bdev %p, %s) @%llu (%pg/%llu/%d)",
 				     superblock_bdev,
-				     btrfs_dev_name(device), dev_bytenr,
+				     rcu_str_deref(device->name), dev_bytenr,
 				     dev_state->bdev, dev_bytenr,
 				     superblock_mirror_num);
 		list_add(&superblock_tmp->all_blocks_node,
@@ -1565,7 +1563,7 @@ static int btrfsic_read_block(struct btrfsic_state *state,
 
 		bio = bio_alloc(block_ctx->dev->bdev, num_pages - i,
 				REQ_OP_READ, GFP_NOFS);
-		bio->bi_iter.bi_sector = dev_bytenr >> SECTOR_SHIFT;
+		bio->bi_iter.bi_sector = dev_bytenr >> 9;
 
 		for (j = i; j < num_pages; j++) {
 			ret = bio_add_page(bio, block_ctx->pagev[j],

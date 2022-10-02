@@ -3034,13 +3034,11 @@ static int ov8865_probe(struct i2c_client *client)
 				       &rate);
 	if (!ret && sensor->extclk) {
 		ret = clk_set_rate(sensor->extclk, rate);
-		if (ret) {
-			dev_err_probe(dev, ret, "failed to set clock rate\n");
-			goto error_endpoint;
-		}
+		if (ret)
+			return dev_err_probe(dev, ret,
+					     "failed to set clock rate\n");
 	} else if (ret && !sensor->extclk) {
-		dev_err_probe(dev, ret, "invalid clock config\n");
-		goto error_endpoint;
+		return dev_err_probe(dev, ret, "invalid clock config\n");
 	}
 
 	sensor->extclk_rate = rate ? rate : clk_get_rate(sensor->extclk);

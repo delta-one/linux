@@ -128,7 +128,7 @@ static int secretmem_mmap(struct file *file, struct vm_area_struct *vma)
 	if (mlock_future_check(vma->vm_mm, vma->vm_flags | VM_LOCKED, len))
 		return -EAGAIN;
 
-	vm_flags_set(vma, VM_LOCKED | VM_DONTDUMP);
+	vma->vm_flags |= VM_LOCKED | VM_DONTDUMP;
 	vma->vm_ops = &secretmem_vm_ops;
 
 	return 0;
@@ -162,7 +162,7 @@ const struct address_space_operations secretmem_aops = {
 	.migrate_folio	= secretmem_migrate_folio,
 };
 
-static int secretmem_setattr(struct mnt_idmap *idmap,
+static int secretmem_setattr(struct user_namespace *mnt_userns,
 			     struct dentry *dentry, struct iattr *iattr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -175,7 +175,7 @@ static int secretmem_setattr(struct mnt_idmap *idmap,
 	if ((ia_valid & ATTR_SIZE) && inode->i_size)
 		ret = -EINVAL;
 	else
-		ret = simple_setattr(idmap, dentry, iattr);
+		ret = simple_setattr(mnt_userns, dentry, iattr);
 
 	filemap_invalidate_unlock(mapping);
 
@@ -190,7 +190,7 @@ static struct vfsmount *secretmem_mnt;
 
 static struct file *secretmem_file_create(unsigned long flags)
 {
-	struct file *file;
+	struct file *file = ERR_PTR(-ENOMEM);
 	struct inode *inode;
 	const char *anon_name = "[secretmem]";
 	const struct qstr qname = QSTR_INIT(anon_name, strlen(anon_name));
@@ -278,8 +278,10 @@ static struct file_system_type secretmem_fs = {
 
 static int __init secretmem_init(void)
 {
+	int ret = 0;
+
 	if (!secretmem_enable)
-		return 0;
+		return ret;
 
 	secretmem_mnt = kern_mount(&secretmem_fs);
 	if (IS_ERR(secretmem_mnt))
@@ -288,6 +290,6 @@ static int __init secretmem_init(void)
 	/* prevent secretmem mappings from ever getting PROT_EXEC */
 	secretmem_mnt->mnt_flags |= MNT_NOEXEC;
 
-	return 0;
+	return ret;
 }
 fs_initcall(secretmem_init);

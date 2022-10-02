@@ -47,7 +47,6 @@
 #include "dcn30/dcn30_clk_mgr.h"
 
 #include "dc_dmub_srv.h"
-#include "link.h"
 
 #include "logger_types.h"
 #undef DC_LOGGER
@@ -250,7 +249,9 @@ void dcn31_update_clocks(struct clk_mgr *clk_mgr_base,
 	cmd.notify_clocks.clocks.dispclk_khz = clk_mgr_base->clks.dispclk_khz;
 	cmd.notify_clocks.clocks.dppclk_khz = clk_mgr_base->clks.dppclk_khz;
 
-	dm_execute_dmub_cmd(dc->ctx, &cmd, DM_DMUB_WAIT_TYPE_WAIT);
+	dc_dmub_srv_cmd_queue(dc->ctx->dmub_srv, &cmd);
+	dc_dmub_srv_cmd_execute(dc->ctx->dmub_srv);
+	dc_dmub_srv_wait_idle(dc->ctx->dmub_srv);
 }
 
 static int get_vco_frequency_from_reg(struct clk_mgr_internal *clk_mgr)
@@ -608,10 +609,8 @@ static void dcn31_clk_mgr_helper_populate_bw_params(struct clk_mgr_internal *clk
 	}
 
 	bw_params->vram_type = bios_info->memory_type;
+	bw_params->num_channels = bios_info->ma_channel_number;
 
-	bw_params->dram_channel_width_bytes = bios_info->memory_type == 0x22 ? 8 : 4;
-	//bw_params->dram_channel_width_bytes = dc->ctx->asic_id.vram_width;
-	bw_params->num_channels = bios_info->ma_channel_number ? bios_info->ma_channel_number : 4;
 	for (i = 0; i < WM_SET_COUNT; i++) {
 		bw_params->wm_table.entries[i].wm_inst = i;
 

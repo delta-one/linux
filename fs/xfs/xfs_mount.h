@@ -66,9 +66,6 @@ struct xfs_inodegc {
 	/* approximate count of inodes in the list */
 	unsigned int		items;
 	unsigned int		shrinker_hits;
-#if defined(DEBUG) || defined(XFS_WARN)
-	unsigned int		cpu;
-#endif
 };
 
 /*
@@ -213,7 +210,8 @@ typedef struct xfs_mount {
 	struct xfs_error_cfg	m_error_cfg[XFS_ERR_CLASS_MAX][XFS_ERR_ERRNO_MAX];
 	struct xstats		m_stats;	/* per-fs stats */
 	xfs_agnumber_t		m_agfrotor;	/* last ag where space found */
-	atomic_t		m_agirotor;	/* last ag dir inode alloced */
+	xfs_agnumber_t		m_agirotor;	/* last ag dir inode alloced */
+	spinlock_t		m_agirotor_lock;/* .. and lock protecting it */
 
 	/* Memory shrinker to throttle and reprioritize inodegc */
 	struct shrinker		m_inodegc_shrinker;

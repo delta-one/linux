@@ -563,7 +563,7 @@ static int imx_card_parse_of(struct imx_card_data *data)
 			link_data->cpu_sysclk_id = FSL_SAI_CLK_MAST1;
 
 			/* sai may support mclk/bclk = 1 */
-			if (of_property_read_bool(np, "fsl,mclk-equal-bclk")) {
+			if (of_find_property(np, "fsl,mclk-equal-bclk", NULL)) {
 				link_data->one2one_ratio = true;
 			} else {
 				int i;
@@ -615,8 +615,17 @@ static int imx_card_parse_of(struct imx_card_data *data)
 				plat_data->type = CODEC_AK5552;
 
 		} else {
-			link->codecs	 = &asoc_dummy_dlc;
+			dlc = devm_kzalloc(dev, sizeof(*dlc), GFP_KERNEL);
+			if (!dlc) {
+				ret = -ENOMEM;
+				goto err;
+			}
+
+			link->codecs	 = dlc;
 			link->num_codecs = 1;
+
+			link->codecs->dai_name = "snd-soc-dummy-dai";
+			link->codecs->name = "snd-soc-dummy";
 		}
 
 		if (!strncmp(link->name, "HiFi-ASRC-FE", 12)) {

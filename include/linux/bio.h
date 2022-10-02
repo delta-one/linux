@@ -12,8 +12,6 @@
 
 #define BIO_MAX_VECS		256U
 
-struct queue_limits;
-
 static inline unsigned int bio_max_segs(unsigned int nr_segs)
 {
 	return min(nr_segs, BIO_MAX_VECS);
@@ -377,8 +375,6 @@ static inline void bip_set_seed(struct bio_integrity_payload *bip,
 void bio_trim(struct bio *bio, sector_t offset, sector_t size);
 extern struct bio *bio_split(struct bio *bio, int sectors,
 			     gfp_t gfp, struct bio_set *bs);
-struct bio *bio_split_rw(struct bio *bio, const struct queue_limits *lim,
-		unsigned *segs, struct bio_set *bs, unsigned max_bytes);
 
 /**
  * bio_next_split - get next @sectors from a bio, splitting if necessary
@@ -500,7 +496,6 @@ void bio_associate_blkg(struct bio *bio);
 void bio_associate_blkg_from_css(struct bio *bio,
 				 struct cgroup_subsys_state *css);
 void bio_clone_blkg_association(struct bio *dst, struct bio *src);
-void blkcg_punt_bio_submit(struct bio *bio);
 #else	/* CONFIG_BLK_CGROUP */
 static inline void bio_associate_blkg(struct bio *bio) { }
 static inline void bio_associate_blkg_from_css(struct bio *bio,
@@ -508,10 +503,6 @@ static inline void bio_associate_blkg_from_css(struct bio *bio,
 { }
 static inline void bio_clone_blkg_association(struct bio *dst,
 					      struct bio *src) { }
-static inline void blkcg_punt_bio_submit(struct bio *bio)
-{
-	submit_bio(bio);
-}
 #endif	/* CONFIG_BLK_CGROUP */
 
 static inline void bio_set_dev(struct bio *bio, struct block_device *bdev)
@@ -793,7 +784,8 @@ static inline void bio_set_polled(struct bio *bio, struct kiocb *kiocb)
 
 static inline void bio_clear_polled(struct bio *bio)
 {
-	bio->bi_opf &= ~REQ_POLLED;
+	/* can't support alloc cache if we turn off polling */
+	bio->bi_opf &= ~(REQ_POLLED | REQ_ALLOC_CACHE);
 }
 
 struct bio *blk_next_bio(struct bio *bio, struct block_device *bdev,

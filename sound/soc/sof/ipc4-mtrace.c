@@ -108,7 +108,6 @@ struct sof_mtrace_core_data {
 	int id;
 	u32 slot_offset;
 	void *log_buffer;
-	struct mutex buffer_lock; /* for log_buffer alloc/free */
 	u32 host_read_ptr;
 	u32 dsp_write_ptr;
 	/* pos update IPC arrived before the slot offset is known, queried */
@@ -129,22 +128,14 @@ static int sof_ipc4_mtrace_dfs_open(struct inode *inode, struct file *file)
 	struct sof_mtrace_core_data *core_data = inode->i_private;
 	int ret;
 
-	mutex_lock(&core_data->buffer_lock);
-
-	if (core_data->log_buffer) {
-		ret = -EBUSY;
-		goto out;
-	}
-
 	ret = debugfs_file_get(file->f_path.dentry);
 	if (unlikely(ret))
-		goto out;
+		return ret;
 
 	core_data->log_buffer = kmalloc(SOF_MTRACE_SLOT_SIZE, GFP_KERNEL);
 	if (!core_data->log_buffer) {
 		debugfs_file_put(file->f_path.dentry);
-		ret = -ENOMEM;
-		goto out;
+		return -ENOMEM;
 	}
 
 	ret = simple_open(inode, file);
@@ -152,9 +143,6 @@ static int sof_ipc4_mtrace_dfs_open(struct inode *inode, struct file *file)
 		kfree(core_data->log_buffer);
 		debugfs_file_put(file->f_path.dentry);
 	}
-
-out:
-	mutex_unlock(&core_data->buffer_lock);
 
 	return ret;
 }
@@ -292,10 +280,7 @@ static int sof_ipc4_mtrace_dfs_release(struct inode *inode, struct file *file)
 
 	debugfs_file_put(file->f_path.dentry);
 
-	mutex_lock(&core_data->buffer_lock);
 	kfree(core_data->log_buffer);
-	core_data->log_buffer = NULL;
-	mutex_unlock(&core_data->buffer_lock);
 
 	return 0;
 }
@@ -344,10 +329,9 @@ static ssize_t sof_ipc4_priority_mask_dfs_write(struct file *file,
 						size_t count, loff_t *ppos)
 {
 	struct sof_mtrace_priv *priv = file->private_data;
-	unsigned int id;
+	int id, ret;
 	char *buf;
 	u32 mask;
-	int ret;
 
 	/*
 	 * To update Nth mask entry, write:
@@ -358,9 +342,9 @@ static ssize_t sof_ipc4_priority_mask_dfs_write(struct file *file,
 	if (IS_ERR(buf))
 		return PTR_ERR(buf);
 
-	ret = sscanf(buf, "%u,0x%x", &id, &mask);
+	ret = sscanf(buf, "%d,0x%x", &id, &mask);
 	if (ret != 2) {
-		ret = sscanf(buf, "%u,%x", &id, &mask);
+		ret = sscanf(buf, "%d,%x", &id, &mask);
 		if (ret != 2) {
 			ret = -EINVAL;
 			goto out;
@@ -579,7 +563,6 @@ static int ipc4_mtrace_init(struct snd_sof_dev *sdev)
 		struct sof_mtrace_core_data *core_data = &priv->cores[i];
 
 		init_waitqueue_head(&core_data->trace_sleep);
-		mutex_init(&core_data->buffer_lock);
 		core_data->sdev = sdev;
 		core_data->id = i;
 	}
@@ -607,16 +590,6 @@ static int ipc4_mtrace_init(struct snd_sof_dev *sdev)
 static void ipc4_mtrace_free(struct snd_sof_dev *sdev)
 {
 	ipc4_mtrace_disable(sdev);
-}
-
-static int sof_ipc4_mtrace_update_pos_all_cores(struct snd_sof_dev *sdev)
-{
-	int i;
-
-	for (i = 0; i < sdev->num_cores; i++)
-		sof_ipc4_mtrace_update_pos(sdev, i);
-
-	return 0;
 }
 
 int sof_ipc4_mtrace_update_pos(struct snd_sof_dev *sdev, int core)
@@ -652,16 +625,6 @@ int sof_ipc4_mtrace_update_pos(struct snd_sof_dev *sdev, int core)
 	return 0;
 }
 
-static void ipc4_mtrace_fw_crashed(struct snd_sof_dev *sdev)
-{
-	/*
-	 * The DSP might not be able to send SOF_IPC4_NOTIFY_LOG_BUFFER_STATUS
-	 * messages anymore, so check the log buffer status on all
-	 * cores and process any pending messages.
-	 */
-	sof_ipc4_mtrace_update_pos_all_cores(sdev);
-}
-
 static int ipc4_mtrace_resume(struct snd_sof_dev *sdev)
 {
 	return ipc4_mtrace_enable(sdev);
@@ -675,7 +638,6 @@ static void ipc4_mtrace_suspend(struct snd_sof_dev *sdev, pm_message_t pm_state)
 const struct sof_ipc_fw_tracing_ops ipc4_mtrace_ops = {
 	.init = ipc4_mtrace_init,
 	.free = ipc4_mtrace_free,
-	.fw_crashed = ipc4_mtrace_fw_crashed,
 	.suspend = ipc4_mtrace_suspend,
 	.resume = ipc4_mtrace_resume,
 };

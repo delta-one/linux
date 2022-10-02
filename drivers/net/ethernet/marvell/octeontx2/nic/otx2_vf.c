@@ -297,8 +297,9 @@ static int otx2vf_vfaf_mbox_init(struct otx2_nic *vf)
 	int err;
 
 	mbox->pfvf = vf;
-	vf->mbox_wq = alloc_ordered_workqueue("otx2_vfaf_mailbox",
-					      WQ_HIGHPRI | WQ_MEM_RECLAIM);
+	vf->mbox_wq = alloc_workqueue("otx2_vfaf_mailbox",
+				      WQ_UNBOUND | WQ_HIGHPRI |
+				      WQ_MEM_RECLAIM, 1);
 	if (!vf->mbox_wq)
 		return -ENOMEM;
 
@@ -620,7 +621,7 @@ static int otx2vf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 
 	err = otx2vf_realloc_msix_vectors(vf);
 	if (err)
-		goto err_detach_rsrc;
+		goto err_mbox_destroy;
 
 	err = otx2_set_real_num_queues(netdev, qcount, qcount);
 	if (err)
@@ -708,7 +709,6 @@ err_unreg_netdev:
 err_ptp_destroy:
 	otx2_ptp_destroy(vf);
 err_detach_rsrc:
-	free_percpu(vf->hw.lmt_info);
 	if (test_bit(CN10K_LMTST, &vf->hw.cap_flag))
 		qmem_free(vf->dev, vf->dync_lmt);
 	otx2_detach_resources(&vf->mbox);
@@ -758,11 +758,8 @@ static void otx2vf_remove(struct pci_dev *pdev)
 	if (vf->otx2_wq)
 		destroy_workqueue(vf->otx2_wq);
 	otx2_ptp_destroy(vf);
-	otx2_mcam_flow_del(vf);
-	otx2_shutdown_tc(vf);
 	otx2vf_disable_mbox_intr(vf);
 	otx2_detach_resources(&vf->mbox);
-	free_percpu(vf->hw.lmt_info);
 	if (test_bit(CN10K_LMTST, &vf->hw.cap_flag))
 		qmem_free(vf->dev, vf->dync_lmt);
 	otx2vf_vfaf_mbox_destroy(vf);

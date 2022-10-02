@@ -2952,11 +2952,10 @@ retry:
 		 */
 		if (PAGE_SIZE <= OCFS2_SB(sb)->s_clustersize) {
 			if (PageDirty(page)) {
-				unlock_page(page);
-				put_page(page);
-
-				ret = filemap_write_and_wait_range(mapping,
-						offset, map_end - 1);
+				/*
+				 * write_on_page will unlock the page on return
+				 */
+				ret = write_one_page(page);
 				goto retry;
 			}
 		}
@@ -4223,7 +4222,7 @@ static int ocfs2_reflink(struct dentry *old_dentry, struct inode *dir,
 {
 	int error, had_lock;
 	struct inode *inode = d_inode(old_dentry);
-	struct buffer_head *old_bh = NULL;
+	struct buffer_head *old_bh = NULL, *dir_bh = NULL;
 	struct inode *new_orphan_inode = NULL;
 	struct ocfs2_lock_holder oh;
 
@@ -4231,7 +4230,7 @@ static int ocfs2_reflink(struct dentry *old_dentry, struct inode *dir,
 		return -EOPNOTSUPP;
 
 
-	error = ocfs2_create_inode_in_orphan(dir, inode->i_mode,
+	error = ocfs2_create_inode_in_orphan(dir, &dir_bh, inode->i_mode,
 					     &new_orphan_inode);
 	if (error) {
 		mlog_errno(error);
@@ -4277,13 +4276,15 @@ static int ocfs2_reflink(struct dentry *old_dentry, struct inode *dir,
 
 	/* If the security isn't preserved, we need to re-initialize them. */
 	if (!preserve) {
-		error = ocfs2_init_security_and_acl(dir, new_orphan_inode,
+		error = ocfs2_init_security_and_acl(dir, dir_bh,
+						    new_orphan_inode,
 						    &new_dentry->d_name);
 		if (error)
 			mlog_errno(error);
 	}
 	if (!error) {
-		error = ocfs2_mv_orphaned_inode_to_new(dir, new_orphan_inode,
+		error = ocfs2_mv_orphaned_inode_to_new(dir, dir_bh,
+						       new_orphan_inode,
 						       new_dentry);
 		if (error)
 			mlog_errno(error);
@@ -4299,6 +4300,11 @@ out:
 		ocfs2_open_unlock(new_orphan_inode);
 		if (error)
 			iput(new_orphan_inode);
+	}
+
+	if (dir_bh) {
+		ocfs2_inode_unlock(dir, 1);
+		brelse(dir_bh);
 	}
 
 	return error;
@@ -4317,7 +4323,7 @@ static inline int ocfs2_may_create(struct inode *dir, struct dentry *child)
 		return -EEXIST;
 	if (IS_DEADDIR(dir))
 		return -ENOENT;
-	return inode_permission(&nop_mnt_idmap, dir, MAY_WRITE | MAY_EXEC);
+	return inode_permission(&init_user_ns, dir, MAY_WRITE | MAY_EXEC);
 }
 
 /**
@@ -4371,7 +4377,7 @@ static int ocfs2_vfs_reflink(struct dentry *old_dentry, struct inode *dir,
 	 * file.
 	 */
 	if (!preserve) {
-		error = inode_permission(&nop_mnt_idmap, inode, MAY_READ);
+		error = inode_permission(&init_user_ns, inode, MAY_READ);
 		if (error)
 			return error;
 	}

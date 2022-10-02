@@ -108,16 +108,6 @@ static inline void __pipe_unlock(struct pipe_inode_info *pipe)
 	mutex_unlock(&pipe->mutex);
 }
 
-static inline bool __pipe_trylock(struct pipe_inode_info *pipe, bool nonblock)
-{
-	if (!nonblock) {
-		__pipe_lock(pipe);
-		return true;
-	}
-
-	return mutex_trylock(&pipe->mutex);
-}
-
 void pipe_double_lock(struct pipe_inode_info *pipe1,
 		      struct pipe_inode_info *pipe2)
 {
@@ -244,7 +234,6 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 	struct file *filp = iocb->ki_filp;
 	struct pipe_inode_info *pipe = filp->private_data;
 	bool was_full, wake_next_reader = false;
-	const bool nonblock = iocb->ki_flags & IOCB_NOWAIT;
 	ssize_t ret;
 
 	/* Null read succeeds. */
@@ -252,8 +241,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 		return 0;
 
 	ret = 0;
-	if (!__pipe_trylock(pipe, nonblock))
-		return -EAGAIN;
+	__pipe_lock(pipe);
 
 	/*
 	 * We only wake up writers if the pipe was full when we started
@@ -309,7 +297,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 				chars = total_len;
 			}
 
-			error = pipe_buf_confirm(pipe, buf, nonblock);
+			error = pipe_buf_confirm(pipe, buf);
 			if (error) {
 				if (!ret)
 					ret = error;
@@ -354,7 +342,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
 			break;
 		if (ret)
 			break;
-		if (filp->f_flags & O_NONBLOCK || nonblock) {
+		if (filp->f_flags & O_NONBLOCK) {
 			ret = -EAGAIN;
 			break;
 		}
@@ -435,14 +423,12 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 	ssize_t chars;
 	bool was_empty = false;
 	bool wake_next_writer = false;
-	const bool nonblock = iocb->ki_flags & IOCB_NOWAIT;
 
 	/* Null write succeeds. */
 	if (unlikely(total_len == 0))
 		return 0;
 
-	if (!__pipe_trylock(pipe, nonblock))
-		return -EAGAIN;
+	__pipe_lock(pipe);
 
 	if (!pipe->readers) {
 		send_sig(SIGPIPE, current, 0);
@@ -475,7 +461,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 
 		if ((buf->flags & PIPE_BUF_FLAG_CAN_MERGE) &&
 		    offset + chars <= PAGE_SIZE) {
-			ret = pipe_buf_confirm(pipe, buf, nonblock);
+			ret = pipe_buf_confirm(pipe, buf);
 			if (ret)
 				goto out;
 
@@ -507,18 +493,9 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 			int copied;
 
 			if (!page) {
-				gfp_t gfp = __GFP_HIGHMEM | __GFP_ACCOUNT |
-					    __GFP_HARDWALL;
-				int this_ret = -EAGAIN;
-
-				if (!nonblock) {
-					this_ret = -ENOMEM;
-					gfp |= GFP_USER;
-				}
-				page = alloc_page(gfp);
+				page = alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
 				if (unlikely(!page)) {
-					if (!ret)
-						ret = this_ret;
+					ret = ret ? : -ENOMEM;
 					break;
 				}
 				pipe->tmp_page = page;
@@ -570,7 +547,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
 			continue;
 
 		/* Wait for buffer space to become available. */
-		if (filp->f_flags & O_NONBLOCK || nonblock) {
+		if (filp->f_flags & O_NONBLOCK) {
 			if (!ret)
 				ret = -EAGAIN;
 			break;
@@ -999,9 +976,6 @@ static int __do_pipe_flags(int *fd, struct file **files, int flags)
 	audit_fd_pair(fdr, fdw);
 	fd[0] = fdr;
 	fd[1] = fdw;
-	/* pipe groks IOCB_NOWAIT */
-	files[0]->f_mode |= FMODE_NOWAIT;
-	files[1]->f_mode |= FMODE_NOWAIT;
 	return 0;
 
  err_fdr:

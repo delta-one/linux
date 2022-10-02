@@ -36,17 +36,6 @@ void prestera_queue_work(struct work_struct *work)
 	queue_work(prestera_owq, work);
 }
 
-void prestera_queue_delayed_work(struct delayed_work *work, unsigned long delay)
-{
-	queue_delayed_work(prestera_wq, work, delay);
-}
-
-void prestera_queue_drain(void)
-{
-	drain_workqueue(prestera_wq);
-	drain_workqueue(prestera_owq);
-}
-
 int prestera_port_learning_set(struct prestera_port *port, bool learn)
 {
 	return prestera_hw_port_learning_set(port, learn);
@@ -360,6 +349,7 @@ static void prestera_pcs_an_restart(struct phylink_pcs *pcs)
 }
 
 static const struct phylink_mac_ops prestera_mac_ops = {
+	.validate = phylink_generic_validate,
 	.mac_select_pcs = prestera_mac_select_pcs,
 	.mac_config = prestera_mac_config,
 	.mac_link_down = prestera_mac_link_down,
@@ -568,6 +558,7 @@ static const struct net_device_ops prestera_netdev_ops = {
 	.ndo_change_mtu = prestera_port_change_mtu,
 	.ndo_get_stats64 = prestera_port_get_stats64,
 	.ndo_set_mac_address = prestera_port_set_mac_address,
+	.ndo_get_devlink_port = prestera_devlink_get_port,
 };
 
 int prestera_port_autoneg_set(struct prestera_port *port, u64 link_modes)
@@ -642,7 +633,6 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
 	dev->netdev_ops = &prestera_netdev_ops;
 	dev->ethtool_ops = &prestera_ethtool_ops;
 	SET_NETDEV_DEV(dev, sw->dev->dev);
-	SET_NETDEV_DEVLINK_PORT(dev, &port->dl_port);
 
 	if (port->caps.transceiver != PRESTERA_PORT_TCVR_SFP)
 		netif_carrier_off(dev);
@@ -736,6 +726,8 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
 	if (err)
 		goto err_register_netdev;
 
+	prestera_devlink_port_set(port);
+
 	err = prestera_port_sfp_bind(port);
 	if (err)
 		goto err_sfp_bind;
@@ -743,7 +735,6 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
 	return 0;
 
 err_sfp_bind:
-	unregister_netdev(dev);
 err_register_netdev:
 	prestera_port_list_del(port);
 err_port_init:
@@ -759,6 +750,7 @@ static void prestera_port_destroy(struct prestera_port *port)
 	struct net_device *dev = port->dev;
 
 	cancel_delayed_work_sync(&port->cached_hw_stats.caching_dw);
+	prestera_devlink_port_clear(port);
 	unregister_netdev(dev);
 	prestera_port_list_del(port);
 	prestera_devlink_port_unregister(port);
@@ -859,10 +851,17 @@ static void prestera_event_handlers_unregister(struct prestera_switch *sw)
 
 static int prestera_switch_set_base_mac_addr(struct prestera_switch *sw)
 {
-	int ret;
+	struct device_node *base_mac_np;
+	int ret = 0;
 
-	if (sw->np)
-		ret = of_get_mac_address(sw->np, sw->base_mac);
+	if (sw->np) {
+		base_mac_np = of_parse_phandle(sw->np, "base-mac-provider", 0);
+		if (base_mac_np) {
+			ret = of_get_mac_address(base_mac_np, sw->base_mac);
+			of_node_put(base_mac_np);
+		}
+	}
+
 	if (!is_valid_ether_addr(sw->base_mac) || ret) {
 		eth_random_addr(sw->base_mac);
 		dev_info(prestera_dev(sw), "using random base mac address\n");
@@ -1366,7 +1365,7 @@ static int prestera_switch_init(struct prestera_switch *sw)
 {
 	int err;
 
-	sw->np = sw->dev->dev->of_node;
+	sw->np = of_find_compatible_node(NULL, NULL, "marvell,prestera");
 
 	err = prestera_hw_switch_init(sw);
 	if (err) {

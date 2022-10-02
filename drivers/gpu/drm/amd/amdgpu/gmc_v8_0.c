@@ -264,10 +264,16 @@ static int gmc_v8_0_init_microcode(struct amdgpu_device *adev)
 	}
 
 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mc.bin", chip_name);
-	err = amdgpu_ucode_request(adev, &adev->gmc.fw, fw_name);
+	err = request_firmware(&adev->gmc.fw, fw_name, adev->dev);
+	if (err)
+		goto out;
+	err = amdgpu_ucode_validate(adev->gmc.fw);
+
+out:
 	if (err) {
 		pr_err("mc: Failed to load firmware \"%s\"\n", fw_name);
-		amdgpu_ucode_release(&adev->gmc.fw);
+		release_firmware(adev->gmc.fw);
+		adev->gmc.fw = NULL;
 	}
 	return err;
 }
@@ -468,7 +474,7 @@ static void gmc_v8_0_mc_program(struct amdgpu_device *adev)
 	WREG32(mmMC_VM_SYSTEM_APERTURE_HIGH_ADDR,
 	       adev->gmc.vram_end >> 12);
 	WREG32(mmMC_VM_SYSTEM_APERTURE_DEFAULT_ADDR,
-	       adev->mem_scratch.gpu_addr >> 12);
+	       adev->vram_scratch.gpu_addr >> 12);
 
 	if (amdgpu_sriov_vf(adev)) {
 		tmp = ((adev->gmc.vram_end >> 24) & 0xFFFF) << 16;
@@ -581,7 +587,10 @@ static int gmc_v8_0_mc_init(struct amdgpu_device *adev)
 	}
 #endif
 
+	/* In case the PCI BAR is larger than the actual amount of vram */
 	adev->gmc.visible_vram_size = adev->gmc.aper_size;
+	if (adev->gmc.visible_vram_size > adev->gmc.real_vram_size)
+		adev->gmc.visible_vram_size = adev->gmc.real_vram_size;
 
 	/* set the gart size */
 	if (amdgpu_gart_size == -1) {
@@ -1194,7 +1203,8 @@ static int gmc_v8_0_sw_fini(void *handle)
 	kfree(adev->gmc.vm_fault_info);
 	amdgpu_gart_table_vram_free(adev);
 	amdgpu_bo_fini(adev);
-	amdgpu_ucode_release(&adev->gmc.fw);
+	release_firmware(adev->gmc.fw);
+	adev->gmc.fw = NULL;
 
 	return 0;
 }

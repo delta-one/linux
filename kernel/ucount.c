@@ -212,16 +212,18 @@ void put_ucounts(struct ucounts *ucounts)
 	}
 }
 
-static inline bool atomic_long_inc_below(atomic_long_t *v, long u)
+static inline bool atomic_long_inc_below(atomic_long_t *v, int u)
 {
-	long c = atomic_long_read(v);
-
-	do {
+	long c, old;
+	c = atomic_long_read(v);
+	for (;;) {
 		if (unlikely(c >= u))
 			return false;
-	} while (!atomic_long_try_cmpxchg(v, &c, c+1));
-
-	return true;
+		old = atomic_long_cmpxchg(v, c, c+1);
+		if (likely(old == c))
+			return true;
+		c = old;
+	}
 }
 
 struct ucounts *inc_ucount(struct user_namespace *ns, kuid_t uid,

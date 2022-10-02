@@ -832,8 +832,13 @@ bool dce_aux_transfer_with_retries(struct ddc_service *ddc,
 									LOG_FLAG_I2cAux_DceAux,
 									"dce_aux_transfer_with_retries: payload->defer_delay=%u",
 									payload->defer_delay);
-						fsleep(payload->defer_delay * 1000);
-						defer_time_in_ms += payload->defer_delay;
+						if (payload->defer_delay > 1) {
+							msleep(payload->defer_delay);
+							defer_time_in_ms += payload->defer_delay;
+						} else if (payload->defer_delay <= 1) {
+							udelay(payload->defer_delay * 1000);
+							defer_time_in_ms += payload->defer_delay;
+						}
 					}
 				}
 				break;
@@ -937,6 +942,10 @@ bool dce_aux_transfer_with_retries(struct ddc_service *ddc,
 		case AUX_RET_ERROR_ENGINE_ACQUIRE:
 		case AUX_RET_ERROR_UNKNOWN:
 		default:
+			DC_TRACE_LEVEL_MESSAGE(DAL_TRACE_LEVEL_INFORMATION,
+						LOG_FLAG_I2cAux_DceAux,
+						"dce_aux_transfer_with_retries: Failure: operation_result=%d",
+						(int)operation_result);
 			goto fail;
 		}
 	}
@@ -944,11 +953,14 @@ bool dce_aux_transfer_with_retries(struct ddc_service *ddc,
 fail:
 	DC_TRACE_LEVEL_MESSAGE(DAL_TRACE_LEVEL_ERROR,
 				LOG_FLAG_Error_I2cAux,
-				"%s: Failure: operation_result=%d",
-				__func__,
-				(int)operation_result);
+				"dce_aux_transfer_with_retries: FAILURE");
 	if (!payload_reply)
 		payload->reply = NULL;
+
+	DC_TRACE_LEVEL_MESSAGE(DAL_TRACE_LEVEL_ERROR,
+				WPP_BIT_FLAG_DC_ERROR,
+				"AUX transaction failed. Result: %d",
+				operation_result);
 
 	return false;
 }

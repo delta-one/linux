@@ -42,8 +42,6 @@ struct intel_guc {
 	/** @capture: the error-state-capture module's data and objects */
 	struct intel_guc_state_capture *capture;
 
-	struct dentry *dbgfs_node;
-
 	/** @sched_engine: Global engine used to submit requests to GuC */
 	struct i915_sched_engine *sched_engine;
 	/**
@@ -80,7 +78,6 @@ struct intel_guc {
 
 	/** @interrupts: pointers to GuC interrupt-managing functions. */
 	struct {
-		bool enabled;
 		void (*reset)(struct intel_guc *guc);
 		void (*enable)(struct intel_guc *guc);
 		void (*disable)(struct intel_guc *guc);
@@ -116,10 +113,6 @@ struct intel_guc {
 		 */
 		struct list_head guc_id_list;
 		/**
-		 * @guc_ids_in_use: Number single-lrc guc_ids in use
-		 */
-		unsigned int guc_ids_in_use;
-		/**
 		 * @destroyed_contexts: list of contexts waiting to be destroyed
 		 * (deregistered with the GuC)
 		 */
@@ -139,16 +132,6 @@ struct intel_guc {
 		 * @reset_fail_mask: mask of engines that failed to reset
 		 */
 		intel_engine_mask_t reset_fail_mask;
-		/**
-		 * @sched_disable_delay_ms: schedule disable delay, in ms, for
-		 * contexts
-		 */
-		unsigned int sched_disable_delay_ms;
-		/**
-		 * @sched_disable_gucid_threshold: threshold of min remaining available
-		 * guc_ids before we start bypassing the schedule disable delay
-		 */
-		unsigned int sched_disable_gucid_threshold;
 	} submission_state;
 
 	/**
@@ -160,9 +143,6 @@ struct intel_guc {
 	bool submission_selected;
 	/** @submission_initialized: tracks whether GuC submission has been initialised */
 	bool submission_initialized;
-	/** @submission_version: Submission API version of the currently loaded firmware */
-	struct intel_uc_fw_ver submission_version;
-
 	/**
 	 * @rc_supported: tracks whether we support GuC rc on the current platform
 	 */
@@ -273,14 +253,6 @@ struct intel_guc {
 #endif
 };
 
-/*
- * GuC version number components are only 8-bit, so converting to a 32bit 8.8.8
- * integer works.
- */
-#define MAKE_GUC_VER(maj, min, pat)	(((maj) << 16) | ((min) << 8) | (pat))
-#define MAKE_GUC_VER_STRUCT(ver)	MAKE_GUC_VER((ver).major, (ver).minor, (ver).patch)
-#define GUC_SUBMIT_VER(guc)		MAKE_GUC_VER_STRUCT((guc)->submission_version)
-
 static inline struct intel_guc *log_to_guc(struct intel_guc_log *log)
 {
 	return container_of(log, struct intel_guc, log);
@@ -344,11 +316,9 @@ retry:
 	return err;
 }
 
-/* Only call this from the interrupt handler code */
 static inline void intel_guc_to_host_event_handler(struct intel_guc *guc)
 {
-	if (guc->interrupts.enabled)
-		intel_guc_ct_event_handler(&guc->ct);
+	intel_guc_ct_event_handler(&guc->ct);
 }
 
 /* GuC addresses above GUC_GGTT_TOP also don't map through the GTT */
@@ -495,7 +465,5 @@ void intel_guc_load_status(struct intel_guc *guc, struct drm_printer *p);
 void intel_guc_write_barrier(struct intel_guc *guc);
 
 void intel_guc_dump_time_info(struct intel_guc *guc, struct drm_printer *p);
-
-int intel_guc_sched_disable_gucid_threshold_max(struct intel_guc *guc);
 
 #endif

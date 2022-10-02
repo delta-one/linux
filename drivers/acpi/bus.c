@@ -27,7 +27,6 @@
 #include <linux/dmi.h>
 #endif
 #include <linux/acpi_agdi.h>
-#include <linux/acpi_apmt.h>
 #include <linux/acpi_iort.h>
 #include <linux/acpi_viot.h>
 #include <linux/pci.h>
@@ -324,8 +323,6 @@ static void acpi_bus_osc_negotiate_platform_control(void)
 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PCLPI_SUPPORT;
 	if (IS_ENABLED(CONFIG_ACPI_PRMT))
 		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PRM_SUPPORT;
-	if (IS_ENABLED(CONFIG_ACPI_FFH))
-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_FFH_OPR_SUPPORT;
 
 #ifdef CONFIG_ARM64
 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
@@ -459,67 +456,85 @@ out_free:
                              Notification Handling
    -------------------------------------------------------------------------- */
 
-/**
- * acpi_bus_notify - Global system-level (0x00-0x7F) notifications handler
- * @handle: Target ACPI object.
- * @type: Notification type.
- * @data: Ignored.
- *
- * This only handles notifications related to device hotplug.
+/*
+ * acpi_bus_notify
+ * ---------------
+ * Callback for all 'system-level' device notifications (values 0x00-0x7F).
  */
 static void acpi_bus_notify(acpi_handle handle, u32 type, void *data)
 {
 	struct acpi_device *adev;
+	u32 ost_code = ACPI_OST_SC_NON_SPECIFIC_FAILURE;
+	bool hotplug_event = false;
 
 	switch (type) {
 	case ACPI_NOTIFY_BUS_CHECK:
 		acpi_handle_debug(handle, "ACPI_NOTIFY_BUS_CHECK event\n");
+		hotplug_event = true;
 		break;
 
 	case ACPI_NOTIFY_DEVICE_CHECK:
 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_CHECK event\n");
+		hotplug_event = true;
 		break;
 
 	case ACPI_NOTIFY_DEVICE_WAKE:
 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_WAKE event\n");
-		return;
+		break;
 
 	case ACPI_NOTIFY_EJECT_REQUEST:
 		acpi_handle_debug(handle, "ACPI_NOTIFY_EJECT_REQUEST event\n");
+		hotplug_event = true;
 		break;
 
 	case ACPI_NOTIFY_DEVICE_CHECK_LIGHT:
 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_CHECK_LIGHT event\n");
 		/* TBD: Exactly what does 'light' mean? */
-		return;
+		break;
 
 	case ACPI_NOTIFY_FREQUENCY_MISMATCH:
 		acpi_handle_err(handle, "Device cannot be configured due "
 				"to a frequency mismatch\n");
-		return;
+		break;
 
 	case ACPI_NOTIFY_BUS_MODE_MISMATCH:
 		acpi_handle_err(handle, "Device cannot be configured due "
 				"to a bus mode mismatch\n");
-		return;
+		break;
 
 	case ACPI_NOTIFY_POWER_FAULT:
 		acpi_handle_err(handle, "Device has suffered a power fault\n");
-		return;
+		break;
 
 	default:
 		acpi_handle_debug(handle, "Unknown event type 0x%x\n", type);
-		return;
+		break;
 	}
 
 	adev = acpi_get_acpi_dev(handle);
+	if (!adev)
+		goto err;
 
-	if (adev && ACPI_SUCCESS(acpi_hotplug_schedule(adev, type)))
+	if (adev->dev.driver) {
+		struct acpi_driver *driver = to_acpi_driver(adev->dev.driver);
+
+		if (driver && driver->ops.notify &&
+		    (driver->flags & ACPI_DRIVER_ALL_NOTIFY_EVENTS))
+			driver->ops.notify(adev, type);
+	}
+
+	if (!hotplug_event) {
+		acpi_put_acpi_dev(adev);
+		return;
+	}
+
+	if (ACPI_SUCCESS(acpi_hotplug_schedule(adev, type)))
 		return;
 
 	acpi_put_acpi_dev(adev);
 
-	acpi_evaluate_ost(handle, type, ACPI_OST_SC_NON_SPECIFIC_FAILURE, NULL);
+ err:
+	acpi_evaluate_ost(handle, type, ost_code, NULL);
 }
 
 static void acpi_notify_device(acpi_handle handle, u32 event, void *data)
@@ -544,52 +559,42 @@ static u32 acpi_device_fixed_event(void *data)
 	return ACPI_INTERRUPT_HANDLED;
 }
 
-static int acpi_device_install_notify_handler(struct acpi_device *device,
-					      struct acpi_driver *acpi_drv)
+static int acpi_device_install_notify_handler(struct acpi_device *device)
 {
 	acpi_status status;
 
-	if (device->device_type == ACPI_BUS_TYPE_POWER_BUTTON) {
+	if (device->device_type == ACPI_BUS_TYPE_POWER_BUTTON)
 		status =
 		    acpi_install_fixed_event_handler(ACPI_EVENT_POWER_BUTTON,
 						     acpi_device_fixed_event,
 						     device);
-	} else if (device->device_type == ACPI_BUS_TYPE_SLEEP_BUTTON) {
+	else if (device->device_type == ACPI_BUS_TYPE_SLEEP_BUTTON)
 		status =
 		    acpi_install_fixed_event_handler(ACPI_EVENT_SLEEP_BUTTON,
 						     acpi_device_fixed_event,
 						     device);
-	} else {
-		u32 type = acpi_drv->flags & ACPI_DRIVER_ALL_NOTIFY_EVENTS ?
-				ACPI_ALL_NOTIFY : ACPI_DEVICE_NOTIFY;
-
-		status = acpi_install_notify_handler(device->handle, type,
+	else
+		status = acpi_install_notify_handler(device->handle,
+						     ACPI_DEVICE_NOTIFY,
 						     acpi_notify_device,
 						     device);
-	}
 
 	if (ACPI_FAILURE(status))
 		return -EINVAL;
 	return 0;
 }
 
-static void acpi_device_remove_notify_handler(struct acpi_device *device,
-					      struct acpi_driver *acpi_drv)
+static void acpi_device_remove_notify_handler(struct acpi_device *device)
 {
-	if (device->device_type == ACPI_BUS_TYPE_POWER_BUTTON) {
+	if (device->device_type == ACPI_BUS_TYPE_POWER_BUTTON)
 		acpi_remove_fixed_event_handler(ACPI_EVENT_POWER_BUTTON,
 						acpi_device_fixed_event);
-	} else if (device->device_type == ACPI_BUS_TYPE_SLEEP_BUTTON) {
+	else if (device->device_type == ACPI_BUS_TYPE_SLEEP_BUTTON)
 		acpi_remove_fixed_event_handler(ACPI_EVENT_SLEEP_BUTTON,
 						acpi_device_fixed_event);
-	} else {
-		u32 type = acpi_drv->flags & ACPI_DRIVER_ALL_NOTIFY_EVENTS ?
-				ACPI_ALL_NOTIFY : ACPI_DEVICE_NOTIFY;
-
-		acpi_remove_notify_handler(device->handle, type,
+	else
+		acpi_remove_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
 					   acpi_notify_device);
-	}
-	acpi_os_wait_events_complete();
 }
 
 /* Handle events targeting \_SB device (at present only graceful shutdown) */
@@ -624,9 +629,8 @@ static void acpi_sb_notify(acpi_handle handle, u32 event, void *data)
 	if (event == ACPI_SB_NOTIFY_SHUTDOWN_REQUEST) {
 		if (!work_busy(&acpi_sb_work))
 			schedule_work(&acpi_sb_work);
-	} else {
+	} else
 		pr_warn("event %x is not supported by \\_SB device\n", event);
-	}
 }
 
 static int __init acpi_setup_sb_notify_handler(void)
@@ -810,10 +814,9 @@ static bool acpi_of_modalias(struct acpi_device *adev,
  * @modalias:   Pointer to buffer that modalias value will be copied into
  * @len:	Length of modalias buffer
  *
- * This is a counterpart of of_alias_from_compatible() for struct acpi_device
- * objects. If there is a compatible string for @adev, it will be copied to
- * @modalias with the vendor prefix stripped; otherwise, @default_id will be
- * used.
+ * This is a counterpart of of_modalias_node() for struct acpi_device objects.
+ * If there is a compatible string for @adev, it will be copied to @modalias
+ * with the vendor prefix stripped; otherwise, @default_id will be used.
  */
 void acpi_set_modalias(struct acpi_device *adev, const char *default_id,
 		       char *modalias, size_t len)
@@ -1008,7 +1011,7 @@ static int acpi_bus_match(struct device *dev, struct device_driver *drv)
 		&& !acpi_match_device_ids(acpi_dev, acpi_drv->ids);
 }
 
-static int acpi_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
+static int acpi_device_uevent(struct device *dev, struct kobj_uevent_env *env)
 {
 	return __acpi_device_uevent_modalias(to_acpi_device(dev), env);
 }
@@ -1033,7 +1036,7 @@ static int acpi_device_probe(struct device *dev)
 		 acpi_drv->name, acpi_dev->pnp.bus_id);
 
 	if (acpi_drv->ops.notify) {
-		ret = acpi_device_install_notify_handler(acpi_dev, acpi_drv);
+		ret = acpi_device_install_notify_handler(acpi_dev);
 		if (ret) {
 			if (acpi_drv->ops.remove)
 				acpi_drv->ops.remove(acpi_dev);
@@ -1056,7 +1059,7 @@ static void acpi_device_remove(struct device *dev)
 	struct acpi_driver *acpi_drv = to_acpi_driver(dev->driver);
 
 	if (acpi_drv->ops.notify)
-		acpi_device_remove_notify_handler(acpi_dev, acpi_drv);
+		acpi_device_remove_notify_handler(acpi_dev);
 
 	if (acpi_drv->ops.remove)
 		acpi_drv->ops.remove(acpi_dev);
@@ -1405,7 +1408,6 @@ static int __init acpi_init(void)
 		disable_acpi();
 		return result;
 	}
-	acpi_init_ffh();
 
 	pci_mmcfg_late_init();
 	acpi_iort_init();
@@ -1421,7 +1423,6 @@ static int __init acpi_init(void)
 	acpi_setup_sb_notify_handler();
 	acpi_viot_init();
 	acpi_agdi_init();
-	acpi_apmt_init();
 	return 0;
 }
 

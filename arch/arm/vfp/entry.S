@@ -22,7 +22,18 @@
 @  IRQs enabled.
 @
 ENTRY(do_vfp)
-	mov	r1, r10
-	mov	r3, r9
-	b	vfp_entry
+	inc_preempt_count r10, r4
+ 	ldr	r4, .LCvfp
+	ldr	r11, [r10, #TI_CPU]	@ CPU number
+	add	r10, r10, #TI_VFPSTATE	@ r10 = workspace
+	ldr	pc, [r4]		@ call VFP entry point
 ENDPROC(do_vfp)
+
+ENTRY(vfp_null_entry)
+	dec_preempt_count_ti r10, r4
+	ret	lr
+ENDPROC(vfp_null_entry)
+
+	.align	2
+.LCvfp:
+	.word	vfp_vector

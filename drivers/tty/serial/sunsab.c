@@ -266,7 +266,8 @@ static void transmit_chars(struct uart_sunsab_port *up,
 	for (i = 0; i < up->port.fifosize; i++) {
 		writeb(xmit->buf[xmit->tail],
 		       &up->regs->w.xfifo[i]);
-		uart_xmit_advance(&up->port, 1);
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		up->port.icount.tx++;
 		if (uart_circ_empty(xmit))
 			break;
 	}
@@ -452,7 +453,8 @@ static void sunsab_start_tx(struct uart_port *port)
 	for (i = 0; i < up->port.fifosize; i++) {
 		writeb(xmit->buf[xmit->tail],
 		       &up->regs->w.xfifo[i]);
-		uart_xmit_advance(&up->port, 1);
+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+		up->port.icount.tx++;
 		if (uart_circ_empty(xmit))
 			break;
 	}
@@ -1131,13 +1133,7 @@ static int __init sunsab_init(void)
 		}
 	}
 
-	err = platform_driver_register(&sab_driver);
-	if (err) {
-		kfree(sunsab_ports);
-		sunsab_ports = NULL;
-	}
-
-	return err;
+	return platform_driver_register(&sab_driver);
 }
 
 static void __exit sunsab_exit(void)

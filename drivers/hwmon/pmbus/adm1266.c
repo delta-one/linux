@@ -301,7 +301,6 @@ static int adm1266_config_gpio(struct adm1266_data *data)
 	data->gc.label = name;
 	data->gc.parent = &data->client->dev;
 	data->gc.owner = THIS_MODULE;
-	data->gc.can_sleep = true;
 	data->gc.base = -1;
 	data->gc.names = data->gpio_names;
 	data->gc.ngpio = ARRAY_SIZE(data->gpio_names);
@@ -502,7 +501,7 @@ static struct i2c_driver adm1266_driver = {
 		   .name = "adm1266",
 		   .of_match_table = adm1266_of_match,
 		  },
-	.probe = adm1266_probe,
+	.probe_new = adm1266_probe,
 	.id_table = adm1266_id,
 };
 

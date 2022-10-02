@@ -631,7 +631,7 @@ err_free_rd:
 	kfree(desc->rd_info);
 
 err_free_desc:
-	while (i--) {
+	while (--i) {
 		desc = &priv->aRD0Ring[i];
 		device_free_rx_buf(priv, desc);
 		kfree(desc->rd_info);
@@ -677,7 +677,7 @@ err_free_rd:
 	kfree(desc->rd_info);
 
 err_free_desc:
-	while (i--) {
+	while (--i) {
 		desc = &priv->aRD1Ring[i];
 		device_free_rx_buf(priv, desc);
 		kfree(desc->rd_info);
@@ -782,7 +782,7 @@ static int device_init_td1_ring(struct vnt_private *priv)
 	return 0;
 
 err_free_desc:
-	while (i--) {
+	while (--i) {
 		desc = &priv->apTD1Rings[i];
 		kfree(desc->td_info);
 	}
@@ -1685,7 +1685,6 @@ static void vnt_reset_tsf(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
 
 static const struct ieee80211_ops vnt_mac_ops = {
 	.tx			= vnt_tx_80211,
-	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
 	.start			= vnt_start,
 	.stop			= vnt_stop,
 	.add_interface		= vnt_add_interface,

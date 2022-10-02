@@ -89,7 +89,6 @@ union dw_i2s_snd_dma_data {
 struct dw_i2s_dev {
 	void __iomem *i2s_base;
 	struct clk *clk;
-	struct reset_control *reset;
 	int active;
 	unsigned int capability;
 	unsigned int quirks;

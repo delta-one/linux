@@ -503,7 +503,7 @@ static void mark_inode_clean(struct ubifs_info *c, struct ubifs_inode *ui)
 static void set_dent_cookie(struct ubifs_info *c, struct ubifs_dent_node *dent)
 {
 	if (c->double_hash)
-		dent->cookie = (__force __le32) get_random_u32();
+		dent->cookie = (__force __le32) prandom_u32();
 	else
 		dent->cookie = 0;
 }
@@ -1201,13 +1201,9 @@ out_free:
  * ubifs_jnl_rename - rename a directory entry.
  * @c: UBIFS file-system description object
  * @old_dir: parent inode of directory entry to rename
- * @old_inode: directory entry's inode to rename
- * @old_nm: name of the old directory entry to rename
+ * @old_dentry: directory entry to rename
  * @new_dir: parent inode of directory entry to rename
- * @new_inode: new directory entry's inode (or directory entry's inode to
- *		replace)
- * @new_nm: new name of the new directory entry
- * @whiteout: whiteout inode
+ * @new_dentry: new directory entry (or directory entry to replace)
  * @sync: non-zero if the write-buffer has to be synchronized
  *
  * This function implements the re-name operation which may involve writing up

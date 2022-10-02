@@ -22,6 +22,7 @@
 #include <linux/platform_data/spi-omap2-mcspi.h>
 #include <linux/platform_data/mmc-omap.h>
 #include <linux/mfd/menelaus.h>
+#include <sound/tlv320aic3x.h>
 
 #include <asm/mach/arch.h>
 #include <asm/mach-types.h>
@@ -504,7 +505,7 @@ static void __init n8x0_mmc_init(void)
 }
 #else
 static struct omap_mmc_platform_data mmc1_data;
-static void __init n8x0_mmc_init(void)
+void __init n8x0_mmc_init(void)
 {
 }
 #endif	/* CONFIG_MMC_OMAP */
@@ -564,6 +565,10 @@ static int n8x0_menelaus_late_init(struct device *dev)
 
 struct menelaus_platform_data n8x0_menelaus_platform_data = {
 	.late_init = n8x0_menelaus_late_init,
+};
+
+struct aic3x_pdata n810_aic33_data = {
+	.gpio_reset = 118,
 };
 
 static int __init n8x0_late_initcall(void)

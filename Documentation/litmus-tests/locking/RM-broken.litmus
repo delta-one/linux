@@ -9,11 +9,12 @@ C RM-broken
  *)
 
 {
+	int lck;
 	int x;
-	atomic_t y;
+	int y;
 }
 
-P0(int *x, atomic_t *y, spinlock_t *lck)
+P0(int *x, int *y, int *lck)
 {
 	int r2;
 
@@ -23,7 +24,7 @@ P0(int *x, atomic_t *y, spinlock_t *lck)
 	spin_unlock(lck);
 }
 
-P1(int *x, atomic_t *y, spinlock_t *lck)
+P1(int *x, int *y, int *lck)
 {
 	int r0;
 	int r1;
@@ -36,6 +37,6 @@ P1(int *x, atomic_t *y, spinlock_t *lck)
 	spin_unlock(lck);
 }
 
-locations [x;0:r2;1:r0;1:r1;1:r2]
-filter (1:r0=0 /\ 1:r1=1)
+locations [x;lck;0:r2;1:r0;1:r1;1:r2]
+filter (y=2 /\ 1:r0=0 /\ 1:r1=1)
 exists (1:r2=1)

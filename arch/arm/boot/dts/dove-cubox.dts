@@ -21,7 +21,7 @@
 		pinctrl-0 = <&pmx_gpio_18>;
 		pinctrl-names = "default";
 
-		led-power {
+		power {
 			label = "Power";
 			gpios = <&gpio0 18 1>;
 			default-state = "keep";
@@ -72,18 +72,11 @@
 &uart0 { status = "okay"; };
 &sata0 { status = "okay"; };
 &mdio { status = "okay"; };
-&eth {
-	status = "okay";
-	ethernet-port@0 {
-		phy-handle = <&ethphy>;
-	};
-};
+&eth { status = "okay"; };
 
-&mdio {
-	ethphy: ethernet-phy@1 {
-		compatible = "marvell,88e1310";
-		reg = <1>;
-	};
+&ethphy {
+	compatible = "marvell,88e1310";
+	reg = <1>;
 };
 
 &gpu {

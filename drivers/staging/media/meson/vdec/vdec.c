@@ -1102,21 +1102,21 @@ static int vdec_probe(struct platform_device *pdev)
 
 err_vdev_release:
 	video_device_release(vdev);
-	v4l2_device_unregister(&core->v4l2_dev);
 	return ret;
 }
 
-static void vdec_remove(struct platform_device *pdev)
+static int vdec_remove(struct platform_device *pdev)
 {
 	struct amvdec_core *core = platform_get_drvdata(pdev);
 
 	video_unregister_device(core->vdev_dec);
-	v4l2_device_unregister(&core->v4l2_dev);
+
+	return 0;
 }
 
 static struct platform_driver meson_vdec_driver = {
 	.probe = vdec_probe,
-	.remove_new = vdec_remove,
+	.remove = vdec_remove,
 	.driver = {
 		.name = "meson-vdec",
 		.of_match_table = vdec_dt_match,

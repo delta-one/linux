@@ -73,9 +73,10 @@ u32 amdgpu_cik_gpu_check_soft_reset(struct amdgpu_device *adev);
 static void cik_sdma_free_microcode(struct amdgpu_device *adev)
 {
 	int i;
-
-	for (i = 0; i < adev->sdma.num_instances; i++)
-		amdgpu_ucode_release(&adev->sdma.instance[i].fw);
+	for (i = 0; i < adev->sdma.num_instances; i++) {
+			release_firmware(adev->sdma.instance[i].fw);
+			adev->sdma.instance[i].fw = NULL;
+	}
 }
 
 /*
@@ -136,15 +137,18 @@ static int cik_sdma_init_microcode(struct amdgpu_device *adev)
 			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_sdma.bin", chip_name);
 		else
 			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_sdma1.bin", chip_name);
-		err = amdgpu_ucode_request(adev, &adev->sdma.instance[i].fw, fw_name);
+		err = request_firmware(&adev->sdma.instance[i].fw, fw_name, adev->dev);
 		if (err)
 			goto out;
+		err = amdgpu_ucode_validate(adev->sdma.instance[i].fw);
 	}
 out:
 	if (err) {
 		pr_err("cik_sdma: Failed to load firmware \"%s\"\n", fw_name);
-		for (i = 0; i < adev->sdma.num_instances; i++)
-			amdgpu_ucode_release(&adev->sdma.instance[i].fw);
+		for (i = 0; i < adev->sdma.num_instances; i++) {
+			release_firmware(adev->sdma.instance[i].fw);
+			adev->sdma.instance[i].fw = NULL;
+		}
 	}
 	return err;
 }
@@ -305,10 +309,14 @@ static void cik_sdma_ring_emit_fence(struct amdgpu_ring *ring, u64 addr, u64 seq
  */
 static void cik_sdma_gfx_stop(struct amdgpu_device *adev)
 {
+	struct amdgpu_ring *sdma0 = &adev->sdma.instance[0].ring;
+	struct amdgpu_ring *sdma1 = &adev->sdma.instance[1].ring;
 	u32 rb_cntl;
 	int i;
 
-	amdgpu_sdma_unset_buffer_funcs_helper(adev);
+	if ((adev->mman.buffer_funcs_ring == sdma0) ||
+	    (adev->mman.buffer_funcs_ring == sdma1))
+			amdgpu_ttm_set_buffer_funcs_status(adev, false);
 
 	for (i = 0; i < adev->sdma.num_instances; i++) {
 		rb_cntl = RREG32(mmSDMA0_GFX_RB_CNTL + sdma_offsets[i]);

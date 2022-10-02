@@ -12,6 +12,7 @@
 #include <linux/cacheflush.h>
 #include <linux/memblock.h>
 #include <linux/mm_types.h>
+#include <linux/percpu-defs.h>
 #include <linux/slab.h>
 #include <linux/smp.h>
 #include <linux/stddef.h>
@@ -125,7 +126,6 @@ void *kmsan_get_metadata(void *address, bool is_origin)
 {
 	u64 addr = (u64)address, pad, off;
 	struct page *page;
-	void *ret;
 
 	if (is_origin && !IS_ALIGNED(addr, KMSAN_ORIGIN_SIZE)) {
 		pad = addr % KMSAN_ORIGIN_SIZE;
@@ -135,10 +135,6 @@ void *kmsan_get_metadata(void *address, bool is_origin)
 	if (kmsan_internal_is_vmalloc_addr(address) ||
 	    kmsan_internal_is_module_addr(address))
 		return (void *)vmalloc_meta(address, is_origin);
-
-	ret = arch_kmsan_get_meta_or_null(address, is_origin);
-	if (ret)
-		return ret;
 
 	page = virt_to_page_or_null(address);
 	if (!page)
@@ -167,7 +163,6 @@ void kmsan_copy_page_meta(struct page *dst, struct page *src)
 	__memcpy(origin_ptr_for(dst), origin_ptr_for(src), PAGE_SIZE);
 	kmsan_leave_runtime();
 }
-EXPORT_SYMBOL(kmsan_copy_page_meta);
 
 void kmsan_alloc_page(struct page *page, unsigned int order, gfp_t flags)
 {
@@ -216,29 +211,27 @@ void kmsan_free_page(struct page *page, unsigned int order)
 	kmsan_leave_runtime();
 }
 
-int kmsan_vmap_pages_range_noflush(unsigned long start, unsigned long end,
-				   pgprot_t prot, struct page **pages,
-				   unsigned int page_shift)
+void kmsan_vmap_pages_range_noflush(unsigned long start, unsigned long end,
+				    pgprot_t prot, struct page **pages,
+				    unsigned int page_shift)
 {
 	unsigned long shadow_start, origin_start, shadow_end, origin_end;
 	struct page **s_pages, **o_pages;
-	int nr, mapped, err = 0;
+	int nr, mapped;
 
 	if (!kmsan_enabled)
-		return 0;
+		return;
 
 	shadow_start = vmalloc_meta((void *)start, KMSAN_META_SHADOW);
 	shadow_end = vmalloc_meta((void *)end, KMSAN_META_SHADOW);
 	if (!shadow_start)
-		return 0;
+		return;
 
 	nr = (end - start) / PAGE_SIZE;
 	s_pages = kcalloc(nr, sizeof(*s_pages), GFP_KERNEL);
 	o_pages = kcalloc(nr, sizeof(*o_pages), GFP_KERNEL);
-	if (!s_pages || !o_pages) {
-		err = -ENOMEM;
+	if (!s_pages || !o_pages)
 		goto ret;
-	}
 	for (int i = 0; i < nr; i++) {
 		s_pages[i] = shadow_page_for(pages[i]);
 		o_pages[i] = origin_page_for(pages[i]);
@@ -251,16 +244,10 @@ int kmsan_vmap_pages_range_noflush(unsigned long start, unsigned long end,
 	kmsan_enter_runtime();
 	mapped = __vmap_pages_range_noflush(shadow_start, shadow_end, prot,
 					    s_pages, page_shift);
-	if (mapped) {
-		err = mapped;
-		goto ret;
-	}
+	KMSAN_WARN_ON(mapped);
 	mapped = __vmap_pages_range_noflush(origin_start, origin_end, prot,
 					    o_pages, page_shift);
-	if (mapped) {
-		err = mapped;
-		goto ret;
-	}
+	KMSAN_WARN_ON(mapped);
 	kmsan_leave_runtime();
 	flush_tlb_kernel_range(shadow_start, shadow_end);
 	flush_tlb_kernel_range(origin_start, origin_end);
@@ -270,7 +257,6 @@ int kmsan_vmap_pages_range_noflush(unsigned long start, unsigned long end,
 ret:
 	kfree(s_pages);
 	kfree(o_pages);
-	return err;
 }
 
 /* Allocate metadata for pages allocated at boot time. */

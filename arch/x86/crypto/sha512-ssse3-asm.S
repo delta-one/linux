@@ -48,7 +48,6 @@
 ########################################################################
 
 #include <linux/linkage.h>
-#include <linux/cfi_types.h>
 
 .text
 
@@ -275,10 +274,10 @@ frame_size = frame_WK + WK_SIZE
 # of SHA512 message blocks.
 # "blocks" is the message length in SHA512 blocks.
 ########################################################################
-SYM_TYPED_FUNC_START(sha512_transform_ssse3)
+SYM_FUNC_START(sha512_transform_ssse3)
 
 	test msglen, msglen
-	je .Lnowork
+	je nowork
 
 	# Save GPRs
 	push	%rbx
@@ -293,7 +292,7 @@ SYM_TYPED_FUNC_START(sha512_transform_ssse3)
 	sub	$frame_size, %rsp
 	and	$~(0x20 - 1), %rsp
 
-.Lupdateblock:
+updateblock:
 
 # Load state variables
 	mov	DIGEST(0), a_64
@@ -350,7 +349,7 @@ SYM_TYPED_FUNC_START(sha512_transform_ssse3)
 	# Advance to next message block
 	add	$16*8, msg
 	dec	msglen
-	jnz	.Lupdateblock
+	jnz	updateblock
 
 	# Restore Stack Pointer
 	mov	%rbp, %rsp
@@ -363,7 +362,7 @@ SYM_TYPED_FUNC_START(sha512_transform_ssse3)
 	pop	%r12
 	pop	%rbx
 
-.Lnowork:
+nowork:
 	RET
 SYM_FUNC_END(sha512_transform_ssse3)
 

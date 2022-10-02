@@ -57,6 +57,7 @@
 #include "dcn31/dcn31_hpo_dp_stream_encoder.h"
 #include "dcn31/dcn31_hpo_dp_link_encoder.h"
 #include "dcn32/dcn32_hpo_dp_link_encoder.h"
+#include "dc_link_dp.h"
 #include "dcn31/dcn31_apg.h"
 #include "dcn31/dcn31_dio_link_encoder.h"
 #include "dcn32/dcn32_dio_link_encoder.h"
@@ -68,7 +69,7 @@
 #include "dml/display_mode_vba.h"
 #include "dcn32/dcn32_dccg.h"
 #include "dcn10/dcn10_resource.h"
-#include "link.h"
+#include "dc_link_ddc.h"
 #include "dcn31/dcn31_panel_cntl.h"
 
 #include "dcn30/dcn30_dwb.h"
@@ -105,6 +106,8 @@ enum dcn32_clk_src_array_id {
  */
 
 /* DCN */
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
 #define BASE_INNER(seg) ctx->dcn_reg_offsets[seg]
 
 #define BASE(seg) BASE_INNER(seg)
@@ -163,9 +166,6 @@ enum dcn32_clk_src_array_id {
 #define SRII_DWB(reg_name, temp_name, block, id)\
 	REG_STRUCT.reg_name[id] = BASE(reg ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 		reg ## block ## id ## _ ## temp_name
-
-#define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
-	.field_name = reg_name ## __ ## field_name ## post_fix
 
 #define DCCG_SRII(reg_name, block, id)\
 	REG_STRUCT.block ## _ ## reg_name[id] = BASE(reg ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
@@ -324,6 +324,7 @@ static const struct dcn10_link_enc_shift le_shift = {
 
 static const struct dcn10_link_enc_mask le_mask = {
 	LINK_ENCODER_MASK_SH_LIST_DCN31(_MASK), \
+
 	//DPCS_DCN31_MASK_SH_LIST(_MASK)
 };
 
@@ -656,6 +657,8 @@ static const struct resource_caps res_cap_dcn32 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+	.blends_with_above = true,
+	.blends_with_below = true,
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -715,21 +718,9 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.force_disable_subvp = false,
 	.exit_idle_opt_for_cursor_updates = true,
 	.enable_single_display_2to1_odm_policy = true,
-
-	/* Must match enable_single_display_2to1_odm_policy to support dynamic ODM transitions*/
-	.enable_double_buffered_dsc_pg_support = true,
 	.enable_dp_dig_pixel_rate_div_policy = 1,
-	.allow_sw_cursor_fallback = false, // Linux can't do SW cursor "fallback"
+	.allow_sw_cursor_fallback = false,
 	.alloc_extra_way_for_cursor = true,
-	.min_prefetch_in_strobe_ns = 60000, // 60us
-	.disable_unbounded_requesting = false,
-	.override_dispclk_programming = true,
-	.disable_fpo_optimizations = false,
-	.fpo_vactive_margin_us = 2000, // 2000us
-	.disable_fpo_vactive = false,
-	.disable_boot_optimizations = false,
-	.disable_subvp_high_refresh = true,
-	.disable_dp_plus_plus_wa = true,
 };
 
 static const struct dc_debug_options debug_defaults_diags = {
@@ -835,7 +826,6 @@ static struct clock_source *dcn32_clock_source_create(
 		return &clk_src->base;
 	}
 
-	kfree(clk_src);
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1510,11 +1500,8 @@ static void dcn32_resource_destruct(struct dcn32_resource_pool *pool)
 	if (pool->base.dccg != NULL)
 		dcn_dccg_destroy(&pool->base.dccg);
 
-	if (pool->base.oem_device != NULL) {
-		struct dc *dc = pool->base.oem_device->ctx->dc;
-
-		dc->link_srv->destroy_ddc_service(&pool->base.oem_device);
-	}
+	if (pool->base.oem_device != NULL)
+		dal_ddc_service_destroy(&pool->base.oem_device);
 }
 
 
@@ -1618,6 +1605,7 @@ bool dcn32_acquire_post_bldn_3dlut(
 		struct dc_transfer_func **shaper)
 {
 	bool ret = false;
+	union dc_3dlut_state *state;
 
 	ASSERT(*lut == NULL && *shaper == NULL);
 	*lut = NULL;
@@ -1626,6 +1614,7 @@ bool dcn32_acquire_post_bldn_3dlut(
 	if (!res_ctx->is_mpc_3dlut_acquired[mpcc_id]) {
 		*lut = pool->mpc_lut[mpcc_id];
 		*shaper = pool->mpc_shaper[mpcc_id];
+		state = &pool->mpc_lut[mpcc_id]->state;
 		res_ctx->is_mpc_3dlut_acquired[mpcc_id] = true;
 		ret = true;
 	}
@@ -1686,9 +1675,7 @@ static void dcn32_enable_phantom_plane(struct dc *dc,
 
 		/* Shadow pipe has small viewport. */
 		phantom_plane->clip_rect.y = 0;
-		phantom_plane->clip_rect.height = phantom_stream->src.height;
-
-		phantom_plane->is_phantom = true;
+		phantom_plane->clip_rect.height = phantom_stream->timing.v_addressable;
 
 		dc_add_plane_to_context(dc, phantom_stream, phantom_plane, context);
 
@@ -1726,29 +1713,8 @@ static struct dc_stream_state *dcn32_enable_phantom_stream(struct dc *dc,
 	return phantom_stream;
 }
 
-void dcn32_retain_phantom_pipes(struct dc *dc, struct dc_state *context)
-{
-	int i;
-	struct dc_plane_state *phantom_plane = NULL;
-	struct dc_stream_state *phantom_stream = NULL;
-
-	for (i = 0; i < dc->res_pool->pipe_count; i++) {
-		struct pipe_ctx *pipe = &context->res_ctx.pipe_ctx[i];
-
-		if (!pipe->top_pipe && !pipe->prev_odm_pipe &&
-				pipe->plane_state && pipe->stream &&
-				pipe->stream->mall_stream_config.type == SUBVP_PHANTOM) {
-			phantom_plane = pipe->plane_state;
-			phantom_stream = pipe->stream;
-
-			dc_plane_state_retain(phantom_plane);
-			dc_stream_retain(phantom_stream);
-		}
-	}
-}
-
 // return true if removed piped from ctx, false otherwise
-bool dcn32_remove_phantom_pipes(struct dc *dc, struct dc_state *context, bool fast_update)
+bool dcn32_remove_phantom_pipes(struct dc *dc, struct dc_state *context)
 {
 	int i;
 	bool removed_pipe = false;
@@ -1775,23 +1741,10 @@ bool dcn32_remove_phantom_pipes(struct dc *dc, struct dc_state *context, bool fa
 			removed_pipe = true;
 		}
 
-		/* For non-full updates, a shallow copy of the current state
-		 * is created. In this case we don't want to erase the current
-		 * state (there can be 2 HIRQL threads, one in flip, and one in
-		 * checkMPO) that can cause a race condition.
-		 *
-		 * This is just a workaround, needs a proper fix.
-		 */
-		if (!fast_update) {
-			// Clear all phantom stream info
-			if (pipe->stream) {
-				pipe->stream->mall_stream_config.type = SUBVP_NONE;
-				pipe->stream->mall_stream_config.paired_stream = NULL;
-			}
-
-			if (pipe->plane_state) {
-				pipe->plane_state->is_phantom = false;
-			}
+		// Clear all phantom stream info
+		if (pipe->stream) {
+			pipe->stream->mall_stream_config.type = SUBVP_NONE;
+			pipe->stream->mall_stream_config.paired_stream = NULL;
 		}
 	}
 	return removed_pipe;
@@ -1842,38 +1795,13 @@ bool dcn32_validate_bandwidth(struct dc *dc,
 	int vlevel = 0;
 	int pipe_cnt = 0;
 	display_e2e_pipe_params_st *pipes = kzalloc(dc->res_pool->pipe_count * sizeof(display_e2e_pipe_params_st), GFP_KERNEL);
-	struct mall_temp_config mall_temp_config;
-
-	/* To handle Freesync properly, setting FreeSync DML parameters
-	 * to its default state for the first stage of validation
-	 */
-	context->bw_ctx.bw.dcn.clk.fw_based_mclk_switching = false;
-	context->bw_ctx.dml.soc.dram_clock_change_requirement_final = true;
-
 	DC_LOGGER_INIT(dc->ctx->logger);
-
-	/* For fast validation, there are situations where a shallow copy of
-	 * of the dc->current_state is created for the validation. In this case
-	 * we want to save and restore the mall config because we always
-	 * teardown subvp at the beginning of validation (and don't attempt
-	 * to add it back if it's fast validation). If we don't restore the
-	 * subvp config in cases of fast validation + shallow copy of the
-	 * dc->current_state, the dc->current_state will have a partially
-	 * removed subvp state when we did not intend to remove it.
-	 */
-	if (fast_validate) {
-		memset(&mall_temp_config, 0, sizeof(mall_temp_config));
-		dcn32_save_mall_state(dc, context, &mall_temp_config);
-	}
 
 	BW_VAL_TRACE_COUNT();
 
 	DC_FP_START();
 	out = dcn32_internal_validate_bw(dc, context, pipes, &pipe_cnt, &vlevel, fast_validate);
 	DC_FP_END();
-
-	if (fast_validate)
-		dcn32_restore_mall_state(dc, context, &mall_temp_config);
 
 	if (pipe_cnt == 0)
 		goto validate_out;
@@ -1889,8 +1817,6 @@ bool dcn32_validate_bandwidth(struct dc *dc,
 	}
 
 	dc->res_pool->funcs->calculate_wm_and_dlg(dc, context, pipes, pipe_cnt, vlevel);
-
-	dcn32_override_min_req_memclk(dc, context);
 
 	BW_VAL_TRACE_END_WATERMARKS();
 
@@ -1920,8 +1846,8 @@ int dcn32_populate_dml_pipes_from_context(
 	struct resource_context *res_ctx = &context->res_ctx;
 	struct pipe_ctx *pipe;
 	bool subvp_in_use = false;
+	int plane_count = 0;
 	struct dc_crtc_timing *timing;
-	bool vsr_odm_support = false;
 
 	dcn20_populate_dml_pipes_from_context(dc, context, pipes, fast_validate);
 
@@ -1939,16 +1865,12 @@ int dcn32_populate_dml_pipes_from_context(
 		timing = &pipe->stream->timing;
 
 		pipes[pipe_cnt].pipe.dest.odm_combine_policy = dm_odm_combine_policy_dal;
-		vsr_odm_support = (res_ctx->pipe_ctx[i].stream->src.width >= 5120 &&
-				res_ctx->pipe_ctx[i].stream->src.width > res_ctx->pipe_ctx[i].stream->dst.width);
-		if (context->stream_count == 1 &&
-				context->stream_status[0].plane_count == 1 &&
-				!dc_is_hdmi_signal(res_ctx->pipe_ctx[i].stream->signal) &&
-				is_h_timing_divisible_by_2(res_ctx->pipe_ctx[i].stream) &&
-				pipe->stream->timing.pix_clk_100hz * 100 > DCN3_2_VMIN_DISPCLK_HZ &&
-				dc->debug.enable_single_display_2to1_odm_policy &&
-				!vsr_odm_support) { //excluding 2to1 ODM combine on >= 5k vsr
-			pipes[pipe_cnt].pipe.dest.odm_combine_policy = dm_odm_combine_policy_2to1;
+		if (context->stream_count == 1 && !dc_is_hdmi_signal(res_ctx->pipe_ctx[i].stream->signal) &&
+				is_h_timing_divisible_by_2(res_ctx->pipe_ctx[i].stream)) {
+			if (dc->debug.enable_single_display_2to1_odm_policy) {
+				if (!((plane_count > 2) && pipe->top_pipe))
+					pipes[pipe_cnt].pipe.dest.odm_combine_policy = dm_odm_combine_policy_2to1;
+			}
 		}
 		pipe_cnt++;
 	}
@@ -1961,36 +1883,30 @@ int dcn32_populate_dml_pipes_from_context(
 		timing = &pipe->stream->timing;
 
 		pipes[pipe_cnt].pipe.src.gpuvm = true;
-		DC_FP_START();
-		dcn32_zero_pipe_dcc_fraction(pipes, pipe_cnt);
-		DC_FP_END();
+		pipes[pipe_cnt].pipe.src.dcc_fraction_of_zs_req_luma = 0;
+		pipes[pipe_cnt].pipe.src.dcc_fraction_of_zs_req_chroma = 0;
 		pipes[pipe_cnt].pipe.dest.vfront_porch = timing->v_front_porch;
 		pipes[pipe_cnt].pipe.src.gpuvm_min_page_size_kbytes = 256; // according to spreadsheet
 		pipes[pipe_cnt].pipe.src.unbounded_req_mode = false;
 		pipes[pipe_cnt].pipe.scale_ratio_depth.lb_depth = dm_lb_19;
 
-		/* Only populate DML input with subvp info for full updates.
-		 * This is just a workaround -- needs a proper fix.
-		 */
-		if (!fast_validate) {
-			switch (pipe->stream->mall_stream_config.type) {
-			case SUBVP_MAIN:
-				pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_sub_viewport;
-				subvp_in_use = true;
-				break;
-			case SUBVP_PHANTOM:
-				pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_phantom_pipe;
-				pipes[pipe_cnt].pipe.src.use_mall_for_static_screen = dm_use_mall_static_screen_disable;
-				// Disallow unbounded req for SubVP according to DCHUB programming guide
-				pipes[pipe_cnt].pipe.src.unbounded_req_mode = false;
-				break;
-			case SUBVP_NONE:
-				pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_disable;
-				pipes[pipe_cnt].pipe.src.use_mall_for_static_screen = dm_use_mall_static_screen_disable;
-				break;
-			default:
-				break;
-			}
+		switch (pipe->stream->mall_stream_config.type) {
+		case SUBVP_MAIN:
+			pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_sub_viewport;
+			subvp_in_use = true;
+			break;
+		case SUBVP_PHANTOM:
+			pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_phantom_pipe;
+			pipes[pipe_cnt].pipe.src.use_mall_for_static_screen = dm_use_mall_static_screen_disable;
+			// Disallow unbounded req for SubVP according to DCHUB programming guide
+			pipes[pipe_cnt].pipe.src.unbounded_req_mode = false;
+			break;
+		case SUBVP_NONE:
+			pipes[pipe_cnt].pipe.src.use_mall_for_pstate_change = dm_use_mall_pstate_change_disable;
+			pipes[pipe_cnt].pipe.src.use_mall_for_static_screen = dm_use_mall_static_screen_disable;
+			break;
+		default:
+			break;
 		}
 
 		pipes[pipe_cnt].dout.dsc_input_bpc = 0;
@@ -2011,10 +1927,12 @@ int dcn32_populate_dml_pipes_from_context(
 			}
 		}
 
-		DC_FP_START();
-		dcn32_predict_pipe_split(context, &pipes[pipe_cnt]);
-		DC_FP_END();
-
+		/* Calculate the number of planes we have so we can determine
+		 *  whether to apply ODM 2to1 policy or not
+		 */
+		if (pipe->stream && !pipe->prev_odm_pipe &&
+				(!pipe->top_pipe || pipe->top_pipe->plane_state != pipe->plane_state))
+			++plane_count;
 		pipe_cnt++;
 	}
 
@@ -2027,7 +1945,7 @@ int dcn32_populate_dml_pipes_from_context(
 	// In general cases we want to keep the dram clock change requirement
 	// (prefer configs that support MCLK switch). Only override to false
 	// for SubVP
-	if (context->bw_ctx.bw.dcn.clk.fw_based_mclk_switching || subvp_in_use)
+	if (subvp_in_use)
 		context->bw_ctx.dml.soc.dram_clock_change_requirement_final = false;
 	else
 		context->bw_ctx.dml.soc.dram_clock_change_requirement_final = true;
@@ -2078,18 +1996,7 @@ static struct resource_funcs dcn32_res_pool_funcs = {
 	.update_soc_for_wm_a = dcn30_update_soc_for_wm_a,
 	.add_phantom_pipes = dcn32_add_phantom_pipes,
 	.remove_phantom_pipes = dcn32_remove_phantom_pipes,
-	.retain_phantom_pipes = dcn32_retain_phantom_pipes,
-	.save_mall_state = dcn32_save_mall_state,
-	.restore_mall_state = dcn32_restore_mall_state,
 };
-
-static uint32_t read_pipe_fuses(struct dc_context *ctx)
-{
-	uint32_t value = REG_READ(CC_DC_PIPE_DIS);
-	/* DCN32 support max 4 pipes */
-	value = value & 0xf;
-	return value;
-}
 
 
 static bool dcn32_resource_construct(
@@ -2104,28 +2011,27 @@ static bool dcn32_resource_construct(
 	uint32_t pipe_fuses = 0;
 	uint32_t num_pipes  = 4;
 
-#undef REG_STRUCT
-#define REG_STRUCT bios_regs
-	bios_regs_init();
+	#undef REG_STRUCT
+	#define REG_STRUCT bios_regs
+		bios_regs_init();
 
-#undef REG_STRUCT
-#define REG_STRUCT clk_src_regs
-	clk_src_regs_init(0, A),
-	clk_src_regs_init(1, B),
-	clk_src_regs_init(2, C),
-	clk_src_regs_init(3, D),
-	clk_src_regs_init(4, E);
+	#undef REG_STRUCT
+	#define REG_STRUCT clk_src_regs
+		clk_src_regs_init(0, A),
+		clk_src_regs_init(1, B),
+		clk_src_regs_init(2, C),
+		clk_src_regs_init(3, D),
+		clk_src_regs_init(4, E);
+	#undef REG_STRUCT
+	#define REG_STRUCT abm_regs
+		abm_regs_init(0),
+		abm_regs_init(1),
+		abm_regs_init(2),
+		abm_regs_init(3);
 
-#undef REG_STRUCT
-#define REG_STRUCT abm_regs
-	abm_regs_init(0),
-	abm_regs_init(1),
-	abm_regs_init(2),
-	abm_regs_init(3);
-
-#undef REG_STRUCT
-#define REG_STRUCT dccg_regs
-	dccg_regs_init();
+	#undef REG_STRUCT
+	#define REG_STRUCT dccg_regs
+		dccg_regs_init();
 
 	DC_FP_START();
 
@@ -2134,7 +2040,7 @@ static bool dcn32_resource_construct(
 	pool->base.res_cap = &res_cap_dcn32;
 	/* max number of pipes for ASIC before checking for pipe fuses */
 	num_pipes  = pool->base.res_cap->num_timing_generator;
-	pipe_fuses = read_pipe_fuses(ctx);
+	pipe_fuses = REG_READ(CC_DC_PIPE_DIS);
 
 	for (i = 0; i < pool->base.res_cap->num_timing_generator; i++)
 		if (pipe_fuses & 1 << i)
@@ -2168,40 +2074,29 @@ static bool dcn32_resource_construct(
 	dc->caps.max_cursor_size = 64;
 	dc->caps.min_horizontal_blanking_period = 80;
 	dc->caps.dmdata_alloc_size = 2048;
-	dc->caps.mall_size_per_mem_channel = 4;
+	dc->caps.mall_size_per_mem_channel = 0;
 	dc->caps.mall_size_total = 0;
 	dc->caps.cursor_cache_size = dc->caps.max_cursor_size * dc->caps.max_cursor_size * 8;
 
 	dc->caps.cache_line_size = 64;
 	dc->caps.cache_num_ways = 16;
-
-	/* Calculate the available MALL space */
-	dc->caps.max_cab_allocation_bytes = dcn32_calc_num_avail_chans_for_mall(
-		dc, dc->ctx->dc_bios->vram_info.num_chans) *
-		dc->caps.mall_size_per_mem_channel * 1024 * 1024;
-	dc->caps.mall_size_total = dc->caps.max_cab_allocation_bytes;
-
+	dc->caps.max_cab_allocation_bytes = 67108864; // 64MB = 1024 * 1024 * 64
 	dc->caps.subvp_fw_processing_delay_us = 15;
-	dc->caps.subvp_drr_max_vblank_margin_us = 40;
 	dc->caps.subvp_prefetch_end_to_mall_start_us = 15;
 	dc->caps.subvp_swath_height_margin_lines = 16;
 	dc->caps.subvp_pstate_allow_width_us = 20;
 	dc->caps.subvp_vertical_int_margin_us = 30;
-	dc->caps.subvp_drr_vblank_start_margin_us = 100; // 100us margin
 
 	dc->caps.max_slave_planes = 2;
 	dc->caps.max_slave_yuv_planes = 2;
 	dc->caps.max_slave_rgb_planes = 2;
 	dc->caps.post_blend_color_processing = true;
 	dc->caps.force_dp_tps4_for_cp2520 = true;
-	if (dc->config.forceHBR2CP2520)
-		dc->caps.force_dp_tps4_for_cp2520 = false;
 	dc->caps.dp_hpo = true;
 	dc->caps.dp_hdmi21_pcon_support = true;
 	dc->caps.edp_dsc_support = true;
 	dc->caps.extended_aux_timeout_support = true;
 	dc->caps.dmcub_support = true;
-	dc->caps.seamless_odm = true;
 
 	/* Color pipeline capabilities */
 	dc->caps.color.dpp.dcn_arch = 1;
@@ -2475,13 +2370,10 @@ static bool dcn32_resource_construct(
 		ddc_init_data.id.id = dc->ctx->dc_bios->fw_info.oem_i2c_obj_id;
 		ddc_init_data.id.enum_id = 0;
 		ddc_init_data.id.type = OBJECT_TYPE_GENERIC;
-		pool->base.oem_device = dc->link_srv->create_ddc_service(&ddc_init_data);
+		pool->base.oem_device = dal_ddc_service_create(&ddc_init_data);
 	} else {
 		pool->base.oem_device = NULL;
 	}
-
-	if (ASICREV_IS_GC_11_0_3(dc->ctx->asic_id.hw_internal_rev) && (dc->config.sdpif_request_limit_words_per_umc == 0))
-		dc->config.sdpif_request_limit_words_per_umc = 16;
 
 	DC_FP_END();
 
@@ -2617,56 +2509,4 @@ struct pipe_ctx *dcn32_acquire_idle_pipe_for_head_pipe_in_layer(
 	idle_pipe->plane_res.mpcc_inst = pool->dpps[idle_pipe->pipe_idx]->inst;
 
 	return idle_pipe;
-}
-
-unsigned int dcn32_calc_num_avail_chans_for_mall(struct dc *dc, int num_chans)
-{
-	/*
-	 * DCN32 and DCN321 SKUs may have different sizes for MALL
-	 *  but we may not be able to access all the MALL space.
-	 *  If the num_chans is power of 2, then we can access all
-	 *  of the available MALL space.  Otherwise, we can only
-	 *  access:
-	 *
-	 *  max_cab_size_in_bytes = total_cache_size_in_bytes *
-	 *    ((2^floor(log2(num_chans)))/num_chans)
-	 *
-	 * Calculating the MALL sizes for all available SKUs, we
-	 *  have come up with the follow simplified check.
-	 * - we have max_chans which provides the max MALL size.
-	 *  Each chans supports 4MB of MALL so:
-	 *
-	 *  total_cache_size_in_bytes = max_chans * 4 MB
-	 *
-	 * - we have avail_chans which shows the number of channels
-	 *  we can use if we can't access the entire MALL space.
-	 *  It is generally half of max_chans
-	 * - so we use the following checks:
-	 *
-	 *   if (num_chans == max_chans), return max_chans
-	 *   if (num_chans < max_chans), return avail_chans
-	 *
-	 * - exception is GC_11_0_0 where we can't access max_chans,
-	 *  so we define max_avail_chans as the maximum available
-	 *  MALL space
-	 *
-	 */
-	int gc_11_0_0_max_chans = 48;
-	int gc_11_0_0_max_avail_chans = 32;
-	int gc_11_0_0_avail_chans = 16;
-	int gc_11_0_3_max_chans = 16;
-	int gc_11_0_3_avail_chans = 8;
-	int gc_11_0_2_max_chans = 8;
-	int gc_11_0_2_avail_chans = 4;
-
-	if (ASICREV_IS_GC_11_0_0(dc->ctx->asic_id.hw_internal_rev)) {
-		return (num_chans == gc_11_0_0_max_chans) ?
-			gc_11_0_0_max_avail_chans : gc_11_0_0_avail_chans;
-	} else if (ASICREV_IS_GC_11_0_2(dc->ctx->asic_id.hw_internal_rev)) {
-		return (num_chans == gc_11_0_2_max_chans) ?
-			gc_11_0_2_max_chans : gc_11_0_2_avail_chans;
-	} else { // if (ASICREV_IS_GC_11_0_3(dc->ctx->asic_id.hw_internal_rev)) {
-		return (num_chans == gc_11_0_3_max_chans) ?
-			gc_11_0_3_max_chans : gc_11_0_3_avail_chans;
-	}
 }

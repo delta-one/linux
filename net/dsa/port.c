@@ -12,11 +12,7 @@
 #include <linux/of_mdio.h>
 #include <linux/of_net.h>
 
-#include "dsa.h"
-#include "port.h"
-#include "slave.h"
-#include "switch.h"
-#include "tag_8021q.h"
+#include "dsa_priv.h"
 
 /**
  * dsa_port_notify - Notify the switching fabric of changes to a port
@@ -112,24 +108,6 @@ static bool dsa_port_can_configure_learning(struct dsa_port *dp)
 
 	err = ds->ops->port_pre_bridge_flags(ds, dp->index, flags, NULL);
 	return !err;
-}
-
-bool dsa_port_supports_hwtstamp(struct dsa_port *dp)
-{
-	struct dsa_switch *ds = dp->ds;
-	struct ifreq ifr = {};
-	int err;
-
-	if (!ds->ops->port_hwtstamp_get || !ds->ops->port_hwtstamp_set)
-		return false;
-
-	/* "See through" shim implementations of the "get" method.
-	 * Since we can't cook up a complete ioctl request structure, this will
-	 * fail in copy_to_user() with -EFAULT, which hopefully is enough to
-	 * detect a valid implementation.
-	 */
-	err = ds->ops->port_hwtstamp_get(ds, dp->index, &ifr);
-	return err != -EOPNOTSUPP;
 }
 
 int dsa_port_set_state(struct dsa_port *dp, u8 state, bool do_fast_age)
@@ -1030,6 +1008,9 @@ static int dsa_port_host_fdb_add(struct dsa_port *dp,
 		.db = db,
 	};
 
+	if (!dp->ds->fdb_isolation)
+		info.db.bridge.num = 0;
+
 	return dsa_port_notify(dp, DSA_NOTIFIER_HOST_FDB_ADD, &info);
 }
 
@@ -1053,9 +1034,6 @@ int dsa_port_bridge_host_fdb_add(struct dsa_port *dp,
 		.bridge = *dp->bridge,
 	};
 	int err;
-
-	if (!dp->ds->fdb_isolation)
-		db.bridge.num = 0;
 
 	/* Avoid a call to __dev_set_promiscuity() on the master, which
 	 * requires rtnl_lock(), since we can't guarantee that is held here,
@@ -1081,6 +1059,9 @@ static int dsa_port_host_fdb_del(struct dsa_port *dp,
 		.db = db,
 	};
 
+	if (!dp->ds->fdb_isolation)
+		info.db.bridge.num = 0;
+
 	return dsa_port_notify(dp, DSA_NOTIFIER_HOST_FDB_DEL, &info);
 }
 
@@ -1104,9 +1085,6 @@ int dsa_port_bridge_host_fdb_del(struct dsa_port *dp,
 		.bridge = *dp->bridge,
 	};
 	int err;
-
-	if (!dp->ds->fdb_isolation)
-		db.bridge.num = 0;
 
 	if (master->priv_flags & IFF_UNICAST_FLT) {
 		err = dev_uc_del(master, addr);
@@ -1212,6 +1190,9 @@ static int dsa_port_host_mdb_add(const struct dsa_port *dp,
 		.db = db,
 	};
 
+	if (!dp->ds->fdb_isolation)
+		info.db.bridge.num = 0;
+
 	return dsa_port_notify(dp, DSA_NOTIFIER_HOST_MDB_ADD, &info);
 }
 
@@ -1236,9 +1217,6 @@ int dsa_port_bridge_host_mdb_add(const struct dsa_port *dp,
 	};
 	int err;
 
-	if (!dp->ds->fdb_isolation)
-		db.bridge.num = 0;
-
 	err = dev_mc_add(master, mdb->addr);
 	if (err)
 		return err;
@@ -1255,6 +1233,9 @@ static int dsa_port_host_mdb_del(const struct dsa_port *dp,
 		.mdb = mdb,
 		.db = db,
 	};
+
+	if (!dp->ds->fdb_isolation)
+		info.db.bridge.num = 0;
 
 	return dsa_port_notify(dp, DSA_NOTIFIER_HOST_MDB_DEL, &info);
 }
@@ -1279,9 +1260,6 @@ int dsa_port_bridge_host_mdb_del(const struct dsa_port *dp,
 		.bridge = *dp->bridge,
 	};
 	int err;
-
-	if (!dp->ds->fdb_isolation)
-		db.bridge.num = 0;
 
 	err = dev_mc_del(master, mdb->addr);
 	if (err)
@@ -1558,14 +1536,16 @@ static void dsa_port_phylink_validate(struct phylink_config *config,
 				      unsigned long *supported,
 				      struct phylink_link_state *state)
 {
-	/* Skip call for drivers which don't yet set mac_capabilities,
-	 * since validating in that case would mean their PHY will advertise
-	 * nothing. In turn, skipping validation makes them advertise
-	 * everything that the PHY supports, so those drivers should be
-	 * converted ASAP.
-	 */
-	if (config->mac_capabilities)
-		phylink_generic_validate(config, supported, state);
+	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+	struct dsa_switch *ds = dp->ds;
+
+	if (!ds->ops->phylink_validate) {
+		if (config->mac_capabilities)
+			phylink_generic_validate(config, supported, state);
+		return;
+	}
+
+	ds->ops->phylink_validate(ds, dp->index, supported, state);
 }
 
 static void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
@@ -1681,7 +1661,6 @@ int dsa_port_phylink_create(struct dsa_port *dp)
 {
 	struct dsa_switch *ds = dp->ds;
 	phy_interface_t mode;
-	struct phylink *pl;
 	int err;
 
 	err = of_get_phy_mode(dp->dn, &mode);
@@ -1698,22 +1677,14 @@ int dsa_port_phylink_create(struct dsa_port *dp)
 	if (ds->ops->phylink_get_caps)
 		ds->ops->phylink_get_caps(ds, dp->index, &dp->pl_config);
 
-	pl = phylink_create(&dp->pl_config, of_fwnode_handle(dp->dn),
-			    mode, &dsa_port_phylink_mac_ops);
-	if (IS_ERR(pl)) {
-		pr_err("error creating PHYLINK: %ld\n", PTR_ERR(pl));
-		return PTR_ERR(pl);
+	dp->pl = phylink_create(&dp->pl_config, of_fwnode_handle(dp->dn),
+				mode, &dsa_port_phylink_mac_ops);
+	if (IS_ERR(dp->pl)) {
+		pr_err("error creating PHYLINK: %ld\n", PTR_ERR(dp->pl));
+		return PTR_ERR(dp->pl);
 	}
 
-	dp->pl = pl;
-
 	return 0;
-}
-
-void dsa_port_phylink_destroy(struct dsa_port *dp)
-{
-	phylink_destroy(dp->pl);
-	dp->pl = NULL;
 }
 
 static int dsa_shared_port_setup_phy_of(struct dsa_port *dp, bool enable)
@@ -1810,7 +1781,7 @@ static int dsa_shared_port_phylink_register(struct dsa_port *dp)
 	return 0;
 
 err_phy_connect:
-	dsa_port_phylink_destroy(dp);
+	phylink_destroy(dp->pl);
 	return err;
 }
 
@@ -2012,7 +1983,8 @@ void dsa_shared_port_link_unregister_of(struct dsa_port *dp)
 		rtnl_lock();
 		phylink_disconnect_phy(dp->pl);
 		rtnl_unlock();
-		dsa_port_phylink_destroy(dp);
+		phylink_destroy(dp->pl);
+		dp->pl = NULL;
 		return;
 	}
 

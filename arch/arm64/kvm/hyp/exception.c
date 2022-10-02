@@ -13,8 +13,6 @@
 #include <hyp/adjust_pc.h>
 #include <linux/kvm_host.h>
 #include <asm/kvm_emulate.h>
-#include <asm/kvm_mmu.h>
-#include <asm/kvm_nested.h>
 
 #if !defined (__KVM_NVHE_HYPERVISOR__) && !defined (__KVM_VHE_HYPERVISOR__)
 #error Hypervisor code only!
@@ -24,9 +22,7 @@ static inline u64 __vcpu_read_sys_reg(const struct kvm_vcpu *vcpu, int reg)
 {
 	u64 val;
 
-	if (unlikely(vcpu_has_nv(vcpu)))
-		return vcpu_read_sys_reg(vcpu, reg);
-	else if (__vcpu_read_sys_reg_from_cpu(reg, &val))
+	if (__vcpu_read_sys_reg_from_cpu(reg, &val))
 		return val;
 
 	return __vcpu_sys_reg(vcpu, reg);
@@ -34,25 +30,18 @@ static inline u64 __vcpu_read_sys_reg(const struct kvm_vcpu *vcpu, int reg)
 
 static inline void __vcpu_write_sys_reg(struct kvm_vcpu *vcpu, u64 val, int reg)
 {
-	if (unlikely(vcpu_has_nv(vcpu)))
-		vcpu_write_sys_reg(vcpu, val, reg);
-	else if (!__vcpu_write_sys_reg_to_cpu(val, reg))
-		__vcpu_sys_reg(vcpu, reg) = val;
+	if (__vcpu_write_sys_reg_to_cpu(val, reg))
+		return;
+
+	 __vcpu_sys_reg(vcpu, reg) = val;
 }
 
-static void __vcpu_write_spsr(struct kvm_vcpu *vcpu, unsigned long target_mode,
-			      u64 val)
+static void __vcpu_write_spsr(struct kvm_vcpu *vcpu, u64 val)
 {
-	if (unlikely(vcpu_has_nv(vcpu))) {
-		if (target_mode == PSR_MODE_EL1h)
-			vcpu_write_sys_reg(vcpu, val, SPSR_EL1);
-		else
-			vcpu_write_sys_reg(vcpu, val, SPSR_EL2);
-	} else if (has_vhe()) {
+	if (has_vhe())
 		write_sysreg_el1(val, SYS_SPSR);
-	} else {
+	else
 		__vcpu_sys_reg(vcpu, SPSR_EL1) = val;
-	}
 }
 
 static void __vcpu_write_spsr_abt(struct kvm_vcpu *vcpu, u64 val)
@@ -111,11 +100,6 @@ static void enter_exception64(struct kvm_vcpu *vcpu, unsigned long target_mode,
 		sctlr = __vcpu_read_sys_reg(vcpu, SCTLR_EL1);
 		__vcpu_write_sys_reg(vcpu, *vcpu_pc(vcpu), ELR_EL1);
 		break;
-	case PSR_MODE_EL2h:
-		vbar = __vcpu_read_sys_reg(vcpu, VBAR_EL2);
-		sctlr = __vcpu_read_sys_reg(vcpu, SCTLR_EL2);
-		__vcpu_write_sys_reg(vcpu, *vcpu_pc(vcpu), ELR_EL2);
-		break;
 	default:
 		/* Don't do that */
 		BUG();
@@ -131,7 +115,7 @@ static void enter_exception64(struct kvm_vcpu *vcpu, unsigned long target_mode,
 	new |= (old & PSR_C_BIT);
 	new |= (old & PSR_V_BIT);
 
-	if (kvm_has_mte(kern_hyp_va(vcpu->kvm)))
+	if (kvm_has_mte(vcpu->kvm))
 		new |= PSR_TCO_BIT;
 
 	new |= (old & PSR_DIT_BIT);
@@ -168,7 +152,7 @@ static void enter_exception64(struct kvm_vcpu *vcpu, unsigned long target_mode,
 	new |= target_mode;
 
 	*vcpu_cpsr(vcpu) = new;
-	__vcpu_write_spsr(vcpu, target_mode, old);
+	__vcpu_write_spsr(vcpu, old);
 }
 
 /*
@@ -338,20 +322,11 @@ static void kvm_inject_exception(struct kvm_vcpu *vcpu)
 		case unpack_vcpu_flag(EXCEPT_AA64_EL1_SYNC):
 			enter_exception64(vcpu, PSR_MODE_EL1h, except_type_sync);
 			break;
-
-		case unpack_vcpu_flag(EXCEPT_AA64_EL2_SYNC):
-			enter_exception64(vcpu, PSR_MODE_EL2h, except_type_sync);
-			break;
-
-		case unpack_vcpu_flag(EXCEPT_AA64_EL2_IRQ):
-			enter_exception64(vcpu, PSR_MODE_EL2h, except_type_irq);
-			break;
-
 		default:
 			/*
-			 * Only EL1_SYNC and EL2_{SYNC,IRQ} makes
-			 * sense so far. Everything else gets silently
-			 * ignored.
+			 * Only EL1_SYNC makes sense so far, EL2_{SYNC,IRQ}
+			 * will be implemented at some point. Everything
+			 * else gets silently ignored.
 			 */
 			break;
 		}

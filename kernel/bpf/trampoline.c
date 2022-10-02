@@ -9,6 +9,7 @@
 #include <linux/btf.h>
 #include <linux/rcupdate_trace.h>
 #include <linux/rcupdate_wait.h>
+#include <linux/module.h>
 #include <linux/static_call.h>
 #include <linux/bpf_verifier.h>
 #include <linux/bpf_lsm.h>
@@ -44,8 +45,8 @@ static int bpf_tramp_ftrace_ops_func(struct ftrace_ops *ops, enum ftrace_ops_cmd
 		lockdep_assert_held_once(&tr->mutex);
 
 		/* Instead of updating the trampoline here, we propagate
-		 * -EAGAIN to register_ftrace_direct(). Then we can
-		 * retry register_ftrace_direct() after updating the
+		 * -EAGAIN to register_ftrace_direct_multi(). Then we can
+		 * retry register_ftrace_direct_multi() after updating the
 		 * trampoline.
 		 */
 		if ((tr->flags & BPF_TRAMP_F_CALL_ORIG) &&
@@ -115,6 +116,22 @@ bool bpf_prog_has_trampoline(const struct bpf_prog *prog)
 		(ptype == BPF_PROG_TYPE_LSM && eatype == BPF_LSM_MAC);
 }
 
+void *bpf_jit_alloc_exec_page(void)
+{
+	void *image;
+
+	image = bpf_jit_alloc_exec(PAGE_SIZE);
+	if (!image)
+		return NULL;
+
+	set_vm_flush_reset_perms(image);
+	/* Keep image as writeable. The alternative is to keep flipping ro/rw
+	 * every time new program is attached or detached.
+	 */
+	set_memory_x((long)image, 1);
+	return image;
+}
+
 void bpf_image_ksym_add(void *data, struct bpf_ksym *ksym)
 {
 	ksym->start = (unsigned long) data;
@@ -171,16 +188,38 @@ out:
 	return tr;
 }
 
+static int bpf_trampoline_module_get(struct bpf_trampoline *tr)
+{
+	struct module *mod;
+	int err = 0;
+
+	preempt_disable();
+	mod = __module_text_address((unsigned long) tr->func.addr);
+	if (mod && !try_module_get(mod))
+		err = -ENOENT;
+	preempt_enable();
+	tr->mod = mod;
+	return err;
+}
+
+static void bpf_trampoline_module_put(struct bpf_trampoline *tr)
+{
+	module_put(tr->mod);
+	tr->mod = NULL;
+}
+
 static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr)
 {
 	void *ip = tr->func.addr;
 	int ret;
 
 	if (tr->func.ftrace_managed)
-		ret = unregister_ftrace_direct(tr->fops, (long)old_addr, false);
+		ret = unregister_ftrace_direct_multi(tr->fops, (long)old_addr);
 	else
 		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, old_addr, NULL);
 
+	if (!ret)
+		bpf_trampoline_module_put(tr);
 	return ret;
 }
 
@@ -192,9 +231,9 @@ static int modify_fentry(struct bpf_trampoline *tr, void *old_addr, void *new_ad
 
 	if (tr->func.ftrace_managed) {
 		if (lock_direct_mutex)
-			ret = modify_ftrace_direct(tr->fops, (long)new_addr);
+			ret = modify_ftrace_direct_multi(tr->fops, (long)new_addr);
 		else
-			ret = modify_ftrace_direct_nolock(tr->fops, (long)new_addr);
+			ret = modify_ftrace_direct_multi_nolock(tr->fops, (long)new_addr);
 	} else {
 		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, old_addr, new_addr);
 	}
@@ -215,13 +254,18 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
 		tr->func.ftrace_managed = true;
 	}
 
+	if (bpf_trampoline_module_get(tr))
+		return -ENOENT;
+
 	if (tr->func.ftrace_managed) {
 		ftrace_set_filter_ip(tr->fops, (unsigned long)ip, 0, 1);
-		ret = register_ftrace_direct(tr->fops, (long)new_addr);
+		ret = register_ftrace_direct_multi(tr->fops, (long)new_addr);
 	} else {
 		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, NULL, new_addr);
 	}
 
+	if (ret)
+		bpf_trampoline_module_put(tr);
 	return ret;
 }
 
@@ -360,10 +404,9 @@ static struct bpf_tramp_image *bpf_tramp_image_alloc(u64 key, u32 idx)
 		goto out_free_im;
 
 	err = -ENOMEM;
-	im->image = image = bpf_jit_alloc_exec(PAGE_SIZE);
+	im->image = image = bpf_jit_alloc_exec_page();
 	if (!image)
 		goto out_uncharge;
-	set_vm_flush_reset_perms(image);
 
 	err = percpu_ref_init(&im->pcref, __bpf_tramp_image_release, 0, GFP_KERNEL);
 	if (err)
@@ -440,8 +483,6 @@ again:
 	if (err < 0)
 		goto out;
 
-	set_memory_rox((long)im->image, 1);
-
 	WARN_ON(tr->cur_image && tr->selector == 0);
 	WARN_ON(!tr->cur_image && tr->selector);
 	if (tr->cur_image)
@@ -460,10 +501,6 @@ again:
 		/* reset fops->func and fops->trampoline for re-register */
 		tr->fops->func = NULL;
 		tr->fops->trampoline = 0;
-
-		/* reset im->image memory attr for arch_prepare_bpf_trampoline */
-		set_memory_nx((long)im->image, 1);
-		set_memory_rw((long)im->image, 1);
 		goto again;
 	}
 #endif
@@ -839,7 +876,7 @@ static __always_inline u64 notrace bpf_prog_start_time(void)
  * [2..MAX_U64] - execute bpf prog and record execution time.
  *     This is start time.
  */
-static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, struct bpf_tramp_run_ctx *run_ctx)
+u64 notrace __bpf_prog_enter(struct bpf_prog *prog, struct bpf_tramp_run_ctx *run_ctx)
 	__acquires(RCU)
 {
 	rcu_read_lock();
@@ -876,8 +913,7 @@ static void notrace update_prog_stats(struct bpf_prog *prog,
 	}
 }
 
-static void notrace __bpf_prog_exit_recur(struct bpf_prog *prog, u64 start,
-					  struct bpf_tramp_run_ctx *run_ctx)
+void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start, struct bpf_tramp_run_ctx *run_ctx)
 	__releases(RCU)
 {
 	bpf_reset_run_ctx(run_ctx->saved_run_ctx);
@@ -888,8 +924,8 @@ static void notrace __bpf_prog_exit_recur(struct bpf_prog *prog, u64 start,
 	rcu_read_unlock();
 }
 
-static u64 notrace __bpf_prog_enter_lsm_cgroup(struct bpf_prog *prog,
-					       struct bpf_tramp_run_ctx *run_ctx)
+u64 notrace __bpf_prog_enter_lsm_cgroup(struct bpf_prog *prog,
+					struct bpf_tramp_run_ctx *run_ctx)
 	__acquires(RCU)
 {
 	/* Runtime stats are exported via actual BPF_LSM_CGROUP
@@ -903,8 +939,8 @@ static u64 notrace __bpf_prog_enter_lsm_cgroup(struct bpf_prog *prog,
 	return NO_START_TIME;
 }
 
-static void notrace __bpf_prog_exit_lsm_cgroup(struct bpf_prog *prog, u64 start,
-					       struct bpf_tramp_run_ctx *run_ctx)
+void notrace __bpf_prog_exit_lsm_cgroup(struct bpf_prog *prog, u64 start,
+					struct bpf_tramp_run_ctx *run_ctx)
 	__releases(RCU)
 {
 	bpf_reset_run_ctx(run_ctx->saved_run_ctx);
@@ -913,8 +949,7 @@ static void notrace __bpf_prog_exit_lsm_cgroup(struct bpf_prog *prog, u64 start,
 	rcu_read_unlock();
 }
 
-u64 notrace __bpf_prog_enter_sleepable_recur(struct bpf_prog *prog,
-					     struct bpf_tramp_run_ctx *run_ctx)
+u64 notrace __bpf_prog_enter_sleepable(struct bpf_prog *prog, struct bpf_tramp_run_ctx *run_ctx)
 {
 	rcu_read_lock_trace();
 	migrate_disable();
@@ -930,8 +965,8 @@ u64 notrace __bpf_prog_enter_sleepable_recur(struct bpf_prog *prog,
 	return bpf_prog_start_time();
 }
 
-void notrace __bpf_prog_exit_sleepable_recur(struct bpf_prog *prog, u64 start,
-					     struct bpf_tramp_run_ctx *run_ctx)
+void notrace __bpf_prog_exit_sleepable(struct bpf_prog *prog, u64 start,
+				       struct bpf_tramp_run_ctx *run_ctx)
 {
 	bpf_reset_run_ctx(run_ctx->saved_run_ctx);
 
@@ -939,51 +974,6 @@ void notrace __bpf_prog_exit_sleepable_recur(struct bpf_prog *prog, u64 start,
 	this_cpu_dec(*(prog->active));
 	migrate_enable();
 	rcu_read_unlock_trace();
-}
-
-static u64 notrace __bpf_prog_enter_sleepable(struct bpf_prog *prog,
-					      struct bpf_tramp_run_ctx *run_ctx)
-{
-	rcu_read_lock_trace();
-	migrate_disable();
-	might_fault();
-
-	run_ctx->saved_run_ctx = bpf_set_run_ctx(&run_ctx->run_ctx);
-
-	return bpf_prog_start_time();
-}
-
-static void notrace __bpf_prog_exit_sleepable(struct bpf_prog *prog, u64 start,
-					      struct bpf_tramp_run_ctx *run_ctx)
-{
-	bpf_reset_run_ctx(run_ctx->saved_run_ctx);
-
-	update_prog_stats(prog, start);
-	migrate_enable();
-	rcu_read_unlock_trace();
-}
-
-static u64 notrace __bpf_prog_enter(struct bpf_prog *prog,
-				    struct bpf_tramp_run_ctx *run_ctx)
-	__acquires(RCU)
-{
-	rcu_read_lock();
-	migrate_disable();
-
-	run_ctx->saved_run_ctx = bpf_set_run_ctx(&run_ctx->run_ctx);
-
-	return bpf_prog_start_time();
-}
-
-static void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start,
-				    struct bpf_tramp_run_ctx *run_ctx)
-	__releases(RCU)
-{
-	bpf_reset_run_ctx(run_ctx->saved_run_ctx);
-
-	update_prog_stats(prog, start);
-	migrate_enable();
-	rcu_read_unlock();
 }
 
 void notrace __bpf_tramp_enter(struct bpf_tramp_image *tr)
@@ -994,36 +984,6 @@ void notrace __bpf_tramp_enter(struct bpf_tramp_image *tr)
 void notrace __bpf_tramp_exit(struct bpf_tramp_image *tr)
 {
 	percpu_ref_put(&tr->pcref);
-}
-
-bpf_trampoline_enter_t bpf_trampoline_enter(const struct bpf_prog *prog)
-{
-	bool sleepable = prog->aux->sleepable;
-
-	if (bpf_prog_check_recur(prog))
-		return sleepable ? __bpf_prog_enter_sleepable_recur :
-			__bpf_prog_enter_recur;
-
-	if (resolve_prog_type(prog) == BPF_PROG_TYPE_LSM &&
-	    prog->expected_attach_type == BPF_LSM_CGROUP)
-		return __bpf_prog_enter_lsm_cgroup;
-
-	return sleepable ? __bpf_prog_enter_sleepable : __bpf_prog_enter;
-}
-
-bpf_trampoline_exit_t bpf_trampoline_exit(const struct bpf_prog *prog)
-{
-	bool sleepable = prog->aux->sleepable;
-
-	if (bpf_prog_check_recur(prog))
-		return sleepable ? __bpf_prog_exit_sleepable_recur :
-			__bpf_prog_exit_recur;
-
-	if (resolve_prog_type(prog) == BPF_PROG_TYPE_LSM &&
-	    prog->expected_attach_type == BPF_LSM_CGROUP)
-		return __bpf_prog_exit_lsm_cgroup;
-
-	return sleepable ? __bpf_prog_exit_sleepable : __bpf_prog_exit;
 }
 
 int __weak

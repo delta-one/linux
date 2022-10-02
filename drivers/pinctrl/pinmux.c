@@ -13,22 +13,19 @@
 #define pr_fmt(fmt) "pinmux core: " fmt
 
 #include <linux/ctype.h>
-#include <linux/debugfs.h>
-#include <linux/device.h>
-#include <linux/err.h>
-#include <linux/init.h>
 #include <linux/kernel.h>
-#include <linux/list.h>
 #include <linux/module.h>
-#include <linux/radix-tree.h>
-#include <linux/seq_file.h>
+#include <linux/init.h>
+#include <linux/device.h>
 #include <linux/slab.h>
+#include <linux/radix-tree.h>
+#include <linux/err.h>
+#include <linux/list.h>
 #include <linux/string.h>
-
+#include <linux/debugfs.h>
+#include <linux/seq_file.h>
 #include <linux/pinctrl/machine.h>
-#include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
-
 #include "core.h"
 #include "pinmux.h"
 
@@ -744,8 +741,10 @@ static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
 	}
 
 	ret = pinctrl_get_group_selector(pctldev, gname);
-	if (ret < 0)
+	if (ret < 0) {
+		dev_err(pctldev->dev, "failed to get group selector for %s", gname);
 		goto exit_free_buf;
+	}
 	gsel = ret;
 
 	ret = pmxops->set_mux(pctldev, fsel, gsel);

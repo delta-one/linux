@@ -15,6 +15,7 @@
 #include <linux/slab.h>
 
 #include <drm/drm_atomic_helper.h>
+#include <drm/drm_crtc_helper.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_mipi_dsi.h>
 #include <drm/drm_of.h>
@@ -1017,7 +1018,8 @@ static int tc358768_get_regulators(struct tc358768_priv *priv)
 	return ret;
 }
 
-static int tc358768_i2c_probe(struct i2c_client *client)
+static int tc358768_i2c_probe(struct i2c_client *client,
+			      const struct i2c_device_id *id)
 {
 	struct tc358768_priv *priv;
 	struct device *dev = &client->dev;
@@ -1083,7 +1085,7 @@ static struct i2c_driver tc358768_driver = {
 		.of_match_table = tc358768_of_ids,
 	},
 	.id_table = tc358768_i2c_ids,
-	.probe_new = tc358768_i2c_probe,
+	.probe = tc358768_i2c_probe,
 	.remove	= tc358768_i2c_remove,
 };
 module_i2c_driver(tc358768_driver);

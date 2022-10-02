@@ -224,13 +224,6 @@ int snd_soc_component_is_dummy(struct snd_soc_component *component)
 		(component->driver == &dummy_codec));
 }
 
-struct snd_soc_dai_link_component asoc_dummy_dlc = {
-	.of_node	= NULL,
-	.dai_name	= "snd-soc-dummy-dai",
-	.name		= "snd-soc-dummy",
-};
-EXPORT_SYMBOL_GPL(asoc_dummy_dlc);
-
 static int snd_soc_dummy_probe(struct platform_device *pdev)
 {
 	int ret;
@@ -271,7 +264,7 @@ int __init snd_soc_util_init(void)
 	return ret;
 }
 
-void snd_soc_util_exit(void)
+void __exit snd_soc_util_exit(void)
 {
 	platform_driver_unregister(&soc_dummy_driver);
 	platform_device_unregister(soc_dummy_dev);

@@ -988,8 +988,8 @@ static u32 get_framesize_raw_p010(u32 width, u32 height)
 {
 	u32 y_plane, uv_plane, y_stride, uv_stride, y_sclines, uv_sclines;
 
-	y_stride = ALIGN(width * 2, 128);
-	uv_stride = ALIGN(width * 2, 128);
+	y_stride = ALIGN(width * 2, 256);
+	uv_stride = ALIGN(width * 2, 256);
 	y_sclines = ALIGN(height, 32);
 	uv_sclines = ALIGN((height + 1) >> 1, 16);
 	y_plane = y_stride * y_sclines;
@@ -1800,7 +1800,7 @@ bool venus_helper_check_format(struct venus_inst *inst, u32 v4l2_pixfmt)
 	struct venus_core *core = inst->core;
 	u32 fmt = to_hfi_raw_fmt(v4l2_pixfmt);
 	struct hfi_plat_caps *caps;
-	bool found;
+	u32 buftype;
 
 	if (!fmt)
 		return false;
@@ -1809,13 +1809,12 @@ bool venus_helper_check_format(struct venus_inst *inst, u32 v4l2_pixfmt)
 	if (!caps)
 		return false;
 
-	found = find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT, fmt);
-	if (found)
-		goto done;
+	if (inst->session_type == VIDC_SESSION_TYPE_DEC)
+		buftype = HFI_BUFFER_OUTPUT2;
+	else
+		buftype = HFI_BUFFER_OUTPUT;
 
-	found = find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT2, fmt);
-done:
-	return found;
+	return find_fmt_from_caps(caps, buftype, fmt);
 }
 EXPORT_SYMBOL_GPL(venus_helper_check_format);
 

@@ -52,12 +52,9 @@ struct i915_page_sizes {
  * @mr: The memory region of the object pointed to by the vma.
  * @ops: Pointer to the backend i915_vma_ops.
  * @private: Bind backend private info.
- * @start: Offset into the address space of bind range start. Note that
- * this is after any padding that might have been allocated.
- * @node_size: Size of the allocated range manager node with padding
- * subtracted.
+ * @start: Offset into the address space of bind range start.
+ * @node_size: Size of the allocated range manager node.
  * @vma_size: Bind size.
- * @guard: The size of guard area preceding and trailing the bind.
  * @page_sizes_gtt: Resulting page sizes from the bind operation.
  * @bound_flags: Flags indicating binding status.
  * @allocated: Backend private data. TODO: Should move into @private.
@@ -116,7 +113,6 @@ struct i915_vma_resource {
 	u64 start;
 	u64 node_size;
 	u64 vma_size;
-	u32 guard;
 	u32 page_sizes_gtt;
 
 	u32 bound_flags;
@@ -178,10 +174,9 @@ static inline void i915_vma_resource_put(struct i915_vma_resource *vma_res)
  * @mr: The memory region of the object the vma points to.
  * @ops: The backend ops.
  * @private: Bind backend private info.
- * @start: Offset into the address space of bind range start after padding.
- * @node_size: Size of the allocated range manager node minus padding.
+ * @start: Offset into the address space of bind range start.
+ * @node_size: Size of the allocated range manager node.
  * @size: Bind size.
- * @guard: The size of the guard area preceding and trailing the bind.
  *
  * Initializes a vma resource allocated using i915_vma_resource_alloc().
  * The reason for having separate allocate and initialize function is that
@@ -200,8 +195,7 @@ static inline void i915_vma_resource_init(struct i915_vma_resource *vma_res,
 					  void *private,
 					  u64 start,
 					  u64 node_size,
-					  u64 size,
-					  u32 guard)
+					  u64 size)
 {
 	__i915_vma_resource_init(vma_res);
 	vma_res->vm = vm;
@@ -219,7 +213,6 @@ static inline void i915_vma_resource_init(struct i915_vma_resource *vma_res,
 	vma_res->start = start;
 	vma_res->node_size = node_size;
 	vma_res->vma_size = size;
-	vma_res->guard = guard;
 }
 
 static inline void i915_vma_resource_fini(struct i915_vma_resource *vma_res)

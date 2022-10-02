@@ -105,7 +105,6 @@ static struct fwnode_handle *dpaa2_mac_get_node(struct device *dev,
 		 * thus the fwnode field is not yet set. Defer probe if we are
 		 * facing this situation.
 		 */
-		dev_dbg(dev, "dprc not finished probing\n");
 		return ERR_PTR(-EPROBE_DEFER);
 	}
 
@@ -159,8 +158,7 @@ static void dpaa2_mac_config(struct phylink_config *config, unsigned int mode,
 	struct dpmac_link_state *dpmac_state = &mac->state;
 	int err;
 
-	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-			      state->advertising))
+	if (state->an_enabled)
 		dpmac_state->options |= DPMAC_LINK_OPT_AUTONEG;
 	else
 		dpmac_state->options &= ~DPMAC_LINK_OPT_AUTONEG;
@@ -237,6 +235,7 @@ static void dpaa2_mac_link_down(struct phylink_config *config,
 }
 
 static const struct phylink_mac_ops dpaa2_mac_phylink_ops = {
+	.validate = phylink_generic_validate,
 	.mac_select_pcs = dpaa2_mac_select_pcs,
 	.mac_config = dpaa2_mac_config,
 	.mac_link_up = dpaa2_mac_link_up,
@@ -265,10 +264,8 @@ static int dpaa2_pcs_create(struct dpaa2_mac *mac,
 
 	mdiodev = fwnode_mdio_find_device(node);
 	fwnode_handle_put(node);
-	if (!mdiodev) {
-		netdev_dbg(mac->net_dev, "missing PCS device\n");
+	if (!mdiodev)
 		return -EPROBE_DEFER;
-	}
 
 	mac->pcs = lynx_pcs_create(mdiodev);
 	if (!mac->pcs) {
@@ -339,20 +336,12 @@ static void dpaa2_mac_set_supported_interfaces(struct dpaa2_mac *mac)
 
 void dpaa2_mac_start(struct dpaa2_mac *mac)
 {
-	ASSERT_RTNL();
-
 	if (mac->serdes_phy)
 		phy_power_on(mac->serdes_phy);
-
-	phylink_start(mac->phylink);
 }
 
 void dpaa2_mac_stop(struct dpaa2_mac *mac)
 {
-	ASSERT_RTNL();
-
-	phylink_stop(mac->phylink);
-
 	if (mac->serdes_phy)
 		phy_power_off(mac->serdes_phy);
 }
@@ -431,9 +420,7 @@ int dpaa2_mac_connect(struct dpaa2_mac *mac)
 	}
 	mac->phylink = phylink;
 
-	rtnl_lock();
 	err = phylink_fwnode_phy_connect(mac->phylink, dpmac_node, 0);
-	rtnl_unlock();
 	if (err) {
 		netdev_err(net_dev, "phylink_fwnode_phy_connect() = %d\n", err);
 		goto err_phylink_destroy;
@@ -451,10 +438,10 @@ err_pcs_destroy:
 
 void dpaa2_mac_disconnect(struct dpaa2_mac *mac)
 {
-	rtnl_lock();
-	phylink_disconnect_phy(mac->phylink);
-	rtnl_unlock();
+	if (!mac->phylink)
+		return;
 
+	phylink_disconnect_phy(mac->phylink);
 	phylink_destroy(mac->phylink);
 	dpaa2_pcs_destroy(mac);
 	of_phy_put(mac->serdes_phy);

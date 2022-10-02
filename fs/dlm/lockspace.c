@@ -17,6 +17,7 @@
 #include "recoverd.h"
 #include "dir.h"
 #include "midcomms.h"
+#include "lowcomms.h"
 #include "config.h"
 #include "memory.h"
 #include "lock.h"
@@ -215,9 +216,9 @@ static int do_uevent(struct dlm_ls *ls, int in)
 	return ls->ls_uevent_result;
 }
 
-static int dlm_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
+static int dlm_uevent(struct kobject *kobj, struct kobj_uevent_env *env)
 {
-	const struct dlm_ls *ls = container_of(kobj, struct dlm_ls, ls_kobj);
+	struct dlm_ls *ls = container_of(kobj, struct dlm_ls, ls_kobj);
 
 	add_uevent_var(env, "LOCKSPACE=%s", ls->ls_name);
 	return 0;
@@ -273,6 +274,7 @@ static int dlm_scand(void *data)
 			if (dlm_lock_recovery_try(ls)) {
 				ls->ls_scan_time = jiffies;
 				dlm_scan_rsbs(ls);
+				dlm_scan_timeout(ls);
 				dlm_unlock_recovery(ls);
 			} else {
 				ls->ls_scan_time += HZ;
@@ -380,23 +382,23 @@ static int threads_start(void)
 {
 	int error;
 
-	/* Thread for sending/receiving messages for all lockspace's */
-	error = dlm_midcomms_start();
-	if (error) {
-		log_print("cannot start dlm midcomms %d", error);
-		goto fail;
-	}
-
 	error = dlm_scand_start();
 	if (error) {
 		log_print("cannot start dlm_scand thread %d", error);
-		goto midcomms_fail;
+		goto fail;
+	}
+
+	/* Thread for sending/receiving messages for all lockspace's */
+	error = dlm_midcomms_start();
+	if (error) {
+		log_print("cannot start dlm lowcomms %d", error);
+		goto scand_fail;
 	}
 
 	return 0;
 
- midcomms_fail:
-	dlm_midcomms_stop();
+ scand_fail:
+	dlm_scand_stop();
  fail:
 	return error;
 }
@@ -471,7 +473,7 @@ static int new_lockspace(const char *name, const char *cluster,
 
 	error = -ENOMEM;
 
-	ls = kzalloc(sizeof(*ls), GFP_NOFS);
+	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
 	if (!ls)
 		goto out;
 	memcpy(ls->ls_name, name, namelen);
@@ -487,10 +489,28 @@ static int new_lockspace(const char *name, const char *cluster,
 		ls->ls_ops_arg = ops_arg;
 	}
 
+#ifdef CONFIG_DLM_DEPRECATED_API
+	if (flags & DLM_LSFL_TIMEWARN) {
+		pr_warn_once("===============================================================\n"
+			     "WARNING: the dlm DLM_LSFL_TIMEWARN flag is being deprecated and\n"
+			     "         will be removed in v6.2!\n"
+			     "         Inclusive DLM_LSFL_TIMEWARN define in UAPI header!\n"
+			     "===============================================================\n");
+
+		set_bit(LSFL_TIMEWARN, &ls->ls_flags);
+	}
+
+	/* ls_exflags are forced to match among nodes, and we don't
+	 * need to require all nodes to have some flags set
+	 */
+	ls->ls_exflags = (flags & ~(DLM_LSFL_TIMEWARN | DLM_LSFL_FS |
+				    DLM_LSFL_NEWEXCL));
+#else
 	/* ls_exflags are forced to match among nodes, and we don't
 	 * need to require all nodes to have some flags set
 	 */
 	ls->ls_exflags = (flags & ~(DLM_LSFL_FS | DLM_LSFL_NEWEXCL));
+#endif
 
 	size = READ_ONCE(dlm_config.ci_rsbtbl_size);
 	ls->ls_rsbtbl_size = size;
@@ -503,6 +523,9 @@ static int new_lockspace(const char *name, const char *cluster,
 		ls->ls_rsbtbl[i].toss.rb_node = NULL;
 		spin_lock_init(&ls->ls_rsbtbl[i].lock);
 	}
+
+	spin_lock_init(&ls->ls_remove_spin);
+	init_waitqueue_head(&ls->ls_remove_wait);
 
 	for (i = 0; i < DLM_REMOVE_NAMES_MAX; i++) {
 		ls->ls_remove_names[i] = kzalloc(DLM_RESNAME_MAXLEN+1,
@@ -518,6 +541,10 @@ static int new_lockspace(const char *name, const char *cluster,
 	mutex_init(&ls->ls_waiters_mutex);
 	INIT_LIST_HEAD(&ls->ls_orphans);
 	mutex_init(&ls->ls_orphans_mutex);
+#ifdef CONFIG_DLM_DEPRECATED_API
+	INIT_LIST_HEAD(&ls->ls_timeout);
+	mutex_init(&ls->ls_timeout_mutex);
+#endif
 
 	INIT_LIST_HEAD(&ls->ls_new_rsb);
 	spin_lock_init(&ls->ls_new_rsb_spin);
@@ -529,8 +556,8 @@ static int new_lockspace(const char *name, const char *cluster,
 	ls->ls_total_weight = 0;
 	ls->ls_node_array = NULL;
 
-	memset(&ls->ls_local_rsb, 0, sizeof(struct dlm_rsb));
-	ls->ls_local_rsb.res_ls = ls;
+	memset(&ls->ls_stub_rsb, 0, sizeof(struct dlm_rsb));
+	ls->ls_stub_rsb.res_ls = ls;
 
 	ls->ls_debug_rsb_dentry = NULL;
 	ls->ls_debug_waiters_dentry = NULL;
@@ -540,7 +567,7 @@ static int new_lockspace(const char *name, const char *cluster,
 	init_completion(&ls->ls_recovery_done);
 	ls->ls_recovery_result = -1;
 
-	spin_lock_init(&ls->ls_cb_lock);
+	mutex_init(&ls->ls_cb_mutex);
 	INIT_LIST_HEAD(&ls->ls_cb_delay);
 
 	ls->ls_recoverd_task = NULL;
@@ -549,7 +576,7 @@ static int new_lockspace(const char *name, const char *cluster,
 	spin_lock_init(&ls->ls_rcom_spin);
 	get_random_bytes(&ls->ls_rcom_seq, sizeof(uint64_t));
 	ls->ls_recover_status = 0;
-	ls->ls_recover_seq = get_random_u64();
+	ls->ls_recover_seq = 0;
 	ls->ls_recover_args = NULL;
 	init_rwsem(&ls->ls_in_recovery);
 	init_rwsem(&ls->ls_recv_active);
@@ -699,7 +726,7 @@ static int __dlm_new_lockspace(const char *name, const char *cluster,
 	if (!ls_count) {
 		dlm_scand_stop();
 		dlm_midcomms_shutdown();
-		dlm_midcomms_stop();
+		dlm_lowcomms_stop();
 	}
  out:
 	mutex_unlock(&ls_lock);
@@ -741,7 +768,7 @@ static int lkb_idr_free(int id, void *p, void *data)
 {
 	struct dlm_lkb *lkb = p;
 
-	if (lkb->lkb_lvbptr && test_bit(DLM_IFL_MSTCPY_BIT, &lkb->lkb_iflags))
+	if (lkb->lkb_lvbptr && lkb->lkb_flags & DLM_IFL_MSTCPY)
 		dlm_free_lvb(lkb->lkb_lvbptr);
 
 	dlm_free_lkb(lkb);
@@ -796,9 +823,6 @@ static int release_lockspace(struct dlm_ls *ls, int force)
 		log_debug(ls, "release_lockspace no remove %d", rv);
 		return rv;
 	}
-
-	if (ls_count == 1)
-		dlm_midcomms_version_wait();
 
 	dlm_device_deregister(ls);
 
@@ -905,7 +929,7 @@ int dlm_release_lockspace(void *lockspace, int force)
 	if (!error)
 		ls_count--;
 	if (!ls_count)
-		dlm_midcomms_stop();
+		dlm_lowcomms_stop();
 	mutex_unlock(&ls_lock);
 
 	return error;

@@ -2927,14 +2927,15 @@ static int megasas_generic_reset(struct scsi_cmnd *scmd)
  * Sets the FW busy flag and reduces the host->can_queue if the
  * cmd has not been completed within the timeout period.
  */
-static enum scsi_timeout_action megasas_reset_timer(struct scsi_cmnd *scmd)
+static enum
+blk_eh_timer_return megasas_reset_timer(struct scsi_cmnd *scmd)
 {
 	struct megasas_instance *instance;
 	unsigned long flags;
 
 	if (time_after(jiffies, scmd->jiffies_at_alloc +
 				(scmd_timeout * 2) * HZ)) {
-		return SCSI_EH_NOT_HANDLED;
+		return BLK_EH_DONE;
 	}
 
 	instance = (struct megasas_instance *)scmd->device->host->hostdata;
@@ -2948,7 +2949,7 @@ static enum scsi_timeout_action megasas_reset_timer(struct scsi_cmnd *scmd)
 
 		spin_unlock_irqrestore(instance->host->host_lock, flags);
 	}
-	return SCSI_EH_RESET_TIMER;
+	return BLK_EH_RESET_TIMER;
 }
 
 /**
@@ -3298,7 +3299,7 @@ fw_crash_buffer_show(struct device *cdev,
 
 	spin_lock_irqsave(&instance->crashdump_lock, flags);
 	buff_offset = instance->fw_crash_buffer_offset;
-	if (!instance->crash_dump_buf ||
+	if (!instance->crash_dump_buf &&
 		!((instance->fw_crash_state == AVAILABLE) ||
 		(instance->fw_crash_state == COPYING))) {
 		dev_err(&instance->pdev->dev,
@@ -3505,7 +3506,7 @@ ATTRIBUTE_GROUPS(megaraid_host);
 /*
  * Scsi host template for megaraid_sas driver
  */
-static const struct scsi_host_template megasas_template = {
+static struct scsi_host_template megasas_template = {
 
 	.module = THIS_MODULE,
 	.name = "Avago SAS based MegaRAID driver",
@@ -5873,6 +5874,10 @@ fallback:
 static
 int megasas_get_device_list(struct megasas_instance *instance)
 {
+	memset(instance->pd_list, 0,
+	       (MEGASAS_MAX_PD * sizeof(struct megasas_pd_list)));
+	memset(instance->ld_ids, 0xff, MEGASAS_MAX_LD_IDS);
+
 	if (instance->enable_fw_dev_list) {
 		if (megasas_host_device_list_query(instance, true))
 			return FAILED;
@@ -7215,7 +7220,7 @@ int megasas_alloc_ctrl_dma_buffers(struct megasas_instance *instance)
 
 		if (!fusion->ioc_init_request) {
 			dev_err(&pdev->dev,
-				"Failed to allocate ioc init request\n");
+				"Failed to allocate PD list buffer\n");
 			return -ENOMEM;
 		}
 
@@ -7434,6 +7439,7 @@ static inline void megasas_init_ctrl_params(struct megasas_instance *instance)
 	    (instance->pdev->device == PCI_DEVICE_ID_LSI_SAS0071SKINNY))
 		instance->flag_ieee = 1;
 
+	megasas_dbg_lvl = 0;
 	instance->flag = 0;
 	instance->unload = 1;
 	instance->last_time = 0;
@@ -8756,26 +8762,33 @@ static
 int megasas_update_device_list(struct megasas_instance *instance,
 			       int event_type)
 {
-	int dcmd_ret;
+	int dcmd_ret = DCMD_SUCCESS;
 
 	if (instance->enable_fw_dev_list) {
-		return megasas_host_device_list_query(instance, false);
+		dcmd_ret = megasas_host_device_list_query(instance, false);
+		if (dcmd_ret != DCMD_SUCCESS)
+			goto out;
 	} else {
 		if (event_type & SCAN_PD_CHANNEL) {
 			dcmd_ret = megasas_get_pd_list(instance);
+
 			if (dcmd_ret != DCMD_SUCCESS)
-				return dcmd_ret;
+				goto out;
 		}
 
 		if (event_type & SCAN_VD_CHANNEL) {
 			if (!instance->requestorId ||
 			megasas_get_ld_vf_affiliation(instance, 0)) {
-				return megasas_ld_list_query(instance,
+				dcmd_ret = megasas_ld_list_query(instance,
 						MR_LD_QUERY_TYPE_EXPOSED_TO_HOST);
+				if (dcmd_ret != DCMD_SUCCESS)
+					goto out;
 			}
 		}
 	}
-	return DCMD_SUCCESS;
+
+out:
+	return dcmd_ret;
 }
 
 /**
@@ -8905,7 +8918,7 @@ megasas_aen_polling(struct work_struct *work)
 			sdev1 = scsi_device_lookup(instance->host,
 						   MEGASAS_MAX_PD_CHANNELS +
 						   (ld_target_id / MEGASAS_MAX_DEV_PER_CHANNEL),
-						   (ld_target_id % MEGASAS_MAX_DEV_PER_CHANNEL),
+						   (ld_target_id - MEGASAS_MAX_DEV_PER_CHANNEL),
 						   0);
 			if (sdev1)
 				megasas_remove_scsi_device(sdev1);
@@ -9003,7 +9016,6 @@ static int __init megasas_init(void)
 	 */
 	pr_info("megasas: %s\n", MEGASAS_VERSION);
 
-	megasas_dbg_lvl = 0;
 	support_poll_for_event = 2;
 	support_device_change = 1;
 	support_nvme_encapsulation = true;

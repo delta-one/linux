@@ -2356,7 +2356,8 @@ static const struct snd_soc_dai_ops max98090_dai_ops = {
 	.no_capture_mute = 1,
 };
 
-static struct snd_soc_dai_driver max98090_dai = {
+static struct snd_soc_dai_driver max98090_dai[] = {
+{
 	.name = "HiFi",
 	.playback = {
 		.stream_name = "HiFi Playback",
@@ -2373,6 +2374,7 @@ static struct snd_soc_dai_driver max98090_dai = {
 		.formats = MAX98090_FORMATS,
 	},
 	 .ops = &max98090_dai_ops,
+}
 };
 
 static int max98090_probe(struct snd_soc_component *component)
@@ -2592,8 +2594,8 @@ static int max98090_i2c_probe(struct i2c_client *i2c)
 	}
 
 	ret = devm_snd_soc_register_component(&i2c->dev,
-					      &soc_component_dev_max98090,
-					      &max98090_dai, 1);
+			&soc_component_dev_max98090, max98090_dai,
+			ARRAY_SIZE(max98090_dai));
 err_enable:
 	return ret;
 }
@@ -2691,7 +2693,7 @@ static struct i2c_driver max98090_i2c_driver = {
 		.of_match_table = of_match_ptr(max98090_of_match),
 		.acpi_match_table = ACPI_PTR(max98090_acpi_match),
 	},
-	.probe = max98090_i2c_probe,
+	.probe_new = max98090_i2c_probe,
 	.shutdown = max98090_i2c_shutdown,
 	.remove = max98090_i2c_remove,
 	.id_table = max98090_i2c_id,

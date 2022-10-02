@@ -261,8 +261,7 @@ static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
 	if (IS_ERR(qcom->icc_path_apps)) {
 		dev_err(dev, "failed to get apps-usb path: %ld\n",
 				PTR_ERR(qcom->icc_path_apps));
-		ret = PTR_ERR(qcom->icc_path_apps);
-		goto put_path_ddr;
+		return PTR_ERR(qcom->icc_path_apps);
 	}
 
 	max_speed = usb_get_maximum_speed(&qcom->dwc3->dev);
@@ -275,22 +274,16 @@ static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
 	}
 	if (ret) {
 		dev_err(dev, "failed to set bandwidth for usb-ddr path: %d\n", ret);
-		goto put_path_apps;
+		return ret;
 	}
 
 	ret = icc_set_bw(qcom->icc_path_apps, APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
 	if (ret) {
 		dev_err(dev, "failed to set bandwidth for apps-usb path: %d\n", ret);
-		goto put_path_apps;
+		return ret;
 	}
 
 	return 0;
-
-put_path_apps:
-	icc_put(qcom->icc_path_apps);
-put_path_ddr:
-	icc_put(qcom->icc_path_ddr);
-	return ret;
 }
 
 /**
@@ -901,7 +894,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
 
 	/* enable vbus override for device mode */
-	if (qcom->mode != USB_DR_MODE_HOST)
+	if (qcom->mode == USB_DR_MODE_PERIPHERAL)
 		dwc3_qcom_vbus_override_enable(qcom, true);
 
 	/* register extcon to override sw_vbus on Vbus change later */
@@ -1014,6 +1007,10 @@ static const struct dev_pm_ops dwc3_qcom_dev_pm_ops = {
 
 static const struct of_device_id dwc3_qcom_of_match[] = {
 	{ .compatible = "qcom,dwc3" },
+	{ .compatible = "qcom,msm8996-dwc3" },
+	{ .compatible = "qcom,msm8998-dwc3" },
+	{ .compatible = "qcom,sdm660-dwc3" },
+	{ .compatible = "qcom,sdm845-dwc3" },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, dwc3_qcom_of_match);

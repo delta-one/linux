@@ -25,81 +25,6 @@ mana_ib_verbs_to_gdma_access_flags(int access_flags)
 	return flags;
 }
 
-static int mana_ib_gd_create_mr(struct mana_ib_dev *dev, struct mana_ib_mr *mr,
-				struct gdma_create_mr_params *mr_params)
-{
-	struct gdma_create_mr_response resp = {};
-	struct gdma_create_mr_request req = {};
-	struct gdma_dev *mdev = dev->gdma_dev;
-	struct gdma_context *gc;
-	int err;
-
-	gc = mdev->gdma_context;
-
-	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_MR, sizeof(req),
-			     sizeof(resp));
-	req.pd_handle = mr_params->pd_handle;
-	req.mr_type = mr_params->mr_type;
-
-	switch (mr_params->mr_type) {
-	case GDMA_MR_TYPE_GVA:
-		req.gva.dma_region_handle = mr_params->gva.dma_region_handle;
-		req.gva.virtual_address = mr_params->gva.virtual_address;
-		req.gva.access_flags = mr_params->gva.access_flags;
-		break;
-
-	default:
-		ibdev_dbg(&dev->ib_dev,
-			  "invalid param (GDMA_MR_TYPE) passed, type %d\n",
-			  req.mr_type);
-		return -EINVAL;
-	}
-
-	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
-
-	if (err || resp.hdr.status) {
-		ibdev_dbg(&dev->ib_dev, "Failed to create mr %d, %u", err,
-			  resp.hdr.status);
-		if (!err)
-			err = -EPROTO;
-
-		return err;
-	}
-
-	mr->ibmr.lkey = resp.lkey;
-	mr->ibmr.rkey = resp.rkey;
-	mr->mr_handle = resp.mr_handle;
-
-	return 0;
-}
-
-static int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev, u64 mr_handle)
-{
-	struct gdma_destroy_mr_response resp = {};
-	struct gdma_destroy_mr_request req = {};
-	struct gdma_dev *mdev = dev->gdma_dev;
-	struct gdma_context *gc;
-	int err;
-
-	gc = mdev->gdma_context;
-
-	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_MR, sizeof(req),
-			     sizeof(resp));
-
-	req.mr_handle = mr_handle;
-
-	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
-	if (err || resp.hdr.status) {
-		dev_err(gc->dev, "Failed to destroy MR: %d, 0x%x\n", err,
-			resp.hdr.status);
-		if (!err)
-			err = -EPROTO;
-		return err;
-	}
-
-	return 0;
-}
-
 struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 				  u64 iova, int access_flags,
 				  struct ib_udata *udata)
@@ -107,9 +32,10 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 	struct mana_ib_pd *pd = container_of(ibpd, struct mana_ib_pd, ibpd);
 	struct gdma_create_mr_params mr_params = {};
 	struct ib_device *ibdev = ibpd->device;
+	gdma_obj_handle_t dma_region_handle;
 	struct mana_ib_dev *dev;
 	struct mana_ib_mr *mr;
-	u64 dma_region_handle;
+	u64 page_sz;
 	int err;
 
 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
@@ -133,9 +59,18 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 		goto err_free;
 	}
 
-	err = mana_ib_gd_create_dma_region(dev, mr->umem, &dma_region_handle);
+	page_sz = ib_umem_find_best_pgsz(mr->umem, PAGE_SZ_BM, iova);
+	if (unlikely(!page_sz)) {
+		ibdev_err(ibdev, "Failed to get best page size\n");
+		err = -EOPNOTSUPP;
+		goto err_umem;
+	}
+	ibdev_dbg(ibdev, "Page size chosen %llu\n", page_sz);
+
+	err = mana_ib_gd_create_dma_region(dev, mr->umem, &dma_region_handle,
+					   page_sz);
 	if (err) {
-		ibdev_dbg(ibdev, "Failed create dma region for user-mr, %d\n",
+		ibdev_err(ibdev, "Failed create dma region for user-mr, %d\n",
 			  err);
 		goto err_umem;
 	}
@@ -155,12 +90,13 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
 	if (err)
 		goto err_dma_region;
 
-	/*
-	 * There is no need to keep track of dma_region_handle after MR is
+	/* There is no need to keep track of dma_region_handle after MR is
 	 * successfully created. The dma_region_handle is tracked in the PF
 	 * as part of the lifecycle of this MR.
 	 */
 
+	mr->ibmr.length = length;
+	mr->ibmr.page_size = page_sz;
 	return &mr->ibmr;
 
 err_dma_region:

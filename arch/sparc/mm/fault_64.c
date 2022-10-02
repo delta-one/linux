@@ -424,13 +424,8 @@ good_area:
 
 	fault = handle_mm_fault(vma, address, flags, regs);
 
-	if (fault_signal_pending(fault, regs)) {
-		if (regs->tstate & TSTATE_PRIV) {
-			insn = get_fault_insn(regs, insn);
-			goto handle_kernel_fault;
-		}
+	if (fault_signal_pending(fault, regs))
 		goto exit_exception;
-	}
 
 	/* The fault is fully completed (including releasing mmap lock) */
 	if (fault & VM_FAULT_COMPLETED)

@@ -1022,8 +1022,8 @@ static void rt5668_jack_detect_handler(struct work_struct *work)
 		container_of(work, struct rt5668_priv, jack_detect_work.work);
 	int val, btn_type;
 
-	if (!rt5668->component ||
-	    !snd_soc_card_is_instantiated(rt5668->component->card)) {
+	if (!rt5668->component || !rt5668->component->card ||
+	    !rt5668->component->card->instantiated) {
 		/* card not yet ready, try later */
 		mod_delayed_work(system_power_efficient_wq,
 				 &rt5668->jack_detect_work, msecs_to_jiffies(15));
@@ -2618,7 +2618,7 @@ static struct i2c_driver rt5668_i2c_driver = {
 		.of_match_table = of_match_ptr(rt5668_of_match),
 		.acpi_match_table = ACPI_PTR(rt5668_acpi_match),
 	},
-	.probe = rt5668_i2c_probe,
+	.probe_new = rt5668_i2c_probe,
 	.shutdown = rt5668_i2c_shutdown,
 	.id_table = rt5668_i2c_id,
 };

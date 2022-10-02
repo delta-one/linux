@@ -53,7 +53,7 @@ properties:
         const: 0
 
     patternProperties:
-      "power-domain@[0-9a-f]+$":
+      "power-domain@[0-9]$":
         type: object
         additionalProperties: false
 
@@ -80,9 +80,6 @@ properties:
             maxItems: 5
 
           power-supply: true
-
-          power-domains:
-            maxItems: 1
 
           resets:
             description: |

@@ -395,13 +395,21 @@ static int tas2770_set_dai_tdm_slot(struct snd_soc_dai *dai,
 	if (tx_mask == 0 || rx_mask != 0)
 		return -EINVAL;
 
-	left_slot = __ffs(tx_mask);
-	tx_mask &= ~(1 << left_slot);
-	if (tx_mask == 0) {
-		right_slot = left_slot;
+	if (slots == 1) {
+		if (tx_mask != 1)
+			return -EINVAL;
+
+		left_slot = 0;
+		right_slot = 0;
 	} else {
-		right_slot = __ffs(tx_mask);
-		tx_mask &= ~(1 << right_slot);
+		left_slot = __ffs(tx_mask);
+		tx_mask &= ~(1 << left_slot);
+		if (tx_mask == 0) {
+			right_slot = left_slot;
+		} else {
+			right_slot = __ffs(tx_mask);
+			tx_mask &= ~(1 << right_slot);
+		}
 	}
 
 	if (tx_mask != 0 || left_slot >= slots || right_slot >= slots)
@@ -720,7 +728,7 @@ static struct i2c_driver tas2770_i2c_driver = {
 		.name   = "tas2770",
 		.of_match_table = of_match_ptr(tas2770_of_match),
 	},
-	.probe      = tas2770_i2c_probe,
+	.probe_new  = tas2770_i2c_probe,
 	.id_table   = tas2770_i2c_id,
 };
 module_i2c_driver(tas2770_i2c_driver);

@@ -678,14 +678,16 @@ static int cpm_uart_tx_pump(struct uart_port *port)
 	/* Pick next descriptor and fill from buffer */
 	bdp = pinfo->tx_cur;
 
-	while (!(in_be16(&bdp->cbd_sc) & BD_SC_READY) && !uart_circ_empty(xmit)) {
+	while (!(in_be16(&bdp->cbd_sc) & BD_SC_READY) &&
+	       xmit->tail != xmit->head) {
 		count = 0;
 		p = cpm2cpu_addr(in_be32(&bdp->cbd_bufaddr), pinfo);
 		while (count < pinfo->tx_fifosize) {
 			*p++ = xmit->buf[xmit->tail];
-			uart_xmit_advance(port, 1);
+			xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+			port->icount.tx++;
 			count++;
-			if (uart_circ_empty(xmit))
+			if (xmit->head == xmit->tail)
 				break;
 		}
 		out_be16(&bdp->cbd_datlen, count);
@@ -1201,6 +1203,12 @@ static int cpm_uart_init_port(struct device_node *np,
 	pinfo->port.fifosize = pinfo->tx_nrfifos * pinfo->tx_fifosize;
 	spin_lock_init(&pinfo->port.lock);
 
+	pinfo->port.irq = irq_of_parse_and_map(np, 0);
+	if (pinfo->port.irq == NO_IRQ) {
+		ret = -EINVAL;
+		goto out_pram;
+	}
+
 	for (i = 0; i < NUM_GPIOS; i++) {
 		struct gpio_desc *gpiod;
 
@@ -1210,7 +1218,7 @@ static int cpm_uart_init_port(struct device_node *np,
 
 		if (IS_ERR(gpiod)) {
 			ret = PTR_ERR(gpiod);
-			goto out_pram;
+			goto out_irq;
 		}
 
 		if (gpiod) {
@@ -1236,6 +1244,8 @@ static int cpm_uart_init_port(struct device_node *np,
 
 	return cpm_uart_request_port(&pinfo->port);
 
+out_irq:
+	irq_dispose_mapping(pinfo->port.irq);
 out_pram:
 	cpm_uart_unmap_pram(pinfo, pram);
 out_mem:
@@ -1415,17 +1425,11 @@ static int cpm_uart_probe(struct platform_device *ofdev)
 	/* initialize the device pointer for the port */
 	pinfo->port.dev = &ofdev->dev;
 
-	pinfo->port.irq = irq_of_parse_and_map(ofdev->dev.of_node, 0);
-	if (!pinfo->port.irq)
-		return -EINVAL;
-
 	ret = cpm_uart_init_port(ofdev->dev.of_node, pinfo);
-	if (!ret)
-		return uart_add_one_port(&cpm_reg, &pinfo->port);
+	if (ret)
+		return ret;
 
-	irq_dispose_mapping(pinfo->port.irq);
-
-	return ret;
+	return uart_add_one_port(&cpm_reg, &pinfo->port);
 }
 
 static int cpm_uart_remove(struct platform_device *ofdev)

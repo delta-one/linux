@@ -5,25 +5,26 @@
 
 obj-$(CONFIG_SECURITY_SELINUX) := selinux.o
 
-ccflags-y := -I$(srctree)/security/selinux -I$(srctree)/security/selinux/include
-
 selinux-y := avc.o hooks.o selinuxfs.o netlink.o nlmsgtab.o netif.o \
 	     netnode.o netport.o status.o \
 	     ss/ebitmap.o ss/hashtab.o ss/symtab.o ss/sidtab.o ss/avtab.o \
 	     ss/policydb.o ss/services.o ss/conditional.o ss/mls.o ss/context.o
 
 selinux-$(CONFIG_SECURITY_NETWORK_XFRM) += xfrm.o
+
 selinux-$(CONFIG_NETLABEL) += netlabel.o
+
 selinux-$(CONFIG_SECURITY_INFINIBAND) += ibpkey.o
+
 selinux-$(CONFIG_IMA) += ima.o
 
-genhdrs := flask.h av_permissions.h
+ccflags-y := -I$(srctree)/security/selinux -I$(srctree)/security/selinux/include
 
-$(addprefix $(obj)/,$(selinux-y)): $(addprefix $(obj)/,$(genhdrs))
+$(addprefix $(obj)/,$(selinux-y)): $(obj)/flask.h
 
-quiet_cmd_genhdrs = GEN     $(addprefix $(obj)/,$(genhdrs))
-      cmd_genhdrs = $< $(addprefix $(obj)/,$(genhdrs))
+quiet_cmd_flask = GEN     $(obj)/flask.h $(obj)/av_permissions.h
+      cmd_flask = scripts/selinux/genheaders/genheaders $(obj)/flask.h $(obj)/av_permissions.h
 
-targets += $(genhdrs)
-$(addprefix $(obj)/,$(genhdrs)) &: scripts/selinux/genheaders/genheaders FORCE
-	$(call if_changed,genhdrs)
+targets += flask.h av_permissions.h
+$(obj)/flask.h: $(src)/include/classmap.h FORCE
+	$(call if_changed,flask)

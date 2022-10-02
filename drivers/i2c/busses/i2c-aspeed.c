@@ -244,7 +244,6 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
 	u32 command, irq_handled = 0;
 	struct i2c_client *slave = bus->slave;
 	u8 value;
-	int ret;
 
 	if (!slave)
 		return 0;
@@ -312,13 +311,7 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
 		break;
 	case ASPEED_I2C_SLAVE_WRITE_REQUESTED:
 		bus->slave_state = ASPEED_I2C_SLAVE_WRITE_RECEIVED;
-		ret = i2c_slave_event(slave, I2C_SLAVE_WRITE_REQUESTED, &value);
-		/*
-		 * Slave ACK's on this address phase already but as the backend driver
-		 * returns an errno, the bus driver should nack the next incoming byte.
-		 */
-		if (ret < 0)
-			writel(ASPEED_I2CD_M_S_RX_CMD_LAST, bus->base + ASPEED_I2C_CMD_REG);
+		i2c_slave_event(slave, I2C_SLAVE_WRITE_REQUESTED, &value);
 		break;
 	case ASPEED_I2C_SLAVE_WRITE_RECEIVED:
 		i2c_slave_event(slave, I2C_SLAVE_WRITE_RECEIVED, &value);
@@ -979,13 +972,15 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
 	const struct of_device_id *match;
 	struct aspeed_i2c_bus *bus;
 	struct clk *parent_clk;
+	struct resource *res;
 	int irq, ret;
 
 	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
 	if (!bus)
 		return -ENOMEM;
 
-	bus->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	bus->base = devm_ioremap_resource(&pdev->dev, res);
 	if (IS_ERR(bus->base))
 		return PTR_ERR(bus->base);
 

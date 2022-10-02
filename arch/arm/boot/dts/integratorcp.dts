@@ -244,13 +244,13 @@
 			clock-names = "apb_pclk";
 		};
 
-		serial@16000000 {
+		uart@16000000 {
 			compatible = "arm,pl011", "arm,primecell";
 			clocks = <&uartclk>, <&pclk>;
 			clock-names = "uartclk", "apb_pclk";
 		};
 
-		serial@17000000 {
+		uart@17000000 {
 			compatible = "arm,pl011", "arm,primecell";
 			clocks = <&uartclk>, <&pclk>;
 			clock-names = "uartclk", "apb_pclk";

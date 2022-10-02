@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0
 /*  Copyright(c) 2021 Intel Corporation. */
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <asm/sgx.h>
 
@@ -29,14 +28,14 @@ static int sgx_get_encls_gva(struct kvm_vcpu *vcpu, unsigned long offset,
 
 	/* Skip vmcs.GUEST_DS retrieval for 64-bit mode to avoid VMREADs. */
 	*gva = offset;
-	if (!is_64_bit_mode(vcpu)) {
+	if (!is_long_mode(vcpu)) {
 		vmx_get_segment(vcpu, &s, VCPU_SREG_DS);
 		*gva += s.base;
 	}
 
 	if (!IS_ALIGNED(*gva, alignment)) {
 		fault = true;
-	} else if (likely(is_64_bit_mode(vcpu))) {
+	} else if (likely(is_long_mode(vcpu))) {
 		fault = is_noncanonical_address(*gva, vcpu);
 	} else {
 		*gva &= 0xffffffff;
@@ -130,7 +129,7 @@ static int sgx_inject_fault(struct kvm_vcpu *vcpu, gva_t gva, int trapnr)
 		ex.address = gva;
 		ex.error_code_valid = true;
 		ex.nested_page_fault = false;
-		kvm_inject_emulated_page_fault(vcpu, &ex);
+		kvm_inject_page_fault(vcpu, &ex);
 	} else {
 		kvm_inject_gp(vcpu, 0);
 	}
@@ -165,7 +164,7 @@ static int __handle_encls_ecreate(struct kvm_vcpu *vcpu,
 	if (!vcpu->kvm->arch.sgx_provisioning_allowed &&
 	    (attributes & SGX_ATTR_PROVISIONKEY)) {
 		if (sgx_12_1->eax & SGX_ATTR_PROVISIONKEY)
-			pr_warn_once("SGX PROVISIONKEY advertised but not allowed\n");
+			pr_warn_once("KVM: SGX PROVISIONKEY advertised but not allowed\n");
 		kvm_inject_gp(vcpu, 0);
 		return 1;
 	}
@@ -183,10 +182,8 @@ static int __handle_encls_ecreate(struct kvm_vcpu *vcpu,
 	/* Enforce CPUID restriction on max enclave size. */
 	max_size_log2 = (attributes & SGX_ATTR_MODE64BIT) ? sgx_12_0->edx >> 8 :
 							    sgx_12_0->edx;
-	if (size >= BIT_ULL(max_size_log2)) {
+	if (size >= BIT_ULL(max_size_log2))
 		kvm_inject_gp(vcpu, 0);
-		return 1;
-	}
 
 	/*
 	 * sgx_virt_ecreate() returns:
@@ -382,7 +379,7 @@ int handle_encls(struct kvm_vcpu *vcpu)
 			return handle_encls_ecreate(vcpu);
 		if (leaf == EINIT)
 			return handle_encls_einit(vcpu);
-		WARN_ONCE(1, "unexpected exit on ENCLS[%u]", leaf);
+		WARN(1, "KVM: unexpected exit on ENCLS[%u]", leaf);
 		vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
 		vcpu->run->hw.hardware_exit_reason = EXIT_REASON_ENCLS;
 		return 0;

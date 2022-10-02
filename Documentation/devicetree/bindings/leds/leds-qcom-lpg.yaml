@@ -27,7 +27,6 @@ properties:
       - qcom,pmc8180c-lpg
       - qcom,pmi8994-lpg
       - qcom,pmi8998-lpg
-      - qcom,pmk8550-pwm
 
   "#pwm-cells":
     const: 2
@@ -73,24 +72,14 @@ properties:
       "^led@[0-9a-f]$":
         type: object
         $ref: common.yaml#
-        unevaluatedProperties: false
-
-        properties:
-          reg:
-            maxItems: 1
-
-        required:
-          - reg
 
 patternProperties:
   "^led@[0-9a-f]$":
     type: object
     $ref: common.yaml#
-    unevaluatedProperties: false
 
     properties:
-      reg:
-        maxItems: 1
+      reg: true
 
     required:
       - reg

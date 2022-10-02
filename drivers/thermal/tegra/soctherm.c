@@ -423,7 +423,7 @@ static int translate_temp(u16 val)
 
 static int tegra_thermctl_get_temp(struct thermal_zone_device *tz, int *out_temp)
 {
-	struct tegra_thermctl_zone *zone = thermal_zone_device_priv(tz);
+	struct tegra_thermctl_zone *zone = tz->devdata;
 	u32 val;
 
 	val = readl(zone->reg);
@@ -584,7 +584,7 @@ static int tsensor_group_thermtrip_get(struct tegra_soctherm *ts, int id)
 
 static int tegra_thermctl_set_trip_temp(struct thermal_zone_device *tz, int trip_id, int temp)
 {
-	struct tegra_thermctl_zone *zone = thermal_zone_device_priv(tz);
+	struct tegra_thermctl_zone *zone = tz->devdata;
 	struct tegra_soctherm *ts = zone->ts;
 	struct thermal_trip trip;
 	const struct tegra_tsensor_group *sg = zone->sg;
@@ -594,7 +594,7 @@ static int tegra_thermctl_set_trip_temp(struct thermal_zone_device *tz, int trip
 	if (!tz)
 		return -EINVAL;
 
-	ret = __thermal_zone_get_trip(tz, trip_id, &trip);
+	ret = thermal_zone_get_trip(tz, trip_id, &trip);
 	if (ret)
 		return ret;
 
@@ -658,7 +658,7 @@ static void thermal_irq_disable(struct tegra_thermctl_zone *zn)
 
 static int tegra_thermctl_set_trips(struct thermal_zone_device *tz, int lo, int hi)
 {
-	struct tegra_thermctl_zone *zone = thermal_zone_device_priv(tz);
+	struct tegra_thermctl_zone *zone = tz->devdata;
 	u32 r;
 
 	thermal_irq_disable(zone);
@@ -742,7 +742,7 @@ static int tegra_soctherm_set_hwtrips(struct device *dev,
 	/* Get thermtrips. If missing, try to get critical trips. */
 	temperature = tsensor_group_thermtrip_get(ts, sg->id);
 	if (min_low_temp == temperature)
-		if (thermal_zone_get_crit_temp(tz, &temperature))
+		if (tz->ops->get_crit_temp(tz, &temperature))
 			temperature = max_high_temp;
 
 	ret = thermtrip_program(dev, sg, temperature);

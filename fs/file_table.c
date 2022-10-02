@@ -13,7 +13,6 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/fs.h>
-#include <linux/filelock.h>
 #include <linux/security.h>
 #include <linux/cred.h>
 #include <linux/eventpoll.h>

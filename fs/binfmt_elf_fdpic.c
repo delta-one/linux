@@ -434,9 +434,8 @@ static int load_elf_fdpic_binary(struct linux_binprm *bprm)
 	current->mm->start_stack = current->mm->start_brk + stack_size;
 #endif
 
-	retval = create_elf_fdpic_tables(bprm, current->mm, &exec_params,
-					 &interp_params);
-	if (retval < 0)
+	if (create_elf_fdpic_tables(bprm, current->mm,
+				    &exec_params, &interp_params) < 0)
 		goto error;
 
 	kdebug("- start_code  %lx", current->mm->start_code);
@@ -1509,7 +1508,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
 	tmp->next = thread_list;
 	thread_list = tmp;
 
-	segs = cprm->vma_count + elf_core_extra_phdrs(cprm);
+	segs = cprm->vma_count + elf_core_extra_phdrs();
 
 	/* for notes section */
 	segs++;
@@ -1540,7 +1539,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
 	fill_note(&auxv_note, "CORE", NT_AUXV, i * sizeof(elf_addr_t), auxv);
 	thread_status_size += notesize(&auxv_note);
 
-	offset = sizeof(*elf);				/* ELF header */
+	offset = sizeof(*elf);				/* Elf header */
 	offset += segs * sizeof(struct elf_phdr);	/* Program headers */
 
 	/* Write notes phdr entry */
@@ -1555,7 +1554,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
 	dataoff = offset = roundup(offset, ELF_EXEC_PAGESIZE);
 
 	offset += cprm->vma_data_size;
-	offset += elf_core_extra_data_size(cprm);
+	offset += elf_core_extra_data_size();
 	e_shoff = offset;
 
 	if (e_phnum == PN_XNUM) {
@@ -1604,7 +1603,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
 	if (!elf_core_write_extra_phdrs(cprm, offset))
 		goto end_coredump;
 
-	/* write out the notes section */
+ 	/* write out the notes section */
 	if (!writenote(thread_list->notes, cprm))
 		goto end_coredump;
 	if (!writenote(&psinfo_note, cprm))

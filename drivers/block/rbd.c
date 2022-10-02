@@ -491,12 +491,12 @@ static bool single_major = true;
 module_param(single_major, bool, 0444);
 MODULE_PARM_DESC(single_major, "Use a single major number for all rbd devices (default: true)");
 
-static ssize_t add_store(const struct bus_type *bus, const char *buf, size_t count);
-static ssize_t remove_store(const struct bus_type *bus, const char *buf,
+static ssize_t add_store(struct bus_type *bus, const char *buf, size_t count);
+static ssize_t remove_store(struct bus_type *bus, const char *buf,
 			    size_t count);
-static ssize_t add_single_major_store(const struct bus_type *bus, const char *buf,
+static ssize_t add_single_major_store(struct bus_type *bus, const char *buf,
 				      size_t count);
-static ssize_t remove_single_major_store(const struct bus_type *bus, const char *buf,
+static ssize_t remove_single_major_store(struct bus_type *bus, const char *buf,
 					 size_t count);
 static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth);
 
@@ -538,7 +538,7 @@ static bool rbd_is_lock_owner(struct rbd_device *rbd_dev)
 	return is_lock_owner;
 }
 
-static ssize_t supported_features_show(const struct bus_type *bus, char *buf)
+static ssize_t supported_features_show(struct bus_type *bus, char *buf)
 {
 	return sprintf(buf, "0x%llx\n", RBD_FEATURES_SUPPORTED);
 }
@@ -3068,12 +3068,13 @@ static int setup_copyup_bvecs(struct rbd_obj_request *obj_req, u64 obj_overlap)
 
 	for (i = 0; i < obj_req->copyup_bvec_count; i++) {
 		unsigned int len = min(obj_overlap, (u64)PAGE_SIZE);
-		struct page *page = alloc_page(GFP_NOIO);
 
-		if (!page)
+		obj_req->copyup_bvecs[i].bv_page = alloc_page(GFP_NOIO);
+		if (!obj_req->copyup_bvecs[i].bv_page)
 			return -ENOMEM;
 
-		bvec_set_page(&obj_req->copyup_bvecs[i], page, len, 0);
+		obj_req->copyup_bvecs[i].bv_offset = 0;
+		obj_req->copyup_bvecs[i].bv_len = len;
 		obj_overlap -= len;
 	}
 
@@ -5291,7 +5292,8 @@ static void rbd_dev_release(struct device *dev)
 		module_put(THIS_MODULE);
 }
 
-static struct rbd_device *__rbd_dev_create(struct rbd_spec *spec)
+static struct rbd_device *__rbd_dev_create(struct rbd_client *rbdc,
+					   struct rbd_spec *spec)
 {
 	struct rbd_device *rbd_dev;
 
@@ -5336,6 +5338,9 @@ static struct rbd_device *__rbd_dev_create(struct rbd_spec *spec)
 	rbd_dev->dev.parent = &rbd_root_dev;
 	device_initialize(&rbd_dev->dev);
 
+	rbd_dev->rbd_client = rbdc;
+	rbd_dev->spec = spec;
+
 	return rbd_dev;
 }
 
@@ -5348,9 +5353,11 @@ static struct rbd_device *rbd_dev_create(struct rbd_client *rbdc,
 {
 	struct rbd_device *rbd_dev;
 
-	rbd_dev = __rbd_dev_create(spec);
+	rbd_dev = __rbd_dev_create(rbdc, spec);
 	if (!rbd_dev)
 		return NULL;
+
+	rbd_dev->opts = opts;
 
 	/* get an id and fill in device name */
 	rbd_dev->dev_id = ida_simple_get(&rbd_dev_id_ida, 0,
@@ -5367,10 +5374,6 @@ static struct rbd_device *rbd_dev_create(struct rbd_client *rbdc,
 
 	/* we have a ref from do_rbd_add() */
 	__module_get(THIS_MODULE);
-
-	rbd_dev->rbd_client = rbdc;
-	rbd_dev->spec = spec;
-	rbd_dev->opts = opts;
 
 	dout("%s rbd_dev %p dev_id %d\n", __func__, rbd_dev, rbd_dev->dev_id);
 	return rbd_dev;
@@ -6733,7 +6736,7 @@ static int rbd_dev_probe_parent(struct rbd_device *rbd_dev, int depth)
 		goto out_err;
 	}
 
-	parent = __rbd_dev_create(rbd_dev->parent_spec);
+	parent = __rbd_dev_create(rbd_dev->rbd_client, rbd_dev->parent_spec);
 	if (!parent) {
 		ret = -ENOMEM;
 		goto out_err;
@@ -6743,8 +6746,8 @@ static int rbd_dev_probe_parent(struct rbd_device *rbd_dev, int depth)
 	 * Images related by parent/child relationships always share
 	 * rbd_client and spec/parent_spec, so bump their refcounts.
 	 */
-	parent->rbd_client = __rbd_get_client(rbd_dev->rbd_client);
-	parent->spec = rbd_spec_get(rbd_dev->parent_spec);
+	__rbd_get_client(rbd_dev->rbd_client);
+	rbd_spec_get(rbd_dev->parent_spec);
 
 	__set_bit(RBD_DEV_FLAG_READONLY, &parent->flags);
 
@@ -6967,7 +6970,9 @@ err_out_format:
 	return ret;
 }
 
-static ssize_t do_rbd_add(const char *buf, size_t count)
+static ssize_t do_rbd_add(struct bus_type *bus,
+			  const char *buf,
+			  size_t count)
 {
 	struct rbd_device *rbd_dev = NULL;
 	struct ceph_options *ceph_opts = NULL;
@@ -7079,18 +7084,18 @@ err_out_args:
 	goto out;
 }
 
-static ssize_t add_store(const struct bus_type *bus, const char *buf, size_t count)
+static ssize_t add_store(struct bus_type *bus, const char *buf, size_t count)
 {
 	if (single_major)
 		return -EINVAL;
 
-	return do_rbd_add(buf, count);
+	return do_rbd_add(bus, buf, count);
 }
 
-static ssize_t add_single_major_store(const struct bus_type *bus, const char *buf,
+static ssize_t add_single_major_store(struct bus_type *bus, const char *buf,
 				      size_t count)
 {
-	return do_rbd_add(buf, count);
+	return do_rbd_add(bus, buf, count);
 }
 
 static void rbd_dev_remove_parent(struct rbd_device *rbd_dev)
@@ -7120,7 +7125,9 @@ static void rbd_dev_remove_parent(struct rbd_device *rbd_dev)
 	}
 }
 
-static ssize_t do_rbd_remove(const char *buf, size_t count)
+static ssize_t do_rbd_remove(struct bus_type *bus,
+			     const char *buf,
+			     size_t count)
 {
 	struct rbd_device *rbd_dev = NULL;
 	struct list_head *tmp;
@@ -7192,18 +7199,18 @@ static ssize_t do_rbd_remove(const char *buf, size_t count)
 	return count;
 }
 
-static ssize_t remove_store(const struct bus_type *bus, const char *buf, size_t count)
+static ssize_t remove_store(struct bus_type *bus, const char *buf, size_t count)
 {
 	if (single_major)
 		return -EINVAL;
 
-	return do_rbd_remove(buf, count);
+	return do_rbd_remove(bus, buf, count);
 }
 
-static ssize_t remove_single_major_store(const struct bus_type *bus, const char *buf,
+static ssize_t remove_single_major_store(struct bus_type *bus, const char *buf,
 					 size_t count)
 {
-	return do_rbd_remove(buf, count);
+	return do_rbd_remove(bus, buf, count);
 }
 
 /*
@@ -7215,10 +7222,8 @@ static int __init rbd_sysfs_init(void)
 	int ret;
 
 	ret = device_register(&rbd_root_dev);
-	if (ret < 0) {
-		put_device(&rbd_root_dev);
+	if (ret < 0)
 		return ret;
-	}
 
 	ret = bus_register(&rbd_bus_type);
 	if (ret < 0)

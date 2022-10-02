@@ -68,7 +68,7 @@ static_assert(N_SPI_MINORS > 0 && N_SPI_MINORS <= 256);
 
 struct spidev_data {
 	dev_t			devt;
-	struct mutex		spi_lock;
+	spinlock_t		spi_lock;
 	struct spi_device	*spi;
 	struct list_head	device_entry;
 
@@ -90,32 +90,23 @@ MODULE_PARM_DESC(bufsiz, "data bytes in biggest supported SPI message");
 /*-------------------------------------------------------------------------*/
 
 static ssize_t
-spidev_sync_unlocked(struct spi_device *spi, struct spi_message *message)
-{
-	ssize_t status;
-
-	status = spi_sync(spi, message);
-	if (status == 0)
-		status = message->actual_length;
-
-	return status;
-}
-
-static ssize_t
 spidev_sync(struct spidev_data *spidev, struct spi_message *message)
 {
-	ssize_t status;
+	int status;
 	struct spi_device *spi;
 
-	mutex_lock(&spidev->spi_lock);
+	spin_lock_irq(&spidev->spi_lock);
 	spi = spidev->spi;
+	spin_unlock_irq(&spidev->spi_lock);
 
 	if (spi == NULL)
 		status = -ESHUTDOWN;
 	else
-		status = spidev_sync_unlocked(spi, message);
+		status = spi_sync(spi, message);
 
-	mutex_unlock(&spidev->spi_lock);
+	if (status == 0)
+		status = message->actual_length;
+
 	return status;
 }
 
@@ -303,7 +294,7 @@ static int spidev_message(struct spidev_data *spidev,
 		spi_message_add_tail(k_tmp, &msg);
 	}
 
-	status = spidev_sync_unlocked(spidev->spi, &msg);
+	status = spidev_sync(spidev, &msg);
 	if (status < 0)
 		goto done;
 
@@ -368,12 +359,12 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	 * we issue this ioctl.
 	 */
 	spidev = filp->private_data;
-	mutex_lock(&spidev->spi_lock);
+	spin_lock_irq(&spidev->spi_lock);
 	spi = spi_dev_get(spidev->spi);
-	if (spi == NULL) {
-		mutex_unlock(&spidev->spi_lock);
+	spin_unlock_irq(&spidev->spi_lock);
+
+	if (spi == NULL)
 		return -ESHUTDOWN;
-	}
 
 	/* use the buffer lock here for triple duty:
 	 *  - prevent I/O (from us) so calling spi_setup() is safe;
@@ -386,23 +377,12 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	switch (cmd) {
 	/* read requests */
 	case SPI_IOC_RD_MODE:
+		retval = put_user(spi->mode & SPI_MODE_MASK,
+					(__u8 __user *)arg);
+		break;
 	case SPI_IOC_RD_MODE32:
-		tmp = spi->mode;
-
-		{
-			struct spi_controller *ctlr = spi->controller;
-
-			if (ctlr->use_gpio_descriptors && ctlr->cs_gpiods &&
-			    ctlr->cs_gpiods[spi_get_chipselect(spi, 0)])
-				tmp &= ~SPI_CS_HIGH;
-		}
-
-		if (cmd == SPI_IOC_RD_MODE)
-			retval = put_user(tmp & SPI_MODE_MASK,
-					  (__u8 __user *)arg);
-		else
-			retval = put_user(tmp & SPI_MODE_MASK,
-					  (__u32 __user *)arg);
+		retval = put_user(spi->mode & SPI_MODE_MASK,
+					(__u32 __user *)arg);
 		break;
 	case SPI_IOC_RD_LSB_FIRST:
 		retval = put_user((spi->mode & SPI_LSB_FIRST) ?  1 : 0,
@@ -432,7 +412,7 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			}
 
 			if (ctlr->use_gpio_descriptors && ctlr->cs_gpiods &&
-			    ctlr->cs_gpiods[spi_get_chipselect(spi, 0)])
+			    ctlr->cs_gpiods[spi->chip_select])
 				tmp |= SPI_CS_HIGH;
 
 			tmp |= spi->mode & ~SPI_MODE_MASK;
@@ -517,7 +497,6 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 	mutex_unlock(&spidev->buf_lock);
 	spi_dev_put(spi);
-	mutex_unlock(&spidev->spi_lock);
 	return retval;
 }
 
@@ -539,12 +518,12 @@ spidev_compat_ioc_message(struct file *filp, unsigned int cmd,
 	 * we issue this ioctl.
 	 */
 	spidev = filp->private_data;
-	mutex_lock(&spidev->spi_lock);
+	spin_lock_irq(&spidev->spi_lock);
 	spi = spi_dev_get(spidev->spi);
-	if (spi == NULL) {
-		mutex_unlock(&spidev->spi_lock);
+	spin_unlock_irq(&spidev->spi_lock);
+
+	if (spi == NULL)
 		return -ESHUTDOWN;
-	}
 
 	/* SPI_IOC_MESSAGE needs the buffer locked "normally" */
 	mutex_lock(&spidev->buf_lock);
@@ -571,7 +550,6 @@ spidev_compat_ioc_message(struct file *filp, unsigned int cmd,
 done:
 	mutex_unlock(&spidev->buf_lock);
 	spi_dev_put(spi);
-	mutex_unlock(&spidev->spi_lock);
 	return retval;
 }
 
@@ -612,6 +590,7 @@ static int spidev_open(struct inode *inode, struct file *filp)
 	if (!spidev->tx_buffer) {
 		spidev->tx_buffer = kmalloc(bufsiz, GFP_KERNEL);
 		if (!spidev->tx_buffer) {
+			dev_dbg(&spidev->spi->dev, "open/ENOMEM\n");
 			status = -ENOMEM;
 			goto err_find_dev;
 		}
@@ -620,6 +599,7 @@ static int spidev_open(struct inode *inode, struct file *filp)
 	if (!spidev->rx_buffer) {
 		spidev->rx_buffer = kmalloc(bufsiz, GFP_KERNEL);
 		if (!spidev->rx_buffer) {
+			dev_dbg(&spidev->spi->dev, "open/ENOMEM\n");
 			status = -ENOMEM;
 			goto err_alloc_rx_buf;
 		}
@@ -649,10 +629,10 @@ static int spidev_release(struct inode *inode, struct file *filp)
 	spidev = filp->private_data;
 	filp->private_data = NULL;
 
-	mutex_lock(&spidev->spi_lock);
+	spin_lock_irq(&spidev->spi_lock);
 	/* ... after we unbound from the underlying device? */
 	dofree = (spidev->spi == NULL);
-	mutex_unlock(&spidev->spi_lock);
+	spin_unlock_irq(&spidev->spi_lock);
 
 	/* last close? */
 	spidev->users--;
@@ -711,8 +691,6 @@ static const struct spi_device_id spidev_spi_ids[] = {
 	{ .name = "m53cpld" },
 	{ .name = "spi-petra" },
 	{ .name = "spi-authenta" },
-	{ .name = "em3581" },
-	{ .name = "si3210" },
 	{},
 };
 MODULE_DEVICE_TABLE(spi, spidev_spi_ids);
@@ -731,16 +709,14 @@ static int spidev_of_check(struct device *dev)
 }
 
 static const struct of_device_id spidev_dt_ids[] = {
-	{ .compatible = "cisco,spi-petra", .data = &spidev_of_check },
-	{ .compatible = "dh,dhcom-board", .data = &spidev_of_check },
-	{ .compatible = "lineartechnology,ltc2488", .data = &spidev_of_check },
-	{ .compatible = "lwn,bk4", .data = &spidev_of_check },
-	{ .compatible = "menlo,m53cpld", .data = &spidev_of_check },
-	{ .compatible = "micron,spi-authenta", .data = &spidev_of_check },
 	{ .compatible = "rohm,dh2228fv", .data = &spidev_of_check },
+	{ .compatible = "lineartechnology,ltc2488", .data = &spidev_of_check },
 	{ .compatible = "semtech,sx1301", .data = &spidev_of_check },
-	{ .compatible = "silabs,em3581", .data = &spidev_of_check },
-	{ .compatible = "silabs,si3210", .data = &spidev_of_check },
+	{ .compatible = "lwn,bk4", .data = &spidev_of_check },
+	{ .compatible = "dh,dhcom-board", .data = &spidev_of_check },
+	{ .compatible = "menlo,m53cpld", .data = &spidev_of_check },
+	{ .compatible = "cisco,spi-petra", .data = &spidev_of_check },
+	{ .compatible = "micron,spi-authenta", .data = &spidev_of_check },
 	{},
 };
 MODULE_DEVICE_TABLE(of, spidev_dt_ids);
@@ -789,7 +765,7 @@ static int spidev_probe(struct spi_device *spi)
 
 	/* Initialize the driver data */
 	spidev->spi = spi;
-	mutex_init(&spidev->spi_lock);
+	spin_lock_init(&spidev->spi_lock);
 	mutex_init(&spidev->buf_lock);
 
 	INIT_LIST_HEAD(&spidev->device_entry);
@@ -805,7 +781,7 @@ static int spidev_probe(struct spi_device *spi)
 		spidev->devt = MKDEV(SPIDEV_MAJOR, minor);
 		dev = device_create(spidev_class, &spi->dev, spidev->devt,
 				    spidev, "spidev%d.%d",
-				    spi->master->bus_num, spi_get_chipselect(spi, 0));
+				    spi->master->bus_num, spi->chip_select);
 		status = PTR_ERR_OR_ZERO(dev);
 	} else {
 		dev_dbg(&spi->dev, "no minor number available!\n");
@@ -834,9 +810,9 @@ static void spidev_remove(struct spi_device *spi)
 	/* prevent new opens */
 	mutex_lock(&device_list_lock);
 	/* make sure ops on existing fds can abort cleanly */
-	mutex_lock(&spidev->spi_lock);
+	spin_lock_irq(&spidev->spi_lock);
 	spidev->spi = NULL;
-	mutex_unlock(&spidev->spi_lock);
+	spin_unlock_irq(&spidev->spi_lock);
 
 	list_del(&spidev->device_entry);
 	device_destroy(spidev_class, spidev->devt);
@@ -877,7 +853,7 @@ static int __init spidev_init(void)
 	if (status < 0)
 		return status;
 
-	spidev_class = class_create("spidev");
+	spidev_class = class_create(THIS_MODULE, "spidev");
 	if (IS_ERR(spidev_class)) {
 		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver.driver.name);
 		return PTR_ERR(spidev_class);

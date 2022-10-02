@@ -95,9 +95,6 @@ struct inet_bind2_bucket {
 	possible_net_t		ib_net;
 	int			l3mdev;
 	unsigned short		port;
-#if IS_ENABLED(CONFIG_IPV6)
-	unsigned short		family;
-#endif
 	union {
 #if IS_ENABLED(CONFIG_IPV6)
 		struct in6_addr		v6_rcv_saddr;
@@ -108,10 +105,6 @@ struct inet_bind2_bucket {
 	struct hlist_node	node;
 	/* List of sockets hashed to this bucket */
 	struct hlist_head	owners;
-	/* bhash has twsk in owners, but bhash2 has twsk in
-	 * deathrow not to add a member in struct sock_common.
-	 */
-	struct hlist_head	deathrow;
 };
 
 static inline struct net *ib_net(const struct inet_bind_bucket *ib)
@@ -285,8 +278,7 @@ inet_bhash2_addr_any_hashbucket(const struct sock *sk, const struct net *net, in
  * sk_v6_rcv_saddr (ipv6) changes after it has been binded. The socket's
  * rcv_saddr field should already have been updated when this is called.
  */
-int inet_bhash2_update_saddr(struct sock *sk, void *saddr, int family);
-void inet_bhash2_reset_saddr(struct sock *sk);
+int inet_bhash2_update_saddr(struct inet_bind_hashbucket *prev_saddr, struct sock *sk);
 
 void inet_bind_hash(struct sock *sk, struct inet_bind_bucket *tb,
 		    struct inet_bind2_bucket *tb2, unsigned short port);

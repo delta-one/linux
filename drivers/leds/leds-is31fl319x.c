@@ -38,7 +38,6 @@
 #define IS31FL3190_CURRENT_uA_MIN	5000
 #define IS31FL3190_CURRENT_uA_DEFAULT	42000
 #define IS31FL3190_CURRENT_uA_MAX	42000
-#define IS31FL3190_CURRENT_SHIFT	2
 #define IS31FL3190_CURRENT_MASK		GENMASK(4, 2)
 #define IS31FL3190_CURRENT_5_mA		0x02
 #define IS31FL3190_CURRENT_10_mA	0x01
@@ -495,11 +494,6 @@ static inline int is31fl3196_db_to_gain(u32 dezibel)
 	return dezibel / IS31FL3196_AUDIO_GAIN_DB_STEP;
 }
 
-static void is31f1319x_mutex_destroy(void *lock)
-{
-	mutex_destroy(lock);
-}
-
 static int is31fl319x_probe(struct i2c_client *client)
 {
 	struct is31fl319x_chip *is31;
@@ -516,7 +510,7 @@ static int is31fl319x_probe(struct i2c_client *client)
 		return -ENOMEM;
 
 	mutex_init(&is31->lock);
-	err = devm_add_action_or_reset(dev, is31f1319x_mutex_destroy, &is31->lock);
+	err = devm_add_action(dev, (void (*)(void *))mutex_destroy, &is31->lock);
 	if (err)
 		return err;
 
@@ -559,7 +553,7 @@ static int is31fl319x_probe(struct i2c_client *client)
 			     is31fl3196_db_to_gain(is31->audio_gain_db));
 	else
 		regmap_update_bits(is31->regmap, IS31FL3190_CURRENT, IS31FL3190_CURRENT_MASK,
-				   is31fl3190_microamp_to_cs(dev, aggregated_led_microamp) << IS31FL3190_CURRENT_SHIFT);
+				   is31fl3190_microamp_to_cs(dev, aggregated_led_microamp));
 
 	for (i = 0; i < is31->cdef->num_leds; i++) {
 		struct is31fl319x_led *led = &is31->leds[i];

@@ -376,7 +376,7 @@ static int graph_get_dai_id(struct device_node *ep)
 		 * only of_graph_parse_endpoint().
 		 * We need to check "reg" property
 		 */
-		if (of_property_present(ep,   "reg"))
+		if (of_get_property(ep,   "reg", NULL))
 			return info.id;
 
 		node = of_get_parent(ep);
@@ -849,8 +849,7 @@ int audio_graph2_link_dpcm(struct asoc_simple_priv *priv,
 			goto err;
 	}
 
-	graph_parse_convert(ep,  dai_props); /* at node of <dpcm> */
-	graph_parse_convert(rep, dai_props); /* at node of <CPU/Codec> */
+	graph_parse_convert(rep, dai_props);
 
 	snd_soc_dai_link_set_capabilities(dai_link);
 
@@ -920,8 +919,8 @@ int audio_graph2_link_c2c(struct asoc_simple_priv *priv,
 		c2c_conf->channels_min	=
 		c2c_conf->channels_max	= 2; /* update ME */
 
-		dai_link->c2c_params		= c2c_conf;
-		dai_link->num_c2c_params	= 1;
+		dai_link->params	= c2c_conf;
+		dai_link->num_params	= 1;
 	}
 
 	ep0 = port_to_endpoint(port0);
@@ -1046,14 +1045,8 @@ static int graph_count_normal(struct asoc_simple_priv *priv,
 	 * =>		lnk: port { endpoint { .. }; };
 	 *	};
 	 */
-	/*
-	 * DON'T REMOVE platforms
-	 * see
-	 *	simple-card.c :: simple_count_noml()
-	 */
 	li->num[li->link].cpus		=
 	li->num[li->link].platforms	= graph_counter(cpu_port);
-
 	li->num[li->link].codecs	= graph_counter(codec_port);
 
 	of_node_put(cpu_ep);
@@ -1085,11 +1078,6 @@ static int graph_count_dpcm(struct asoc_simple_priv *priv,
 	 */
 
 	if (asoc_graph_is_ports0(lnk)) {
-		/*
-		 * DON'T REMOVE platforms
-		 * see
-		 *	simple-card.c :: simple_count_noml()
-		 */
 		li->num[li->link].cpus		= graph_counter(rport); /* FE */
 		li->num[li->link].platforms	= graph_counter(rport);
 	} else {
@@ -1124,14 +1112,8 @@ static int graph_count_c2c(struct asoc_simple_priv *priv,
 	 *	};
 	 * };
 	 */
-	/*
-	 * DON'T REMOVE platforms
-	 * see
-	 *	simple-card.c :: simple_count_noml()
-	 */
 	li->num[li->link].cpus		=
 	li->num[li->link].platforms	= graph_counter(codec0);
-
 	li->num[li->link].codecs	= graph_counter(codec1);
 
 	of_node_put(ports);
@@ -1288,6 +1270,9 @@ err:
 
 	if (ret < 0)
 		dev_err_probe(dev, ret, "parse error\n");
+
+	if (ret == 0)
+		dev_warn(dev, "Audio Graph Card2 is still under Experimental stage\n");
 
 	return ret;
 }

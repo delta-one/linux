@@ -37,14 +37,12 @@
 #include <linux/extable.h>
 #include <linux/kdebug.h>
 #include <linux/kallsyms.h>
-#include <linux/kgdb.h>
 #include <linux/ftrace.h>
 #include <linux/kasan.h>
 #include <linux/moduleloader.h>
 #include <linux/objtool.h>
 #include <linux/vmalloc.h>
 #include <linux/pgtable.h>
-#include <linux/set_memory.h>
 
 #include <asm/text-patching.h>
 #include <asm/cacheflush.h>
@@ -53,12 +51,15 @@
 #include <asm/alternative.h>
 #include <asm/insn.h>
 #include <asm/debugreg.h>
+#include <asm/set_memory.h>
 #include <asm/ibt.h>
 
 #include "common.h"
 
 DEFINE_PER_CPU(struct kprobe *, current_kprobe) = NULL;
 DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+
+#define stack_addr(regs) ((unsigned long *)regs->sp)
 
 #define W(row, b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, ba, bb, bc, bd, be, bf)\
 	(((b0##UL << 0x0)|(b1##UL << 0x1)|(b2##UL << 0x2)|(b3##UL << 0x3) |   \
@@ -282,15 +283,12 @@ static int can_probe(unsigned long paddr)
 		if (ret < 0)
 			return 0;
 
-#ifdef CONFIG_KGDB
 		/*
-		 * If there is a dynamically installed kgdb sw breakpoint,
-		 * this function should not be probed.
+		 * Another debugging subsystem might insert this breakpoint.
+		 * In that case, we can't recover it.
 		 */
-		if (insn.opcode.bytes[0] == INT3_INSN_OPCODE &&
-		    kgdb_has_hit_break(addr))
+		if (insn.opcode.bytes[0] == INT3_INSN_OPCODE)
 			return 0;
-#endif
 		addr += insn.length;
 	}
 
@@ -418,11 +416,18 @@ void *alloc_insn_page(void)
 	if (!page)
 		return NULL;
 
+	set_vm_flush_reset_perms(page);
+	/*
+	 * First make the page read-only, and only then make it executable to
+	 * prevent it from being W+X in between.
+	 */
+	set_memory_ro((unsigned long)page, 1);
+
 	/*
 	 * TODO: Once additional kernel code protection mechanisms are set, ensure
 	 * that the page was not maliciously altered and it is still zeroed.
 	 */
-	set_memory_rox((unsigned long)page, 1);
+	set_memory_x((unsigned long)page, 1);
 
 	return page;
 }
@@ -464,26 +469,50 @@ static void kprobe_emulate_call(struct kprobe *p, struct pt_regs *regs)
 }
 NOKPROBE_SYMBOL(kprobe_emulate_call);
 
-static void kprobe_emulate_jmp(struct kprobe *p, struct pt_regs *regs)
+static nokprobe_inline
+void __kprobe_emulate_jmp(struct kprobe *p, struct pt_regs *regs, bool cond)
 {
 	unsigned long ip = regs->ip - INT3_INSN_SIZE + p->ainsn.size;
 
-	ip += p->ainsn.rel32;
+	if (cond)
+		ip += p->ainsn.rel32;
 	int3_emulate_jmp(regs, ip);
+}
+
+static void kprobe_emulate_jmp(struct kprobe *p, struct pt_regs *regs)
+{
+	__kprobe_emulate_jmp(p, regs, true);
 }
 NOKPROBE_SYMBOL(kprobe_emulate_jmp);
 
+static const unsigned long jcc_mask[6] = {
+	[0] = X86_EFLAGS_OF,
+	[1] = X86_EFLAGS_CF,
+	[2] = X86_EFLAGS_ZF,
+	[3] = X86_EFLAGS_CF | X86_EFLAGS_ZF,
+	[4] = X86_EFLAGS_SF,
+	[5] = X86_EFLAGS_PF,
+};
+
 static void kprobe_emulate_jcc(struct kprobe *p, struct pt_regs *regs)
 {
-	unsigned long ip = regs->ip - INT3_INSN_SIZE + p->ainsn.size;
+	bool invert = p->ainsn.jcc.type & 1;
+	bool match;
 
-	int3_emulate_jcc(regs, p->ainsn.jcc.type, ip, p->ainsn.rel32);
+	if (p->ainsn.jcc.type < 0xc) {
+		match = regs->flags & jcc_mask[p->ainsn.jcc.type >> 1];
+	} else {
+		match = ((regs->flags & X86_EFLAGS_SF) >> X86_EFLAGS_SF_BIT) ^
+			((regs->flags & X86_EFLAGS_OF) >> X86_EFLAGS_OF_BIT);
+		if (p->ainsn.jcc.type >= 0xe)
+			match = match || (regs->flags & X86_EFLAGS_ZF);
+	}
+	__kprobe_emulate_jmp(p, regs, (match && !invert) || (!match && invert));
 }
 NOKPROBE_SYMBOL(kprobe_emulate_jcc);
 
 static void kprobe_emulate_loop(struct kprobe *p, struct pt_regs *regs)
 {
-	unsigned long ip = regs->ip - INT3_INSN_SIZE + p->ainsn.size;
 	bool match;
 
 	if (p->ainsn.loop.type != 3) {	/* LOOP* */
@@ -511,9 +540,7 @@ static void kprobe_emulate_loop(struct kprobe *p, struct pt_regs *regs)
 	else if (p->ainsn.loop.type == 1)	/* LOOPE */
 		match = match && (regs->flags & X86_EFLAGS_ZF);
 
-	if (match)
-		ip += p->ainsn.rel32;
-	int3_emulate_jmp(regs, ip);
+	__kprobe_emulate_jmp(p, regs, match);
 }
 NOKPROBE_SYMBOL(kprobe_emulate_loop);
 
@@ -603,7 +630,7 @@ static int prepare_emulation(struct kprobe *p, struct insn *insn)
 		/* 1 byte conditional jump */
 		p->ainsn.emulate_op = kprobe_emulate_jcc;
 		p->ainsn.jcc.type = opcode & 0xf;
-		p->ainsn.rel32 = insn->immediate.value;
+		p->ainsn.rel32 = *(char *)insn->immediate.bytes;
 		break;
 	case 0x0f:
 		opcode = insn->opcode.bytes[1];
@@ -637,19 +664,17 @@ static int prepare_emulation(struct kprobe *p, struct insn *insn)
 		 * is determined by the MOD/RM byte.
 		 */
 		opcode = insn->modrm.bytes[0];
-		switch (X86_MODRM_REG(opcode)) {
-		case 0b010:	/* FF /2, call near, absolute indirect */
+		if ((opcode & 0x30) == 0x10) {
+			if ((opcode & 0x8) == 0x8)
+				return -EOPNOTSUPP;	/* far call */
+			/* call absolute, indirect */
 			p->ainsn.emulate_op = kprobe_emulate_call_indirect;
-			break;
-		case 0b100:	/* FF /4, jmp near, absolute indirect */
+		} else if ((opcode & 0x30) == 0x20) {
+			if ((opcode & 0x8) == 0x8)
+				return -EOPNOTSUPP;	/* far jmp */
+			/* jmp near absolute indirect */
 			p->ainsn.emulate_op = kprobe_emulate_jmp_indirect;
-			break;
-		case 0b011:	/* FF /3, call far, absolute indirect */
-		case 0b101:	/* FF /5, jmp far, absolute indirect */
-			return -EOPNOTSUPP;
-		}
-
-		if (!p->ainsn.emulate_op)
+		} else
 			break;
 
 		if (insn->addr_bytes != sizeof(unsigned long))
@@ -970,6 +995,20 @@ int kprobe_int3_handler(struct pt_regs *regs)
 			kprobe_post_process(p, regs, kcb);
 			return 1;
 		}
+	}
+
+	if (*addr != INT3_INSN_OPCODE) {
+		/*
+		 * The breakpoint instruction was removed right
+		 * after we hit it.  Another cpu has removed
+		 * either a probepoint or a debugger breakpoint
+		 * at this address.  In either case, no further
+		 * handling of this interrupt is appropriate.
+		 * Back up over the (now missing) int3 and run
+		 * the original instruction.
+		 */
+		regs->ip = (unsigned long)addr;
+		return 1;
 	} /* else: not a kprobe fault; let the kernel handle it */
 
 	return 0;

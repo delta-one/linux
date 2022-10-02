@@ -419,18 +419,15 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
 		rtnl_lock();
 	sockopt_lock_sock(sk);
 
-	/* Another thread has converted the socket into IPv4 with
-	 * IPV6_ADDRFORM concurrently.
-	 */
-	if (unlikely(sk->sk_family != AF_INET6))
-		goto unlock;
-
 	switch (optname) {
 
 	case IPV6_ADDRFORM:
 		if (optlen < sizeof(int))
 			goto e_inval;
 		if (val == PF_INET) {
+			struct ipv6_txoptions *opt;
+			struct sk_buff *pktopt;
+
 			if (sk->sk_type == SOCK_RAW)
 				break;
 
@@ -461,8 +458,16 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
 				break;
 			}
 
+			fl6_free_socklist(sk);
 			__ipv6_sock_mc_close(sk);
 			__ipv6_sock_ac_close(sk);
+
+			/*
+			 * Sock is moving from IPv6 to IPv4 (sk_prot), so
+			 * remove it from the refcnt debug socks count in the
+			 * original family...
+			 */
+			sk_refcnt_debug_dec(sk);
 
 			if (sk->sk_protocol == IPPROTO_TCP) {
 				struct inet_connection_sock *icsk = inet_csk(sk);
@@ -470,10 +475,9 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
 				sock_prot_inuse_add(net, sk->sk_prot, -1);
 				sock_prot_inuse_add(net, &tcp_prot, 1);
 
-				/* Paired with READ_ONCE(sk->sk_prot) in inet6_stream_ops */
+				/* Paired with READ_ONCE(sk->sk_prot) in net/ipv6/af_inet6.c */
 				WRITE_ONCE(sk->sk_prot, &tcp_prot);
-				/* Paired with READ_ONCE() in tcp_(get|set)sockopt() */
-				WRITE_ONCE(icsk->icsk_af_ops, &ipv4_specific);
+				icsk->icsk_af_ops = &ipv4_specific;
 				sk->sk_socket->ops = &inet_stream_ops;
 				sk->sk_family = PF_INET;
 				tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
@@ -486,20 +490,25 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
 				sock_prot_inuse_add(net, sk->sk_prot, -1);
 				sock_prot_inuse_add(net, prot, 1);
 
-				/* Paired with READ_ONCE(sk->sk_prot) in inet6_dgram_ops */
+				/* Paired with READ_ONCE(sk->sk_prot) in net/ipv6/af_inet6.c */
 				WRITE_ONCE(sk->sk_prot, prot);
 				sk->sk_socket->ops = &inet_dgram_ops;
 				sk->sk_family = PF_INET;
 			}
+			opt = xchg((__force struct ipv6_txoptions **)&np->opt,
+				   NULL);
+			if (opt) {
+				atomic_sub(opt->tot_len, &sk->sk_omem_alloc);
+				txopt_put(opt);
+			}
+			pktopt = xchg(&np->pktoptions, NULL);
+			kfree_skb(pktopt);
 
-			/* Disable all options not to allocate memory anymore,
-			 * but there is still a race.  See the lockless path
-			 * in udpv6_sendmsg() and ipv6_local_rxpmtu().
+			/*
+			 * ... and add it to the refcnt debug socks count
+			 * in the new family. -acme
 			 */
-			np->rxopt.all = 0;
-
-			inet6_cleanup_sock(sk);
-
+			sk_refcnt_debug_inc(sk);
 			module_put(THIS_MODULE);
 			retv = 0;
 			break;
@@ -716,7 +725,6 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
 			goto done;
 
 		msg.msg_controllen = optlen;
-		msg.msg_control_is_user = false;
 		msg.msg_control = (void *)(opt+1);
 		ipc6.opt = opt;
 
@@ -986,7 +994,6 @@ done:
 		break;
 	}
 
-unlock:
 	sockopt_release_sock(sk);
 	if (needs_rtnl)
 		rtnl_unlock();
@@ -994,8 +1001,10 @@ unlock:
 	return retv;
 
 e_inval:
-	retv = -EINVAL;
-	goto unlock;
+	sockopt_release_sock(sk);
+	if (needs_rtnl)
+		rtnl_unlock();
+	return -EINVAL;
 }
 
 int ipv6_setsockopt(struct sock *sk, int level, int optname, sockptr_t optval,

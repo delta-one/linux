@@ -96,11 +96,12 @@ struct dw_edma_irq {
 };
 
 struct dw_edma {
-	char				name[32];
+	char				name[20];
 
-	struct dma_device		dma;
-
+	struct dma_device		wr_edma;
 	u16				wr_ch_cnt;
+
+	struct dma_device		rd_edma;
 	u16				rd_ch_cnt;
 
 	struct dw_edma_irq		*irq;
@@ -111,6 +112,9 @@ struct dw_edma {
 	raw_spinlock_t			lock;		/* Only for legacy */
 
 	struct dw_edma_chip             *chip;
+#ifdef CONFIG_DEBUG_FS
+	struct dentry			*debugfs;
+#endif /* CONFIG_DEBUG_FS */
 };
 
 struct dw_edma_sg {

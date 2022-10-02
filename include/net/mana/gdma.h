@@ -65,6 +65,8 @@ enum {
 	GDMA_DEVICE_MANA	= 2,
 };
 
+typedef u64 gdma_obj_handle_t;
+
 struct gdma_resource {
 	/* Protect the bitmap */
 	spinlock_t lock;
@@ -145,7 +147,6 @@ struct gdma_general_req {
 }; /* HW DATA */
 
 #define GDMA_MESSAGE_V1 1
-#define GDMA_MESSAGE_V2 2
 
 struct gdma_general_resp {
 	struct gdma_resp_hdr hdr;
@@ -199,7 +200,7 @@ struct gdma_mem_info {
 	u64 length;
 
 	/* Allocated by the PF driver */
-	u64 dma_region_handle;
+	gdma_obj_handle_t dma_region_handle;
 };
 
 #define REGISTER_ATB_MST_MKEY_LOWER_SIZE 8
@@ -337,12 +338,9 @@ struct gdma_queue_spec {
 	};
 };
 
-#define MANA_IRQ_NAME_SZ 32
-
 struct gdma_irq_context {
 	void (*handler)(void *arg);
 	void *arg;
-	char name[MANA_IRQ_NAME_SZ];
 };
 
 struct gdma_context {
@@ -354,9 +352,6 @@ struct gdma_context {
 	unsigned int		num_msix_usable;
 	struct gdma_resource	msix_resource;
 	struct gdma_irq_context	*irq_contexts;
-
-	/* L2 MTU */
-	u16 adapter_mtu;
 
 	/* This maps a CQ index to the queue structure. */
 	unsigned int		max_num_cqs;
@@ -374,7 +369,6 @@ struct gdma_context {
 	void __iomem		*db_page_base;
 	phys_addr_t		phys_db_page_base;
 	u32 db_page_size;
-	int                     numa_node;
 
 	/* Shared memory chanenl (used to bootstrap HWC) */
 	struct shm_channel	shm_channel;
@@ -527,14 +521,7 @@ enum {
 
 #define GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT BIT(0)
 
-/* Advertise to the NIC firmware: the NAPI work_done variable race is fixed,
- * so the driver is able to reliably support features like busy_poll.
- */
-#define GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX BIT(2)
-
-#define GDMA_DRV_CAP_FLAGS1 \
-	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
-	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX)
+#define GDMA_DRV_CAP_FLAGS1 GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT
 
 #define GDMA_DRV_CAP_FLAGS2 0
 
@@ -637,7 +624,7 @@ struct gdma_create_queue_req {
 	u32 reserved1;
 	u32 pdid;
 	u32 doolbell_id;
-	u64 gdma_region;
+	gdma_obj_handle_t gdma_region;
 	u32 reserved2;
 	u32 queue_size;
 	u32 log2_throttle_limit;
@@ -712,14 +699,14 @@ struct gdma_create_dma_region_req {
 
 struct gdma_create_dma_region_resp {
 	struct gdma_resp_hdr hdr;
-	u64 dma_region_handle;
+	gdma_obj_handle_t dma_region_handle;
 }; /* HW DATA */
 
 /* GDMA_DMA_REGION_ADD_PAGES */
 struct gdma_dma_region_add_pages_req {
 	struct gdma_req_hdr hdr;
 
-	u64 dma_region_handle;
+	gdma_obj_handle_t dma_region_handle;
 
 	u32 page_addr_list_len;
 	u32 reserved3;
@@ -731,7 +718,7 @@ struct gdma_dma_region_add_pages_req {
 struct gdma_destroy_dma_region_req {
 	struct gdma_req_hdr hdr;
 
-	u64 dma_region_handle;
+	gdma_obj_handle_t dma_region_handle;
 }; /* HW DATA */
 
 enum gdma_pd_flags {
@@ -746,14 +733,14 @@ struct gdma_create_pd_req {
 
 struct gdma_create_pd_resp {
 	struct gdma_resp_hdr hdr;
-	u64 pd_handle;
+	gdma_obj_handle_t pd_handle;
 	u32 pd_id;
 	u32 reserved;
 };/* HW DATA */
 
 struct gdma_destroy_pd_req {
 	struct gdma_req_hdr hdr;
-	u64 pd_handle;
+	gdma_obj_handle_t pd_handle;
 };/* HW DATA */
 
 struct gdma_destory_pd_resp {
@@ -769,11 +756,11 @@ enum gdma_mr_type {
 };
 
 struct gdma_create_mr_params {
-	u64 pd_handle;
+	gdma_obj_handle_t pd_handle;
 	enum gdma_mr_type mr_type;
 	union {
 		struct {
-			u64 dma_region_handle;
+			gdma_obj_handle_t dma_region_handle;
 			u64 virtual_address;
 			enum gdma_mr_access_flags access_flags;
 		} gva;
@@ -782,13 +769,13 @@ struct gdma_create_mr_params {
 
 struct gdma_create_mr_request {
 	struct gdma_req_hdr hdr;
-	u64 pd_handle;
+	gdma_obj_handle_t pd_handle;
 	enum gdma_mr_type mr_type;
 	u32 reserved_1;
 
 	union {
 		struct {
-			u64 dma_region_handle;
+			gdma_obj_handle_t dma_region_handle;
 			u64 virtual_address;
 			enum gdma_mr_access_flags access_flags;
 		} gva;
@@ -799,14 +786,14 @@ struct gdma_create_mr_request {
 
 struct gdma_create_mr_response {
 	struct gdma_resp_hdr hdr;
-	u64 mr_handle;
+	gdma_obj_handle_t mr_handle;
 	u32 lkey;
 	u32 rkey;
 };/* HW DATA */
 
 struct gdma_destroy_mr_request {
 	struct gdma_req_hdr hdr;
-	u64 mr_handle;
+	gdma_obj_handle_t mr_handle;
 };/* HW DATA */
 
 struct gdma_destroy_mr_response {
@@ -840,6 +827,11 @@ void mana_gd_free_memory(struct gdma_mem_info *gmi);
 int mana_gd_send_request(struct gdma_context *gc, u32 req_len, const void *req,
 			 u32 resp_len, void *resp);
 
-int mana_gd_destroy_dma_region(struct gdma_context *gc, u64 dma_region_handle);
+int mana_gd_allocate_doorbell_page(struct gdma_context *gc, int *doorbell_page);
+
+int mana_gd_destroy_doorbell_page(struct gdma_context *gc, int doorbell_page);
+
+int mana_gd_destroy_dma_region(struct gdma_context *gc,
+			       gdma_obj_handle_t dma_region_handle);
 
 #endif /* _GDMA_H */

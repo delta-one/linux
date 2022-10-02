@@ -18,7 +18,6 @@
 #include <net/netlink.h>
 #include <net/act_api.h>
 #include <net/pkt_cls.h>
-#include <net/tc_wrapper.h>
 
 struct basic_head {
 	struct list_head	flist;
@@ -37,9 +36,8 @@ struct basic_filter {
 	struct rcu_work		rwork;
 };
 
-TC_INDIRECT_SCOPE int basic_classify(struct sk_buff *skb,
-				     const struct tcf_proto *tp,
-				     struct tcf_result *res)
+static int basic_classify(struct sk_buff *skb, const struct tcf_proto *tp,
+			  struct tcf_result *res)
 {
 	int r;
 	struct basic_head *head = rcu_dereference_bh(tp->root);
@@ -263,7 +261,12 @@ static void basic_bind_class(void *fh, u32 classid, unsigned long cl, void *q,
 {
 	struct basic_filter *f = fh;
 
-	tc_cls_bind_class(classid, cl, q, &f->res, base);
+	if (f && f->res.classid == classid) {
+		if (cl)
+			__tcf_bind_filter(q, &f->res, base);
+		else
+			__tcf_unbind_filter(q, &f->res);
+	}
 }
 
 static int basic_dump(struct net *net, struct tcf_proto *tp, void *fh,

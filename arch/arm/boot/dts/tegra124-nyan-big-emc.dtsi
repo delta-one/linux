@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
-
-#include <dt-bindings/clock/tegra124-car.h>
-
 / {
+	apbmisc@70000800 {
+		nvidia,long-ram-code;
+	};
+
 	clock@60006000 {
 		emc-timings-1 {
 			nvidia,ram-code = <1>;
@@ -246,10 +247,6 @@
 				clock-names = "emc-parent";
 			};
 		};
-	};
-
-	apbmisc@70000800 {
-		nvidia,long-ram-code;
 	};
 
 	memory-controller@70019000 {
@@ -6681,14 +6678,14 @@
 			};
 		};
 	};
+};
 
-	opp-table-actmon {
-		/delete-node/ opp-924000000;
-		/delete-node/ opp-1200000000;
-	};
+&emc_icc_dvfs_opp_table {
+	/delete-node/ opp-924000000-1100;
+	/delete-node/ opp-1200000000-1100;
+};
 
-	opp-table-emc {
-		/delete-node/ opp-924000000-1100;
-		/delete-node/ opp-1200000000-1100;
-	};
+&emc_bw_dfs_opp_table {
+	/delete-node/ opp-924000000;
+	/delete-node/ opp-1200000000;
 };

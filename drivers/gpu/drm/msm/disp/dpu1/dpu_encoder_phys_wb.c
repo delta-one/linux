@@ -26,7 +26,6 @@
 
 /**
  * dpu_encoder_phys_wb_is_master - report wb always as master encoder
- * @phys_enc:	Pointer to physical encoder
  */
 static bool dpu_encoder_phys_wb_is_master(struct dpu_encoder_phys *phys_enc)
 {
@@ -133,6 +132,7 @@ static void dpu_encoder_phys_wb_set_qos(struct dpu_encoder_phys *phys_enc)
  * dpu_encoder_phys_wb_setup_fb - setup output framebuffer
  * @phys_enc:	Pointer to physical encoder
  * @fb:		Pointer to output framebuffer
+ * @wb_roi:	Pointer to output region of interest
  */
 static void dpu_encoder_phys_wb_setup_fb(struct dpu_encoder_phys *phys_enc,
 		struct drm_framebuffer *fb)
@@ -365,9 +365,13 @@ static void _dpu_encoder_phys_wb_frame_done_helper(void *arg)
 
 	DPU_DEBUG("[wb:%d]\n", hw_wb->idx - WB_0);
 
-	dpu_encoder_frame_done_callback(phys_enc->parent, phys_enc, event);
+	if (phys_enc->parent_ops->handle_frame_done)
+		phys_enc->parent_ops->handle_frame_done(phys_enc->parent,
+				phys_enc, event);
 
-	dpu_encoder_vblank_callback(phys_enc->parent, phys_enc);
+	if (phys_enc->parent_ops->handle_vblank_virt)
+		phys_enc->parent_ops->handle_vblank_virt(phys_enc->parent,
+				phys_enc);
 
 	spin_lock_irqsave(phys_enc->enc_spinlock, lock_flags);
 	atomic_add_unless(&phys_enc->pending_kickoff_cnt, -1, 0);
@@ -437,7 +441,9 @@ static void _dpu_encoder_phys_wb_handle_wbdone_timeout(
 	if (wb_enc->wb_conn)
 		drm_writeback_signal_completion(wb_enc->wb_conn, 0);
 
-	dpu_encoder_frame_done_callback(phys_enc->parent, phys_enc, frame_event);
+	if (phys_enc->parent_ops->handle_frame_done)
+		phys_enc->parent_ops->handle_frame_done(
+				phys_enc->parent, phys_enc, frame_event);
 }
 
 /**
@@ -686,7 +692,7 @@ static void dpu_encoder_phys_wb_init_ops(struct dpu_encoder_phys_ops *ops)
 
 /**
  * dpu_encoder_phys_wb_init - initialize writeback encoder
- * @p:	Pointer to init info structure with initialization params
+ * @init:	Pointer to init info structure with initialization params
  */
 struct dpu_encoder_phys *dpu_encoder_phys_wb_init(
 		struct dpu_enc_phys_init_params *p)
@@ -717,6 +723,7 @@ struct dpu_encoder_phys *dpu_encoder_phys_wb_init(
 
 	dpu_encoder_phys_wb_init_ops(&phys_enc->ops);
 	phys_enc->parent = p->parent;
+	phys_enc->parent_ops = p->parent_ops;
 	phys_enc->dpu_kms = p->dpu_kms;
 	phys_enc->split_role = p->split_role;
 	phys_enc->intf_mode = INTF_MODE_WB_LINE;

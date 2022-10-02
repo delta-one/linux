@@ -162,7 +162,7 @@
 		};
 	};
 
-	serial@100000 {
+	uart@100000 {
 		compatible = "arm,pl011", "arm,primecell";
 		reg = <0x00100000 0x1000>;
 		interrupts-extended = <&impd1_vic 1>;
@@ -170,7 +170,7 @@
 		clock-names = "uartclk", "apb_pclk";
 	};
 
-	serial@200000 {
+	uart@200000 {
 		compatible = "arm,pl011", "arm,primecell";
 		reg = <0x00200000 0x1000>;
 		interrupts-extended = <&impd1_vic 2>;
@@ -249,7 +249,6 @@
 		/* 640x480 16bpp @ 25.175MHz is 36827428 bytes/s */
 		max-memory-bandwidth = <40000000>;
 		memory-region = <&impd1_ram>;
-		dma-ranges;
 
 		port@0 {
 			#address-cells = <1>;

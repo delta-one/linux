@@ -17,17 +17,15 @@
 struct fprobe_rethook_node {
 	struct rethook_node node;
 	unsigned long entry_ip;
-	char data[];
 };
 
 static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
 			   struct ftrace_ops *ops, struct ftrace_regs *fregs)
 {
 	struct fprobe_rethook_node *fpr;
-	struct rethook_node *rh = NULL;
+	struct rethook_node *rh;
 	struct fprobe *fp;
-	void *entry_data = NULL;
-	int bit, ret;
+	int bit;
 
 	fp = container_of(ops, struct fprobe, ops);
 	if (fprobe_disabled(fp))
@@ -39,6 +37,9 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
 		return;
 	}
 
+	if (fp->entry_handler)
+		fp->entry_handler(fp, ip, ftrace_get_regs(fregs));
+
 	if (fp->exit_handler) {
 		rh = rethook_try_get(fp->rethook);
 		if (!rh) {
@@ -47,20 +48,9 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
 		}
 		fpr = container_of(rh, struct fprobe_rethook_node, node);
 		fpr->entry_ip = ip;
-		if (fp->entry_data_size)
-			entry_data = fpr->data;
+		rethook_hook(rh, ftrace_get_regs(fregs), true);
 	}
 
-	if (fp->entry_handler)
-		ret = fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
-
-	/* If entry_handler returns !0, nmissed is not counted. */
-	if (rh) {
-		if (ret)
-			rethook_recycle(rh);
-		else
-			rethook_hook(rh, ftrace_get_regs(fregs), true);
-	}
 out:
 	ftrace_test_recursion_unlock(bit);
 }
@@ -91,8 +81,7 @@ static void fprobe_exit_handler(struct rethook_node *rh, void *data,
 
 	fpr = container_of(rh, struct fprobe_rethook_node, node);
 
-	fp->exit_handler(fp, fpr->entry_ip, regs,
-			 fp->entry_data_size ? (void *)fpr->data : NULL);
+	fp->exit_handler(fp, fpr->entry_ip, regs);
 }
 NOKPROBE_SYMBOL(fprobe_exit_handler);
 
@@ -147,20 +136,15 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
 	}
 
 	/* Initialize rethook if needed */
-	if (fp->nr_maxactive)
-		size = fp->nr_maxactive;
-	else
-		size = num * num_possible_cpus() * 2;
+	size = num * num_possible_cpus() * 2;
 	if (size < 0)
 		return -E2BIG;
 
 	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler);
-	if (!fp->rethook)
-		return -ENOMEM;
 	for (i = 0; i < size; i++) {
 		struct fprobe_rethook_node *node;
 
-		node = kzalloc(sizeof(*node) + fp->entry_data_size, GFP_KERNEL);
+		node = kzalloc(sizeof(*node), GFP_KERNEL);
 		if (!node) {
 			rethook_free(fp->rethook);
 			fp->rethook = NULL;
@@ -317,8 +301,7 @@ int unregister_fprobe(struct fprobe *fp)
 {
 	int ret;
 
-	if (!fp || (fp->ops.saved_func != fprobe_handler &&
-		    fp->ops.saved_func != fprobe_kprobe_handler))
+	if (!fp || fp->ops.func != fprobe_handler)
 		return -EINVAL;
 
 	/*

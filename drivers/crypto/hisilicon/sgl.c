@@ -70,11 +70,11 @@ struct hisi_acc_sgl_pool *hisi_acc_create_sgl_pool(struct device *dev,
 			 HISI_ACC_SGL_ALIGN_SIZE);
 
 	/*
-	 * the pool may allocate a block of memory of size PAGE_SIZE * 2^MAX_ORDER,
+	 * the pool may allocate a block of memory of size PAGE_SIZE * 2^(MAX_ORDER - 1),
 	 * block size may exceed 2^31 on ia64, so the max of block size is 2^31
 	 */
-	block_size = 1 << (PAGE_SHIFT + MAX_ORDER < 32 ?
-			   PAGE_SHIFT + MAX_ORDER : 31);
+	block_size = 1 << (PAGE_SHIFT + MAX_ORDER <= 32 ?
+			   PAGE_SHIFT + MAX_ORDER - 1 : 31);
 	sgl_num_per_block = block_size / sgl_size;
 	block_num = count / sgl_num_per_block;
 	remain_sgl = count % sgl_num_per_block;
@@ -124,8 +124,9 @@ err_free_mem:
 	for (j = 0; j < i; j++) {
 		dma_free_coherent(dev, block_size, block[j].sgl,
 				  block[j].sgl_dma);
+		memset(block + j, 0, sizeof(*block));
 	}
-	kfree_sensitive(pool);
+	kfree(pool);
 	return ERR_PTR(-ENOMEM);
 }
 EXPORT_SYMBOL_GPL(hisi_acc_create_sgl_pool);
@@ -249,6 +250,7 @@ hisi_acc_sg_buf_map_to_hw_sgl(struct device *dev,
 		dev_err(dev, "Get SGL error!\n");
 		dma_unmap_sg(dev, sgl, sg_n, DMA_BIDIRECTIONAL);
 		return ERR_PTR(-ENOMEM);
+
 	}
 	curr_hw_sgl->entry_length_in_sgl = cpu_to_le16(pool->sge_nr);
 	curr_hw_sge = curr_hw_sgl->sge_entries;

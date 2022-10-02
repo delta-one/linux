@@ -8,7 +8,6 @@
  * Copyright 2011 Red Hat, Inc. and/or its affiliates.
  * Copyright IBM Corporation, 2008
  */
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/kvm_host.h>
 #include <linux/export.h>
@@ -26,7 +25,6 @@
 #include "mmu.h"
 #include "trace.h"
 #include "pmu.h"
-#include "xen.h"
 
 /*
  * Unlike "struct cpuinfo_x86.x86_capability", kvm_cpu_caps doesn't need to be
@@ -60,14 +58,14 @@ u32 xstate_required_size(u64 xstate_bv, bool compacted)
 	return ret;
 }
 
-#define F feature_bit
+/*
+ * This one is tied to SSB in the user API, and not
+ * visible in /proc/cpuinfo.
+ */
+#define KVM_X86_FEATURE_PSFD		(13*32+28) /* Predictive Store Forwarding Disable */
 
-/* Scattered Flag - For features that are scattered by cpufeatures.h. */
-#define SF(name)						\
-({								\
-	BUILD_BUG_ON(X86_FEATURE_##name >= MAX_CPU_FEATURES);	\
-	(boot_cpu_has(X86_FEATURE_##name) ? F(name) : 0);	\
-})
+#define F feature_bit
+#define SF(name) (boot_cpu_has(X86_FEATURE_##name) ? F(name) : 0)
 
 /*
  * Magic value used by KVM when querying userspace-provided CPUID entries and
@@ -176,15 +174,15 @@ static int kvm_cpuid_check_equal(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2 
 	return 0;
 }
 
-static struct kvm_hypervisor_cpuid kvm_get_hypervisor_cpuid(struct kvm_vcpu *vcpu,
-							    const char *sig)
+static void kvm_update_kvm_cpuid_base(struct kvm_vcpu *vcpu)
 {
-	struct kvm_hypervisor_cpuid cpuid = {};
+	u32 function;
 	struct kvm_cpuid_entry2 *entry;
-	u32 base;
 
-	for_each_possible_hypervisor_cpuid_base(base) {
-		entry = kvm_find_cpuid_entry(vcpu, base);
+	vcpu->arch.kvm_cpuid_base = 0;
+
+	for_each_possible_hypervisor_cpuid_base(function) {
+		entry = kvm_find_cpuid_entry(vcpu, function);
 
 		if (entry) {
 			u32 signature[3];
@@ -193,21 +191,19 @@ static struct kvm_hypervisor_cpuid kvm_get_hypervisor_cpuid(struct kvm_vcpu *vcp
 			signature[1] = entry->ecx;
 			signature[2] = entry->edx;
 
-			if (!memcmp(signature, sig, sizeof(signature))) {
-				cpuid.base = base;
-				cpuid.limit = entry->eax;
+			BUILD_BUG_ON(sizeof(signature) > sizeof(KVM_SIGNATURE));
+			if (!memcmp(signature, KVM_SIGNATURE, sizeof(signature))) {
+				vcpu->arch.kvm_cpuid_base = function;
 				break;
 			}
 		}
 	}
-
-	return cpuid;
 }
 
 static struct kvm_cpuid_entry2 *__kvm_find_kvm_cpuid_features(struct kvm_vcpu *vcpu,
 					      struct kvm_cpuid_entry2 *entries, int nent)
 {
-	u32 base = vcpu->arch.kvm_cpuid.base;
+	u32 base = vcpu->arch.kvm_cpuid_base;
 
 	if (!base)
 		return NULL;
@@ -260,7 +256,7 @@ static void __kvm_update_cpuid_runtime(struct kvm_vcpu *vcpu, struct kvm_cpuid_e
 		/* Update OSXSAVE bit */
 		if (boot_cpu_has(X86_FEATURE_XSAVE))
 			cpuid_entry_change(best, X86_FEATURE_OSXSAVE,
-					   kvm_is_cr4_bit_set(vcpu, X86_CR4_OSXSAVE));
+				   kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE));
 
 		cpuid_entry_change(best, X86_FEATURE_APIC,
 			   vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE);
@@ -269,7 +265,7 @@ static void __kvm_update_cpuid_runtime(struct kvm_vcpu *vcpu, struct kvm_cpuid_e
 	best = cpuid_entry2_find(entries, nent, 7, 0);
 	if (best && boot_cpu_has(X86_FEATURE_PKU) && best->function == 0x7)
 		cpuid_entry_change(best, X86_FEATURE_OSPKE,
-				   kvm_is_cr4_bit_set(vcpu, X86_CR4_PKE));
+				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
 
 	best = cpuid_entry2_find(entries, nent, 0xD, 0);
 	if (best)
@@ -315,15 +311,6 @@ void kvm_update_cpuid_runtime(struct kvm_vcpu *vcpu)
 }
 EXPORT_SYMBOL_GPL(kvm_update_cpuid_runtime);
 
-static bool kvm_cpuid_has_hyperv(struct kvm_cpuid_entry2 *entries, int nent)
-{
-	struct kvm_cpuid_entry2 *entry;
-
-	entry = cpuid_entry2_find(entries, nent, HYPERV_CPUID_INTERFACE,
-				  KVM_CPUID_INDEX_NOT_SIGNIFICANT);
-	return entry && entry->eax == HYPERV_CPUID_SIGNATURE_EAX;
-}
-
 static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
 {
 	struct kvm_lapic *apic = vcpu->arch.apic;
@@ -359,8 +346,7 @@ static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
 	vcpu->arch.cr4_guest_rsvd_bits =
 	    __cr4_reserved_bits(guest_cpuid_has, vcpu);
 
-	kvm_hv_set_cpuid(vcpu, kvm_cpuid_has_hyperv(vcpu->arch.cpuid_entries,
-						    vcpu->arch.cpuid_nent));
+	kvm_hv_set_cpuid(vcpu);
 
 	/* Invoke the vendor callback only after the above state is updated. */
 	static_call(kvm_x86_vcpu_after_set_cpuid)(vcpu);
@@ -414,19 +400,13 @@ static int kvm_set_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2 *e2,
 	 * KVM_SET_CPUID{,2} again. To support this legacy behavior, check
 	 * whether the supplied CPUID data is equal to what's already set.
 	 */
-	if (kvm_vcpu_has_run(vcpu)) {
+	if (vcpu->arch.last_vmentry_cpu != -1) {
 		r = kvm_cpuid_check_equal(vcpu, e2, nent);
 		if (r)
 			return r;
 
 		kvfree(e2);
 		return 0;
-	}
-
-	if (kvm_cpuid_has_hyperv(e2, nent)) {
-		r = kvm_hv_vcpu_init(vcpu);
-		if (r)
-			return r;
 	}
 
 	r = kvm_check_cpuid(vcpu, e2, nent);
@@ -437,8 +417,7 @@ static int kvm_set_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2 *e2,
 	vcpu->arch.cpuid_entries = e2;
 	vcpu->arch.cpuid_nent = nent;
 
-	vcpu->arch.kvm_cpuid = kvm_get_hypervisor_cpuid(vcpu, KVM_SIGNATURE);
-	vcpu->arch.xen.cpuid = kvm_get_hypervisor_cpuid(vcpu, XEN_SIGNATURE);
+	kvm_update_kvm_cpuid_base(vcpu);
 	kvm_vcpu_after_set_cpuid(vcpu);
 
 	return 0;
@@ -548,9 +527,9 @@ static __always_inline void __kvm_cpu_cap_mask(unsigned int leaf)
 }
 
 static __always_inline
-void kvm_cpu_cap_init_kvm_defined(enum kvm_only_cpuid_leafs leaf, u32 mask)
+void kvm_cpu_cap_init_scattered(enum kvm_only_cpuid_leafs leaf, u32 mask)
 {
-	/* Use kvm_cpu_cap_mask for leafs that aren't KVM-only. */
+	/* Use kvm_cpu_cap_mask for non-scattered leafs. */
 	BUILD_BUG_ON(leaf < NCAPINTS);
 
 	kvm_cpu_caps[leaf] = mask;
@@ -560,7 +539,7 @@ void kvm_cpu_cap_init_kvm_defined(enum kvm_only_cpuid_leafs leaf, u32 mask)
 
 static __always_inline void kvm_cpu_cap_mask(enum cpuid_leafs leaf, u32 mask)
 {
-	/* Use kvm_cpu_cap_init_kvm_defined for KVM-only leafs. */
+	/* Use kvm_cpu_cap_init_scattered for scattered leafs. */
 	BUILD_BUG_ON(leaf >= NCAPINTS);
 
 	kvm_cpu_caps[leaf] &= mask;
@@ -647,7 +626,7 @@ void kvm_set_cpu_caps(void)
 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
 		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
 		F(SERIALIZE) | F(TSXLDTRK) | F(AVX512_FP16) |
-		F(AMX_TILE) | F(AMX_INT8) | F(AMX_BF16) | F(FLUSH_L1D)
+		F(AMX_TILE) | F(AMX_INT8) | F(AMX_BF16)
 	);
 
 	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
@@ -662,21 +641,15 @@ void kvm_set_cpu_caps(void)
 		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL_SSBD);
 
 	kvm_cpu_cap_mask(CPUID_7_1_EAX,
-		F(AVX_VNNI) | F(AVX512_BF16) | F(CMPCCXADD) |
-		F(FZRM) | F(FSRS) | F(FSRC) |
-		F(AMX_FP16) | F(AVX_IFMA)
-	);
-
-	kvm_cpu_cap_init_kvm_defined(CPUID_7_1_EDX,
-		F(AVX_VNNI_INT8) | F(AVX_NE_CONVERT) | F(PREFETCHITI)
+		F(AVX_VNNI) | F(AVX512_BF16)
 	);
 
 	kvm_cpu_cap_mask(CPUID_D_1_EAX,
 		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | F(XSAVES) | f_xfd
 	);
 
-	kvm_cpu_cap_init_kvm_defined(CPUID_12_EAX,
-		SF(SGX1) | SF(SGX2) | SF(SGX_EDECCSSA)
+	kvm_cpu_cap_init_scattered(CPUID_12_EAX,
+		SF(SGX1) | SF(SGX2)
 	);
 
 	kvm_cpu_cap_mask(CPUID_8000_0001_ECX,
@@ -701,15 +674,11 @@ void kvm_set_cpu_caps(void)
 	if (!tdp_enabled && IS_ENABLED(CONFIG_X86_64))
 		kvm_cpu_cap_set(X86_FEATURE_GBPAGES);
 
-	kvm_cpu_cap_init_kvm_defined(CPUID_8000_0007_EDX,
-		SF(CONSTANT_TSC)
-	);
-
 	kvm_cpu_cap_mask(CPUID_8000_0008_EBX,
 		F(CLZERO) | F(XSAVEERPTR) |
 		F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
 		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON) |
-		F(AMD_PSFD)
+		__feature_bit(KVM_X86_FEATURE_PSFD)
 	);
 
 	/*
@@ -745,27 +714,6 @@ void kvm_set_cpu_caps(void)
 		0 /* SME */ | F(SEV) | 0 /* VM_PAGE_FLUSH */ | F(SEV_ES) |
 		F(SME_COHERENT));
 
-	kvm_cpu_cap_mask(CPUID_8000_0021_EAX,
-		F(NO_NESTED_DATA_BP) | F(LFENCE_RDTSC) | 0 /* SmmPgCfgLock */ |
-		F(NULL_SEL_CLR_BASE) | F(AUTOIBRS) | 0 /* PrefetchCtlMsr */
-	);
-
-	/*
-	 * Synthesize "LFENCE is serializing" into the AMD-defined entry in
-	 * KVM's supported CPUID if the feature is reported as supported by the
-	 * kernel.  LFENCE_RDTSC was a Linux-defined synthetic feature long
-	 * before AMD joined the bandwagon, e.g. LFENCE is serializing on most
-	 * CPUs that support SSE2.  On CPUs that don't support AMD's leaf,
-	 * kvm_cpu_cap_mask() will unfortunately drop the flag due to ANDing
-	 * the mask with the raw host CPUID, and reporting support in AMD's
-	 * leaf can make it easier for userspace to detect the feature.
-	 */
-	if (cpu_feature_enabled(X86_FEATURE_LFENCE_RDTSC))
-		kvm_cpu_cap_set(X86_FEATURE_LFENCE_RDTSC);
-	if (!static_cpu_has_bug(X86_BUG_NULL_SEG))
-		kvm_cpu_cap_set(X86_FEATURE_NULL_SEL_CLR_BASE);
-	kvm_cpu_cap_set(X86_FEATURE_NO_SMM_CTL_MSR);
-
 	kvm_cpu_cap_mask(CPUID_C000_0001_EDX,
 		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
 		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
@@ -795,21 +743,15 @@ struct kvm_cpuid_array {
 	int nent;
 };
 
-static struct kvm_cpuid_entry2 *get_next_cpuid(struct kvm_cpuid_array *array)
-{
-	if (array->nent >= array->maxnent)
-		return NULL;
-
-	return &array->entries[array->nent++];
-}
-
 static struct kvm_cpuid_entry2 *do_host_cpuid(struct kvm_cpuid_array *array,
 					      u32 function, u32 index)
 {
-	struct kvm_cpuid_entry2 *entry = get_next_cpuid(array);
+	struct kvm_cpuid_entry2 *entry;
 
-	if (!entry)
+	if (array->nent >= array->maxnent)
 		return NULL;
+
+	entry = &array->entries[array->nent++];
 
 	memset(entry, 0, sizeof(*entry));
 	entry->function = function;
@@ -955,10 +897,12 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
 				goto out;
 
 			cpuid_entry_override(entry, CPUID_7_1_EAX);
-			cpuid_entry_override(entry, CPUID_7_1_EDX);
 			entry->ebx = 0;
 			entry->ecx = 0;
+			entry->edx = 0;
 		}
+		break;
+	case 9:
 		break;
 	case 0xa: { /* Architectural Performance Monitoring */
 		union cpuid10_eax eax;
@@ -987,16 +931,25 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
 		entry->edx = edx.full;
 		break;
 	}
+	/*
+	 * Per Intel's SDM, the 0x1f is a superset of 0xb,
+	 * thus they can be handled by common code.
+	 */
 	case 0x1f:
 	case 0xb:
 		/*
-		 * No topology; a valid topology is indicated by the presence
-		 * of subleaf 1.
+		 * Populate entries until the level type (ECX[15:8]) of the
+		 * previous entry is zero.  Note, CPUID EAX.{0x1f,0xb}.0 is
+		 * the starting entry, filled by the primary do_host_cpuid().
 		 */
-		entry->eax = entry->ebx = entry->ecx = 0;
+		for (i = 1; entry->ecx & 0xff00; ++i) {
+			entry = do_host_cpuid(array, function, i);
+			if (!entry)
+				goto out;
+		}
 		break;
 	case 0xd: {
-		u64 permitted_xcr0 = kvm_get_filtered_xcr0();
+		u64 permitted_xcr0 = kvm_caps.supported_xcr0 & xstate_get_guest_group_perm();
 		u64 permitted_xss = kvm_caps.supported_xss;
 
 		entry->eax &= permitted_xcr0;
@@ -1080,7 +1033,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
 		 * userspace.  ATTRIBUTES.XFRM is not adjusted as userspace is
 		 * expected to derive it from supported XCR0.
 		 */
-		entry->eax &= SGX_ATTR_PRIV_MASK | SGX_ATTR_UNPRIV_MASK;
+		entry->eax &= SGX_ATTR_DEBUG | SGX_ATTR_MODE64BIT |
+			      SGX_ATTR_PROVISIONKEY | SGX_ATTR_EINITTOKENKEY |
+			      SGX_ATTR_KSS;
 		entry->ebx &= 0;
 		break;
 	/* Intel PT */
@@ -1164,17 +1119,15 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
 			entry->eax = max(entry->eax, 0x80000021);
 		break;
 	case 0x80000001:
-		entry->ebx &= ~GENMASK(27, 16);
 		cpuid_entry_override(entry, CPUID_8000_0001_EDX);
 		cpuid_entry_override(entry, CPUID_8000_0001_ECX);
 		break;
 	case 0x80000006:
-		/* Drop reserved bits, pass host L2 cache and TLB info. */
-		entry->edx &= ~GENMASK(17, 16);
+		/* L2 cache and TLB: pass through host info. */
 		break;
 	case 0x80000007: /* Advanced power management */
-		cpuid_entry_override(entry, CPUID_8000_0007_EDX);
-
+		/* invariant TSC is CPUID.80000007H:EDX[8] */
+		entry->edx &= (1 << 8);
 		/* mask against host */
 		entry->edx &= boot_cpu_data.x86_power;
 		entry->eax = entry->ebx = entry->ecx = 0;
@@ -1200,7 +1153,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
 			g_phys_as = phys_as;
 
 		entry->eax = g_phys_as | (virt_as << 8);
-		entry->ecx &= ~(GENMASK(31, 16) | GENMASK(11, 8));
 		entry->edx = 0;
 		cpuid_entry_override(entry, CPUID_8000_0008_EBX);
 		break;
@@ -1220,21 +1172,14 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
 		entry->ecx = entry->edx = 0;
 		break;
 	case 0x8000001a:
-		entry->eax &= GENMASK(2, 0);
-		entry->ebx = entry->ecx = entry->edx = 0;
-		break;
 	case 0x8000001e:
-		/* Do not return host topology information.  */
-		entry->eax = entry->ebx = entry->ecx = 0;
-		entry->edx = 0; /* reserved */
 		break;
 	case 0x8000001F:
 		if (!kvm_cpu_cap_has(X86_FEATURE_SEV)) {
 			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
 		} else {
 			cpuid_entry_override(entry, CPUID_8000_001F_EAX);
-			/* Clear NumVMPL since KVM does not support VMPL.  */
-			entry->ebx &= ~GENMASK(31, 12);
+
 			/*
 			 * Enumerate '0' for "PA bits reduction", the adjusted
 			 * MAXPHYADDR is enumerated directly (see 0x80000008).
@@ -1247,7 +1192,21 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
 		break;
 	case 0x80000021:
 		entry->ebx = entry->ecx = entry->edx = 0;
-		cpuid_entry_override(entry, CPUID_8000_0021_EAX);
+		/*
+		 * Pass down these bits:
+		 *    EAX      0      NNDBP, Processor ignores nested data breakpoints
+		 *    EAX      2      LAS, LFENCE always serializing
+		 *    EAX      6      NSCB, Null selector clear base
+		 *
+		 * Other defined bits are for MSRs that KVM does not expose:
+		 *   EAX      3      SPCL, SMM page configuration lock
+		 *   EAX      13     PCMSR, Prefetch control MSR
+		 */
+		entry->eax &= BIT(0) | BIT(2) | BIT(6);
+		if (static_cpu_has(X86_FEATURE_LFENCE_RDTSC))
+			entry->eax |= BIT(2);
+		if (!static_cpu_has_bug(X86_BUG_NULL_SEG))
+			entry->eax |= BIT(6);
 		break;
 	/*Add support for Centaur's CPUID instruction*/
 	case 0xC0000000:
@@ -1358,7 +1317,7 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
 	if (sanity_check_entries(entries, cpuid->nent, type))
 		return -EINVAL;
 
-	array.entries = kvcalloc(cpuid->nent, sizeof(struct kvm_cpuid_entry2), GFP_KERNEL);
+	array.entries = kvcalloc(sizeof(struct kvm_cpuid_entry2), cpuid->nent, GFP_KERNEL);
 	if (!array.entries)
 		return -ENOMEM;
 
@@ -1489,9 +1448,6 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
 		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
 			    (data & TSX_CTRL_CPUID_CLEAR))
 				*ebx &= ~(F(RTM) | F(HLE));
-		} else if (function == 0x80000007) {
-			if (kvm_hv_invtsc_suppressed(vcpu))
-				*edx &= ~SF(CONSTANT_TSC);
 		}
 	} else {
 		*eax = *ebx = *ecx = *edx = 0;

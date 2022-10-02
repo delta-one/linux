@@ -758,6 +758,7 @@ static void qeth_l2_br2dev_worker(struct work_struct *work)
 	struct list_head *iter;
 	int err = 0;
 
+	kfree(br2dev_event_work);
 	QETH_CARD_TEXT_(card, 4, "b2dw%04lx", event);
 	QETH_CARD_TEXT_(card, 4, "ma%012llx", ether_addr_to_u64(addr));
 
@@ -814,7 +815,6 @@ unlock:
 	dev_put(brdev);
 	dev_put(lsyncdev);
 	dev_put(dstdev);
-	kfree(br2dev_event_work);
 }
 
 static int qeth_l2_br2dev_queue_work(struct net_device *brdev,
@@ -1133,7 +1133,7 @@ static int qeth_l2_setup_netdev(struct qeth_card *card)
 				       PAGE_SIZE * (QDIO_MAX_ELEMENTS_PER_BUFFER - 1));
 	}
 
-	netif_napi_add(card->dev, &card->napi, qeth_poll);
+	netif_napi_add(card->dev, &card->napi, qeth_poll, NAPI_POLL_WEIGHT);
 	return register_netdev(card->dev);
 }
 
@@ -1255,38 +1255,37 @@ static void qeth_bridge_emit_host_event(struct qeth_card *card,
 
 	switch (evtype) {
 	case anev_reg_unreg:
-		scnprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=%s",
-			  (code & IPA_ADDR_CHANGE_CODE_REMOVAL)
-			  ? "deregister" : "register");
+		snprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=%s",
+				(code & IPA_ADDR_CHANGE_CODE_REMOVAL)
+				? "deregister" : "register");
 		env[i] = str[i]; i++;
 		if (code & IPA_ADDR_CHANGE_CODE_VLANID) {
-			scnprintf(str[i], sizeof(str[i]), "VLAN=%d",
-				  addr_lnid->lnid);
+			snprintf(str[i], sizeof(str[i]), "VLAN=%d",
+				addr_lnid->lnid);
 			env[i] = str[i]; i++;
 		}
 		if (code & IPA_ADDR_CHANGE_CODE_MACADDR) {
-			scnprintf(str[i], sizeof(str[i]), "MAC=%pM",
-				  addr_lnid->mac);
+			snprintf(str[i], sizeof(str[i]), "MAC=%pM",
+				addr_lnid->mac);
 			env[i] = str[i]; i++;
 		}
-		scnprintf(str[i], sizeof(str[i]), "NTOK_BUSID=%x.%x.%04x",
-			  token->cssid, token->ssid, token->devnum);
+		snprintf(str[i], sizeof(str[i]), "NTOK_BUSID=%x.%x.%04x",
+			token->cssid, token->ssid, token->devnum);
 		env[i] = str[i]; i++;
-		scnprintf(str[i], sizeof(str[i]), "NTOK_IID=%02x", token->iid);
+		snprintf(str[i], sizeof(str[i]), "NTOK_IID=%02x", token->iid);
 		env[i] = str[i]; i++;
-		scnprintf(str[i], sizeof(str[i]), "NTOK_CHPID=%02x",
-			  token->chpid);
+		snprintf(str[i], sizeof(str[i]), "NTOK_CHPID=%02x",
+				token->chpid);
 		env[i] = str[i]; i++;
-		scnprintf(str[i], sizeof(str[i]), "NTOK_CHID=%04x",
-			  token->chid);
+		snprintf(str[i], sizeof(str[i]), "NTOK_CHID=%04x", token->chid);
 		env[i] = str[i]; i++;
 		break;
 	case anev_abort:
-		scnprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=abort");
+		snprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=abort");
 		env[i] = str[i]; i++;
 		break;
 	case anev_reset:
-		scnprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=reset");
+		snprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=reset");
 		env[i] = str[i]; i++;
 		break;
 	}
@@ -1315,17 +1314,17 @@ static void qeth_bridge_state_change_worker(struct work_struct *work)
 		NULL
 	};
 
-	scnprintf(env_locrem, sizeof(env_locrem), "BRIDGEPORT=statechange");
-	scnprintf(env_role, sizeof(env_role), "ROLE=%s",
-		  (data->role == QETH_SBP_ROLE_NONE) ? "none" :
-		  (data->role == QETH_SBP_ROLE_PRIMARY) ? "primary" :
-		  (data->role == QETH_SBP_ROLE_SECONDARY) ? "secondary" :
-		  "<INVALID>");
-	scnprintf(env_state, sizeof(env_state), "STATE=%s",
-		  (data->state == QETH_SBP_STATE_INACTIVE) ? "inactive" :
-		  (data->state == QETH_SBP_STATE_STANDBY) ? "standby" :
-		  (data->state == QETH_SBP_STATE_ACTIVE) ? "active" :
-		  "<INVALID>");
+	snprintf(env_locrem, sizeof(env_locrem), "BRIDGEPORT=statechange");
+	snprintf(env_role, sizeof(env_role), "ROLE=%s",
+		(data->role == QETH_SBP_ROLE_NONE) ? "none" :
+		(data->role == QETH_SBP_ROLE_PRIMARY) ? "primary" :
+		(data->role == QETH_SBP_ROLE_SECONDARY) ? "secondary" :
+		"<INVALID>");
+	snprintf(env_state, sizeof(env_state), "STATE=%s",
+		(data->state == QETH_SBP_STATE_INACTIVE) ? "inactive" :
+		(data->state == QETH_SBP_STATE_STANDBY) ? "standby" :
+		(data->state == QETH_SBP_STATE_ACTIVE) ? "active" :
+		"<INVALID>");
 	kobject_uevent_env(&data->card->gdev->dev.kobj,
 				KOBJ_CHANGE, env);
 	kfree(data);
@@ -1531,8 +1530,8 @@ static void qeth_addr_change_event(struct qeth_card *card,
 	else
 		INIT_DELAYED_WORK(&data->dwork, qeth_l2_dev2br_worker);
 	data->card = card;
-	data->ac_event = *hostevs;
-	memcpy(data->ac_event.entry, hostevs->entry, extrasize);
+	memcpy(&data->ac_event, hostevs,
+			sizeof(struct qeth_ipacmd_addr_change) + extrasize);
 	queue_delayed_work(card->event_wq, &data->dwork, 0);
 }
 

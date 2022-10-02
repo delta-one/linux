@@ -52,7 +52,7 @@ bool acpi_dock_match(acpi_handle handle);
 bool acpi_check_dsm(acpi_handle handle, const guid_t *guid, u64 rev, u64 funcs);
 union acpi_object *acpi_evaluate_dsm(acpi_handle handle, const guid_t *guid,
 			u64 rev, u64 func, union acpi_object *argv4);
-#ifdef CONFIG_ACPI
+
 static inline union acpi_object *
 acpi_evaluate_dsm_typed(acpi_handle handle, const guid_t *guid, u64 rev,
 			u64 func, union acpi_object *argv4,
@@ -68,7 +68,6 @@ acpi_evaluate_dsm_typed(acpi_handle handle, const guid_t *guid, u64 rev,
 
 	return obj;
 }
-#endif
 
 #define	ACPI_INIT_DSM_ARGV4(cnt, eles)			\
 	{						\
@@ -150,7 +149,7 @@ struct acpi_hotplug_context {
  */
 
 typedef int (*acpi_op_add) (struct acpi_device * device);
-typedef void (*acpi_op_remove) (struct acpi_device *device);
+typedef int (*acpi_op_remove) (struct acpi_device * device);
 typedef void (*acpi_op_notify) (struct acpi_device * device, u32 event);
 
 struct acpi_device_ops {
@@ -231,8 +230,7 @@ struct acpi_pnp_type {
 	u32 hardware_id:1;
 	u32 bus_address:1;
 	u32 platform_id:1;
-	u32 backlight:1;
-	u32 reserved:28;
+	u32 reserved:29;
 };
 
 struct acpi_device_pnp {
@@ -535,7 +533,6 @@ int acpi_bus_update_power(acpi_handle handle, int *state_p);
 int acpi_device_update_power(struct acpi_device *device, int *state_p);
 bool acpi_bus_power_manageable(acpi_handle handle);
 void acpi_dev_power_up_children_with_adr(struct acpi_device *adev);
-u8 acpi_dev_power_state_for_wake(struct acpi_device *adev);
 int acpi_device_power_add_dependent(struct acpi_device *adev,
 				    struct device *dev);
 void acpi_device_power_remove_dependent(struct acpi_device *adev,
@@ -622,7 +619,8 @@ enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev);
 int acpi_iommu_fwspec_init(struct device *dev, u32 id,
 			   struct fwnode_handle *fwnode,
 			   const struct iommu_ops *ops);
-int acpi_dma_get_range(struct device *dev, const struct bus_dma_region **map);
+int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
+		       u64 *size);
 int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
 			   const u32 *input_id);
 static inline int acpi_dma_configure(struct device *dev,
@@ -658,7 +656,6 @@ static inline bool acpi_quirk_skip_acpi_ac_and_battery(void)
 #if IS_ENABLED(CONFIG_X86_ANDROID_TABLETS)
 bool acpi_quirk_skip_i2c_client_enumeration(struct acpi_device *adev);
 int acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *skip);
-bool acpi_quirk_skip_gpio_event_handlers(void);
 #else
 static inline bool acpi_quirk_skip_i2c_client_enumeration(struct acpi_device *adev)
 {
@@ -669,10 +666,6 @@ acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *skip)
 {
 	*skip = false;
 	return 0;
-}
-static inline bool acpi_quirk_skip_gpio_event_handlers(void)
-{
-	return false;
 }
 #endif
 
@@ -750,20 +743,7 @@ int acpi_dev_uid_to_integer(struct acpi_device *adev, u64 *integer);
 
 void acpi_dev_clear_dependencies(struct acpi_device *supplier);
 bool acpi_dev_ready_for_enumeration(const struct acpi_device *device);
-struct acpi_device *acpi_dev_get_next_consumer_dev(struct acpi_device *supplier,
-						   struct acpi_device *start);
-
-/**
- * for_each_acpi_consumer_dev - iterate over the consumer ACPI devices for a
- *				given supplier
- * @supplier: Pointer to the supplier's ACPI device
- * @consumer: Pointer to &struct acpi_device to hold the consumer, initially NULL
- */
-#define for_each_acpi_consumer_dev(supplier, consumer)			\
-	for (consumer = acpi_dev_get_next_consumer_dev(supplier, NULL);	\
-	     consumer;							\
-	     consumer = acpi_dev_get_next_consumer_dev(supplier, consumer))
-
+struct acpi_device *acpi_dev_get_first_consumer_dev(struct acpi_device *supplier);
 struct acpi_device *
 acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
 struct acpi_device *

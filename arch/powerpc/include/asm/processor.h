@@ -354,38 +354,17 @@ static inline unsigned long __pack_fe01(unsigned int fpmode)
 
 #ifdef CONFIG_PPC64
 
-#define spin_begin()							\
-	asm volatile(ASM_FTR_IFCLR(					\
-		"or 1,1,1", /* HMT_LOW */				\
-		"nop", /* v3.1 uses pause_short in cpu_relax instead */	\
-		%0) :: "i" (CPU_FTR_ARCH_31) : "memory")
+#define spin_begin()	HMT_low()
 
-#define spin_cpu_relax()						\
-	asm volatile(ASM_FTR_IFCLR(					\
-		"nop", /* Before v3.1 use priority nops in spin_begin/end */ \
-		PPC_WAIT(2, 0),	/* aka pause_short */			\
-		%0) :: "i" (CPU_FTR_ARCH_31) : "memory")
+#define spin_cpu_relax()	barrier()
 
-#define spin_end()							\
-	asm volatile(ASM_FTR_IFCLR(					\
-		"or 2,2,2", /* HMT_MEDIUM */				\
-		"nop",							\
-		%0) :: "i" (CPU_FTR_ARCH_31) : "memory")
+#define spin_end()	HMT_medium()
 
 #endif
 
-/*
- * Check that a certain kernel stack pointer is a valid (minimum sized)
- * stack frame in task_struct p.
- */
-int validate_sp(unsigned long sp, struct task_struct *p);
-
-/*
- * validate the stack frame of a particular minimum size, used for when we are
- * looking at a certain object in the stack beyond the minimum.
- */
-int validate_sp_size(unsigned long sp, struct task_struct *p,
-		     unsigned long nbytes);
+/* Check that a certain kernel stack pointer is valid in task_struct p */
+int validate_sp(unsigned long sp, struct task_struct *p,
+                       unsigned long nbytes);
 
 /*
  * Prefetch macros.

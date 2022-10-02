@@ -460,8 +460,7 @@ ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
 
 		if (err >= 0)
 			break;
-		if ((err == -ENOTSUPP ||
-				err == -NFS4ERR_OFFLOAD_DENIED) &&
+		if (err == -ENOTSUPP &&
 				nfs42_files_from_same_server(src, dst)) {
 			err = -EOPNOTSUPP;
 			break;
@@ -1094,9 +1093,6 @@ static int _nfs42_proc_clone(struct rpc_message *msg, struct file *src_f,
 				&args.seq_args, &res.seq_res, 0);
 	trace_nfs4_clone(src_inode, dst_inode, &args, status);
 	if (status == 0) {
-		/* a zero-length count means clone to EOF in src */
-		if (count == 0 && res.dst_fattr->valid & NFS_ATTR_FATTR_SIZE)
-			count = nfs_size_to_loff_t(res.dst_fattr->size) - dst_offset;
 		nfs42_copy_dest_done(dst_inode, dst_offset, count);
 		status = nfs_post_op_update_inode(dst_inode, res.dst_fattr);
 	}
@@ -1179,7 +1175,6 @@ static int _nfs42_proc_removexattr(struct inode *inode, const char *name)
 
 	ret = nfs4_call_sync(server->client, server, &msg, &args.seq_args,
 	    &res.seq_res, 1);
-	trace_nfs4_removexattr(inode, name, ret);
 	if (!ret)
 		nfs4_update_changeattr(inode, &res.cinfo, timestamp, 0);
 
@@ -1219,7 +1214,6 @@ static int _nfs42_proc_setxattr(struct inode *inode, const char *name,
 
 	ret = nfs4_call_sync(server->client, server, &msg, &arg.seq_args,
 	    &res.seq_res, 1);
-	trace_nfs4_setxattr(inode, name, ret);
 
 	for (; np > 0; np--)
 		put_page(pages[np - 1]);
@@ -1252,7 +1246,6 @@ static ssize_t _nfs42_proc_getxattr(struct inode *inode, const char *name,
 
 	ret = nfs4_call_sync(server->client, server, &msg, &arg.seq_args,
 	    &res.seq_res, 0);
-	trace_nfs4_getxattr(inode, name, ret);
 	if (ret < 0)
 		return ret;
 
@@ -1324,7 +1317,6 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
 
 	ret = nfs4_call_sync(server->client, server, &msg, &arg.seq_args,
 	    &res.seq_res, 0);
-	trace_nfs4_listxattr(inode, ret);
 
 	if (ret >= 0) {
 		ret = res.copied;

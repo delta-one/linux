@@ -272,7 +272,7 @@
 			interrupts = <GIC_SPI 205 IRQ_TYPE_EDGE_RISING>;
 		};
 
-		cec@94a087c {
+		sti-cec@94a087c {
 			compatible = "st,stih-cec";
 			reg = <0x94a087c 0x64>;
 			clocks = <&clk_sysin>;

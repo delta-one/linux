@@ -5364,8 +5364,6 @@ static struct clk_branch gcc_ufs_1_card_clkref_clk = {
 		.enable_mask = BIT(0),
 		.hw.init = &(const struct clk_init_data) {
 			.name = "gcc_ufs_1_card_clkref_clk",
-			.parent_data = &gcc_parent_data_tcxo,
-			.num_parents = 1,
 			.ops = &clk_branch2_ops,
 		},
 	},
@@ -5434,8 +5432,6 @@ static struct clk_branch gcc_ufs_card_clkref_clk = {
 		.enable_mask = BIT(0),
 		.hw.init = &(const struct clk_init_data) {
 			.name = "gcc_ufs_card_clkref_clk",
-			.parent_data = &gcc_parent_data_tcxo,
-			.num_parents = 1,
 			.ops = &clk_branch2_ops,
 		},
 	},
@@ -5852,8 +5848,6 @@ static struct clk_branch gcc_ufs_ref_clkref_clk = {
 		.enable_mask = BIT(0),
 		.hw.init = &(const struct clk_init_data) {
 			.name = "gcc_ufs_ref_clkref_clk",
-			.parent_data = &gcc_parent_data_tcxo,
-			.num_parents = 1,
 			.ops = &clk_branch2_ops,
 		},
 	},
@@ -6849,12 +6843,17 @@ static struct gdsc ufs_phy_gdsc = {
 	.pwrsts = PWRSTS_OFF_ON,
 };
 
+/*
+ * The Qualcomm DWC3 driver suspend implementation appears to be incomplete
+ * for sc8280xp so keep the USB power domains always-on for now.
+ */
 static struct gdsc usb30_mp_gdsc = {
 	.gdscr = 0xab004,
 	.pd = {
 		.name = "usb30_mp_gdsc",
 	},
-	.pwrsts = PWRSTS_RET_ON,
+	.pwrsts = PWRSTS_OFF_ON,
+	.flags = ALWAYS_ON,
 };
 
 static struct gdsc usb30_prim_gdsc = {
@@ -6862,7 +6861,8 @@ static struct gdsc usb30_prim_gdsc = {
 	.pd = {
 		.name = "usb30_prim_gdsc",
 	},
-	.pwrsts = PWRSTS_RET_ON,
+	.pwrsts = PWRSTS_OFF_ON,
+	.flags = ALWAYS_ON,
 };
 
 static struct gdsc usb30_sec_gdsc = {
@@ -6870,23 +6870,8 @@ static struct gdsc usb30_sec_gdsc = {
 	.pd = {
 		.name = "usb30_sec_gdsc",
 	},
-	.pwrsts = PWRSTS_RET_ON,
-};
-
-static struct gdsc emac_0_gdsc = {
-	.gdscr = 0xaa004,
-	.pd = {
-		.name = "emac_0_gdsc",
-	},
 	.pwrsts = PWRSTS_OFF_ON,
-};
-
-static struct gdsc emac_1_gdsc = {
-	.gdscr = 0xba004,
-	.pd = {
-		.name = "emac_1_gdsc",
-	},
-	.pwrsts = PWRSTS_OFF_ON,
+	.flags = ALWAYS_ON,
 };
 
 static struct clk_regmap *gcc_sc8280xp_clocks[] = {
@@ -7367,8 +7352,6 @@ static struct gdsc *gcc_sc8280xp_gdscs[] = {
 	[USB30_MP_GDSC] = &usb30_mp_gdsc,
 	[USB30_PRIM_GDSC] = &usb30_prim_gdsc,
 	[USB30_SEC_GDSC] = &usb30_sec_gdsc,
-	[EMAC_0_GDSC] = &emac_0_gdsc,
-	[EMAC_1_GDSC] = &emac_1_gdsc,
 };
 
 static const struct clk_rcg_dfs_data gcc_dfs_clocks[] = {

@@ -88,10 +88,7 @@ def get_target_endianness():
 
 
 def read_memoryview(inf, start, length):
-    m = inf.read_memory(start, length)
-    if type(m) is memoryview:
-        return m
-    return memoryview(m)
+    return memoryview(inf.read_memory(start, length))
 
 
 def read_u16(buffer, offset):
@@ -196,3 +193,11 @@ def gdb_eval_or_none(expresssion):
         return gdb.parse_and_eval(expresssion)
     except gdb.error:
         return None
+
+
+def dentry_name(d):
+    parent = d['d_parent']
+    if parent == d or parent == 0:
+        return ""
+    p = dentry_name(d['d_parent']) + "/"
+    return p + d['d_iname'].string()

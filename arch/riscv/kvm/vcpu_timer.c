@@ -147,8 +147,10 @@ static void kvm_riscv_vcpu_timer_blocking(struct kvm_vcpu *vcpu)
 		return;
 
 	delta_ns = kvm_riscv_delta_cycles2ns(t->next_cycles, gt, t);
-	hrtimer_start(&t->hrt, ktime_set(0, delta_ns), HRTIMER_MODE_REL);
-	t->next_set = true;
+	if (delta_ns) {
+		hrtimer_start(&t->hrt, ktime_set(0, delta_ns), HRTIMER_MODE_REL);
+		t->next_set = true;
+	}
 }
 
 static void kvm_riscv_vcpu_timer_unblocking(struct kvm_vcpu *vcpu)
@@ -318,21 +320,6 @@ void kvm_riscv_vcpu_timer_restore(struct kvm_vcpu *vcpu)
 	kvm_riscv_vcpu_timer_unblocking(vcpu);
 }
 
-void kvm_riscv_vcpu_timer_sync(struct kvm_vcpu *vcpu)
-{
-	struct kvm_vcpu_timer *t = &vcpu->arch.timer;
-
-	if (!t->sstc_enabled)
-		return;
-
-#if defined(CONFIG_32BIT)
-	t->next_cycles = csr_read(CSR_VSTIMECMP);
-	t->next_cycles |= (u64)csr_read(CSR_VSTIMECMPH) << 32;
-#else
-	t->next_cycles = csr_read(CSR_VSTIMECMP);
-#endif
-}
-
 void kvm_riscv_vcpu_timer_save(struct kvm_vcpu *vcpu)
 {
 	struct kvm_vcpu_timer *t = &vcpu->arch.timer;
@@ -340,11 +327,13 @@ void kvm_riscv_vcpu_timer_save(struct kvm_vcpu *vcpu)
 	if (!t->sstc_enabled)
 		return;
 
-	/*
-	 * The vstimecmp CSRs are saved by kvm_riscv_vcpu_timer_sync()
-	 * upon every VM exit so no need to save here.
-	 */
-
+	t = &vcpu->arch.timer;
+#if defined(CONFIG_32BIT)
+	t->next_cycles = csr_read(CSR_VSTIMECMP);
+	t->next_cycles |= (u64)csr_read(CSR_VSTIMECMPH) << 32;
+#else
+	t->next_cycles = csr_read(CSR_VSTIMECMP);
+#endif
 	/* timer should be enabled for the remaining operations */
 	if (unlikely(!t->init_done))
 		return;

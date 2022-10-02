@@ -11,10 +11,7 @@ struct dax_device;
 struct dax_region;
 void dax_region_put(struct dax_region *dax_region);
 
-/* dax bus specific ioresource flags */
-#define IORESOURCE_DAX_STATIC BIT(0)
-#define IORESOURCE_DAX_KMEM BIT(1)
-
+#define IORESOURCE_DAX_STATIC (1UL << 0)
 struct dax_region *alloc_dax_region(struct device *parent, int region_id,
 		struct range *range, int target_node, unsigned int align,
 		unsigned long flags);
@@ -28,15 +25,10 @@ struct dev_dax_data {
 
 struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data);
 
-enum dax_driver_type {
-	DAXDRV_KMEM_TYPE,
-	DAXDRV_DEVICE_TYPE,
-};
-
 struct dax_device_driver {
 	struct device_driver drv;
 	struct list_head ids;
-	enum dax_driver_type type;
+	int match_always;
 	int (*probe)(struct dev_dax *dev);
 	void (*remove)(struct dev_dax *dev);
 };

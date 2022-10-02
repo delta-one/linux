@@ -186,13 +186,6 @@ int msm_iommu_pagetable_params(struct msm_mmu *mmu,
 	return 0;
 }
 
-struct iommu_domain_geometry *msm_iommu_get_geometry(struct msm_mmu *mmu)
-{
-	struct msm_iommu *iommu = to_msm_iommu(mmu);
-
-	return &iommu->domain->geometry;
-}
-
 static const struct msm_mmu_funcs pagetable_funcs = {
 		.map = msm_iommu_pagetable_map,
 		.unmap = msm_iommu_pagetable_unmap,
@@ -237,6 +230,13 @@ struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
 	if (!ttbr1_cfg)
 		return ERR_PTR(-ENODEV);
 
+	/*
+	 * Defer setting the fault handler until we have a valid adreno_smmu
+	 * to avoid accidentially installing a GPU specific fault handler for
+	 * the display's iommu
+	 */
+	iommu_set_fault_handler(iommu->domain, msm_fault_handler, iommu);
+
 	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
 	if (!pagetable)
 		return ERR_PTR(-ENOMEM);
@@ -264,6 +264,9 @@ struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
 	 * the arm-smmu driver as a trigger to set up TTBR0
 	 */
 	if (atomic_inc_return(&iommu->pagetables) == 1) {
+		/* Enable stall on iommu fault: */
+		adreno_smmu->set_stall(adreno_smmu->cookie, true);
+
 		ret = adreno_smmu->set_ttbr0_cfg(adreno_smmu->cookie, &ttbr0_cfg);
 		if (ret) {
 			free_io_pgtable_ops(pagetable->pgtbl_ops);
@@ -292,7 +295,6 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
 		unsigned long iova, int flags, void *arg)
 {
 	struct msm_iommu *iommu = arg;
-	struct msm_mmu *mmu = &iommu->base;
 	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(iommu->base.dev);
 	struct adreno_smmu_fault_info info, *ptr = NULL;
 
@@ -305,10 +307,6 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
 		return iommu->base.handler(iommu->base.arg, iova, flags, ptr);
 
 	pr_warn_ratelimited("*** fault: iova=%16lx, flags=%d\n", iova, flags);
-
-	if (mmu->funcs->resume_translation)
-		mmu->funcs->resume_translation(mmu);
-
 	return 0;
 }
 
@@ -316,8 +314,7 @@ static void msm_iommu_resume_translation(struct msm_mmu *mmu)
 {
 	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(mmu->dev);
 
-	if (adreno_smmu->resume_translation)
-		adreno_smmu->resume_translation(adreno_smmu->cookie, true);
+	adreno_smmu->resume_translation(adreno_smmu->cookie, true);
 }
 
 static void msm_iommu_detach(struct msm_mmu *mmu)
@@ -370,23 +367,17 @@ static const struct msm_mmu_funcs funcs = {
 		.resume_translation = msm_iommu_resume_translation,
 };
 
-struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks)
+struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
 {
-	struct iommu_domain *domain;
 	struct msm_iommu *iommu;
 	int ret;
 
-	domain = iommu_domain_alloc(dev->bus);
 	if (!domain)
-		return NULL;
-
-	iommu_set_pgtable_quirks(domain, quirks);
+		return ERR_PTR(-ENODEV);
 
 	iommu = kzalloc(sizeof(*iommu), GFP_KERNEL);
-	if (!iommu) {
-		iommu_domain_free(domain);
+	if (!iommu)
 		return ERR_PTR(-ENOMEM);
-	}
 
 	iommu->domain = domain;
 	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
@@ -395,30 +386,9 @@ struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks)
 
 	ret = iommu_attach_device(iommu->domain, dev);
 	if (ret) {
-		iommu_domain_free(domain);
 		kfree(iommu);
 		return ERR_PTR(ret);
 	}
 
 	return &iommu->base;
-}
-
-struct msm_mmu *msm_iommu_gpu_new(struct device *dev, struct msm_gpu *gpu, unsigned long quirks)
-{
-	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(dev);
-	struct msm_iommu *iommu;
-	struct msm_mmu *mmu;
-
-	mmu = msm_iommu_new(dev, quirks);
-	if (IS_ERR(mmu))
-		return mmu;
-
-	iommu = to_msm_iommu(mmu);
-	iommu_set_fault_handler(iommu->domain, msm_fault_handler, iommu);
-
-	/* Enable stall on iommu fault: */
-	if (adreno_smmu->set_stall)
-		adreno_smmu->set_stall(adreno_smmu->cookie, true);
-
-	return mmu;
 }

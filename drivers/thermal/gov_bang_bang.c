@@ -13,21 +13,12 @@
 
 #include "thermal_core.h"
 
-static int thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
+static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
 {
 	struct thermal_trip trip;
 	struct thermal_instance *instance;
-	int ret;
 
-	ret = __thermal_zone_get_trip(tz, trip_id, &trip);
-	if (ret) {
-		pr_warn_once("Failed to retrieve trip point %d\n", trip_id);
-		return ret;
-	}
-
-	if (!trip.hysteresis)
-		dev_info_once(&tz->device,
-			      "Zero hysteresis value for thermal zone %s\n", tz->type);
+	thermal_zone_get_trip(tz, trip_id, &trip);
 
 	dev_dbg(&tz->device, "Trip%d[temp=%d]:temp=%d:hyst=%d\n",
 				trip_id, trip.temperature, tz->temperature,
@@ -65,8 +56,6 @@ static int thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
 		instance->cdev->updated = false; /* cdev needs update */
 		mutex_unlock(&instance->cdev->lock);
 	}
-
-	return 0;
 }
 
 /**
@@ -99,13 +88,10 @@ static int thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id)
 static int bang_bang_control(struct thermal_zone_device *tz, int trip)
 {
 	struct thermal_instance *instance;
-	int ret;
 
 	lockdep_assert_held(&tz->lock);
 
-	ret = thermal_zone_trip_update(tz, trip);
-	if (ret)
-		return ret;
+	thermal_zone_trip_update(tz, trip);
 
 	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
 		thermal_cdev_update(instance->cdev);

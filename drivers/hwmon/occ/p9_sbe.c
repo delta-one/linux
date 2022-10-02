@@ -7,7 +7,6 @@
 #include <linux/fsi-occ.h>
 #include <linux/mm.h>
 #include <linux/module.h>
-#include <linux/mod_devicetable.h>
 #include <linux/mutex.h>
 #include <linux/platform_device.h>
 #include <linux/string.h>
@@ -83,7 +82,6 @@ done:
 static int p9_sbe_occ_send_cmd(struct occ *occ, u8 *cmd, size_t len,
 			       void *resp, size_t resp_len)
 {
-	size_t original_resp_len = resp_len;
 	struct p9_sbe_occ *ctx = to_p9_sbe_occ(occ);
 	int rc, i;
 
@@ -99,7 +97,6 @@ static int p9_sbe_occ_send_cmd(struct occ *occ, u8 *cmd, size_t len,
 		}
 		if (rc != -EBADE)
 			return rc;
-		resp_len = original_resp_len;
 	}
 
 	switch (((struct occ_response *)resp)->return_status) {
@@ -182,17 +179,9 @@ static int p9_sbe_occ_remove(struct platform_device *pdev)
 	return 0;
 }
 
-static const struct of_device_id p9_sbe_occ_of_match[] = {
-	{ .compatible = "ibm,p9-occ-hwmon" },
-	{ .compatible = "ibm,p10-occ-hwmon" },
-	{}
-};
-MODULE_DEVICE_TABLE(of, p9_sbe_occ_of_match);
-
 static struct platform_driver p9_sbe_occ_driver = {
 	.driver = {
 		.name = "occ-hwmon",
-		.of_match_table = p9_sbe_occ_of_match,
 	},
 	.probe	= p9_sbe_occ_probe,
 	.remove = p9_sbe_occ_remove,

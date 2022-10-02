@@ -511,7 +511,8 @@ static struct lp55xx_device_config lp5562_cfg = {
 	.dev_attr_group     = &lp5562_group,
 };
 
-static int lp5562_probe(struct i2c_client *client)
+static int lp5562_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
 {
 	int ret;
 	struct lp55xx_chip *chip;
@@ -603,7 +604,7 @@ static struct i2c_driver lp5562_driver = {
 		.name	= "lp5562",
 		.of_match_table = of_match_ptr(of_lp5562_leds_match),
 	},
-	.probe_new	= lp5562_probe,
+	.probe		= lp5562_probe,
 	.remove		= lp5562_remove,
 	.id_table	= lp5562_id,
 };

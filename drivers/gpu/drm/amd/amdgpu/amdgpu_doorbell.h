@@ -21,9 +21,6 @@
  *
  */
 
-#ifndef AMDGPU_DOORBELL_H
-#define AMDGPU_DOORBELL_H
-
 /*
  * GPU doorbell structures, functions & helpers
  */
@@ -32,9 +29,7 @@ struct amdgpu_doorbell {
 	resource_size_t		base;
 	resource_size_t		size;
 	u32 __iomem		*ptr;
-
-	/* Number of doorbells reserved for amdgpu kernel driver */
-	u32 num_kernel_doorbells;
+	u32			num_doorbells;	/* Number of doorbells actually reserved for amdgpu. */
 };
 
 /* Reserved doorbells for amdgpu (including multimedia).
@@ -83,8 +78,6 @@ struct amdgpu_doorbell_index {
 	};
 	uint32_t first_non_cp;
 	uint32_t last_non_cp;
-	uint32_t xcc1_kiq_start;
-	uint32_t xcc1_mec_ring0_start;
 	uint32_t max_assignment;
 	/* Per engine SDMA doorbell size in dword */
 	uint32_t sdma_doorbell_range;
@@ -166,12 +159,7 @@ typedef enum _AMDGPU_VEGA20_DOORBELL_ASSIGNMENT
 	AMDGPU_VEGA20_DOORBELL64_FIRST_NON_CP            = AMDGPU_VEGA20_DOORBELL_sDMA_ENGINE0,
 	AMDGPU_VEGA20_DOORBELL64_LAST_NON_CP             = AMDGPU_VEGA20_DOORBELL64_VCE_RING6_7,
 
-	/* kiq/kcq from second XCD. Max 8 XCDs */
-	AMDGPU_VEGA20_DOORBELL_XCC1_KIQ_START             = 0x190,
-	/* 8 compute rings per GC. Max to 0x1CE */
-	AMDGPU_VEGA20_DOORBELL_XCC1_MEC_RING0_START       = 0x197,
-
-	AMDGPU_VEGA20_DOORBELL_MAX_ASSIGNMENT            = 0x1CE,
+	AMDGPU_VEGA20_DOORBELL_MAX_ASSIGNMENT            = 0x18F,
 	AMDGPU_VEGA20_DOORBELL_INVALID                   = 0xFFFF
 } AMDGPU_VEGA20_DOORBELL_ASSIGNMENT;
 
@@ -318,4 +306,3 @@ void amdgpu_mm_wdoorbell64(struct amdgpu_device *adev, u32 index, u64 v);
 #define RDOORBELL64(index) amdgpu_mm_rdoorbell64(adev, (index))
 #define WDOORBELL64(index, v) amdgpu_mm_wdoorbell64(adev, (index), (v))
 
-#endif

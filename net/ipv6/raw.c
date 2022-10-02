@@ -64,7 +64,7 @@
 struct raw_hashinfo raw_v6_hashinfo;
 EXPORT_SYMBOL_GPL(raw_v6_hashinfo);
 
-bool raw_v6_match(struct net *net, const struct sock *sk, unsigned short num,
+bool raw_v6_match(struct net *net, struct sock *sk, unsigned short num,
 		  const struct in6_addr *loc_addr,
 		  const struct in6_addr *rmt_addr, int dif, int sdif)
 {
@@ -141,9 +141,10 @@ EXPORT_SYMBOL(rawv6_mh_filter_unregister);
 static bool ipv6_raw_deliver(struct sk_buff *skb, int nexthdr)
 {
 	struct net *net = dev_net(skb->dev);
+	struct hlist_nulls_head *hlist;
+	struct hlist_nulls_node *hnode;
 	const struct in6_addr *saddr;
 	const struct in6_addr *daddr;
-	struct hlist_head *hlist;
 	struct sock *sk;
 	bool delivered = false;
 	__u8 hash;
@@ -151,10 +152,10 @@ static bool ipv6_raw_deliver(struct sk_buff *skb, int nexthdr)
 	saddr = &ipv6_hdr(skb)->saddr;
 	daddr = saddr + 1;
 
-	hash = raw_hashfunc(net, nexthdr);
+	hash = nexthdr & (RAW_HTABLE_SIZE - 1);
 	hlist = &raw_v6_hashinfo.ht[hash];
 	rcu_read_lock();
-	sk_for_each_rcu(sk, hlist) {
+	sk_nulls_for_each(sk, hnode, hlist) {
 		int filtered;
 
 		if (!raw_v6_match(net, sk, nexthdr, daddr, saddr,
@@ -193,8 +194,10 @@ static bool ipv6_raw_deliver(struct sk_buff *skb, int nexthdr)
 			struct sk_buff *clone = skb_clone(skb, GFP_ATOMIC);
 
 			/* Not releasing hash table! */
-			if (clone)
+			if (clone) {
+				nf_reset_ct(clone);
 				rawv6_rcv(sk, clone);
+			}
 		}
 	}
 	rcu_read_unlock();
@@ -330,14 +333,15 @@ void raw6_icmp_error(struct sk_buff *skb, int nexthdr,
 		u8 type, u8 code, int inner_offset, __be32 info)
 {
 	struct net *net = dev_net(skb->dev);
-	struct hlist_head *hlist;
+	struct hlist_nulls_head *hlist;
+	struct hlist_nulls_node *hnode;
 	struct sock *sk;
 	int hash;
 
-	hash = raw_hashfunc(net, nexthdr);
+	hash = nexthdr & (RAW_HTABLE_SIZE - 1);
 	hlist = &raw_v6_hashinfo.ht[hash];
 	rcu_read_lock();
-	sk_for_each_rcu(sk, hlist) {
+	sk_nulls_for_each(sk, hnode, hlist) {
 		/* Note: ipv6_hdr(skb) != skb->data */
 		const struct ipv6hdr *ip6h = (const struct ipv6hdr *)skb->data;
 
@@ -351,19 +355,17 @@ void raw6_icmp_error(struct sk_buff *skb, int nexthdr,
 
 static inline int rawv6_rcv_skb(struct sock *sk, struct sk_buff *skb)
 {
-	enum skb_drop_reason reason;
-
 	if ((raw6_sk(sk)->checksum || rcu_access_pointer(sk->sk_filter)) &&
 	    skb_checksum_complete(skb)) {
 		atomic_inc(&sk->sk_drops);
-		kfree_skb_reason(skb, SKB_DROP_REASON_SKB_CSUM);
+		kfree_skb(skb);
 		return NET_RX_DROP;
 	}
 
 	/* Charge it to the socket. */
 	skb_dst_drop(skb);
-	if (sock_queue_rcv_skb_reason(sk, skb, &reason) < 0) {
-		kfree_skb_reason(skb, reason);
+	if (sock_queue_rcv_skb(sk, skb) < 0) {
+		kfree_skb(skb);
 		return NET_RX_DROP;
 	}
 
@@ -384,10 +386,9 @@ int rawv6_rcv(struct sock *sk, struct sk_buff *skb)
 
 	if (!xfrm6_policy_check(sk, XFRM_POLICY_IN, skb)) {
 		atomic_inc(&sk->sk_drops);
-		kfree_skb_reason(skb, SKB_DROP_REASON_XFRM_POLICY);
+		kfree_skb(skb);
 		return NET_RX_DROP;
 	}
-	nf_reset_ct(skb);
 
 	if (!rp->checksum)
 		skb->ip_summed = CHECKSUM_UNNECESSARY;
@@ -409,7 +410,7 @@ int rawv6_rcv(struct sock *sk, struct sk_buff *skb)
 	if (inet->hdrincl) {
 		if (skb_checksum_complete(skb)) {
 			atomic_inc(&sk->sk_drops);
-			kfree_skb_reason(skb, SKB_DROP_REASON_SKB_CSUM);
+			kfree_skb(skb);
 			return NET_RX_DROP;
 		}
 	}
@@ -504,7 +505,6 @@ csum_copy_err:
 static int rawv6_push_pending_frames(struct sock *sk, struct flowi6 *fl6,
 				     struct raw6_sock *rp)
 {
-	struct ipv6_txoptions *opt;
 	struct sk_buff *skb;
 	int err = 0;
 	int offset;
@@ -522,9 +522,6 @@ static int rawv6_push_pending_frames(struct sock *sk, struct flowi6 *fl6,
 
 	offset = rp->offset;
 	total_len = inet_sk(sk)->cork.base.length;
-	opt = inet6_sk(sk)->cork.opt;
-	total_len -= opt ? opt->opt_flen : 0;
-
 	if (offset >= total_len - 1) {
 		err = -EINVAL;
 		ip6_flush_pending_frames(sk);
@@ -1176,6 +1173,8 @@ static void raw6_destroy(struct sock *sk)
 	lock_sock(sk);
 	ip6_flush_pending_frames(sk);
 	release_sock(sk);
+
+	inet6_destroy_sock(sk);
 }
 
 static int rawv6_init_sk(struct sock *sk)

@@ -869,7 +869,7 @@ static int mcasp_common_hw_param(struct davinci_mcasp *mcasp, int stream,
 	if (mcasp->op_mode == DAVINCI_MCASP_DIT_MODE)
 		max_active_serializers = 1;
 	else
-		max_active_serializers = DIV_ROUND_UP(channels, slots);
+		max_active_serializers = (channels + slots - 1) / slots;
 
 	/* Default configuration */
 	if (mcasp->version < MCASP_VERSION_3)
@@ -1002,7 +1002,8 @@ static int mcasp_i2s_hw_param(struct davinci_mcasp *mcasp, int stream,
 	 */
 	if (mcasp->tdm_mask[stream]) {
 		active_slots = hweight32(mcasp->tdm_mask[stream]);
-		active_serializers = DIV_ROUND_UP(channels, active_slots);
+		active_serializers = (channels + active_slots - 1) /
+			active_slots;
 		if (active_serializers == 1)
 			active_slots = channels;
 		for (i = 0; i < total_slots; i++) {
@@ -1013,7 +1014,7 @@ static int mcasp_i2s_hw_param(struct davinci_mcasp *mcasp, int stream,
 			}
 		}
 	} else {
-		active_serializers = DIV_ROUND_UP(channels, total_slots);
+		active_serializers = (channels + total_slots - 1) / total_slots;
 		if (active_serializers == 1)
 			active_slots = channels;
 		else
@@ -1699,10 +1700,9 @@ static void davinci_mcasp_init_iec958_status(struct davinci_mcasp *mcasp)
 static int davinci_mcasp_dai_probe(struct snd_soc_dai *dai)
 {
 	struct davinci_mcasp *mcasp = snd_soc_dai_get_drvdata(dai);
-	int stream;
 
-	for_each_pcm_streams(stream)
-		snd_soc_dai_dma_data_set(dai, stream, &mcasp->dma_data[stream]);
+	dai->playback_dma_data = &mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK];
+	dai->capture_dma_data = &mcasp->dma_data[SNDRV_PCM_STREAM_CAPTURE];
 
 	if (mcasp->op_mode == DAVINCI_MCASP_DIT_MODE) {
 		davinci_mcasp_init_iec958_status(mcasp);
@@ -2461,9 +2461,11 @@ err:
 	return ret;
 }
 
-static void davinci_mcasp_remove(struct platform_device *pdev)
+static int davinci_mcasp_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+
+	return 0;
 }
 
 #ifdef CONFIG_PM
@@ -2529,7 +2531,7 @@ static const struct dev_pm_ops davinci_mcasp_pm_ops = {
 
 static struct platform_driver davinci_mcasp_driver = {
 	.probe		= davinci_mcasp_probe,
-	.remove_new	= davinci_mcasp_remove,
+	.remove		= davinci_mcasp_remove,
 	.driver		= {
 		.name	= "davinci-mcasp",
 		.pm     = &davinci_mcasp_pm_ops,

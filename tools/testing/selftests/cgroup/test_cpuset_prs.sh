@@ -15,6 +15,8 @@ skip_test() {
 
 [[ $(id -u) -eq 0 ]] || skip_test "Test must be run as root!"
 
+# Set sched verbose flag, if available
+[[ -d /sys/kernel/debug/sched ]] && echo Y > /sys/kernel/debug/sched/verbose
 
 # Get wait_inotify location
 WAIT_INOTIFY=$(cd $(dirname $0); pwd)/wait_inotify
@@ -23,21 +25,17 @@ WAIT_INOTIFY=$(cd $(dirname $0); pwd)/wait_inotify
 CGROUP2=$(mount -t cgroup2 | head -1 | awk -e '{print $3}')
 [[ -n "$CGROUP2" ]] || skip_test "Cgroup v2 mount point not found!"
 
-CPUS=$(lscpu | grep "^CPU(s):" | sed -e "s/.*:[[:space:]]*//")
+CPUS=$(lscpu | grep "^CPU(s)" | sed -e "s/.*:[[:space:]]*//")
 [[ $CPUS -lt 8 ]] && skip_test "Test needs at least 8 cpus available!"
 
 # Set verbose flag and delay factor
 PROG=$1
 VERBOSE=
 DELAY_FACTOR=1
-SCHED_DEBUG=
 while [[ "$1" = -* ]]
 do
 	case "$1" in
 		-v) VERBOSE=1
-		    # Enable sched/verbose can slow thing down
-		    [[ $DELAY_FACTOR -eq 1 ]] &&
-			DELAY_FACTOR=2
 		    break
 		    ;;
 		-d) DELAY_FACTOR=$2
@@ -51,28 +49,10 @@ do
 	shift
 done
 
-# Set sched verbose flag if available when "-v" option is specified
-if [[ -n "$VERBOSE" && -d /sys/kernel/debug/sched ]]
-then
-	# Used to restore the original setting during cleanup
-	SCHED_DEBUG=$(cat /sys/kernel/debug/sched/verbose)
-	echo Y > /sys/kernel/debug/sched/verbose
-fi
-
 cd $CGROUP2
 echo +cpuset > cgroup.subtree_control
 [[ -d test ]] || mkdir test
 cd test
-
-cleanup()
-{
-	online_cpus
-	rmdir A1/A2/A3 A1/A2 A1 B1 > /dev/null 2>&1
-	cd ..
-	rmdir test > /dev/null 2>&1
-	[[ -n "$SCHED_DEBUG" ]] &&
-		echo "$SCHED_DEBUG" > /sys/kernel/debug/sched/verbose
-}
 
 # Pause in ms
 pause()
@@ -274,7 +254,6 @@ TEST_MATRIX=(
 	# Taking away all CPUs from parent or itself if there are tasks
 	# will make the partition invalid.
 	"  S+ C2-3:P1:S+  C3:P1  .      .      T     C2-3    .      .     0 A1:2-3,A2:2-3 A1:P1,A2:P-1"
-	"  S+  C3:P1:S+    C3    .      .      T      P1     .      .     0 A1:3,A2:3 A1:P1,A2:P-1"
 	"  S+ $SETUP_A123_PARTITIONS    .    T:C2-3   .      .      .     0 A1:2-3,A2:2-3,A3:3 A1:P1,A2:P-1,A3:P-1"
 	"  S+ $SETUP_A123_PARTITIONS    . T:C2-3:C1-3 .      .      .     0 A1:1,A2:2,A3:3 A1:P1,A2:P1,A3:P1"
 
@@ -577,6 +556,7 @@ run_state_test()
 			echo "Test $TEST[$I] failed result check!"
 			eval echo \"\${$TEST[$I]}\"
 			dump_states
+			online_cpus
 			exit 1
 		}
 
@@ -587,6 +567,7 @@ run_state_test()
 				eval echo \"\${$TEST[$I]}\"
 				echo
 				dump_states
+				online_cpus
 				exit 1
 			}
 		}
@@ -598,6 +579,7 @@ run_state_test()
 				eval echo \"\${$TEST[$I]}\"
 				echo
 				dump_states
+				online_cpus
 				exit 1
 			}
 		}
@@ -684,7 +666,6 @@ test_inotify()
 	fi
 }
 
-trap cleanup 0 2 3 6
 run_state_test TEST_MATRIX
 test_isolated
 test_inotify

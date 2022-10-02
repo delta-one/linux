@@ -24,8 +24,6 @@
 #include "mt8192-afe-clk.h"
 #include "mt8192-afe-gpio.h"
 
-#define DRIVER_NAME "mt8192_mt6359"
-
 #define RT1015_CODEC_DAI	"rt1015-aif"
 #define RT1015_DEV0_NAME	"rt1015.1-0028"
 #define RT1015_DEV1_NAME	"rt1015.1-0029"
@@ -41,18 +39,6 @@
 struct mt8192_mt6359_priv {
 	struct snd_soc_jack headset_jack;
 	struct snd_soc_jack hdmi_jack;
-};
-
-/* Headset jack detection DAPM pins */
-static struct snd_soc_jack_pin mt8192_jack_pins[] = {
-	{
-		.pin = "Headphone Jack",
-		.mask = SND_JACK_HEADPHONE,
-	},
-	{
-		.pin = "Headset Mic",
-		.mask = SND_JACK_MICROPHONE,
-	},
 };
 
 static int mt8192_rt1015_i2s_hw_params(struct snd_pcm_substream *substream,
@@ -160,6 +146,8 @@ static int mt8192_mt6359_mtkaif_calibration(struct snd_soc_pcm_runtime *rtd)
 	int chosen_phase_1, chosen_phase_2, chosen_phase_3;
 	int counter;
 	int mtkaif_calib_ok;
+
+	dev_info(afe->dev, "%s(), start\n", __func__);
 
 	pm_runtime_get_sync(afe->dev);
 	mt8192_afe_gpio_request(afe->dev, true, MT8192_DAI_ADDA, 1);
@@ -292,11 +280,11 @@ static int mt8192_mt6359_mtkaif_calibration(struct snd_soc_pcm_runtime *rtd)
 	mt8192_afe_gpio_request(afe->dev, false, MT8192_DAI_ADDA_CH34, 0);
 	pm_runtime_put(afe->dev);
 
-	dev_dbg(afe->dev, "%s(), mtkaif_chosen_phase[0/1/2]:%d/%d/%d\n",
-		__func__,
-		afe_priv->mtkaif_chosen_phase[0],
-		afe_priv->mtkaif_chosen_phase[1],
-		afe_priv->mtkaif_chosen_phase[2]);
+	dev_info(afe->dev, "%s(), mtkaif_chosen_phase[0/1/2]:%d/%d/%d\n",
+		 __func__,
+		 afe_priv->mtkaif_chosen_phase[0],
+		 afe_priv->mtkaif_chosen_phase[1],
+		 afe_priv->mtkaif_chosen_phase[2]);
 
 	return 0;
 }
@@ -338,12 +326,11 @@ static int mt8192_rt5682_init(struct snd_soc_pcm_runtime *rtd)
 		return ret;
 	}
 
-	ret = snd_soc_card_jack_new_pins(rtd->card, "Headset Jack",
+	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
 				    SND_JACK_HEADSET | SND_JACK_BTN_0 |
 				    SND_JACK_BTN_1 | SND_JACK_BTN_2 |
 				    SND_JACK_BTN_3,
-				    jack, mt8192_jack_pins,
-				    ARRAY_SIZE(mt8192_jack_pins));
+				    jack);
 	if (ret) {
 		dev_err(rtd->dev, "Headset Jack creation failed: %d\n", ret);
 		return ret;
@@ -1070,7 +1057,6 @@ static struct snd_soc_codec_conf rt1015_amp_conf[] = {
 
 static struct snd_soc_card mt8192_mt6359_rt1015_rt5682_card = {
 	.name = RT1015_RT5682_CARD_NAME,
-	.driver_name = DRIVER_NAME,
 	.owner = THIS_MODULE,
 	.dai_link = mt8192_mt6359_dai_links,
 	.num_links = ARRAY_SIZE(mt8192_mt6359_dai_links),
@@ -1106,7 +1092,6 @@ static const struct snd_kcontrol_new mt8192_mt6359_rt1015p_rt5682x_controls[] = 
 };
 
 static struct snd_soc_card mt8192_mt6359_rt1015p_rt5682x_card = {
-	.driver_name = DRIVER_NAME,
 	.owner = THIS_MODULE,
 	.dai_link = mt8192_mt6359_dai_links,
 	.num_links = ARRAY_SIZE(mt8192_mt6359_dai_links),
@@ -1259,7 +1244,6 @@ static const struct of_device_id mt8192_mt6359_dt_match[] = {
 	},
 	{}
 };
-MODULE_DEVICE_TABLE(of, mt8192_mt6359_dt_match);
 #endif
 
 static const struct dev_pm_ops mt8192_mt6359_pm_ops = {
@@ -1269,7 +1253,7 @@ static const struct dev_pm_ops mt8192_mt6359_pm_ops = {
 
 static struct platform_driver mt8192_mt6359_driver = {
 	.driver = {
-		.name = DRIVER_NAME,
+		.name = "mt8192_mt6359",
 #ifdef CONFIG_OF
 		.of_match_table = mt8192_mt6359_dt_match,
 #endif

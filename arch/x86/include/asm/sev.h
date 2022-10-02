@@ -9,12 +9,9 @@
 #define __ASM_ENCRYPTED_STATE_H
 
 #include <linux/types.h>
-#include <linux/sev-guest.h>
-
 #include <asm/insn.h>
 #include <asm/sev-common.h>
 #include <asm/bootparam.h>
-#include <asm/coco.h>
 
 #define GHCB_PROTOCOL_MIN	1ULL
 #define GHCB_PROTOCOL_MAX	2ULL
@@ -137,26 +134,24 @@ struct snp_secrets_page_layout {
 } __packed;
 
 #ifdef CONFIG_AMD_MEM_ENCRYPT
+extern struct static_key_false sev_es_enable_key;
 extern void __sev_es_ist_enter(struct pt_regs *regs);
 extern void __sev_es_ist_exit(void);
 static __always_inline void sev_es_ist_enter(struct pt_regs *regs)
 {
-	if (cc_vendor == CC_VENDOR_AMD &&
-	    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+	if (static_branch_unlikely(&sev_es_enable_key))
 		__sev_es_ist_enter(regs);
 }
 static __always_inline void sev_es_ist_exit(void)
 {
-	if (cc_vendor == CC_VENDOR_AMD &&
-	    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+	if (static_branch_unlikely(&sev_es_enable_key))
 		__sev_es_ist_exit();
 }
 extern int sev_es_setup_ap_jump_table(struct real_mode_header *rmh);
 extern void __sev_es_nmi_complete(void);
 static __always_inline void sev_es_nmi_complete(void)
 {
-	if (cc_vendor == CC_VENDOR_AMD &&
-	    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+	if (static_branch_unlikely(&sev_es_enable_key))
 		__sev_es_nmi_complete();
 }
 extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
@@ -190,9 +185,6 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
 
 	return rc;
 }
-
-struct snp_guest_request_ioctl;
-
 void setup_ghcb(void);
 void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
 					 unsigned int npages);
@@ -204,7 +196,7 @@ void snp_set_memory_private(unsigned long vaddr, unsigned int npages);
 void snp_set_wakeup_secondary_cpu(void);
 bool snp_init(struct boot_params *bp);
 void __init __noreturn snp_abort(void);
-int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct snp_guest_request_ioctl *rio);
+int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, unsigned long *fw_err);
 #else
 static inline void sev_es_ist_enter(struct pt_regs *regs) { }
 static inline void sev_es_ist_exit(void) { }
@@ -224,7 +216,8 @@ static inline void snp_set_memory_private(unsigned long vaddr, unsigned int npag
 static inline void snp_set_wakeup_secondary_cpu(void) { }
 static inline bool snp_init(struct boot_params *bp) { return false; }
 static inline void snp_abort(void) { }
-static inline int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct snp_guest_request_ioctl *rio)
+static inline int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input,
+					  unsigned long *fw_err)
 {
 	return -ENOTTY;
 }

@@ -943,7 +943,7 @@ u64 fsl_pci_immrbar_base(struct pci_controller *hose)
 	return 0;
 }
 
-#ifdef CONFIG_PPC_E500
+#ifdef CONFIG_E500
 static int mcheck_handle_load(struct pt_regs *regs, u32 inst)
 {
 	unsigned int rd, ra, rb, d;
@@ -1137,19 +1137,6 @@ void __init fsl_pci_assign_primary(void)
 		if (of_match_node(pci_ids, np) && of_device_is_available(np))
 			return;
 	}
-
-	/*
-	 * If there's no PCI host bridge with ISA then check for
-	 * PCI host bridge with alias "pci0" (first PCI host bridge).
-	 */
-	np = of_find_node_by_path("pci0");
-	if (np && of_match_node(pci_ids, np) && of_device_is_available(np)) {
-		fsl_pci_primary = np;
-		of_node_put(np);
-		return;
-	}
-	if (np)
-		of_node_put(np);
 
 	/*
 	 * If there's no PCI host bridge with ISA, arbitrarily

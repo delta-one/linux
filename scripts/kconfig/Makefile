@@ -35,6 +35,7 @@ menuconfig-prog	:= mconf
 nconfig-prog	:= nconf
 gconfig-prog	:= gconf
 xconfig-prog	:= qconf
+cfconfig-prog    := cfconfig
 cfoutconfig-prog := cfoutconfig
 
 define config_rule
@@ -46,7 +47,7 @@ PHONY += build_$(1)
 build_$(1): $(obj)/$($(1)-prog)
 endef
 
-$(foreach c, config menuconfig nconfig gconfig xconfig cfoutconfig, $(eval $(call config_rule,$(c))))
+$(foreach c, config menuconfig nconfig gconfig xconfig cfconfig cfoutconfig, $(eval $(call config_rule,$(c))))
 
 PHONY += localmodconfig localyesconfig
 localyesconfig localmodconfig: $(obj)/conf
@@ -142,6 +143,7 @@ help:
 	@echo  '                    default value without prompting'
 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
+	@echo  '  cfconfig        - CLI tool for debugging ConfigFix'
 	@echo  '  cfoutconfig     - Print constraints and DIMACS-output into files'
 
 # ===========================================================================
@@ -161,12 +163,11 @@ conf-objs	:= conf.o $(common-objs)
 hostprogs	+= nconf
 nconf-objs	:= nconf.o nconf.gui.o $(common-objs)
 
-HOSTLDLIBS_nconf       = $(call read-file, $(obj)/nconf-libs)
-HOSTCFLAGS_nconf.o     = $(call read-file, $(obj)/nconf-cflags)
-HOSTCFLAGS_nconf.gui.o = $(call read-file, $(obj)/nconf-cflags)
+HOSTLDLIBS_nconf	= $(shell . $(obj)/nconf-cfg && echo $$libs)
+HOSTCFLAGS_nconf.o	= $(shell . $(obj)/nconf-cfg && echo $$cflags)
+HOSTCFLAGS_nconf.gui.o	= $(shell . $(obj)/nconf-cfg && echo $$cflags)
 
-$(obj)/nconf: | $(obj)/nconf-libs
-$(obj)/nconf.o $(obj)/nconf.gui.o: | $(obj)/nconf-cflags
+$(obj)/nconf.o $(obj)/nconf.gui.o: $(obj)/nconf-cfg
 
 # mconf: Used for the menuconfig target based on lxdialog
 hostprogs	+= mconf
@@ -174,37 +175,37 @@ lxdialog	:= $(addprefix lxdialog/, \
 		     checklist.o inputbox.o menubox.o textbox.o util.o yesno.o)
 mconf-objs	:= mconf.o $(lxdialog) $(common-objs)
 
-HOSTLDLIBS_mconf = $(call read-file, $(obj)/mconf-libs)
+HOSTLDLIBS_mconf = $(shell . $(obj)/mconf-cfg && echo $$libs)
 $(foreach f, mconf.o $(lxdialog), \
-  $(eval HOSTCFLAGS_$f = $$(call read-file, $(obj)/mconf-cflags)))
+  $(eval HOSTCFLAGS_$f = $$(shell . $(obj)/mconf-cfg && echo $$$$cflags)))
 
-$(obj)/mconf: | $(obj)/mconf-libs
-$(addprefix $(obj)/, mconf.o $(lxdialog)): | $(obj)/mconf-cflags
+$(addprefix $(obj)/, mconf.o $(lxdialog)): $(obj)/mconf-cfg
 
 # configfix: Used for the xconfig target as well as for its debugging tools
-hostprogs        += cfoutconfig
+hostprogs        += cfconfig cfoutconfig
 cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_rangefix.o cf_utils.o picosat.o
-cfoutconfig-objs := cfoutconfig.o $(common-objs) $(cfconf-objs)
+cfconfig-objs    := cfconfig.o $(cfconf-objs) $(common-objs)
+cfoutconfig-objs := cfoutconfig.o $(cfconf-objs) $(common-objs)
 
 HOSTCFLAGS_picosat.o = -DTRACE -Wno-missing-prototypes -Wno-pointer-compare
 
 # qconf: Used for the xconfig target based on Qt
 hostprogs	+= qconf
 qconf-cxxobjs	:= qconf.o qconf-moc.o conflict_resolver.o
-qconf-objs	:= images.o $(common-objs) $(cfconf-objs)
+qconf-objs	:= images.o $(common-objs)  $(cfconf-objs)
 
-HOSTLDLIBS_qconf         = $(call read-file, $(obj)/qconf-libs)
-HOSTLDLIBS_conflict_resolver = $(call read-file, $(obj)/qconf-libs)
-HOSTCXXFLAGS_qconf.o     = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
-HOSTCXXFLAGS_qconf-moc.o = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
-HOSTCXXFLAGS_conflict_resolver.o = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
-$(obj)/qconf: | $(obj)/qconf-libs
-$(obj)/qconf.o $(obj)/qconf-moc.o: | $(obj)/qconf-cflags
+HOSTLDLIBS_qconf	= $(shell . $(obj)/qconf-cfg && echo $$libs && echo -lpthread)
+HOSTLDLIBS_conflict_resolver	= $(shell . $(obj)/qconf-cfg && echo $$libs)
+HOSTCXXFLAGS_qconf.o	= $(shell . $(obj)/qconf-cfg && echo $$cflags)
+HOSTCXXFLAGS_conflict_resolver.o	= $(shell . $(obj)/qconf-cfg && echo $$cflags)
+HOSTCXXFLAGS_qconf-moc.o = $(shell . $(obj)/qconf-cfg && echo $$cflags)
+
+$(obj)/qconf.o: $(obj)/qconf-cfg
 
 quiet_cmd_moc = MOC     $@
-      cmd_moc = $(call read-file, $(obj)/qconf-bin)/moc $< -o $@
+      cmd_moc = $(shell . $(obj)/qconf-cfg && echo $$moc) $< -o $@
 
-$(obj)/qconf-moc.cc: $(src)/qconf.h FORCE | $(obj)/qconf-bin
+$(obj)/qconf-moc.cc: $(src)/qconf.h $(obj)/qconf-cfg FORCE
 	$(call if_changed,moc)
 
 targets += qconf-moc.cc
@@ -213,16 +214,15 @@ targets += qconf-moc.cc
 hostprogs	+= gconf
 gconf-objs	:= gconf.o images.o $(common-objs)
 
-HOSTLDLIBS_gconf   = $(call read-file, $(obj)/gconf-libs)
-HOSTCFLAGS_gconf.o = $(call read-file, $(obj)/gconf-cflags)
+HOSTLDLIBS_gconf    = $(shell . $(obj)/gconf-cfg && echo $$libs)
+HOSTCFLAGS_gconf.o  = $(shell . $(obj)/gconf-cfg && echo $$cflags)
 
-$(obj)/gconf: | $(obj)/gconf-libs
-$(obj)/gconf.o: | $(obj)/gconf-cflags
+$(obj)/gconf.o: $(obj)/gconf-cfg
 
 # check if necessary packages are available, and configure build flags
-cmd_conf_cfg = $< $(addprefix $(obj)/$*conf-, cflags libs bin); touch $(obj)/$*conf-bin
+filechk_conf_cfg = $(CONFIG_SHELL) $<
 
-$(obj)/%conf-cflags $(obj)/%conf-libs $(obj)/%conf-bin: $(src)/%conf-cfg.sh
-	$(call cmd,conf_cfg)
+$(obj)/%conf-cfg: $(src)/%conf-cfg.sh FORCE
+	$(call filechk,conf_cfg)
 
-clean-files += *conf-cflags *conf-libs *conf-bin
+clean-files += *conf-cfg

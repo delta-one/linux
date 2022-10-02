@@ -136,9 +136,6 @@
 
 #define DCN3_15_MAX_DET_SIZE 384
 #define DCN3_15_CRB_SEGMENT_SIZE_KB 64
-#define DCN3_15_MAX_DET_SEGS (DCN3_15_MAX_DET_SIZE / DCN3_15_CRB_SEGMENT_SIZE_KB)
-/* Minimum 2 extra segments need to be in compbuf and claimable to guarantee seamless mpo transitions */
-#define MIN_RESERVED_DET_SEGS 2
 
 enum dcn31_clk_src_array_id {
 	DCN31_CLK_SRC_PLL0,
@@ -154,6 +151,8 @@ enum dcn31_clk_src_array_id {
  */
 
 /* DCN */
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
 #define BASE_INNER(seg) DCN_BASE__INST0_SEG ## seg
 
 #define BASE(seg) BASE_INNER(seg)
@@ -185,9 +184,6 @@ enum dcn31_clk_src_array_id {
 #define SRII_DWB(reg_name, temp_name, block, id)\
 	.reg_name[id] = BASE(reg ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 					reg ## block ## id ## _ ## temp_name
-
-#define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
-	.field_name = reg_name ## __ ## field_name ## post_fix
 
 #define DCCG_SRII(reg_name, block, id)\
 	.block ## _ ## reg_name[id] = BASE(reg ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
@@ -827,6 +823,8 @@ static const struct resource_caps res_cap_dcn31 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+	.blends_with_above = true,
+	.blends_with_below = true,
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -887,6 +885,7 @@ static const struct dc_debug_options debug_defaults_drv = {
 			.afmt = true,
 		}
 	},
+	.optimize_edp_link_rate = true,
 	.psr_power_use_phy_fsm = 0,
 };
 
@@ -906,16 +905,6 @@ static const struct dc_debug_options debug_defaults_diags = {
 	.dmub_command_table = true,
 	.enable_tri_buf = true,
 	.use_max_lb = true
-};
-
-static const struct dc_panel_config panel_config_defaults = {
-	.psr = {
-		.disable_psr = false,
-		.disallow_psrsu = false,
-	},
-	.ilr = {
-		.optimize_edp_link_rate = true,
-	},
 };
 
 static void dcn31_dpp_destroy(struct dpp **dpp)
@@ -1629,7 +1618,6 @@ static struct clock_source *dcn31_clock_source_create(
 		return &clk_src->base;
 	}
 
-	kfree(clk_src);
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1639,57 +1627,21 @@ static bool is_dual_plane(enum surface_pixel_format format)
 	return format >= SURFACE_PIXEL_FORMAT_VIDEO_BEGIN || format == SURFACE_PIXEL_FORMAT_GRPH_RGBE_ALPHA;
 }
 
-static int source_format_to_bpp (enum source_format_class SourcePixelFormat)
-{
-	if (SourcePixelFormat == dm_444_64)
-		return 8;
-	else if (SourcePixelFormat == dm_444_16 || SourcePixelFormat == dm_444_16)
-		return 2;
-	else if (SourcePixelFormat == dm_444_8)
-		return 1;
-	else if (SourcePixelFormat == dm_rgbe_alpha)
-		return 5;
-	else if (SourcePixelFormat == dm_420_8)
-		return 3;
-	else if (SourcePixelFormat == dm_420_12)
-		return 6;
-	else
-		return 4;
-}
-
-static bool allow_pixel_rate_crb(struct dc *dc, struct dc_state *context)
-{
-	int i;
-	struct resource_context *res_ctx = &context->res_ctx;
-
-	for (i = 0; i < dc->res_pool->pipe_count; i++) {
-		if (!res_ctx->pipe_ctx[i].stream)
-			continue;
-
-		/*Don't apply if MPO to avoid transition issues*/
-		if (res_ctx->pipe_ctx[i].top_pipe && res_ctx->pipe_ctx[i].top_pipe->plane_state != res_ctx->pipe_ctx[i].plane_state)
-			return false;
-	}
-	return true;
-}
-
 static int dcn315_populate_dml_pipes_from_context(
 	struct dc *dc, struct dc_state *context,
 	display_e2e_pipe_params_st *pipes,
 	bool fast_validate)
 {
-	int i, pipe_cnt, crb_idx, crb_pipes;
+	int i, pipe_cnt;
 	struct resource_context *res_ctx = &context->res_ctx;
 	struct pipe_ctx *pipe;
 	const int max_usable_det = context->bw_ctx.dml.ip.config_return_buffer_size_in_kbytes - DCN3_15_MIN_COMPBUF_SIZE_KB;
-	int remaining_det_segs = max_usable_det / DCN3_15_CRB_SEGMENT_SIZE_KB;
-	bool pixel_rate_crb = allow_pixel_rate_crb(dc, context);
 
 	DC_FP_START();
-	dcn31x_populate_dml_pipes_from_context(dc, context, pipes, fast_validate);
+	dcn20_populate_dml_pipes_from_context(dc, context, pipes, fast_validate);
 	DC_FP_END();
 
-	for (i = 0, pipe_cnt = 0, crb_pipes = 0; i < dc->res_pool->pipe_count; i++) {
+	for (i = 0, pipe_cnt = 0; i < dc->res_pool->pipe_count; i++) {
 		struct dc_crtc_timing *timing;
 
 		if (!res_ctx->pipe_ctx[i].stream)
@@ -1705,28 +1657,12 @@ static int dcn315_populate_dml_pipes_from_context(
 		pipes[pipe_cnt].pipe.src.immediate_flip = true;
 
 		pipes[pipe_cnt].pipe.src.unbounded_req_mode = false;
+		pipes[pipe_cnt].pipe.src.gpuvm = true;
 		pipes[pipe_cnt].pipe.dest.vfront_porch = timing->v_front_porch;
 		pipes[pipe_cnt].pipe.src.dcc_rate = 3;
 		pipes[pipe_cnt].dout.dsc_input_bpc = 0;
 		DC_FP_START();
 		dcn31_zero_pipe_dcc_fraction(pipes, pipe_cnt);
-		if (pixel_rate_crb && !pipe->top_pipe && !pipe->prev_odm_pipe) {
-			int bpp = source_format_to_bpp(pipes[pipe_cnt].pipe.src.source_format);
-			/* Ceil to crb segment size */
-			int approx_det_segs_required_for_pstate = dcn_get_approx_det_segs_required_for_pstate(
-					&context->bw_ctx.dml.soc, timing->pix_clk_100hz, bpp, DCN3_15_CRB_SEGMENT_SIZE_KB);
-			if (approx_det_segs_required_for_pstate <= 2 * DCN3_15_MAX_DET_SEGS) {
-				bool split_required = approx_det_segs_required_for_pstate > DCN3_15_MAX_DET_SEGS;
-				split_required = split_required || timing->pix_clk_100hz >= dcn_get_max_non_odm_pix_rate_100hz(&dc->dml.soc);
-				split_required = split_required || (pipe->plane_state && pipe->plane_state->src_rect.width > 5120);
-				if (split_required)
-					approx_det_segs_required_for_pstate += approx_det_segs_required_for_pstate % 2;
-				pipes[pipe_cnt].pipe.src.det_size_override = approx_det_segs_required_for_pstate;
-				remaining_det_segs -= approx_det_segs_required_for_pstate;
-			} else
-				remaining_det_segs = -1;
-			crb_pipes++;
-		}
 		DC_FP_END();
 
 		if (pipes[pipe_cnt].dout.dsc_enable) {
@@ -1745,41 +1681,8 @@ static int dcn315_populate_dml_pipes_from_context(
 				break;
 			}
 		}
+
 		pipe_cnt++;
-	}
-
-	/* Spread remaining unreserved crb evenly among all pipes, use default policy if not enough det or single pipe */
-	if (pixel_rate_crb) {
-		for (i = 0, pipe_cnt = 0, crb_idx = 0; i < dc->res_pool->pipe_count; i++) {
-			pipe = &res_ctx->pipe_ctx[i];
-			if (!pipe->stream)
-				continue;
-
-			if (!pipe->top_pipe && !pipe->prev_odm_pipe) {
-				bool split_required = pipe->stream->timing.pix_clk_100hz >= dcn_get_max_non_odm_pix_rate_100hz(&dc->dml.soc)
-						|| (pipe->plane_state && pipe->plane_state->src_rect.width > 5120);
-
-				if (remaining_det_segs < 0 || crb_pipes == 1)
-					pipes[pipe_cnt].pipe.src.det_size_override = 0;
-				if (remaining_det_segs > MIN_RESERVED_DET_SEGS)
-					pipes[pipe_cnt].pipe.src.det_size_override += (remaining_det_segs - MIN_RESERVED_DET_SEGS) / crb_pipes +
-							(crb_idx < (remaining_det_segs - MIN_RESERVED_DET_SEGS) % crb_pipes ? 1 : 0);
-				if (pipes[pipe_cnt].pipe.src.det_size_override > 2 * DCN3_15_MAX_DET_SEGS) {
-					/* Clamp to 2 pipe split max det segments */
-					remaining_det_segs += pipes[pipe_cnt].pipe.src.det_size_override - 2 * (DCN3_15_MAX_DET_SEGS);
-					pipes[pipe_cnt].pipe.src.det_size_override = 2 * DCN3_15_MAX_DET_SEGS;
-				}
-				if (pipes[pipe_cnt].pipe.src.det_size_override > DCN3_15_MAX_DET_SEGS || split_required) {
-					/* If we are splitting we must have an even number of segments */
-					remaining_det_segs += pipes[pipe_cnt].pipe.src.det_size_override % 2;
-					pipes[pipe_cnt].pipe.src.det_size_override -= pipes[pipe_cnt].pipe.src.det_size_override % 2;
-				}
-				/* Convert segments into size for DML use */
-				pipes[pipe_cnt].pipe.src.det_size_override *= DCN3_15_CRB_SEGMENT_SIZE_KB;
-				crb_idx++;
-			}
-			pipe_cnt++;
-		}
 	}
 
 	if (pipe_cnt)
@@ -1787,7 +1690,7 @@ static int dcn315_populate_dml_pipes_from_context(
 				(max_usable_det / DCN3_15_CRB_SEGMENT_SIZE_KB / pipe_cnt) * DCN3_15_CRB_SEGMENT_SIZE_KB;
 	if (context->bw_ctx.dml.ip.det_buffer_size_kbytes > DCN3_15_MAX_DET_SIZE)
 		context->bw_ctx.dml.ip.det_buffer_size_kbytes = DCN3_15_MAX_DET_SIZE;
-
+	ASSERT(context->bw_ctx.dml.ip.det_buffer_size_kbytes >= DCN3_15_DEFAULT_DET_SIZE);
 	dc->config.enable_4to1MPC = false;
 	if (pipe_cnt == 1 && pipe->plane_state && !dc->debug.disable_z9_mpc) {
 		if (is_dual_plane(pipe->plane_state->format)
@@ -1795,9 +1698,7 @@ static int dcn315_populate_dml_pipes_from_context(
 			dc->config.enable_4to1MPC = true;
 			context->bw_ctx.dml.ip.det_buffer_size_kbytes =
 					(max_usable_det / DCN3_15_CRB_SEGMENT_SIZE_KB / 4) * DCN3_15_CRB_SEGMENT_SIZE_KB;
-		} else if (!is_dual_plane(pipe->plane_state->format)
-				&& pipe->plane_state->src_rect.width <= 5120
-				&& pipe->stream->timing.pix_clk_100hz < dcn_get_max_non_odm_pix_rate_100hz(&dc->dml.soc)) {
+		} else if (!is_dual_plane(pipe->plane_state->format) && pipe->plane_state->src_rect.width <= 5120) {
 			/* Limit to 5k max to avoid forced pipe split when there is not enough detile for swath */
 			context->bw_ctx.dml.ip.det_buffer_size_kbytes = 192;
 			pipes[0].pipe.src.unbounded_req_mode = true;
@@ -1805,11 +1706,6 @@ static int dcn315_populate_dml_pipes_from_context(
 	}
 
 	return pipe_cnt;
-}
-
-static void dcn315_get_panel_config_defaults(struct dc_panel_config *panel_config)
-{
-	*panel_config = panel_config_defaults;
 }
 
 static struct dc_cap_funcs cap_funcs = {
@@ -1825,7 +1721,7 @@ static struct resource_funcs dcn315_res_pool_funcs = {
 	.panel_cntl_create = dcn31_panel_cntl_create,
 	.validate_bandwidth = dcn31_validate_bandwidth,
 	.calculate_wm_and_dlg = dcn31_calculate_wm_and_dlg,
-	.update_soc_for_wm_a = dcn315_update_soc_for_wm_a,
+	.update_soc_for_wm_a = dcn31_update_soc_for_wm_a,
 	.populate_dml_pipes = dcn315_populate_dml_pipes_from_context,
 	.acquire_idle_pipe_for_layer = dcn20_acquire_idle_pipe_for_layer,
 	.add_stream_to_ctx = dcn30_add_stream_to_ctx,
@@ -1838,7 +1734,6 @@ static struct resource_funcs dcn315_res_pool_funcs = {
 	.release_post_bldn_3dlut = dcn30_release_post_bldn_3dlut,
 	.update_bw_bounding_box = dcn315_update_bw_bounding_box,
 	.patch_unknown_plane_state = dcn20_patch_unknown_plane_state,
-	.get_panel_config_defaults = dcn315_get_panel_config_defaults,
 };
 
 static bool dcn315_resource_construct(
@@ -1873,8 +1768,6 @@ static bool dcn315_resource_construct(
 	dc->caps.max_slave_rgb_planes = 2;
 	dc->caps.post_blend_color_processing = true;
 	dc->caps.force_dp_tps4_for_cp2520 = true;
-	if (dc->config.forceHBR2CP2520)
-		dc->caps.force_dp_tps4_for_cp2520 = false;
 	dc->caps.dp_hpo = true;
 	dc->caps.dp_hdmi21_pcon_support = true;
 	dc->caps.edp_dsc_support = true;

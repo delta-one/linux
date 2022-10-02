@@ -729,7 +729,7 @@ static void ieee80211_report_used_skb(struct ieee80211_local *local,
 
 		if (!sdata) {
 			skb->dev = NULL;
-		} else if (!dropped) {
+		} else {
 			unsigned int hdr_size =
 				ieee80211_hdrlen(hdr->frame_control);
 
@@ -1243,6 +1243,30 @@ void ieee80211_tx_rate_update(struct ieee80211_hw *hw,
 		sta->deflink.tx_stats.last_rate = info->status.rates[0];
 }
 EXPORT_SYMBOL(ieee80211_tx_rate_update);
+
+void ieee80211_tx_status_8023(struct ieee80211_hw *hw,
+			      struct ieee80211_vif *vif,
+			      struct sk_buff *skb)
+{
+	struct ieee80211_sub_if_data *sdata;
+	struct ieee80211_tx_status status = {
+		.skb = skb,
+		.info = IEEE80211_SKB_CB(skb),
+	};
+	struct sta_info *sta;
+
+	sdata = vif_to_sdata(vif);
+
+	rcu_read_lock();
+
+	if (!ieee80211_lookup_ra_sta(sdata, skb, &sta) && !IS_ERR(sta))
+		status.sta = &sta->sta;
+
+	ieee80211_tx_status_ext(hw, &status);
+
+	rcu_read_unlock();
+}
+EXPORT_SYMBOL(ieee80211_tx_status_8023);
 
 void ieee80211_report_low_ack(struct ieee80211_sta *pubsta, u32 num_packets)
 {

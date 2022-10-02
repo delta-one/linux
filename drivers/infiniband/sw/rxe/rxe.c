@@ -160,8 +160,6 @@ void rxe_set_mtu(struct rxe_dev *rxe, unsigned int ndev_mtu)
 
 	port->attr.active_mtu = mtu;
 	port->mtu_cap = ib_mtu_enum_to_int(mtu);
-
-	rxe_info_dev(rxe, "Set mtu to %d", port->mtu_cap);
 }
 
 /* called by ifc layer to create new rxe device.
@@ -177,26 +175,26 @@ int rxe_add(struct rxe_dev *rxe, unsigned int mtu, const char *ibdev_name)
 
 static int rxe_newlink(const char *ibdev_name, struct net_device *ndev)
 {
-	struct rxe_dev *rxe;
+	struct rxe_dev *exists;
 	int err = 0;
 
 	if (is_vlan_dev(ndev)) {
-		rxe_err("rxe creation allowed on top of a real device only");
+		pr_err("rxe creation allowed on top of a real device only\n");
 		err = -EPERM;
 		goto err;
 	}
 
-	rxe = rxe_get_dev_from_net(ndev);
-	if (rxe) {
-		ib_device_put(&rxe->ib_dev);
-		rxe_err_dev(rxe, "already configured on %s", ndev->name);
+	exists = rxe_get_dev_from_net(ndev);
+	if (exists) {
+		ib_device_put(&exists->ib_dev);
+		pr_err("already configured on %s\n", ndev->name);
 		err = -EEXIST;
 		goto err;
 	}
 
 	err = rxe_net_add(ibdev_name, ndev);
 	if (err) {
-		rxe_err("failed to add %s\n", ndev->name);
+		pr_err("failed to add %s\n", ndev->name);
 		goto err;
 	}
 err:

@@ -23,7 +23,7 @@
 
 const efi_system_table_t *efi_system_table;
 const efi_dxe_services_table_t *efi_dxe_table;
-u32 image_offset __section(".data");
+extern u32 image_offset;
 static efi_loaded_image_t *image = NULL;
 
 static efi_status_t
@@ -765,14 +765,14 @@ static efi_status_t exit_boot(struct boot_params *boot_params, void *handle)
  * relocated by efi_relocate_kernel.
  * On failure, we exit to the firmware via efi_exit instead of returning.
  */
-asmlinkage unsigned long efi_main(efi_handle_t handle,
-				  efi_system_table_t *sys_table_arg,
-				  struct boot_params *boot_params)
+unsigned long efi_main(efi_handle_t handle,
+			     efi_system_table_t *sys_table_arg,
+			     struct boot_params *boot_params)
 {
 	unsigned long bzimage_addr = (unsigned long)startup_32;
 	unsigned long buffer_start, buffer_end;
 	struct setup_header *hdr = &boot_params->hdr;
-	const struct linux_efi_initrd *initrd = NULL;
+	const struct linux_efi_initrd *initrd;
 	efi_status_t status;
 
 	efi_system_table = sys_table_arg;
@@ -871,7 +871,7 @@ asmlinkage unsigned long efi_main(efi_handle_t handle,
 				 &initrd);
 	if (status != EFI_SUCCESS)
 		goto fail;
-	if (initrd && initrd->size > 0) {
+	if (initrd->size > 0) {
 		efi_set_u64_split(initrd->base, &hdr->ramdisk_image,
 				  &boot_params->ext_ramdisk_image);
 		efi_set_u64_split(initrd->size, &hdr->ramdisk_size,

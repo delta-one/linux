@@ -815,9 +815,6 @@ static void snd_mts64_interrupt(void *private)
 	u8 status, data;
 	struct snd_rawmidi_substream *substream;
 
-	if (!mts)
-		return;
-
 	spin_lock(&mts->lock);
 	ret = mts64_read(mts->pardev->port);
 	data = ret & 0x00ff;
@@ -999,17 +996,19 @@ __err:
 	return err;
 }
 
-static void snd_mts64_remove(struct platform_device *pdev)
+static int snd_mts64_remove(struct platform_device *pdev)
 {
 	struct snd_card *card = platform_get_drvdata(pdev);
 
 	if (card)
 		snd_card_free(card);
+
+	return 0;
 }
 
 static struct platform_driver snd_mts64_driver = {
 	.probe  = snd_mts64_probe,
-	.remove_new = snd_mts64_remove,
+	.remove = snd_mts64_remove,
 	.driver = {
 		.name = PLATFORM_DRIVER,
 	}

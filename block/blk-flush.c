@@ -68,10 +68,12 @@
 #include <linux/bio.h>
 #include <linux/blkdev.h>
 #include <linux/gfp.h>
+#include <linux/blk-mq.h>
 #include <linux/part_stat.h>
 
 #include "blk.h"
 #include "blk-mq.h"
+#include "blk-mq-tag.h"
 #include "blk-mq-sched.h"
 
 /* PREFLUSH/FUA sequences */
@@ -136,6 +138,11 @@ static void blk_flush_restore_request(struct request *rq)
 	rq->end_io = rq->flush.saved_end_io;
 }
 
+static void blk_flush_queue_rq(struct request *rq, bool add_front)
+{
+	blk_mq_add_to_requeue_list(rq, add_front, true);
+}
+
 static void blk_account_io_flush(struct request *rq)
 {
 	struct block_device *part = rq->q->disk->part0;
@@ -188,8 +195,7 @@ static void blk_flush_complete_seq(struct request *rq,
 
 	case REQ_FSEQ_DATA:
 		list_move_tail(&rq->flush.list, &fq->flush_data_in_flight);
-		blk_mq_add_to_requeue_list(rq, BLK_MQ_INSERT_AT_HEAD);
-		blk_mq_kick_requeue_list(q);
+		blk_flush_queue_rq(rq, true);
 		break;
 
 	case REQ_FSEQ_DONE:
@@ -199,6 +205,7 @@ static void blk_flush_complete_seq(struct request *rq,
 		 * flush data request completion path.  Restore @rq for
 		 * normal completion and end it.
 		 */
+		BUG_ON(!list_empty(&rq->queuelist));
 		list_del_init(&rq->flush.list);
 		blk_flush_restore_request(rq);
 		blk_mq_end_request(rq, error);
@@ -211,8 +218,7 @@ static void blk_flush_complete_seq(struct request *rq,
 	blk_kick_flush(q, fq, cmd_flags);
 }
 
-static enum rq_end_io_ret flush_end_io(struct request *flush_rq,
-				       blk_status_t error)
+static void flush_end_io(struct request *flush_rq, blk_status_t error)
 {
 	struct request_queue *q = flush_rq->q;
 	struct list_head *running;
@@ -226,7 +232,7 @@ static enum rq_end_io_ret flush_end_io(struct request *flush_rq,
 	if (!req_ref_put_and_test(flush_rq)) {
 		fq->rq_status = error;
 		spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
-		return RQ_END_IO_NONE;
+		return;
 	}
 
 	blk_account_io_flush(flush_rq);
@@ -263,7 +269,6 @@ static enum rq_end_io_ret flush_end_io(struct request *flush_rq,
 	}
 
 	spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
-	return RQ_END_IO_NONE;
 }
 
 bool is_flush_rq(struct request *rq)
@@ -346,12 +351,10 @@ static void blk_kick_flush(struct request_queue *q, struct blk_flush_queue *fq,
 	smp_wmb();
 	req_ref_set(flush_rq, 1);
 
-	blk_mq_add_to_requeue_list(flush_rq, 0);
-	blk_mq_kick_requeue_list(q);
+	blk_flush_queue_rq(flush_rq, false);
 }
 
-static enum rq_end_io_ret mq_flush_data_end_io(struct request *rq,
-					       blk_status_t error)
+static void mq_flush_data_end_io(struct request *rq, blk_status_t error)
 {
 	struct request_queue *q = rq->q;
 	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
@@ -373,7 +376,6 @@ static enum rq_end_io_ret mq_flush_data_end_io(struct request *rq,
 	spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
 
 	blk_mq_sched_restart(hctx);
-	return RQ_END_IO_NONE;
 }
 
 /**
@@ -391,7 +393,6 @@ void blk_insert_flush(struct request *rq)
 	unsigned long fflags = q->queue_flags;	/* may change, cache */
 	unsigned int policy = blk_flush_policy(fflags, rq);
 	struct blk_flush_queue *fq = blk_get_flush_queue(q, rq->mq_ctx);
-	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
 
 	/*
 	 * @policy now records what operations need to be done.  Adjust
@@ -428,8 +429,7 @@ void blk_insert_flush(struct request *rq)
 	 */
 	if ((policy & REQ_FSEQ_DATA) &&
 	    !(policy & (REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH))) {
-		blk_mq_request_bypass_insert(rq, 0);
-		blk_mq_run_hw_queue(hctx, false);
+		blk_mq_request_bypass_insert(rq, false, true);
 		return;
 	}
 

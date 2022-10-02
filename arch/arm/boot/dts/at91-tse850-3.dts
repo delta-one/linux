@@ -106,35 +106,35 @@
 	leds {
 		compatible = "gpio-leds";
 
-		led-ch1-red {
+		ch1-red {
 			label = "ch-1:red";
 			gpios = <&pioA 23 GPIO_ACTIVE_LOW>;
 		};
-		led-ch1-green {
+		ch1-green {
 			label = "ch-1:green";
 			gpios = <&pioA 22 GPIO_ACTIVE_LOW>;
 		};
-		led-ch2-red {
+		ch2-red {
 			label = "ch-2:red";
 			gpios = <&pioA 21 GPIO_ACTIVE_LOW>;
 		};
-		led-ch2-green {
+		ch2-green {
 			label = "ch-2:green";
 			gpios = <&pioA 20 GPIO_ACTIVE_LOW>;
 		};
-		led-data-red {
+		data-red {
 			label = "data:red";
 			gpios = <&pioA 19 GPIO_ACTIVE_LOW>;
 		};
-		led-data-green {
+		data-green {
 			label = "data:green";
 			gpios = <&pioA 18 GPIO_ACTIVE_LOW>;
 		};
-		led-alarm-red {
+		alarm-red {
 			label = "alarm:red";
 			gpios = <&pioA 17 GPIO_ACTIVE_LOW>;
 		};
-		led-alarm-green {
+		alarm-green {
 			label = "alarm:green";
 			gpios = <&pioA 16 GPIO_ACTIVE_LOW>;
 		};

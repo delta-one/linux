@@ -3157,7 +3157,7 @@ static int rt5645_jack_detect(struct snd_soc_component *component, int jack_inse
 		snd_soc_dapm_force_enable_pin(dapm, "LDO2");
 		snd_soc_dapm_force_enable_pin(dapm, "Mic Det Power");
 		snd_soc_dapm_sync(dapm);
-		if (!snd_soc_card_is_instantiated(dapm->card)) {
+		if (!dapm->card->instantiated) {
 			/* Power up necessary bits for JD if dapm is
 			   not ready yet */
 			regmap_update_bits(rt5645->regmap, RT5645_PWR_ANLG1,
@@ -4184,7 +4184,7 @@ static struct i2c_driver rt5645_i2c_driver = {
 		.of_match_table = of_match_ptr(rt5645_of_match),
 		.acpi_match_table = ACPI_PTR(rt5645_acpi_match),
 	},
-	.probe = rt5645_i2c_probe,
+	.probe_new = rt5645_i2c_probe,
 	.remove = rt5645_i2c_remove,
 	.shutdown = rt5645_i2c_shutdown,
 	.id_table = rt5645_i2c_id,

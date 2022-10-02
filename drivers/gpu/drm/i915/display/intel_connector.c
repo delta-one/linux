@@ -54,7 +54,7 @@ int intel_connector_init(struct intel_connector *connector)
 	__drm_atomic_helper_connector_reset(&connector->base,
 					    &conn_state->base);
 
-	intel_panel_init_alloc(connector);
+	INIT_LIST_HEAD(&connector->panel.fixed_modes);
 
 	return 0;
 }
@@ -95,9 +95,12 @@ void intel_connector_destroy(struct drm_connector *connector)
 {
 	struct intel_connector *intel_connector = to_intel_connector(connector);
 
-	drm_edid_free(intel_connector->detect_edid);
+	kfree(intel_connector->detect_edid);
 
 	intel_hdcp_cleanup(intel_connector);
+
+	if (!IS_ERR_OR_NULL(intel_connector->edid))
+		kfree(intel_connector->edid);
 
 	intel_panel_fini(intel_connector);
 
@@ -289,22 +292,4 @@ intel_attach_dp_colorspace_property(struct drm_connector *connector)
 {
 	if (!drm_mode_create_dp_colorspace_property(connector))
 		drm_connector_attach_colorspace_property(connector);
-}
-
-void
-intel_attach_scaling_mode_property(struct drm_connector *connector)
-{
-	struct drm_i915_private *i915 = to_i915(connector->dev);
-	u32 scaling_modes;
-
-	scaling_modes = BIT(DRM_MODE_SCALE_ASPECT) |
-		BIT(DRM_MODE_SCALE_FULLSCREEN);
-
-	/* On GMCH platforms borders are only possible on the LVDS port */
-	if (!HAS_GMCH(i915) || connector->connector_type == DRM_MODE_CONNECTOR_LVDS)
-		scaling_modes |= BIT(DRM_MODE_SCALE_CENTER);
-
-	drm_connector_attach_scaling_mode_property(connector, scaling_modes);
-
-	connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
 }

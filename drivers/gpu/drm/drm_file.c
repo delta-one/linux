@@ -156,7 +156,7 @@ struct drm_file *drm_file_alloc(struct drm_minor *minor)
 	if (!file)
 		return ERR_PTR(-ENOMEM);
 
-	file->pid = get_pid(task_tgid(current));
+	file->pid = get_pid(task_pid(current));
 	file->minor = minor;
 
 	/* for compatibility root is always authenticated */
@@ -245,10 +245,10 @@ void drm_file_free(struct drm_file *file)
 
 	dev = file->minor->dev;
 
-	drm_dbg_core(dev, "comm=\"%s\", pid=%d, dev=0x%lx, open_count=%d\n",
-		     current->comm, task_pid_nr(current),
-		     (long)old_encode_dev(file->minor->kdev->devt),
-		     atomic_read(&dev->open_count));
+	DRM_DEBUG("comm=\"%s\", pid=%d, dev=0x%lx, open_count=%d\n",
+		  current->comm, task_pid_nr(current),
+		  (long)old_encode_dev(file->minor->kdev->devt),
+		  atomic_read(&dev->open_count));
 
 #ifdef CONFIG_DRM_LEGACY
 	if (drm_core_check_feature(dev, DRIVER_LEGACY) &&
@@ -326,7 +326,7 @@ static int drm_cpu_valid(void)
  * Creates and initializes a drm_file structure for the file private data in \p
  * filp and add it into the double linked list in \p dev.
  */
-int drm_open_helper(struct file *filp, struct drm_minor *minor)
+static int drm_open_helper(struct file *filp, struct drm_minor *minor)
 {
 	struct drm_device *dev = minor->dev;
 	struct drm_file *priv;
@@ -340,8 +340,8 @@ int drm_open_helper(struct file *filp, struct drm_minor *minor)
 	    dev->switch_power_state != DRM_SWITCH_POWER_DYNAMIC_OFF)
 		return -EINVAL;
 
-	drm_dbg_core(dev, "comm=\"%s\", pid=%d, minor=%d\n",
-		     current->comm, task_pid_nr(current), minor->index);
+	DRM_DEBUG("comm=\"%s\", pid=%d, minor=%d\n", current->comm,
+		  task_pid_nr(current), minor->index);
 
 	priv = drm_file_alloc(minor);
 	if (IS_ERR(priv))
@@ -450,11 +450,11 @@ EXPORT_SYMBOL(drm_open);
 
 void drm_lastclose(struct drm_device * dev)
 {
-	drm_dbg_core(dev, "\n");
+	DRM_DEBUG("\n");
 
 	if (dev->driver->lastclose)
 		dev->driver->lastclose(dev);
-	drm_dbg_core(dev, "driver lastclose completed\n");
+	DRM_DEBUG("driver lastclose completed\n");
 
 	if (drm_core_check_feature(dev, DRIVER_LEGACY))
 		drm_legacy_dev_reinit(dev);
@@ -485,7 +485,7 @@ int drm_release(struct inode *inode, struct file *filp)
 	if (drm_dev_needs_global_mutex(dev))
 		mutex_lock(&drm_global_mutex);
 
-	drm_dbg_core(dev, "open_count = %d\n", atomic_read(&dev->open_count));
+	DRM_DEBUG("open_count = %d\n", atomic_read(&dev->open_count));
 
 	drm_close_helper(filp);
 

@@ -235,20 +235,13 @@ static int sco_chan_add(struct sco_conn *conn, struct sock *sk,
 	return err;
 }
 
-static int sco_connect(struct sock *sk)
+static int sco_connect(struct hci_dev *hdev, struct sock *sk)
 {
 	struct sco_conn *conn;
 	struct hci_conn *hcon;
-	struct hci_dev  *hdev;
 	int err, type;
 
 	BT_DBG("%pMR -> %pMR", &sco_pi(sk)->src, &sco_pi(sk)->dst);
-
-	hdev = hci_get_route(&sco_pi(sk)->dst, &sco_pi(sk)->src, BDADDR_BREDR);
-	if (!hdev)
-		return -EHOSTUNREACH;
-
-	hci_dev_lock(hdev);
 
 	if (lmp_esco_capable(hdev) && !disable_esco)
 		type = ESCO_LINK;
@@ -256,20 +249,13 @@ static int sco_connect(struct sock *sk)
 		type = SCO_LINK;
 
 	if (sco_pi(sk)->setting == BT_VOICE_TRANSPARENT &&
-	    (!lmp_transp_capable(hdev) || !lmp_esco_capable(hdev))) {
-		err = -EOPNOTSUPP;
-		goto unlock;
-	}
+	    (!lmp_transp_capable(hdev) || !lmp_esco_capable(hdev)))
+		return -EOPNOTSUPP;
 
 	hcon = hci_connect_sco(hdev, type, &sco_pi(sk)->dst,
 			       sco_pi(sk)->setting, &sco_pi(sk)->codec);
-	if (IS_ERR(hcon)) {
-		err = PTR_ERR(hcon);
-		goto unlock;
-	}
-
-	hci_dev_unlock(hdev);
-	hci_dev_put(hdev);
+	if (IS_ERR(hcon))
+		return PTR_ERR(hcon);
 
 	conn = sco_conn_add(hcon);
 	if (!conn) {
@@ -277,14 +263,12 @@ static int sco_connect(struct sock *sk)
 		return -ENOMEM;
 	}
 
+	/* Update source addr of the socket */
+	bacpy(&sco_pi(sk)->src, &hcon->src);
+
 	err = sco_chan_add(conn, sk, NULL);
 	if (err)
 		return err;
-
-	lock_sock(sk);
-
-	/* Update source addr of the socket */
-	bacpy(&sco_pi(sk)->src, &hcon->src);
 
 	if (hcon->state == BT_CONNECTED) {
 		sco_sock_clear_timer(sk);
@@ -294,13 +278,6 @@ static int sco_connect(struct sock *sk)
 		sco_sock_set_timer(sk, sk->sk_sndtimeo);
 	}
 
-	release_sock(sk);
-
-	return err;
-
-unlock:
-	hci_dev_unlock(hdev);
-	hci_dev_put(hdev);
 	return err;
 }
 
@@ -588,6 +565,7 @@ static int sco_sock_connect(struct socket *sock, struct sockaddr *addr, int alen
 {
 	struct sockaddr_sco *sa = (struct sockaddr_sco *) addr;
 	struct sock *sk = sock->sk;
+	struct hci_dev  *hdev;
 	int err;
 
 	BT_DBG("sk %p", sk);
@@ -596,26 +574,37 @@ static int sco_sock_connect(struct socket *sock, struct sockaddr *addr, int alen
 	    addr->sa_family != AF_BLUETOOTH)
 		return -EINVAL;
 
-	if (sk->sk_state != BT_OPEN && sk->sk_state != BT_BOUND)
-		return -EBADFD;
-
-	if (sk->sk_type != SOCK_SEQPACKET)
-		err = -EINVAL;
-
 	lock_sock(sk);
+	if (sk->sk_state != BT_OPEN && sk->sk_state != BT_BOUND) {
+		err = -EBADFD;
+		goto done;
+	}
+
+	if (sk->sk_type != SOCK_SEQPACKET) {
+		err = -EINVAL;
+		goto done;
+	}
+
+	hdev = hci_get_route(&sa->sco_bdaddr, &sco_pi(sk)->src, BDADDR_BREDR);
+	if (!hdev) {
+		err = -EHOSTUNREACH;
+		goto done;
+	}
+	hci_dev_lock(hdev);
+
 	/* Set destination address and psm */
 	bacpy(&sco_pi(sk)->dst, &sa->sco_bdaddr);
-	release_sock(sk);
 
-	err = sco_connect(sk);
+	err = sco_connect(hdev, sk);
+	hci_dev_unlock(hdev);
+	hci_dev_put(hdev);
 	if (err)
-		return err;
-
-	lock_sock(sk);
+		goto done;
 
 	err = bt_sock_wait_state(sk, BT_CONNECTED,
 				 sock_sndtimeo(sk, flags & O_NONBLOCK));
 
+done:
 	release_sock(sk);
 	return err;
 }
@@ -1140,8 +1129,6 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
 			break;
 		}
 
-		release_sock(sk);
-
 		/* find total buffer size required to copy codec + caps */
 		hci_dev_lock(hdev);
 		list_for_each_entry(c, &hdev->local_codecs, list) {
@@ -1159,13 +1146,15 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
 		buf_len += sizeof(struct bt_codecs);
 		if (buf_len > len) {
 			hci_dev_put(hdev);
-			return -ENOBUFS;
+			err = -ENOBUFS;
+			break;
 		}
 		ptr = optval;
 
 		if (put_user(num_codecs, ptr)) {
 			hci_dev_put(hdev);
-			return -EFAULT;
+			err = -EFAULT;
+			break;
 		}
 		ptr += sizeof(num_codecs);
 
@@ -1205,13 +1194,11 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
 			ptr += len;
 		}
 
-		hci_dev_unlock(hdev);
-		hci_dev_put(hdev);
-
-		lock_sock(sk);
-
 		if (!err && put_user(buf_len, optlen))
 			err = -EFAULT;
+
+		hci_dev_unlock(hdev);
+		hci_dev_put(hdev);
 
 		break;
 

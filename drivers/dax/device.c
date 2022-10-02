@@ -308,7 +308,7 @@ static int dax_mmap(struct file *filp, struct vm_area_struct *vma)
 		return rc;
 
 	vma->vm_ops = &dax_vm_ops;
-	vm_flags_set(vma, VM_HUGEPAGE);
+	vma->vm_flags |= VM_HUGEPAGE;
 	return 0;
 }
 
@@ -475,7 +475,8 @@ EXPORT_SYMBOL_GPL(dev_dax_probe);
 
 static struct dax_device_driver device_dax_driver = {
 	.probe = dev_dax_probe,
-	.type = DAXDRV_DEVICE_TYPE,
+	/* all probe actions are unwound by devm, so .remove isn't necessary */
+	.match_always = 1,
 };
 
 static int __init dax_init(void)

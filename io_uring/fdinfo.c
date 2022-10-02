@@ -22,6 +22,7 @@ static __cold int io_uring_show_cred(struct seq_file *m, unsigned int id,
 	struct user_namespace *uns = seq_user_ns(m);
 	struct group_info *gi;
 	kernel_cap_t cap;
+	unsigned __capi;
 	int g;
 
 	seq_printf(m, "%5d\n", id);
@@ -41,7 +42,8 @@ static __cold int io_uring_show_cred(struct seq_file *m, unsigned int id,
 	}
 	seq_puts(m, "\n\tCapEff:\t");
 	cap = cred->cap_effective;
-	seq_put_hex_ll(m, NULL, cap.val, 16);
+	CAP_FOR_EACH_U32(__capi)
+		seq_put_hex_ll(m, NULL, cap.cap[CAP_LAST_U32 - __capi], 8);
 	seq_putc(m, '\n');
 	return 0;
 }
@@ -92,7 +94,7 @@ static __cold void __io_uring_show_fdinfo(struct io_ring_ctx *ctx,
 		sq_idx = READ_ONCE(ctx->sq_array[entry & sq_mask]);
 		if (sq_idx > sq_mask)
 			continue;
-		sqe = &ctx->sq_sqes[sq_idx << sq_shift];
+		sqe = &ctx->sq_sqes[sq_idx << 1];
 		seq_printf(m, "%5u: opcode:%s, fd:%d, flags:%x, off:%llu, "
 			      "addr:0x%llx, rw_flags:0x%x, buf_index:%d "
 			      "user_data:%llu",
@@ -168,11 +170,12 @@ static __cold void __io_uring_show_fdinfo(struct io_ring_ctx *ctx,
 		xa_for_each(&ctx->personalities, index, cred)
 			io_uring_show_cred(m, index, cred);
 	}
+	if (has_lock)
+		mutex_unlock(&ctx->uring_lock);
 
 	seq_puts(m, "PollList:\n");
 	for (i = 0; i < (1U << ctx->cancel_table.hash_bits); i++) {
 		struct io_hash_bucket *hb = &ctx->cancel_table.hbs[i];
-		struct io_hash_bucket *hbl = &ctx->cancel_table_locked.hbs[i];
 		struct io_kiocb *req;
 
 		spin_lock(&hb->lock);
@@ -180,16 +183,7 @@ static __cold void __io_uring_show_fdinfo(struct io_ring_ctx *ctx,
 			seq_printf(m, "  op=%d, task_works=%d\n", req->opcode,
 					task_work_pending(req->task));
 		spin_unlock(&hb->lock);
-
-		if (!has_lock)
-			continue;
-		hlist_for_each_entry(req, &hbl->list, hash_node)
-			seq_printf(m, "  op=%d, task_works=%d\n", req->opcode,
-					task_work_pending(req->task));
 	}
-
-	if (has_lock)
-		mutex_unlock(&ctx->uring_lock);
 
 	seq_puts(m, "CqOverflowList:\n");
 	spin_lock(&ctx->completion_lock);

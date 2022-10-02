@@ -13,11 +13,12 @@
 #include <linux/netdevice.h>
 #include <linux/etherdevice.h>
 #include <linux/ethtool_netlink.h>
+#include <linux/of_gpio.h>
 #include <linux/bitfield.h>
+#include <linux/gpio/consumer.h>
 #include <linux/regulator/of_regulator.h>
 #include <linux/regulator/driver.h>
 #include <linux/regulator/consumer.h>
-#include <linux/of.h>
 #include <linux/phylink.h>
 #include <linux/sfp.h>
 #include <dt-bindings/net/qca-ar803x.h>
@@ -675,7 +676,6 @@ static int at803x_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
 	struct phy_device *phydev = upstream;
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(phy_support);
 	__ETHTOOL_DECLARE_LINK_MODE_MASK(sfp_support);
-	DECLARE_PHY_INTERFACE_MASK(interfaces);
 	phy_interface_t iface;
 
 	linkmode_zero(phy_support);
@@ -686,7 +686,7 @@ static int at803x_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
 	phylink_set(phy_support, Asym_Pause);
 
 	linkmode_zero(sfp_support);
-	sfp_parse_support(phydev->sfp_bus, id, sfp_support, interfaces);
+	sfp_parse_support(phydev->sfp_bus, id, sfp_support);
 	/* Some modules support 10G modes as well as others we support.
 	 * Mask out non-supported modes so the correct interface is picked.
 	 */
@@ -869,10 +869,8 @@ static int at803x_probe(struct phy_device *phydev)
 			.wolopts = 0,
 		};
 
-		if (ccr < 0) {
-			ret = ccr;
+		if (ccr < 0)
 			goto err;
-		}
 		mode_cfg = ccr & AT803X_MODE_CFG_MASK;
 
 		switch (mode_cfg) {
@@ -1759,7 +1757,7 @@ static int qca808x_phy_fast_retrain_config(struct phy_device *phydev)
 
 static int qca808x_phy_ms_random_seed_set(struct phy_device *phydev)
 {
-	u16 seed_value = get_random_u32_below(QCA808X_MASTER_SLAVE_SEED_RANGE);
+	u16 seed_value = (prandom_u32() % QCA808X_MASTER_SLAVE_SEED_RANGE);
 
 	return at803x_debug_reg_mask(phydev, QCA808X_PHY_DEBUG_LOCAL_SEED,
 			QCA808X_MASTER_SLAVE_SEED_CFG,

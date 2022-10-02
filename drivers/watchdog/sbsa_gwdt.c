@@ -150,7 +150,6 @@ static int sbsa_gwdt_set_timeout(struct watchdog_device *wdd,
 	struct sbsa_gwdt *gwdt = watchdog_get_drvdata(wdd);
 
 	wdd->timeout = timeout;
-	timeout = clamp_t(unsigned int, timeout, 1, wdd->max_hw_heartbeat_ms / 1000);
 
 	if (action)
 		sbsa_gwdt_reg_write(gwdt->clk * timeout, gwdt);
@@ -361,7 +360,7 @@ static int __maybe_unused sbsa_gwdt_suspend(struct device *dev)
 {
 	struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
 
-	if (watchdog_hw_running(&gwdt->wdd))
+	if (watchdog_active(&gwdt->wdd))
 		sbsa_gwdt_stop(&gwdt->wdd);
 
 	return 0;
@@ -372,7 +371,7 @@ static int __maybe_unused sbsa_gwdt_resume(struct device *dev)
 {
 	struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
 
-	if (watchdog_hw_running(&gwdt->wdd))
+	if (watchdog_active(&gwdt->wdd))
 		sbsa_gwdt_start(&gwdt->wdd);
 
 	return 0;

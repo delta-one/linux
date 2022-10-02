@@ -257,10 +257,7 @@ static int pwm_fan_update_enable(struct pwm_fan_ctx *ctx, long val)
 
 	if (val == 0) {
 		/* Disable pwm-fan unconditionally */
-		if (ctx->enabled)
-			ret = __set_pwm(ctx, 0);
-		else
-			ret = pwm_fan_switch_power(ctx, false);
+		ret = __set_pwm(ctx, 0);
 		if (ret)
 			ctx->enable_mode = old_val;
 		pwm_fan_update_state(ctx, 0);
@@ -427,7 +424,7 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
 	struct device_node *np = dev->of_node;
 	int num, i, ret;
 
-	if (!of_property_present(np, "cooling-levels"))
+	if (!of_find_property(np, "cooling-levels", NULL))
 		return 0;
 
 	ret = of_property_count_u32_elems(np, "cooling-levels");
@@ -506,14 +503,6 @@ static int pwm_fan_probe(struct platform_device *pdev)
 	}
 
 	pwm_init_state(ctx->pwm, &ctx->pwm_state);
-
-	/*
-	 * PWM fans are controlled solely by the duty cycle of the PWM signal,
-	 * they do not care about the exact timing. Thus set usage_power to true
-	 * to allow less flexible hardware to work as a PWM source for fan
-	 * control.
-	 */
-	ctx->pwm_state.usage_power = true;
 
 	/*
 	 * set_pwm assumes that MAX_PWM * (period - 1) fits into an unsigned
@@ -650,6 +639,7 @@ static void pwm_fan_shutdown(struct platform_device *pdev)
 	pwm_fan_cleanup(ctx);
 }
 
+#ifdef CONFIG_PM_SLEEP
 static int pwm_fan_suspend(struct device *dev)
 {
 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
@@ -663,8 +653,9 @@ static int pwm_fan_resume(struct device *dev)
 
 	return set_pwm(ctx, ctx->pwm_value);
 }
+#endif
 
-static DEFINE_SIMPLE_DEV_PM_OPS(pwm_fan_pm, pwm_fan_suspend, pwm_fan_resume);
+static SIMPLE_DEV_PM_OPS(pwm_fan_pm, pwm_fan_suspend, pwm_fan_resume);
 
 static const struct of_device_id of_pwm_fan_match[] = {
 	{ .compatible = "pwm-fan", },
@@ -677,7 +668,7 @@ static struct platform_driver pwm_fan_driver = {
 	.shutdown	= pwm_fan_shutdown,
 	.driver	= {
 		.name		= "pwm-fan",
-		.pm		= pm_sleep_ptr(&pwm_fan_pm),
+		.pm		= &pwm_fan_pm,
 		.of_match_table	= of_pwm_fan_match,
 	},
 };
