@@ -16,7 +16,7 @@ extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
 // extern struct fexpr *const_false;
-extern struct fexpr *const_true;
+// extern struct fexpr *const_true;
 extern struct fexpr *symbol_yes_fexpr;
 extern struct fexpr *symbol_mod_fexpr;
 extern struct fexpr *symbol_no_fexpr;

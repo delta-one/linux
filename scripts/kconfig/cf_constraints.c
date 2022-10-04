@@ -327,8 +327,8 @@ static void add_selects(struct symbol *sym, struct cfdata *data)
 		if (!selected->rev_dep.expr)
 			continue;
 
-		cond_y = pexf(const_true);
-		cond_both = pexf(const_true);
+		cond_y = pexf(data->constants->const_true);
+		cond_both = pexf(data->constants->const_true);
 		if (p->visible.expr) {
 			cond_y = expr_calculate_pexpr_y(p->visible.expr, data);
 			cond_both = expr_calculate_pexpr_both(p->visible.expr, data);
@@ -475,7 +475,7 @@ static void add_choice_prompt_cond(struct symbol* sym, struct cfdata *data)
 	if (prompt == NULL)
 		return;
 
-	promptCondition = prompt->visible.expr ? expr_calculate_pexpr_both(prompt->visible.expr, data) : pexf(const_true);
+	promptCondition = prompt->visible.expr ? expr_calculate_pexpr_both(prompt->visible.expr, data) : pexf(data->constants->const_true);
 
 	fe_both = sym_get_fexpr_both(sym, data);
 
@@ -657,7 +657,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 	if (prompt == NULL) {
 		promptCondition_both = pexf(data->constants->const_false);
 		promptCondition_yes = pexf(data->constants->const_false);
-		noPromptCond = pexf(const_true);
+		noPromptCond = pexf(data->constants->const_true);
 	} else {
 		struct property *p;
 
@@ -753,7 +753,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		sym_add_constraint_eq(sym, e2, data);
 	} else {
 		struct pexpr *default_any = get_default_any(sym, data);
-		struct pexpr *e1 = pexf(const_true);
+		struct pexpr *e1 = pexf(data->constants->const_true);
 		struct pexpr *e2,*e3;
 
 		for (struct fexpr_node *node = sym->nb_vals->head->next; node != NULL; node = node->next)
@@ -845,7 +845,7 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 		if (prop == NULL)
 			continue;
 
-		prevs = pexf(const_true);
+		prevs = pexf(data->constants->const_true);
 		propCond = prop_get_condition(prop, data);
 
 		if (prevCond->size == 0) {
@@ -1244,7 +1244,7 @@ void sym_add_constraint(struct symbol *sym, struct pexpr *constraint, struct cfd
 		return;
 
 	/* no need to add that */
-	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == const_true)
+	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == data->constants->const_true)
 		return;
 
 	/* this should never happen */
@@ -1268,7 +1268,7 @@ void sym_add_constraint_eq(struct symbol *sym, struct pexpr *constraint, struct 
 		return;
 
 	/* no need to add that */
-	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == const_true)
+	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == data->constants->const_true)
 		return;
 
 	/* this should never happen */

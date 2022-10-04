@@ -83,15 +83,15 @@ void create_constants(struct constants *constants)
 	// const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
 	fexpr_add_to_satmap(constants->const_false);
 
-	const_true = fexpr_create(sat_variable_nr++, FE_TRUE, "True");
-	fexpr_add_to_satmap(const_true);
+	constants->const_true = fexpr_create(sat_variable_nr++, FE_TRUE, "True");
+	fexpr_add_to_satmap(constants->const_true);
 
 	/* add fexpr of constants to tristate constants */
-	symbol_yes.fexpr_y = const_true;
+	symbol_yes.fexpr_y = constants->const_true;
 	symbol_yes.fexpr_m = constants->const_false;
 
 	symbol_mod.fexpr_y = constants->const_false;
-	symbol_mod.fexpr_m = const_true;
+	symbol_mod.fexpr_m = constants->const_true;
 
 	symbol_no.fexpr_y = constants->const_false;
 	symbol_no.fexpr_m = constants->const_false;
@@ -351,7 +351,7 @@ struct pexpr * prop_get_condition(struct property *prop, struct cfdata *data)
 
 	/* if there is no condition, return True */
 	if (!prop->visible.expr)
-		return pexf(const_true);
+		return pexf(data->constants->const_true);
 
 	return expr_calculate_pexpr_both(prop->visible.expr, data);
 }
@@ -547,7 +547,7 @@ void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 
 	/* adding unit-clauses for constants */
 	sat_add_clause(2, pico, -(data->constants->const_false->satval));
-	sat_add_clause(2, pico, const_true->satval);
+	sat_add_clause(2, pico, data->constants->const_true->satval);
 
 	for_all_symbols(i, sym) {
 		struct pexpr_node *node;
