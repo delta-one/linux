@@ -16,19 +16,11 @@
 
 #include "configfix.h"
 
-unsigned int sat_variable_nr = 1;
-unsigned int tmp_variable_nr = 1;
-
-struct fexpr *satmap;
-size_t satmap_size;
-
 struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 
 bool CFDEBUG = false;
 bool stop_rangefix = false;
 
-struct fexpr *const_false; /* constant False */
-struct fexpr *const_true; /* constant True */
 struct fexpr *symbol_yes_fexpr; /* symbol_yes as fexpr */
 struct fexpr *symbol_mod_fexpr; /* symbol_mod as fexpr */
 struct fexpr *symbol_no_fexpr; /* symbol_no_as fexpr */
@@ -37,7 +29,6 @@ static PicoSAT *pico;
 static bool init_done = false;
 static struct sym_list *conflict_syms;
 
-static void initialize_data(struct cfdata *data);
 static bool sdv_within_range(struct sdv_list *symbols);
 
 /* -------------------------------------- */
@@ -126,12 +117,6 @@ int run_satconf_cli(const char *Kconfig_file)
 	return EXIT_SUCCESS;
 }
 
-static void initialize_data(struct cfdata *data)
-{
-
-}
-
-
 /*
  * called from satdvconfig
  */
@@ -169,7 +154,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		start = clock();
 
 		/* initialize satmap and cnf_clauses */
-		init_data();
+		init_data(&data);
 
 		/* creating constants */
 		create_constants(&data);
@@ -242,7 +227,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
 		printd("\n");
 
-		ret = rangefix_run(pico);
+		ret = rangefix_run(pico, &data);
 	} else {
 		printd("Unknown if satisfiable.\n");
 

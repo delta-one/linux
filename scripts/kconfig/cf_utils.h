@@ -10,7 +10,7 @@
 void init_config (const char *Kconfig_file);
 
 /* initialize satmap and cnf_clauses */
-void init_data(void);
+void init_data(struct cfdata *data);
 
 /* assign SAT-variables to all fexpr and create the sat_map */
 void create_sat_variables(struct cfdata *data);
@@ -97,7 +97,7 @@ void construct_cnf_clauses(PicoSAT *pico, struct cfdata *data);
 void sat_add_clause(int num, ...);
 
 /* start PicoSAT */
-void picosat_solve(PicoSAT *pico);
+void picosat_solve(PicoSAT *pico, struct cfdata *data);
 
 /* add assumption for a symbol to the SAT-solver */
 void sym_add_assumption(PicoSAT *pico, struct symbol *sym);

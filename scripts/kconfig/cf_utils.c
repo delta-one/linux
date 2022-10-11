@@ -44,11 +44,11 @@ void init_config(const char *Kconfig_file)
 /*
  * initialize satmap
  */
-void init_data(void)
+void init_data(struct cfdata *data)
 {
 	/* create hashtable with all fexpr */
-	satmap = xcalloc(SATMAP_INIT_SIZE, sizeof(*satmap));
-	satmap_size = SATMAP_INIT_SIZE;
+	data->satmap = xcalloc(SATMAP_INIT_SIZE, sizeof(*data->satmap));
+	data->satmap_size = SATMAP_INIT_SIZE;
 
 	printd("done.\n");
 }
@@ -81,10 +81,10 @@ void create_constants(struct cfdata *data)
 	/* create TRUE and FALSE constants */
 	data->constants->const_false = fexpr_create(data->sat_variable_nr++, FE_FALSE, "False");
 	// const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
-	fexpr_add_to_satmap(data->constants->const_false);
+	fexpr_add_to_satmap(data->constants->const_false, data);
 
 	data->constants->const_true = fexpr_create(data->sat_variable_nr++, FE_TRUE, "True");
-	fexpr_add_to_satmap(data->constants->const_true);
+	fexpr_add_to_satmap(data->constants->const_true, data);
 
 	/* add fexpr of constants to tristate constants */
 	symbol_yes.fexpr_y = data->constants->const_true;
@@ -118,8 +118,8 @@ void create_constants(struct cfdata *data)
 struct fexpr * create_tmpsatvar(struct cfdata *data)
 {
 	struct fexpr *t = fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, "");
-	str_append(&t->name, get_tmp_var_as_char(tmp_variable_nr++));
-	fexpr_add_to_satmap(t);
+	str_append(&t->name, get_tmp_var_as_char(data->tmp_variable_nr++));
+	fexpr_add_to_satmap(t, data);
 
 	return t;
 }
@@ -828,7 +828,7 @@ static int pexpr_satval(struct pexpr *e)
 /*
  * start PicoSAT
  */
-void picosat_solve(PicoSAT *pico)
+void picosat_solve(PicoSAT *pico, struct cfdata *data)
 {
 	clock_t start, end;
 	double time;
@@ -861,7 +861,7 @@ void picosat_solve(PicoSAT *pico)
 		*lit = abs(*i++);
 
 		while (*lit != 0) {
-			e = &satmap[*lit];
+			e = &data->satmap[*lit];
 
 			printd("(%d) %s <%d>\n", *lit, str_get(&e->name), e->assumption);
 			*lit = abs(*i++);

@@ -27,12 +27,12 @@
 static struct fexl_list *diagnoses;
 static struct sfl_list *diagnoses_symbol;
 
-static struct fexl_list * generate_diagnoses(PicoSAT *pico);
+static struct fexl_list * generate_diagnoses(PicoSAT *pico, struct cfdata *data);
 
 static void add_fexpr_to_constraint_set(struct fexpr_list *C);
 static void set_assumptions(PicoSAT *pico, struct fexpr_list *c);
 static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval);
-static struct fexpr_list * get_unsat_core_soft(PicoSAT *pico);
+static struct fexpr_list * get_unsat_core_soft(PicoSAT *pico, struct cfdata *data);
 static struct fexpr_list * minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C);
 
 
@@ -61,7 +61,7 @@ static unsigned int nr_of_assumptions = 0, nr_of_assumptions_true = 0;
 
 /* -------------------------------------- */
 
-struct sfl_list * rangefix_run(PicoSAT *pico)
+struct sfl_list * rangefix_run(PicoSAT *pico, struct cfdata *data)
 {
 	clock_t start, end;
 	double time;
@@ -71,7 +71,7 @@ struct sfl_list * rangefix_run(PicoSAT *pico)
 
 	/* generate the diagnoses */
 	start = clock();
-	diagnoses = generate_diagnoses(pico);
+	diagnoses = generate_diagnoses(pico, data);
 	end = clock();
 
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -97,7 +97,7 @@ struct sfl_list * rangefix_run(PicoSAT *pico)
 /*
  * generate the diagnoses
  */
-static struct fexl_list * generate_diagnoses(PicoSAT *pico)
+static struct fexl_list * generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 {
 	struct fexpr_list *C = fexpr_list_init();
 	struct fexl_list *E = fexl_list_init();
@@ -170,7 +170,7 @@ static struct fexl_list * generate_diagnoses(PicoSAT *pico)
 			goto DIAGNOSES_FOUND;
 
 		/* get unsat core from SAT solver */
-		X = get_unsat_core_soft(pico);
+		X = get_unsat_core_soft(pico, data);
 
 		/* minimise the unsat core */
 		if (MINIMISE_UNSAT_CORE)
@@ -464,7 +464,7 @@ static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval)
 /*
  * get the unsatisfiable soft constraints from the last run of Picosat
  */
-static struct fexpr_list * get_unsat_core_soft(PicoSAT *pico)
+static struct fexpr_list * get_unsat_core_soft(PicoSAT *pico, struct cfdata *data)
 {
 	struct fexpr_list *ret = fexpr_list_init();
 	struct fexpr *e;
@@ -474,7 +474,7 @@ static struct fexpr_list * get_unsat_core_soft(PicoSAT *pico)
 	*lit = abs(*i++);
 
 	while (*lit != 0) {
-		e = &satmap[*lit];
+		e = &data->satmap[*lit];
 
 		if (!sym_is_sdv(sdv_symbols, e->sym))
 			fexpr_list_add(ret, e);

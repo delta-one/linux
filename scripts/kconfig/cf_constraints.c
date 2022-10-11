@@ -684,7 +684,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		str_append(&npc_fe->name, sym_get_name(sym));
 		str_append(&npc_fe->name, "_NPC");
 		sym->noPromptCond = npc_fe;
-		fexpr_add_to_satmap(npc_fe);
+		fexpr_add_to_satmap(npc_fe, data);
 
 		npc = pexf(npc_fe);
 

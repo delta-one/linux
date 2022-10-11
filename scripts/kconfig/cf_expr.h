@@ -100,7 +100,7 @@ bool pexpr_is_symbol(struct pexpr *e);
 bool fexpr_is_constant(struct fexpr *e, struct cfdata *data);
 
 /* add a fexpr to the satmap */
-void fexpr_add_to_satmap(struct fexpr *e);
+void fexpr_add_to_satmap(struct fexpr *e, struct cfdata *data);
 
 /* print an fexpr */
 void fexpr_print(char *tag, struct fexpr *e);

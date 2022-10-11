@@ -7,16 +7,9 @@
 #define DEFS_H
 
 /* external variables */
-// extern unsigned int sat_variable_nr;
-extern unsigned int tmp_variable_nr;
-extern struct fexpr *satmap; // map SAT variables to fexpr [array]
-extern size_t satmap_size;
-
 extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
-// extern struct fexpr *const_false;
-// extern struct fexpr *const_true;
 extern struct fexpr *symbol_yes_fexpr;
 extern struct fexpr *symbol_mod_fexpr;
 extern struct fexpr *symbol_no_fexpr;

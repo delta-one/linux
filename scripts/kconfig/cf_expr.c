@@ -68,7 +68,7 @@ static void create_fexpr_selected(struct symbol *sym, struct cfdata *data)
 	fexpr_sel_y = fexpr_create(data->sat_variable_nr++, FE_SELECT, sym->name);
 	str_append(&fexpr_sel_y->name, "_sel_y");
 	fexpr_sel_y->sym = sym;
-	fexpr_add_to_satmap(fexpr_sel_y);
+	fexpr_add_to_satmap(fexpr_sel_y, data);
 
 	sym->fexpr_sel_y = fexpr_sel_y;
 
@@ -79,7 +79,7 @@ static void create_fexpr_selected(struct symbol *sym, struct cfdata *data)
 	fexpr_sel_m = fexpr_create(data->sat_variable_nr++, FE_SELECT, sym->name);
 	str_append(&fexpr_sel_m->name, "_sel_m");
 	fexpr_sel_m->sym = sym;
-	fexpr_add_to_satmap(fexpr_sel_m);
+	fexpr_add_to_satmap(fexpr_sel_m, data);
 
 	sym->fexpr_sel_m = fexpr_sel_m;
 }
@@ -95,7 +95,7 @@ static void create_fexpr_bool(struct symbol *sym, struct cfdata *data)
 	fexpr_y = fexpr_create(data->sat_variable_nr++, FE_SYMBOL, sym->name);
 	fexpr_y->sym = sym;
 	fexpr_y->tri = yes;
-	fexpr_add_to_satmap(fexpr_y);
+	fexpr_add_to_satmap(fexpr_y, data);
 
 	sym->fexpr_y = fexpr_y;
 
@@ -105,7 +105,7 @@ static void create_fexpr_bool(struct symbol *sym, struct cfdata *data)
 		str_append(&fexpr_m->name, "_MODULE");
 		fexpr_m->sym = sym;
 		fexpr_m->tri = mod;
-		fexpr_add_to_satmap(fexpr_m);
+		fexpr_add_to_satmap(fexpr_m, data);
 	} else {
 		fexpr_m = data->constants->const_false;
 	}
@@ -154,7 +154,7 @@ static void create_fexpr_nonbool(struct symbol *sym, struct cfdata *data)
 		}
 
 		fexpr_list_add(sym->nb_vals, e);
-		fexpr_add_to_satmap(e);
+		fexpr_add_to_satmap(e, data);
 	}
 }
 
@@ -200,7 +200,7 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 	str_append(&fexpr_y->name, name);
 	fexpr_y->sym = sym;
 	fexpr_y->tri = yes;
-	fexpr_add_to_satmap(fexpr_y);
+	fexpr_add_to_satmap(fexpr_y, data);
 
 	sym->fexpr_y = fexpr_y;
 
@@ -210,7 +210,7 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 		str_append(&fexpr_m->name, "_MODULE");
 		fexpr_m->sym = sym;
 		fexpr_m->tri = mod;
-		fexpr_add_to_satmap(fexpr_m);
+		fexpr_add_to_satmap(fexpr_m, data);
 	} else {
 		fexpr_m = data->constants->const_false;
 	}
@@ -590,7 +590,7 @@ struct fexpr * sym_create_nonbool_fexpr(struct symbol *sym, char *value, struct 
 	str_append(&e->nb_val, s);
 
 	fexpr_list_add(sym->nb_vals, e);
-	fexpr_add_to_satmap(e);
+	fexpr_add_to_satmap(e, data);
 
 	return e;
 }
@@ -1067,14 +1067,14 @@ bool fexpr_is_constant(struct fexpr *e, struct cfdata *data)
 /*
  * add a fexpr to the satmap
  */
-void fexpr_add_to_satmap(struct fexpr *e)
+void fexpr_add_to_satmap(struct fexpr *e, struct cfdata *data)
 {
-	if (e->satval >= satmap_size) {
-		satmap = xrealloc(satmap, satmap_size * 2 * sizeof(*satmap));
-		satmap_size *= 2;
+	if (e->satval >= data->satmap_size) {
+		data->satmap = xrealloc(data->satmap, data->satmap_size * 2 * sizeof(*data->satmap));
+		data->satmap_size *= 2;
 	}
 
-	satmap[e->satval] = *e;
+	data->satmap[e->satval] = *e;
 }
 
 /*
