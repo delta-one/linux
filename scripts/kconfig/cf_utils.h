@@ -16,10 +16,10 @@ void init_data(void);
 void create_sat_variables(struct cfdata *data);
 
 /* create True/False constants */
-void create_constants(struct constants *constants);
+void create_constants(struct cfdata *data);
 
 /* create a temporary SAT-variable */
-struct fexpr * create_tmpsatvar(void);
+struct fexpr * create_tmpsatvar(struct cfdata *data);
 
 /* return a temporary SAT variable as string */
 char * get_tmp_var_as_char(int i);

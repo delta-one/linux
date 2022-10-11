@@ -59,13 +59,13 @@ void sym_create_fexpr(struct symbol *sym, struct cfdata *data)
 /*
  * create the fexpr for symbols with reverse dependencies
  */
-static void create_fexpr_selected(struct symbol *sym)
+static void create_fexpr_selected(struct symbol *sym, struct cfdata *data)
 {
 	struct fexpr *fexpr_sel_y;
 	struct fexpr *fexpr_sel_m;
 
 	/* fexpr_sel_y */
-	fexpr_sel_y = fexpr_create(sat_variable_nr++, FE_SELECT, sym->name);
+	fexpr_sel_y = fexpr_create(data->sat_variable_nr++, FE_SELECT, sym->name);
 	str_append(&fexpr_sel_y->name, "_sel_y");
 	fexpr_sel_y->sym = sym;
 	fexpr_add_to_satmap(fexpr_sel_y);
@@ -76,7 +76,7 @@ static void create_fexpr_selected(struct symbol *sym)
 	if (sym->type == S_BOOLEAN)
 		return;
 
-	fexpr_sel_m = fexpr_create(sat_variable_nr++, FE_SELECT, sym->name);
+	fexpr_sel_m = fexpr_create(data->sat_variable_nr++, FE_SELECT, sym->name);
 	str_append(&fexpr_sel_m->name, "_sel_m");
 	fexpr_sel_m->sym = sym;
 	fexpr_add_to_satmap(fexpr_sel_m);
@@ -92,7 +92,7 @@ static void create_fexpr_bool(struct symbol *sym, struct cfdata *data)
 	struct fexpr *fexpr_y;
 	struct fexpr *fexpr_m;
 
-	fexpr_y = fexpr_create(sat_variable_nr++, FE_SYMBOL, sym->name);
+	fexpr_y = fexpr_create(data->sat_variable_nr++, FE_SYMBOL, sym->name);
 	fexpr_y->sym = sym;
 	fexpr_y->tri = yes;
 	fexpr_add_to_satmap(fexpr_y);
@@ -101,7 +101,7 @@ static void create_fexpr_bool(struct symbol *sym, struct cfdata *data)
 
 
 	if (sym->type == S_TRISTATE) {
-		fexpr_m = fexpr_create(sat_variable_nr++, FE_SYMBOL, sym->name);
+		fexpr_m = fexpr_create(data->sat_variable_nr++, FE_SYMBOL, sym->name);
 		str_append(&fexpr_m->name, "_MODULE");
 		fexpr_m->sym = sym;
 		fexpr_m->tri = mod;
@@ -113,7 +113,7 @@ static void create_fexpr_bool(struct symbol *sym, struct cfdata *data)
 	sym->fexpr_m = fexpr_m;
 
 	if (sym->rev_dep.expr)
-		create_fexpr_selected(sym);
+		create_fexpr_selected(sym, data);
 }
 
 /*
@@ -131,7 +131,7 @@ static void create_fexpr_nonbool(struct symbol *sym, struct cfdata *data)
 	sym->nb_vals = fexpr_list_init();
 
 	for (int i = 0; i < 3; i++) {
-		struct fexpr *e = fexpr_create(sat_variable_nr++, FE_NONBOOL, sym->name);
+		struct fexpr *e = fexpr_create(data->sat_variable_nr++, FE_NONBOOL, sym->name);
 		e->sym = sym;
 		str_append(&e->name, "=");
 		e->nb_val = str_new();
@@ -196,7 +196,7 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 			*write++ = *read;
 	} while (*read++);
 
-	fexpr_y = fexpr_create(sat_variable_nr++, FE_CHOICE, "Choice_");
+	fexpr_y = fexpr_create(data->sat_variable_nr++, FE_CHOICE, "Choice_");
 	str_append(&fexpr_y->name, name);
 	fexpr_y->sym = sym;
 	fexpr_y->tri = yes;
@@ -205,7 +205,7 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 	sym->fexpr_y = fexpr_y;
 
 	if (sym->type == S_TRISTATE) {
-		fexpr_m = fexpr_create(sat_variable_nr++, FE_CHOICE, "Choice_");
+		fexpr_m = fexpr_create(data->sat_variable_nr++, FE_CHOICE, "Choice_");
 		str_append(&fexpr_m->name, name);
 		str_append(&fexpr_m->name, "_MODULE");
 		fexpr_m->sym = sym;
@@ -535,7 +535,7 @@ static struct pexpr * equiv_pexpr(struct pexpr *a, struct pexpr *b, struct cfdat
 /*
  * create the fexpr of a non-boolean symbol for a specific value
  */
-struct fexpr * sym_create_nonbool_fexpr(struct symbol *sym, char *value)
+struct fexpr * sym_create_nonbool_fexpr(struct symbol *sym, char *value, struct cfdata *data)
 {
 	struct fexpr *e;
 	char *s;
@@ -582,7 +582,7 @@ struct fexpr * sym_create_nonbool_fexpr(struct symbol *sym, char *value)
 	if (e != NULL)
 		return e;
 
-	e = fexpr_create(sat_variable_nr++, FE_NONBOOL, sym->name);
+	e = fexpr_create(data->sat_variable_nr++, FE_NONBOOL, sym->name);
 	e->sym = sym;
 	str_append(&e->name, "=");
 	str_append(&e->name, s);
@@ -613,14 +613,14 @@ struct fexpr * sym_get_nonbool_fexpr(struct symbol *sym, char *value)
  * return the fexpr of a non-boolean symbol for a specific value, if it exists
  * otherwise create it
  */
-struct fexpr * sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value)
+struct fexpr * sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value, struct cfdata *data)
 {
 	struct fexpr *e = sym_get_nonbool_fexpr(sym, value);
 
 	if (e != NULL)
 		return e;
 	else
-		return sym_create_nonbool_fexpr(sym, value);
+		return sym_create_nonbool_fexpr(sym, value, data);
 }
 
 /*
@@ -646,10 +646,10 @@ struct pexpr * expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data
 
 	/* comparing nonboolean with a constant */
 	if (sym_is_nonboolean(e->left.sym) && sym_is_nonbool_constant(e->right.sym)) {
-		return pexf(sym_get_or_create_nonbool_fexpr(e->left.sym, e->right.sym->name));
+		return pexf(sym_get_or_create_nonbool_fexpr(e->left.sym, e->right.sym->name, data));
 	}
 	if (sym_is_nonbool_constant(e->left.sym) && sym_is_nonboolean(e->right.sym))
-		return pexf(sym_get_or_create_nonbool_fexpr(e->right.sym, e->left.sym->name));
+		return pexf(sym_get_or_create_nonbool_fexpr(e->right.sym, e->left.sym->name, data));
 
 	/* comparing nonboolean with tristate constant, will never be true */
 	if (sym_is_nonboolean(e->left.sym) && sym_is_tristate_constant(e->right.sym))

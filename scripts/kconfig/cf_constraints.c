@@ -40,7 +40,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data);
 static void add_invisible_constraints(struct symbol *sym, struct cfdata *data);
 static void sym_nonbool_at_least_1(struct symbol *sym, struct cfdata *data);
 static void sym_nonbool_at_most_1(struct symbol *sym, struct cfdata *data);
-static void sym_add_nonbool_values_from_default_range(struct symbol *sym);
+static void sym_add_nonbool_values_from_default_range(struct symbol *sym, struct cfdata *data);
 static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data);
 static void sym_add_nonbool_prompt_constraint(struct symbol *sym, struct cfdata *data);
 
@@ -105,22 +105,22 @@ static void init_constraints(struct cfdata *data)
 				if (p == NULL)
 					continue;
 
-				sym_create_nonbool_fexpr(sym, p->expr->left.sym->name);
+				sym_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
 			}
 			for_all_properties(sym, p, P_RANGE) {
 				if (p == NULL)
 					continue;
 
-				sym_create_nonbool_fexpr(sym, p->expr->left.sym->name);
-				sym_create_nonbool_fexpr(sym, p->expr->right.sym->name);
+				sym_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
+				sym_create_nonbool_fexpr(sym, p->expr->right.sym->name, data);
 			}
 			curr = sym_get_string_value(sym);
 			if (strcmp(curr, "") != 0)
-				sym_create_nonbool_fexpr(sym, (char *) curr);
+				sym_create_nonbool_fexpr(sym, (char *) curr, data);
 		}
 
 		if (sym->type == S_HEX || sym->type == S_INT)
-			sym_add_nonbool_values_from_default_range(sym);
+			sym_add_nonbool_values_from_default_range(sym, data);
 	}
 }
 
@@ -675,7 +675,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 	}
 
 	if (NPC_OPTIMISATION) {
-		struct fexpr *npc_fe = fexpr_create(sat_variable_nr++, FE_NPC, "");
+		struct fexpr *npc_fe = fexpr_create(data->sat_variable_nr++, FE_NPC, "");
 		struct pexpr *c;
 
 		if (sym_is_choice(sym))
@@ -807,7 +807,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 /*
  * add the known values from the default and range properties
  */
-static void sym_add_nonbool_values_from_default_range(struct symbol *sym)
+static void sym_add_nonbool_values_from_default_range(struct symbol *sym, struct cfdata *data)
 {
 	struct property *p;
 
@@ -816,7 +816,7 @@ static void sym_add_nonbool_values_from_default_range(struct symbol *sym)
 			continue;
 
 		/* add the value to known values, if it doesn't exist yet */
-		sym_create_nonbool_fexpr(sym, p->expr->left.sym->name);
+		sym_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
 	}
 
 	for_all_properties(sym, p, P_RANGE) {
@@ -824,8 +824,8 @@ static void sym_add_nonbool_values_from_default_range(struct symbol *sym)
 			continue;
 
 		/* add the values to known values, if they don't exist yet */
-		sym_create_nonbool_fexpr(sym, p->expr->left.sym->name);
-		sym_create_nonbool_fexpr(sym, p->expr->right.sym->name);
+		sym_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
+		sym_create_nonbool_fexpr(sym, p->expr->right.sym->name, data);
 	}
 }
 
@@ -1093,7 +1093,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 		}
 		/* if def.value = non-boolean constant */
 		else if (expr_is_nonbool_constant(p->expr)) {
-			struct fexpr *s = sym_get_or_create_nonbool_fexpr(sym, p->expr->left.sym->name);
+			struct fexpr *s = sym_get_or_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
 			updateDefaultList(s, expr_calculate_pexpr_both(expr, data), result, sym, data);
 		}
 		/* any expression which evaluates to n/m/y for a tristate */

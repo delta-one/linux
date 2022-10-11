@@ -172,7 +172,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		init_data();
 
 		/* creating constants */
-		create_constants(data.constants);
+		create_constants(&data);
 
 		/* assign SAT variables & create sat_map */
 		create_sat_variables(&data);

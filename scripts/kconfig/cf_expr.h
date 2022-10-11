@@ -76,7 +76,7 @@ struct pexpr * sym_get_fexpr_both(struct symbol *sym, struct cfdata *data);
 struct pexpr * sym_get_fexpr_sel_both(struct symbol *sym, struct cfdata *data);
 
 /* create the fexpr of a non-boolean symbol for a specific value */
-struct fexpr * sym_create_nonbool_fexpr(struct symbol *sym, char *value);
+struct fexpr * sym_create_nonbool_fexpr(struct symbol *sym, char *value, struct cfdata *data);
 
 /* return the fexpr of a non-boolean symbol for a specific value, NULL if non-existent */
 struct fexpr * sym_get_nonbool_fexpr(struct symbol *sym, char *value);
@@ -85,7 +85,7 @@ struct fexpr * sym_get_nonbool_fexpr(struct symbol *sym, char *value);
  * return the fexpr of a non-boolean symbol for a specific value, if it exists
  * otherwise create it
  */
-struct fexpr * sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value);
+struct fexpr * sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value, struct cfdata *data);
 
 /* macro to construct a pexpr for "A implies B" */
 struct pexpr * pexpr_implies(struct pexpr *a, struct pexpr *b, struct cfdata *data);

@@ -7,7 +7,7 @@
 #define DEFS_H
 
 /* external variables */
-extern unsigned int sat_variable_nr;
+// extern unsigned int sat_variable_nr;
 extern unsigned int tmp_variable_nr;
 extern struct fexpr *satmap; // map SAT variables to fexpr [array]
 extern size_t satmap_size;

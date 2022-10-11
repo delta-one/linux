@@ -22,14 +22,14 @@
 static PicoSAT *pico;
 
 static void unfold_cnf_clause(struct pexpr *e);
-static void build_cnf_tseytin(struct pexpr *e);
+static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data);
 
-static void build_cnf_tseytin_top_and(struct pexpr *e);
-static void build_cnf_tseytin_top_or(struct pexpr *e);
+static void build_cnf_tseytin_top_and(struct pexpr *e, struct cfdata *data);
+static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data);
 
-static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t);
-static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t);
-static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t);
+static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdata *data);
+static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdata *data);
+static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata *data);
 static int pexpr_satval(struct pexpr *e);
 
 /*
@@ -74,27 +74,27 @@ void create_sat_variables(struct cfdata *data)
 /*
  * create various constants
  */
-void create_constants(struct constants *constants)
+void create_constants(struct cfdata *data)
 {
 	printd("Creating constants...");
 
 	/* create TRUE and FALSE constants */
-	constants->const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
+	data->constants->const_false = fexpr_create(data->sat_variable_nr++, FE_FALSE, "False");
 	// const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
-	fexpr_add_to_satmap(constants->const_false);
+	fexpr_add_to_satmap(data->constants->const_false);
 
-	constants->const_true = fexpr_create(sat_variable_nr++, FE_TRUE, "True");
-	fexpr_add_to_satmap(constants->const_true);
+	data->constants->const_true = fexpr_create(data->sat_variable_nr++, FE_TRUE, "True");
+	fexpr_add_to_satmap(data->constants->const_true);
 
 	/* add fexpr of constants to tristate constants */
-	symbol_yes.fexpr_y = constants->const_true;
-	symbol_yes.fexpr_m = constants->const_false;
+	symbol_yes.fexpr_y = data->constants->const_true;
+	symbol_yes.fexpr_m = data->constants->const_false;
 
-	symbol_mod.fexpr_y = constants->const_false;
-	symbol_mod.fexpr_m = constants->const_true;
+	symbol_mod.fexpr_y = data->constants->const_false;
+	symbol_mod.fexpr_m = data->constants->const_true;
 
-	symbol_no.fexpr_y = constants->const_false;
-	symbol_no.fexpr_m = constants->const_false;
+	symbol_no.fexpr_y = data->constants->const_false;
+	symbol_no.fexpr_m = data->constants->const_false;
 
 	/* create symbols yes/mod/no as fexpr */
 	symbol_yes_fexpr = fexpr_create(0, FE_SYMBOL, "y");
@@ -115,9 +115,9 @@ void create_constants(struct constants *constants)
 /*
  * create a temporary SAT-variable
  */
-struct fexpr * create_tmpsatvar(void)
+struct fexpr * create_tmpsatvar(struct cfdata *data)
 {
-	struct fexpr *t = fexpr_create(sat_variable_nr++, FE_TMPSATVAR, "");
+	struct fexpr *t = fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, "");
 	str_append(&t->name, get_tmp_var_as_char(tmp_variable_nr++));
 	fexpr_add_to_satmap(t);
 
@@ -560,7 +560,7 @@ void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 				unfold_cnf_clause(node->elem);
 				picosat_add(pico, 0);
 			} else {
-				build_cnf_tseytin(node->elem);
+				build_cnf_tseytin(node->elem, data);
 			}
 
 		}
@@ -591,14 +591,14 @@ static void unfold_cnf_clause(struct pexpr *e)
 /*
  * build CNF-clauses for a pexpr not in CNF
  */
-static void build_cnf_tseytin(struct pexpr *e)
+static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data)
 {
 	switch (e->type) {
 	case PE_AND:
-		build_cnf_tseytin_top_and(e);
+		build_cnf_tseytin_top_and(e, data);
 		break;
 	case PE_OR:
-		build_cnf_tseytin_top_or(e);
+		build_cnf_tseytin_top_or(e, data);
 		break;
 	default:
 		perror("Expression not a propositional logic formula. root.");
@@ -608,21 +608,21 @@ static void build_cnf_tseytin(struct pexpr *e)
 /*
  * split up a pexpr of type AND as both sides must be satisfied
  */
-static void build_cnf_tseytin_top_and(struct pexpr *e)
+static void build_cnf_tseytin_top_and(struct pexpr *e, struct cfdata *data)
 {
 	if (pexpr_is_cnf(e->left.pexpr))
 		unfold_cnf_clause(e->left.pexpr);
 	else
-		build_cnf_tseytin(e->left.pexpr);
+		build_cnf_tseytin(e->left.pexpr, data);
 
 	if (pexpr_is_cnf(e->right.pexpr))
 		unfold_cnf_clause(e->right.pexpr);
 	else
-		build_cnf_tseytin(e->right.pexpr);
+		build_cnf_tseytin(e->right.pexpr, data);
 
 }
 
-static void build_cnf_tseytin_top_or(struct pexpr *e)
+static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b;
@@ -631,7 +631,7 @@ static void build_cnf_tseytin_top_or(struct pexpr *e)
 	if (pexpr_is_symbol(e->left.pexpr)) {
 		a = pexpr_satval(e->left.pexpr);
 	} else {
-		t1 = create_tmpsatvar();
+		t1 = create_tmpsatvar(data);
 		a = t1->satval;
 	}
 
@@ -639,7 +639,7 @@ static void build_cnf_tseytin_top_or(struct pexpr *e)
 	if (pexpr_is_symbol(e->right.pexpr)) {
 		b = pexpr_satval(e->right.pexpr);
 	} else {
-		t2 = create_tmpsatvar();
+		t2 = create_tmpsatvar(data);
 		b = t2->satval;
 	}
 
@@ -651,28 +651,28 @@ static void build_cnf_tseytin_top_or(struct pexpr *e)
 		if (t1 == NULL)
 			perror("t1 is NULL.");
 
-		build_cnf_tseytin_tmp(e->left.pexpr, t1);
+		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
 	}
 
 	if (!pexpr_is_symbol(e->right.pexpr)) {
 		if (t2 == NULL)
 			perror("t2 is NULL.");
 
-		build_cnf_tseytin_tmp(e->right.pexpr, t2);
+		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
 	}
 }
 
 /*
  * build the sub-expressions
  */
-static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t)
+static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdata *data)
 {
 	switch (e->type) {
 	case PE_AND:
-		build_cnf_tseytin_and(e, t);
+		build_cnf_tseytin_and(e, t, data);
 		break;
 	case PE_OR:
-		build_cnf_tseytin_or(e, t);
+		build_cnf_tseytin_or(e, t, data);
 		break;
 	default:
 		perror("Expression not a propositional logic formula. root.");
@@ -682,7 +682,7 @@ static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t)
 /*
  * build the Tseytin sub-expressions for a pexpr of type AND
  */
-static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t)
+static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdata *data)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
@@ -691,7 +691,7 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t)
 	if (pexpr_is_symbol(e->left.pexpr)) {
 		a = pexpr_satval(e->left.pexpr);
 	} else {
-		t1 = create_tmpsatvar();
+		t1 = create_tmpsatvar(data);
 		a = t1->satval;
 	}
 
@@ -699,7 +699,7 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t)
 	if (pexpr_is_symbol(e->right.pexpr)) {
 		b = pexpr_satval(e->right.pexpr);
 	} else {
-		t2 = create_tmpsatvar();
+		t2 = create_tmpsatvar(data);
 		b = t2->satval;
 	}
 
@@ -717,20 +717,20 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t)
 		if (t1 == NULL)
 			perror("t1 is NULL.");
 
-		build_cnf_tseytin_tmp(e->left.pexpr, t1);
+		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
 	}
 	if (!pexpr_is_symbol(e->right.pexpr)) {
 		if (t2 == NULL)
 			perror("t2 is NULL.");
 
-		build_cnf_tseytin_tmp(e->right.pexpr, t2);
+		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
 	}
 }
 
 /*
  * build the Tseytin sub-expressions for a pexpr of type
  */
-static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t)
+static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata *data)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
@@ -739,7 +739,7 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t)
 	if (pexpr_is_symbol(e->left.pexpr)) {
 		a = pexpr_satval(e->left.pexpr);
 	} else {
-		t1 = create_tmpsatvar();
+		t1 = create_tmpsatvar(data);
 		a = t1->satval;
 	}
 
@@ -747,7 +747,7 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t)
 	if (pexpr_is_symbol(e->right.pexpr)) {
 		b = pexpr_satval(e->right.pexpr);
 	} else {
-		t2 = create_tmpsatvar();
+		t2 = create_tmpsatvar(data);
 		b = t2->satval;
 	}
 
@@ -765,13 +765,13 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t)
 		if (t1 == NULL)
 			perror("t1 is NULL.");
 
-		build_cnf_tseytin_tmp(e->left.pexpr, t1);
+		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
 	}
 	if (!pexpr_is_symbol(e->right.pexpr)) {
 		if (t2 == NULL)
 			perror("t2 is NULL.");
 
-		build_cnf_tseytin_tmp(e->right.pexpr, t2);
+		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
 	}
 }
 
