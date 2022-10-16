@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2022 Patrick Franz <deltaone@debian.org>
  */
 
 #define _GNU_SOURCE
@@ -97,17 +97,17 @@ void create_constants(struct cfdata *data)
 	symbol_no.fexpr_m = data->constants->const_false;
 
 	/* create symbols yes/mod/no as fexpr */
-	symbol_yes_fexpr = fexpr_create(0, FE_SYMBOL, "y");
-	symbol_yes_fexpr->sym = &symbol_yes;
-	symbol_yes_fexpr->tri = yes;
+	data->constants->symbol_yes_fexpr = fexpr_create(0, FE_SYMBOL, "y");
+	data->constants->symbol_yes_fexpr->sym = &symbol_yes;
+	data->constants->symbol_yes_fexpr->tri = yes;
 
-	symbol_mod_fexpr = fexpr_create(0, FE_SYMBOL, "m");
-	symbol_mod_fexpr->sym = &symbol_mod;
-	symbol_mod_fexpr->tri = mod;
+	data->constants->symbol_mod_fexpr = fexpr_create(0, FE_SYMBOL, "m");
+	data->constants->symbol_mod_fexpr->sym = &symbol_mod;
+	data->constants->symbol_mod_fexpr->tri = mod;
 
-	symbol_no_fexpr = fexpr_create(0, FE_SYMBOL, "n");
-	symbol_no_fexpr->sym = &symbol_no;
-	symbol_no_fexpr->tri = no;
+	data->constants->symbol_no_fexpr = fexpr_create(0, FE_SYMBOL, "n");
+	data->constants->symbol_no_fexpr->sym = &symbol_no;
+	data->constants->symbol_no_fexpr->tri = no;
 
 	printd("done.\n");
 }

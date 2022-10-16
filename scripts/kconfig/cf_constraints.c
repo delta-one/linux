@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2022 Patrick Franz <deltaone@debian.org>
  */
 
 #define _GNU_SOURCE
@@ -1060,18 +1060,18 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			struct pexpr *expr_y = expr_calculate_pexpr_y(expr, data);
 			struct pexpr *expr_m = expr_calculate_pexpr_m(expr, data);
 
-			updateDefaultList(symbol_yes_fexpr, expr_y, result, sym, data);
-			updateDefaultList(symbol_mod_fexpr, expr_m, result, sym, data);
+			updateDefaultList(data->constants->symbol_yes_fexpr, expr_y, result, sym, data);
+			updateDefaultList(data->constants->symbol_mod_fexpr, expr_m, result, sym, data);
 		}
 		/* if def.value = n/m/y */
 		else if (p->expr->type == E_SYMBOL && sym_is_tristate_constant(p->expr->left.sym) && sym_is_boolean(sym)) {
 			struct fexpr *s;
 			if (p->expr->left.sym == &symbol_yes)
-				s = symbol_yes_fexpr;
+				s = data->constants->symbol_yes_fexpr;
 			else if (p->expr->left.sym == &symbol_mod)
-				s = symbol_mod_fexpr;
+				s = data->constants->symbol_mod_fexpr;
 			else
-				s = symbol_no_fexpr;
+				s = data->constants->symbol_no_fexpr;
 
 			updateDefaultList(s, expr_calculate_pexpr_both(expr, data), result, sym, data);
 		}
@@ -1083,11 +1083,11 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 
 			struct fexpr *s;
 			if (!strcmp(p->expr->left.sym->name, "0"))
-				s = symbol_no_fexpr;
+				s = data->constants->symbol_no_fexpr;
 			else if (!strcmp(p->expr->left.sym->name, "1"))
-				s = symbol_mod_fexpr;
+				s = data->constants->symbol_mod_fexpr;
 			else
-				s = symbol_yes_fexpr;
+				s = data->constants->symbol_yes_fexpr;
 
 			updateDefaultList(s, expr_calculate_pexpr_both(expr, data), result, sym, data);
 		}
@@ -1101,8 +1101,8 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
 			struct pexpr *expr_y = expr_calculate_pexpr_y(e_tmp, data);
 			struct pexpr *expr_m = expr_calculate_pexpr_m(e_tmp, data);
-			updateDefaultList(symbol_yes_fexpr, expr_y, result, sym, data);
-			updateDefaultList(symbol_mod_fexpr, expr_m, result, sym, data);
+			updateDefaultList(data->constants->symbol_yes_fexpr, expr_y, result, sym, data);
+			updateDefaultList(data->constants->symbol_mod_fexpr, expr_m, result, sym, data);
 		}
 		/* if non-boolean && def.value = non-boolean symbol */
 		else if (p->expr->type == E_SYMBOL && sym_is_nonboolean(sym) && sym_is_nonboolean(p->expr->left.sym)) {
@@ -1117,7 +1117,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 		else {
 			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
 			struct pexpr *expr_both = expr_calculate_pexpr_both(e_tmp, data);
-			updateDefaultList(symbol_yes_fexpr, expr_both, result, sym, data);
+			updateDefaultList(data->constants->symbol_yes_fexpr, expr_both, result, sym, data);
 		}
 	}
 }

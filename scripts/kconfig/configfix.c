@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2022 Patrick Franz <deltaone@debian.org>
  */
 
 #define _GNU_SOURCE
@@ -20,10 +20,6 @@ struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 
 bool CFDEBUG = false;
 bool stop_rangefix = false;
-
-struct fexpr *symbol_yes_fexpr; /* symbol_yes as fexpr */
-struct fexpr *symbol_mod_fexpr; /* symbol_mod as fexpr */
-struct fexpr *symbol_no_fexpr; /* symbol_no_as fexpr */
 
 static PicoSAT *pico;
 static bool init_done = false;

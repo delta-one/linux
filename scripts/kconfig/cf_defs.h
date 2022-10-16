@@ -10,9 +10,6 @@
 extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
-extern struct fexpr *symbol_yes_fexpr;
-extern struct fexpr *symbol_mod_fexpr;
-extern struct fexpr *symbol_no_fexpr;
 
 #define printd(fmt...) if (CFDEBUG) printf(fmt)
 
