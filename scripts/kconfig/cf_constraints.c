@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: GPL-2.0 */
+// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2022 Patrick Franz <deltaone@debian.org>
  */
@@ -30,8 +30,8 @@ static void build_tristate_constraint_clause(struct symbol *sym, struct cfdata *
 static void add_selects_kcr(struct symbol *sym, struct cfdata *data);
 static void add_selects(struct symbol *sym, struct cfdata *data);
 
-static void add_dependencies_bool(struct symbol* sym, struct cfdata *data);
-static void add_dependencies_bool_kcr(struct symbol* sym, struct cfdata *data);
+static void add_dependencies_bool(struct symbol *sym, struct cfdata *data);
+static void add_dependencies_bool_kcr(struct symbol *sym, struct cfdata *data);
 static void add_dependencies_nonbool(struct symbol *sym, struct cfdata *data);
 
 static void add_choice_prompt_cond(struct symbol *sym, struct cfdata *data);
@@ -44,10 +44,10 @@ static void sym_add_nonbool_values_from_default_range(struct symbol *sym, struct
 static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data);
 static void sym_add_nonbool_prompt_constraint(struct symbol *sym, struct cfdata *data);
 
-static struct default_map * create_default_map_entry(struct fexpr *val, struct pexpr *e);
-static struct defm_list * get_defaults(struct symbol *sym, struct cfdata *data);
-static struct pexpr * get_default_y(struct defm_list *list, struct cfdata *data);
-static struct pexpr * get_default_m(struct defm_list *list, struct cfdata *data);
+static struct default_map *create_default_map_entry(struct fexpr *val, struct pexpr *e);
+static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data);
+static struct pexpr *get_default_y(struct defm_list *list, struct cfdata *data);
+static struct pexpr *get_default_m(struct defm_list *list, struct cfdata *data);
 static struct pexpr *get_default_any(struct symbol *sym, struct cfdata *data);
 static long sym_get_range_val(struct symbol *sym, int base);
 
@@ -75,6 +75,7 @@ static void init_constraints(struct cfdata *data)
 	unsigned int i;
 	struct symbol *sym;
 	struct property *p;
+
 	for_all_symbols(i, sym) {
 		struct property *prompt;
 
@@ -132,6 +133,7 @@ static void get_constraints_bool(struct cfdata *data)
 {
 	unsigned int i;
 	struct symbol *sym;
+
 	for_all_symbols(i, sym) {
 
 		if (!sym_is_boolean(sym))
@@ -142,7 +144,8 @@ static void get_constraints_bool(struct cfdata *data)
 			build_tristate_constraint_clause(sym, data);
 
 		/* build constraints for select statements
-		 * need to treat choice symbols seperately */
+		 * need to treat choice symbols seperately
+		 */
 		if (!KCR_CMP) {
 			add_selects(sym, data);
 		} else {
@@ -176,13 +179,14 @@ static void get_constraints_bool(struct cfdata *data)
 }
 
 /*
-* build the constraints for select-variables
-* skip non-Booleans, choice symbols/options och symbols without rev_dir
-*/
+ * build the constraints for select-variables
+ * skip non-Booleans, choice symbols/options och symbols without rev_dir
+ */
 static void get_constraints_select(struct cfdata *data)
 {
 	unsigned int i;
 	struct symbol *sym;
+
 	for_all_symbols(i, sym) {
 		struct pexpr *sel_y, *sel_m;
 		struct pexpr *c1, *c2;
@@ -239,6 +243,7 @@ static void get_constraints_nonbool(struct cfdata *data)
 {
 	unsigned int i;
 	struct symbol *sym;
+
 	for_all_symbols(i, sym) {
 
 		if (!sym_is_nonboolean(sym))
@@ -286,6 +291,7 @@ static void build_tristate_constraint_clause(struct symbol *sym, struct cfdata *
 	/* X_m -> MODULES */
 	if (modules_sym->fexpr_y != NULL) {
 		struct pexpr *c2 = pexpr_implies(X_m, modules, data);
+
 		sym_add_constraint(sym, c2, data);
 	}
 }
@@ -338,6 +344,7 @@ static void add_selects(struct symbol *sym, struct cfdata *data)
 			/* imply that symbol is selected to y */
 			struct pexpr *e1 = pexpr_and(cond_both, sym_get_fexpr_both(sym, data), data);
 			struct pexpr *c1 = pexpr_implies(e1, pexf(selected->fexpr_sel_y), data);
+
 			sym_add_constraint(selected, c1, data);
 
 			if (selected->list_sel_y == NULL)
@@ -396,6 +403,7 @@ static void add_dependencies_bool(struct symbol *sym, struct cfdata *data)
 		sym_add_constraint(sym, c2, data);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *c = pexpr_implies(pexf(sym->fexpr_y), pexpr_or(dep_both, sym_get_fexpr_sel_both(sym, data), data), data);
+
 		sym_add_constraint(sym, c, data);
 	}
 }
@@ -425,6 +433,7 @@ static void add_dependencies_bool_kcr(struct symbol *sym, struct cfdata *data)
 		sym_add_constraint(sym, c2, data);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *c = pexpr_implies(pexf(sym->fexpr_y), pexpr_or(dep_both, sel_both, data), data);
+
 		sym_add_constraint(sym, c, data);
 	}
 }
@@ -461,7 +470,7 @@ static void add_dependencies_nonbool(struct symbol *sym, struct cfdata *data)
 /*
  * build the constraints for the choice prompt
  */
-static void add_choice_prompt_cond(struct symbol* sym, struct cfdata *data)
+static void add_choice_prompt_cond(struct symbol *sym, struct cfdata *data)
 {
 	struct property *prompt;
 	struct pexpr *promptCondition;
@@ -481,6 +490,7 @@ static void add_choice_prompt_cond(struct symbol* sym, struct cfdata *data)
 
 	if (!sym_is_optional(sym)) {
 		struct pexpr *req_cond = pexpr_implies(promptCondition, fe_both, data);
+
 		sym_add_constraint(sym, req_cond, data);
 	}
 
@@ -525,6 +535,7 @@ static void add_choice_dependencies(struct symbol *sym, struct cfdata *data)
 		sym_add_constraint_eq(sym, c2, data);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *c = pexpr_implies(pexf(sym->fexpr_y), dep_both, data);
+
 		sym_add_constraint_eq(sym, c, data);
 	}
 }
@@ -555,6 +566,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 
 	for_all_choices(sym, prop) {
 		struct expr *expr;
+
 		expr_list_for_each_sym(prop->expr, expr, choice) {
 			sym_list_add(items, choice);
 			if (sym_get_prompt(choice) != NULL)
@@ -570,6 +582,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 	}
 	if (c1 != NULL) {
 		struct pexpr *c2 = pexpr_implies(pexf(sym->fexpr_y), c1, data);
+
 		sym_add_constraint(sym, c2, data);
 	}
 
@@ -611,7 +624,8 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 	}
 
 	/* if one choice option with a prompt is set to yes,
-	 * then no other option may be set to mod */
+	 * then no other option may be set to mod
+	 */
 	if (sym->type == S_TRISTATE) {
 		sym_list_for_each(node, promptItems) {
 			struct sym_list *tmp;
@@ -624,7 +638,8 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 				if (choice2->type == S_TRISTATE)
 					sym_list_add(tmp, choice2);
 			}
-			if (tmp->size == 0) continue;
+			if (tmp->size == 0)
+				continue;
 
 			sym_list_for_each(node2, tmp) {
 				choice2 = node2->elem;
@@ -704,6 +719,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 	/* tristate elements are only selectable as yes, if they are visible as yes */
 	if (sym->type == S_TRISTATE) {
 		struct pexpr *e1 = pexpr_implies(promptCondition_both, pexpr_implies(pexf(sym->fexpr_y), promptCondition_yes, data), data);
+
 		sym_add_constraint(sym, e1, data);
 	}
 
@@ -754,7 +770,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 	} else {
 		struct pexpr *default_any = get_default_any(sym, data);
 		struct pexpr *e1 = pexf(data->constants->const_true);
-		struct pexpr *e2,*e3;
+		struct pexpr *e2, *e3;
 
 		for (struct fexpr_node *node = sym->nb_vals->head->next; node != NULL; node = node->next)
 			e1 = pexpr_and(e1, pexpr_not(pexf(node->elem), data), data);
@@ -795,6 +811,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		struct defm_node *node;
 		struct pexpr *cond, *c;
 		struct fexpr *f;
+
 		defm_list_for_each(node, defaults) {
 			f = node->elem->val;
 			cond = node->elem->e;
@@ -837,6 +854,7 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 	struct property *prop;
 	struct pexpr *prevs, *propCond;
 	struct pexpr_list *prevCond = pexpr_list_init();
+
 	for_all_properties(sym, prop, P_RANGE) {
 		int base;
 		long long range_min, range_max, tmp;
@@ -852,6 +870,7 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 			prevs = propCond;
 		} else {
 			struct pexpr_node *node;
+
 			pexpr_list_for_each(node, prevCond)
 				prevs = pexpr_and(pexpr_not(node->elem, data), prevs, data);
 
@@ -889,11 +908,13 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 			not_nb_val = pexpr_not(pexf(node->elem), data);
 			if (tmp < range_min) {
 				struct pexpr *c = pexpr_implies(prevs, not_nb_val, data);
+
 				sym_add_constraint(sym, c, data);
 			}
 
 			if (tmp > range_max) {
 				struct pexpr *c = pexpr_implies(prevs, not_nb_val, data);
+
 				sym_add_constraint(sym, c, data);
 			}
 		}
@@ -932,9 +953,11 @@ static void sym_nonbool_at_most_1(struct symbol *sym, struct cfdata *data)
 
 	fexpr_list_for_each(node1, sym->nb_vals) {
 		struct pexpr *e1 = pexf(node1->elem);
+
 		for (struct fexpr_node *node2 = node1->next; node2 != NULL; node2 = node2->next) {
 			struct pexpr *e2 = pexf(node2->elem);
 			struct pexpr *e = pexpr_or(pexpr_not(e1, data), pexpr_not(e2, data), data);
+
 			sym_add_constraint(sym, e, data);
 		}
 	}
@@ -967,18 +990,20 @@ static void sym_add_nonbool_prompt_constraint(struct symbol *sym, struct cfdata 
 	sym_add_constraint(sym, c, data);
 }
 
-static struct default_map * create_default_map_entry(struct fexpr *val, struct pexpr *e)
+static struct default_map *create_default_map_entry(struct fexpr *val, struct pexpr *e)
 {
 	struct default_map *map = malloc(sizeof(struct default_map));
+
 	map->val = val;
 	map->e = e;
 
 	return map;
 }
 
-static struct pexpr * findDefaultEntry(struct fexpr *val, struct defm_list *defaults, struct constants *constants)
+static struct pexpr *findDefaultEntry(struct fexpr *val, struct defm_list *defaults, struct constants *constants)
 {
 	struct defm_node *node;
+
 	defm_list_for_each(node, defaults)
 		if (val == node->elem->val)
 			return node->elem->e;
@@ -992,7 +1017,8 @@ static struct pexpr * findDefaultEntry(struct fexpr *val, struct defm_list *defa
  * return all defaults for a symbol
  */
 static struct pexpr *covered;
-static bool is_tri_as_num(struct symbol *sym) {
+static bool is_tri_as_num(struct symbol *sym)
+{
 	if (!sym->name)
 		return false;
 
@@ -1006,6 +1032,7 @@ static void add_to_default_map(struct defm_list *defaults, struct default_map *e
 	if (sym_is_boolean(sym)) {
 		struct default_map *map;
 		struct defm_node *node;
+
 		defm_list_for_each(node, defaults) {
 			map = node->elem;
 			if (map->val->sym == entry->val->sym) {
@@ -1017,6 +1044,7 @@ static void add_to_default_map(struct defm_list *defaults, struct default_map *e
 	} else {
 		struct default_map *map;
 		struct defm_node *node;
+
 		defm_list_for_each(node, defaults) {
 			map = node->elem;
 			if (map->val->satval == entry->val->satval) {
@@ -1032,6 +1060,7 @@ static void updateDefaultList(struct fexpr *val, struct pexpr *newCond, struct d
 	struct pexpr *prevCond = findDefaultEntry(val, result, data->constants);
 	struct pexpr *cond = pexpr_or(prevCond, pexpr_and(newCond, pexpr_not(covered, data), data), data);
 	struct default_map *entry = create_default_map_entry(val, cond);
+
 	add_to_default_map(result, entry, sym);
 	covered = pexpr_or(covered, newCond, data);
 }
@@ -1066,6 +1095,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 		/* if def.value = n/m/y */
 		else if (p->expr->type == E_SYMBOL && sym_is_tristate_constant(p->expr->left.sym) && sym_is_boolean(sym)) {
 			struct fexpr *s;
+
 			if (p->expr->left.sym == &symbol_yes)
 				s = data->constants->symbol_yes_fexpr;
 			else if (p->expr->left.sym == &symbol_mod)
@@ -1082,6 +1112,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			is_tri_as_num(p->expr->left.sym)) {
 
 			struct fexpr *s;
+
 			if (!strcmp(p->expr->left.sym->name, "0"))
 				s = data->constants->symbol_no_fexpr;
 			else if (!strcmp(p->expr->left.sym->name, "1"))
@@ -1094,6 +1125,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 		/* if def.value = non-boolean constant */
 		else if (expr_is_nonbool_constant(p->expr)) {
 			struct fexpr *s = sym_get_or_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
+
 			updateDefaultList(s, expr_calculate_pexpr_both(expr, data), result, sym, data);
 		}
 		/* any expression which evaluates to n/m/y for a tristate */
@@ -1101,6 +1133,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
 			struct pexpr *expr_y = expr_calculate_pexpr_y(e_tmp, data);
 			struct pexpr *expr_m = expr_calculate_pexpr_m(e_tmp, data);
+
 			updateDefaultList(data->constants->symbol_yes_fexpr, expr_y, result, sym, data);
 			updateDefaultList(data->constants->symbol_mod_fexpr, expr_m, result, sym, data);
 		}
@@ -1108,6 +1141,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 		else if (p->expr->type == E_SYMBOL && sym_is_nonboolean(sym) && sym_is_nonboolean(p->expr->left.sym)) {
 			struct prop_list *nb_sym_defaults = prop_list_init();
 			struct property *p_tmp;
+
 			for_all_defaults(p->expr->left.sym, p_tmp)
 				prop_list_add(nb_sym_defaults, p_tmp);
 
@@ -1117,15 +1151,17 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 		else {
 			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
 			struct pexpr *expr_both = expr_calculate_pexpr_both(e_tmp, data);
+
 			updateDefaultList(data->constants->symbol_yes_fexpr, expr_both, result, sym, data);
 		}
 	}
 }
-static struct defm_list * get_defaults(struct symbol *sym, struct cfdata *data)
+static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data)
 {
 	struct defm_list *result = defm_list_init();
 	struct prop_list *defaults;
 	struct property *p;
+
 	covered = pexf(data->constants->const_false);
 
 	defaults = prop_list_init();
@@ -1140,7 +1176,7 @@ static struct defm_list * get_defaults(struct symbol *sym, struct cfdata *data)
 /*
  * return the default_map for "y", False if it doesn't exist
  */
-static struct pexpr * get_default_y(struct defm_list *list, struct cfdata *data)
+static struct pexpr *get_default_y(struct defm_list *list, struct cfdata *data)
 {
 	struct default_map *entry;
 	struct defm_node *node;
@@ -1225,6 +1261,7 @@ unsigned int count_counstraints(void)
 {
 	unsigned int i, c = 0;
 	struct symbol *sym;
+
 	for_all_symbols(i, sym) {
 		if (sym->type == S_UNKNOWN)
 			continue;

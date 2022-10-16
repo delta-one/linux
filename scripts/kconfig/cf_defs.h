@@ -11,7 +11,11 @@ extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
 
-#define printd(fmt...) if (CFDEBUG) printf(fmt)
+#define printd(fmt...) do { \
+	if (CFDEBUG) \
+		printf(fmt); \
+} while (0)
+
 
 /* different types for f_expr */
 enum fexpr_type {

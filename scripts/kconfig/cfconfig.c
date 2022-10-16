@@ -16,8 +16,8 @@
 
 #include "configfix.h"
 
-static struct symbol * read_symbol_from_stdin(void);
-static struct symbol_dvalue * sym_create_sdv(struct symbol *sym, char *input);
+static struct symbol *read_symbol_from_stdin(void);
+static struct symbol_dvalue *sym_create_sdv(struct symbol *sym, char *input);
 static void handle_fixes(struct sfl_list *diag);
 
 /* -------------------------------------- */
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
 	init_config(argv[1]);
 
-	while(1) {
+	while (1) {
 		struct symbol *sym;
 		char input[100];
 		struct symbol_dvalue *sdv;
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 /*
  * read a symbol name from stdin
  */
-static struct symbol * read_symbol_from_stdin(void)
+static struct symbol *read_symbol_from_stdin(void)
 {
 	char input[100];
 	struct symbol *sym = NULL;
@@ -90,9 +90,10 @@ static struct symbol * read_symbol_from_stdin(void)
 /*
  * create a symbol_dvalue struct containing the symbol and the desired value
  */
-static struct symbol_dvalue * sym_create_sdv(struct symbol *sym, char *input)
+static struct symbol_dvalue *sym_create_sdv(struct symbol *sym, char *input)
 {
 	struct symbol_dvalue *sdv = malloc(sizeof(struct symbol_dvalue));
+
 	sdv->sym = sym;
 	sdv->type = sym_is_boolean(sym) ? SDV_BOOLEAN : SDV_NONBOOLEAN;
 

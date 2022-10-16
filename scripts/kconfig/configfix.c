@@ -18,11 +18,11 @@
 
 struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 
-bool CFDEBUG = false;
-bool stop_rangefix = false;
+bool CFDEBUG;
+bool stop_rangefix;
 
 static PicoSAT *pico;
-static bool init_done = false;
+static bool init_done;
 static struct sym_list *conflict_syms;
 
 static bool sdv_within_range(struct sdv_list *symbols);
@@ -38,34 +38,34 @@ int run_satconf_cli(const char *Kconfig_file)
 	// struct symbol *sym;
  //
 	// if (!init_done) {
-	// 	printd("Init...");
-	// 	/* measure time for constructing constraints and clauses */
-	// 	start = clock();
+	//	printd("Init...");
+	//	/* measure time for constructing constraints and clauses */
+	//	start = clock();
  //
-	// 	/* parse Kconfig-file and read .config */
-	// 	init_config(Kconfig_file);
+	//	/* parse Kconfig-file and read .config */
+	//	init_config(Kconfig_file);
  //
-	// 	/* initialize satmap and cnf_clauses */
-	// 	init_data();
+	//	/* initialize satmap and cnf_clauses */
+	//	init_data();
  //
-	// 	/* creating constants */
-	// 	create_constants();
+	//	/* creating constants */
+	//	create_constants();
  //
-	// 	/* assign SAT variables & create sat_map */
-	// 	create_sat_variables();
+	//	/* assign SAT variables & create sat_map */
+	//	create_sat_variables();
  //
-	// 	/* get the constraints */
-	// 	get_constraints();
+	//	/* get the constraints */
+	//	get_constraints();
  //
-	// 	/* print all symbols and its constraints */
-	// 	// 		print_all_symbols();
+	//	/* print all symbols and its constraints */
+	//	//		print_all_symbols();
  //
-	// 	end = clock();
-	// 	time = ((double)(end - start)) / CLOCKS_PER_SEC;
+	//	end = clock();
+	//	time = ((double)(end - start)) / CLOCKS_PER_SEC;
  //
-	// 	printd("done. (%.6f secs.)\n", time);
+	//	printd("done. (%.6f secs.)\n", time);
  //
-	// 	init_done = true;
+	//	init_done = true;
 	// }
  //
 	// /* start PicoSAT */
@@ -86,13 +86,13 @@ int run_satconf_cli(const char *Kconfig_file)
 	// start = clock();
  //
 	// for_all_symbols(i, sym) {
-	// 	if (sym->type == S_UNKNOWN)
-	// 		continue;
+	//	if (sym->type == S_UNKNOWN)
+	//		continue;
  //
-	// 	if (!sym->name || !sym_has_prompt(sym))
-	// 		continue;
+	//	if (!sym->name || !sym_has_prompt(sym))
+	//		continue;
  //
-	// 	sym_add_assumption(pico, sym);
+	//	sym_add_assumption(pico, sym);
  //
 	// }
  //
@@ -241,8 +241,10 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 static bool sym_is_conflict_sym(struct symbol *sym)
 {
 	struct sym_node *node;
-	sym_list_for_each(node,
-			  conflict_syms) if (sym == node->elem) return true;
+
+	sym_list_for_each(node, conflict_syms)
+		if (sym == node->elem)
+			return true;
 
 	return false;
 }
@@ -403,6 +405,7 @@ struct sfix_list *select_solution(struct sfl_list *solutions, int index)
 {
 	struct sfl_node *node = solutions->head;
 	unsigned int counter;
+
 	for (counter = 0; counter < index; counter++)
 		node = node->next;
 
@@ -413,6 +416,7 @@ struct symbol_fix *select_symbol(struct sfix_list *solution, int index)
 {
 	struct sfix_node *node = solution->head;
 	unsigned int counter;
+
 	for (counter = 0; counter < index; counter++)
 		node = node->next;
 

@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: GPL-2.0 */
+// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2022 Patrick Franz <deltaone@debian.org>
  */
@@ -20,7 +20,7 @@
 #define OUTFILE_DIMACS "./scripts/kconfig/cfout_constraints.dimacs"
 
 static void write_constraints_to_file(struct cfdata *data);
-static void write_dimacs_to_file(PicoSAT *pico,struct cfdata *data);
+static void write_dimacs_to_file(PicoSAT *pico, struct cfdata *data);
 
 /* -------------------------------------- */
 
@@ -109,10 +109,12 @@ static void write_constraints_to_file(struct cfdata *data)
 	for_all_symbols(i, sym) {
 		struct pexpr_node *node;
 
-		if (sym->type == S_UNKNOWN) continue;
+		if (sym->type == S_UNKNOWN)
+			continue;
 
 		pexpr_list_for_each(node, sym->constraints) {
 			struct gstr s = str_new();
+
 			pexpr_as_char(node->elem, &s, 0, data);
 			fprintf(fd, "%s\n", str_get(&s));
 			str_free(&s);
@@ -131,6 +133,7 @@ static void write_dimacs_to_file(PicoSAT *pico, struct cfdata *data)
 	FILE *fd = fopen(OUTFILE_DIMACS, "w");
 
 	unsigned int i;
+
 	for (i = 1; i < data->sat_variable_nr; i++)
 		add_comment(fd, &data->satmap[i]);
 

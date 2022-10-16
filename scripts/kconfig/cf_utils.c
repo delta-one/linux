@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: GPL-2.0 */
+// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2022 Patrick Franz <deltaone@debian.org>
  */
@@ -115,9 +115,10 @@ void create_constants(struct cfdata *data)
 /*
  * create a temporary SAT-variable
  */
-struct fexpr * create_tmpsatvar(struct cfdata *data)
+struct fexpr *create_tmpsatvar(struct cfdata *data)
 {
 	struct fexpr *t = fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, "");
+
 	str_append(&t->name, get_tmp_var_as_char(data->tmp_variable_nr++));
 	fexpr_add_to_satmap(t, data);
 
@@ -127,9 +128,10 @@ struct fexpr * create_tmpsatvar(struct cfdata *data)
 /*
  * return a temporary SAT variable as string
  */
-char * get_tmp_var_as_char(int i)
+char *get_tmp_var_as_char(int i)
 {
 	char *val = malloc(sizeof(char) * 18);
+
 	snprintf(val, 18, "T_%d", i);
 	return val;
 }
@@ -137,7 +139,7 @@ char * get_tmp_var_as_char(int i)
 /*
  * return a tristate value as a char *
  */
-char * tristate_get_char(tristate val)
+char *tristate_get_char(tristate val)
 {
 	switch (val) {
 	case yes:
@@ -287,7 +289,8 @@ void print_expr(char *tag, struct expr *e, int prevtoken)
 /*
  * check, if the symbol is a tristate-constant
  */
-bool sym_is_tristate_constant(struct symbol *sym) {
+bool sym_is_tristate_constant(struct symbol *sym)
+{
 	return sym == &symbol_yes || sym == &symbol_mod || sym == &symbol_no;
 }
 
@@ -331,7 +334,7 @@ bool sym_has_prompt(struct symbol *sym)
 /*
  * return the prompt of the symbol if there is one, NULL otherwise
  */
-struct property * sym_get_prompt(struct symbol *sym)
+struct property *sym_get_prompt(struct symbol *sym)
 {
 	struct property *prop;
 
@@ -344,7 +347,7 @@ struct property * sym_get_prompt(struct symbol *sym)
 /*
  * return the condition for the property, True if there is none
  */
-struct pexpr * prop_get_condition(struct property *prop, struct cfdata *data)
+struct pexpr *prop_get_condition(struct property *prop, struct cfdata *data)
 {
 	if (prop == NULL)
 		return NULL;
@@ -415,10 +418,11 @@ bool sym_nonbool_has_value_set(struct symbol *sym)
 /*
  * return the name of the symbol or the prompt-text, if it is a choice symbol
  */
-char * sym_get_name(struct symbol *sym)
+char *sym_get_name(struct symbol *sym)
 {
 	if (sym_is_choice(sym)) {
 		struct property *prompt = sym_get_prompt(sym);
+
 		if (prompt == NULL)
 			return "";
 
@@ -434,6 +438,7 @@ char * sym_get_name(struct symbol *sym)
 bool sym_is_sdv(struct sdv_list *list, struct symbol *sym)
 {
 	struct sdv_node *node;
+
 	sdv_list_for_each(node, list)
 		if (sym == node->elem->sym)
 			return true;
@@ -449,6 +454,7 @@ void print_sym_name(struct symbol *sym)
 	printf("Symbol: ");
 	if (sym_is_choice(sym)) {
 		struct property *prompt = sym_get_prompt(sym);
+
 		printf("(Choice) %s", prompt->text);
 	} else  {
 		printf("%s", sym->name);
@@ -459,9 +465,10 @@ void print_sym_name(struct symbol *sym)
 /*
  * print all constraints for a symbol
  */
-void print_sym_constraint(struct symbol* sym)
+void print_sym_constraint(struct symbol *sym)
 {
 	struct pexpr_node *node;
+
 	pexpr_list_for_each(node, sym->constraints)
 		pexpr_print("::", node->elem, -1);
 }
@@ -476,6 +483,7 @@ void print_default_map(struct defm_list *map)
 
 	defm_list_for_each(node, map) {
 		struct gstr s = str_new();
+
 		entry = node->elem;
 
 		str_append(&s, "\t");
@@ -493,6 +501,7 @@ bool string_is_number(char *s)
 {
 	int len = strlen(s);
 	int i = 0;
+
 	while (i < len) {
 		if (!isdigit(s[i]))
 			return false;
@@ -509,6 +518,7 @@ bool string_is_hex(char *s)
 {
 	int len = strlen(s);
 	int i = 2;
+
 	if (len >= 3 && s[0] == '0' && s[1] == 'x') {
 		while (i < len) {
 			if (!isxdigit(s[i]))
@@ -524,7 +534,7 @@ bool string_is_hex(char *s)
 /*
  * initialize PicoSAT
  */
-PicoSAT * initialize_picosat(void)
+PicoSAT *initialize_picosat(void)
 {
 	PicoSAT *pico;
 
@@ -543,6 +553,7 @@ void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 {
 	unsigned int i;
 	struct symbol *sym;
+
 	pico = p;
 
 	/* adding unit-clauses for constants */
@@ -866,8 +877,7 @@ void picosat_solve(PicoSAT *pico, struct cfdata *data)
 			printd("(%d) %s <%d>\n", *lit, str_get(&e->name), e->assumption);
 			*lit = abs(*i++);
 		}
-	}
-	else {
+	} else {
 		printd("Unknown if satisfiable.\n");
 	}
 }
@@ -879,6 +889,7 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 {
 	if (sym_is_boolean(sym)) {
 		int tri_val = sym_get_tristate_value(sym);
+
 		sym_add_assumption_tri(pico, sym, tri_val);
 		return;
 	}
@@ -935,6 +946,7 @@ void sym_add_assumption_tri(PicoSAT *pico, struct symbol *sym, tristate tri_val)
 {
 	if (sym->type == S_BOOLEAN) {
 		int a = sym->fexpr_y->satval;
+
 		switch (tri_val) {
 		case no:
 			picosat_assume(pico, -a);
@@ -953,6 +965,7 @@ void sym_add_assumption_tri(PicoSAT *pico, struct symbol *sym, tristate tri_val)
 	if (sym->type == S_TRISTATE) {
 		int a = sym->fexpr_y->satval;
 		int a_m = sym->fexpr_m->satval;
+
 		switch (tri_val) {
 		case no:
 			picosat_assume(pico, -a);
