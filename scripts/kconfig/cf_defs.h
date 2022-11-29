@@ -1,13 +1,12 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2022 Patrick Franz <deltaone@debian.org>
  */
 
 #ifndef DEFS_H
 #define DEFS_H
 
-/* external variables */
-extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
+/* global variables */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
 
@@ -238,6 +237,7 @@ struct cfdata {
 	struct fexpr *satmap; // map SAT variables to fexpr
 	size_t satmap_size;
 	struct constants *constants;
+	struct sdv_list *sdv_symbols; // array with conflict-symbols
 };
 
 #endif

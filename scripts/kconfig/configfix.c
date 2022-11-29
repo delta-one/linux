@@ -16,8 +16,6 @@
 
 #include "configfix.h"
 
-struct sdv_list *sdv_symbols; /* array with conflict-symbols */
-
 bool CFDEBUG;
 bool stop_rangefix;
 
@@ -132,7 +130,8 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		1,    // unsigned int tmp_variable_nr
 		NULL, // struct fexpr *satmap
 		0,    // size_t satmap_size
-		&constants // struct constants *constants
+		&constants, // struct constants *constants
+		NULL // array with conflict-symbols
 	};
 
 
@@ -186,23 +185,23 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	}
 
 	/* copy array with symbols to change */
-	sdv_symbols = sdv_list_copy(symbols);
+	data.sdv_symbols = sdv_list_copy(symbols);
 
 	/* add assumptions for conflict-symbols */
-	sym_add_assumption_sdv(pico, sdv_symbols);
+	sym_add_assumption_sdv(pico, data.sdv_symbols);
 
 	/* add assumptions for all other symbols */
 	for_all_symbols(i, sym) {
 		if (sym->type == S_UNKNOWN)
 			continue;
 
-		if (!sym_is_sdv(sdv_symbols, sym))
+		if (!sym_is_sdv(data.sdv_symbols, sym))
 			sym_add_assumption(pico, sym);
 	}
 
 	/* store the conflict symbols */
 	conflict_syms = sym_list_init();
-	sdv_list_for_each(node, sdv_symbols)
+	sdv_list_for_each(node, data.sdv_symbols)
 		sym_list_add(conflict_syms, node->elem->sym);
 
 	printd("Solving SAT-problem...");
@@ -230,7 +229,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 		ret = sfl_list_init();
 	}
 
-	sdv_list_free(sdv_symbols);
+	sdv_list_free(data.sdv_symbols);
 
 	return ret;
 }
