@@ -169,6 +169,12 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 		if (time_t > (double) MAX_SECONDS)
 			goto DIAGNOSES_FOUND;
 
+		/* abort and return results if cancelled by user */
+		if (stop_rangefix) {
+			stop_rangefix = false;
+			goto DIAGNOSES_FOUND;
+		}
+
 		/* get unsat core from SAT solver */
 		X = get_unsat_core_soft(pico, data);
 
